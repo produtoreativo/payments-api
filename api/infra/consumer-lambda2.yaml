@@ -18,7 +18,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: payments-api
-      CodeUri: .lambda_build_temp
+      CodeUri: ../.lambda_build_temp
       Handler: lambda.handler
       Events:
         HttpApiEvent:
@@ -63,7 +63,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: transactions-consumer
-      CodeUri: .lambda_build_temp
+      CodeUri: ../.lambda_build_temp
       Handler: sqs.handler
       Timeout: 30
       Environment:
