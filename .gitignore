@@ -24,3 +24,4 @@ lerna-debug.log*
 .tmp
 
 .aws-sam
+.lambda_build_temp
