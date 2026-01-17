@@ -32,8 +32,8 @@ aws configure
 Utilizo o [localstack](https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/lambda-localstack.html) como Docker:
 
 ```sh
-docker run -d \                                                                 
-  --name localstack \                                    
+docker run -d \
+  --name localstack \
   --rm -it \
   -p 127.0.0.1:4566:4566 \
   -p 127.0.0.1:4510-4559:4510-4559 \
@@ -50,6 +50,13 @@ aws s3 mb s3://payments-gateway-prod --endpoint-url=http://localhost.localstack.
 Listar o Bucket
 ```sh
 aws s3 ls --endpoint-url=http://localhost.localstack.cloud:4566
+```
+
+## Cria o Dynamodb
+
+```sh
+chmod +x ./scripts/deploy-dynamodb-local.sh
+./scripts/deploy-dynamodb-local.sh
 ```
 
 ## Executando a Lambda
