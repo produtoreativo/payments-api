@@ -59,29 +59,29 @@ Resources:
   # =====================================================
   # SQS CONSUMER LAMBDA (NestJS ApplicationContext)
   # =====================================================
-  TransactionsConsumerFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: transactions-consumer
-      CodeUri: ../.lambda_build_temp
-      Handler: sqs.handler
-      Timeout: 30
-      Environment:
-        Variables:
-          TRANSACTIONS_TABLE: TransactionsTable
-      Events:
-        SQSEvent:
-          Type: SQS
-          Properties:
-            Queue: !GetAtt TransactionsQueue.Arn
-            BatchSize: 5
-            Enabled: true
+  # TransactionsConsumerFunction:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     FunctionName: transactions-consumer
+  #     CodeUri: ../.lambda_build_temp
+  #     Handler: sqs.handler
+  #     Timeout: 30
+  #     Environment:
+  #       Variables:
+  #         TRANSACTIONS_TABLE: TransactionsTable
+  #     Events:
+  #       SQSEvent:
+  #         Type: SQS
+  #         Properties:
+  #           Queue: !GetAtt TransactionsQueue.Arn
+  #           BatchSize: 5
+  #           Enabled: true
 
-  TransactionsConsumerLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: /aws/lambda/transactions-consumer
-      RetentionInDays: 3
+  # TransactionsConsumerLogGroup:
+  #   Type: AWS::Logs::LogGroup
+  #   Properties:
+  #     LogGroupName: /aws/lambda/transactions-consumer
+  #     RetentionInDays: 3
 
 Outputs:
   ApiUrl:

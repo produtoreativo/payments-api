@@ -82,11 +82,21 @@ aws --endpoint-url=http://localhost.localstack.cloud:4566 \
 # criar a rota
 aws --endpoint-url=http://localhost.localstack.cloud:4566 \
   lambda create-function-url-config \
-  --function-name payments-api \                       
+  --function-name payments-api \
   --auth-type NONE
 
 # quando precisar pegar a url novamente
 aws --endpoint-url=http://localhost.localstack.cloud:4566 \
   lambda get-function-url-config \
   --function-name payments-api 
+```
+
+Apagar a Stack
+
+```sh
+# Listar as stacks
+aws --endpoint-url=http://localhost.localstack.cloud:4566 cloudformation list-stacks
+
+# Apagar
+aws --endpoint-url=http://localhost.localstack.cloud:4566 cloudformation delete-stack --stack-name payments-gateway
 ```

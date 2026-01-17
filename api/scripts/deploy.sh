@@ -10,7 +10,7 @@ export AWS_SECRET_ACCESS_KEY=test
 
 sam deploy \
   --debug \
-  --template-file infra/consumer-lambda2.yaml \
+  --template-file .aws-sam/build/template.yaml \
   --stack-name payments-gateway \
   --s3-bucket payments-gateway-prod \
   --no-confirm-changeset \

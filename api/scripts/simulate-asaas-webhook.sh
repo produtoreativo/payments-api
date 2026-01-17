@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-WEBHOOK_URL="http://localhost:3000/webhook/payments"
+# WEBHOOK_URL="http://localhost:3000/webhook/payments"
 
-# WEBHOOK_URL="http://4n7hwbmvaycilt1sy6n3xcd5fnctvpcd.lambda-url.us-east-1.localhost.localstack.cloud:4566/webhook/payments"
+WEBHOOK_URL="http://qtxgg4gjzp7x6twzpaknvix55nfkdsli.lambda-url.us-east-1.localhost.localstack.cloud:4566/webhook/payments"
 
 echo "📡 Simulando webhook da Asaas"
 echo "➡️  POST $WEBHOOK_URL"
