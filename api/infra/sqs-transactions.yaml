@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: SQS queues for Transactions webhook processing
+
+Resources:
+  TransactionsDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: transactions-dlq
+      MessageRetentionPeriod: 1209600 # 14 dias
+
+  TransactionsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: transactions-queue
+      VisibilityTimeout: 60
+      MessageRetentionPeriod: 345600 # 4 dias
+      ReceiveMessageWaitTimeSeconds: 10 # Long polling
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt TransactionsDLQ.Arn
+        maxReceiveCount: 5
+
+Outputs:
+  TransactionsQueueUrl:
+    Description: URL da fila de transactions
+    Value: !Ref TransactionsQueue
+
+  TransactionsQueueArn:
+    Description: ARN da fila de transactions
+    Value: !GetAtt TransactionsQueue.Arn
+
+  TransactionsDLQArn:
+    Description: ARN da DLQ de transactions
+    Value: !GetAtt TransactionsDLQ.Arn

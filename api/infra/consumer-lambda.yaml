@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Payments Gateway - API + SQS Consumer (NestJS)
+
+Globals:
+  Function:
+    Runtime: nodejs18.x
+    MemorySize: 512
+    Timeout: 15
+    Architectures:
+      - x86_64
+
+Resources:
+  # =====================================================
+  # API LAMBDA (NestJS HTTP)
+  # =====================================================
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: payments-api
+      CodeUri: ../
+      Handler: lambda.handler
+      Events:
+        HttpApiEvent:
+          Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+      Environment:
+        Variables:
+          TRANSACTIONS_QUEUE_URL: !Ref TransactionsQueue
+
+  ApiFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/payments-api
+      RetentionInDays: 7
+
+  # =====================================================
+  # SQS QUEUE + DLQ
+  # =====================================================
+  TransactionsDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: transactions-dlq
+      MessageRetentionPeriod: 1209600 # 14 dias
+
+  TransactionsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: transactions-queue
+      VisibilityTimeout: 600
+      MessageRetentionPeriod: 345600 # 4 dias
+      ReceiveMessageWaitTimeSeconds: 10
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt TransactionsDLQ.Arn
+        maxReceiveCount: 5
+
+  # =====================================================
+  # SQS CONSUMER LAMBDA (NestJS ApplicationContext)
+  # =====================================================
+  TransactionsConsumerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: transactions-consumer
+      CodeUri: ../
+      Handler: sqs.handler
+      Timeout: 30
+      Environment:
+        Variables:
+          TRANSACTIONS_TABLE: TransactionsTable
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt TransactionsQueue.Arn
+            BatchSize: 5
+            Enabled: true
+
+  TransactionsConsumerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/transactions-consumer
+      RetentionInDays: 3
+
+Outputs:
+  ApiUrl:
+    Description: HTTP API endpoint
+    Value: !Sub https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com
+
+  TransactionsQueueUrl:
+    Description: URL da fila de transactions
+    Value: !Ref TransactionsQueue
+
+  TransactionsQueueArn:
+    Description: ARN da fila de transactions
+    Value: !GetAtt TransactionsQueue.Arn
