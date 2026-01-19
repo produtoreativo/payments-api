@@ -20,7 +20,6 @@ docker ps | grep localstack
 Lembre de configurar o seu aws local:
 ```sh
 aws configure
-
 # AWS Access Key ID: test
 # AWS Secret Access Key: test
 # Default region name: us-east-1
@@ -61,13 +60,13 @@ chmod +x ./scripts/deploy-dynamodb-local.sh
 
 ## Executando a Lambda
 
-Execute o build
+### Execute o build
 ```sh
 chmod +x ./scripts/build.sh
 ./scripts/build.sh
 ```
 
-Deploy local
+### Deploy local
 ```sh
 chmod +x ./scripts/deploy.sh
 ./scripts/deploy.sh
@@ -91,7 +90,13 @@ aws --endpoint-url=http://localhost.localstack.cloud:4566 \
   --function-name payments-api 
 ```
 
-Apagar a Stack
+### Validar o ciclo SQS, Dynamo, Lambdas
+```sh
+chmod +x ./scripts/simulate-asaas-webhook.sh
+./scripts/simulate-asaas-webhook.sh
+```
+
+### Apagar a Stack
 
 ```sh
 # Listar as stacks
@@ -99,4 +104,8 @@ aws --endpoint-url=http://localhost.localstack.cloud:4566 cloudformation list-st
 
 # Apagar
 aws --endpoint-url=http://localhost.localstack.cloud:4566 cloudformation delete-stack --stack-name payments-gateway
+
+aws logs delete-log-group \
+  --log-group-name /aws/lambda/payments-api \
+  --endpoint-url http://localhost.localstack.cloud:4566
 ```

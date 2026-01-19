@@ -29,12 +29,13 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "aws-lambda": "^1.0.7",
+    "axios": "^1.13.2",
     "nestjs-pino": "^4.5.0",
     "pino-http": "^11.0.0",
     "pino-pretty": "^13.1.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "uuid": "^13.0.0"
+    "ulid": "^3.0.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

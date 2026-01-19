@@ -6,8 +6,7 @@ import { AsaasWebhookDto } from './dto/asaas-webhook.dto';
 import { DynamoService } from './infra/dynamo.service';
 import { AsaasService } from './infra/asaas.service';
 import { SqsService } from './infra/sqs.service';
-import { v4 as uuidv4 } from 'uuid';
-
+import { ulid } from 'ulid';
 @Injectable()
 export class AppService {
   constructor(
@@ -54,7 +53,7 @@ export class AppService {
       value: dto.amount,
     });
 
-    const paymentId = uuidv4();
+    const paymentId = ulid();
 
     const payment = {
       PK: `TENANT#${dto.tenantId}`,

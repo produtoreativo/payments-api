@@ -18,7 +18,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: payments-api
-      CodeUri: ../
+      CodeUri: ../.lambda_build_temp
       Handler: lambda.handler
       Events:
         HttpApiEvent:
@@ -30,11 +30,11 @@ Resources:
         Variables:
           TRANSACTIONS_QUEUE_URL: !Ref TransactionsQueue
 
-  ApiFunctionLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: /aws/lambda/payments-api
-      RetentionInDays: 7
+  # ApiFunctionLogGroup:
+  #   Type: AWS::Logs::LogGroup
+  #   Properties:
+  #     LogGroupName: /aws/lambda/payments-api
+  #     RetentionInDays: 7
 
   # =====================================================
   # SQS QUEUE + DLQ
@@ -63,7 +63,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: transactions-consumer
-      CodeUri: ../
+      CodeUri: ../.lambda_build_temp
       Handler: sqs.handler
       Timeout: 30
       Environment:
@@ -77,11 +77,11 @@ Resources:
             BatchSize: 5
             Enabled: true
 
-  TransactionsConsumerLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: /aws/lambda/transactions-consumer
-      RetentionInDays: 3
+  # TransactionsConsumerLogGroup:
+  #   Type: AWS::Logs::LogGroup
+  #   Properties:
+  #     LogGroupName: /aws/lambda/transactions-consumer
+  #     RetentionInDays: 3
 
 Outputs:
   ApiUrl:
