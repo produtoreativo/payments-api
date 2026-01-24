@@ -1,4 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DynamoService } from './infra/dynamo.service';
@@ -7,6 +8,7 @@ import { AsaasService } from './infra/asaas.service';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import awsConfig from './config/aws.config';
+import KafkaService from './infra/kafka.service';
 
 @Module({
   imports: [
@@ -37,8 +39,16 @@ import awsConfig from './config/aws.config';
             : undefined,
       },
     }),
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [Logger, DynamoService, SqsService, AsaasService, AppService],
+  providers: [
+    Logger,
+    DynamoService,
+    SqsService,
+    AsaasService,
+    KafkaService,
+    AppService,
+  ],
 })
 export class AppModule {}

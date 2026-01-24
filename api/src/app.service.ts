@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { AsaasWebhookDto } from './dto/asaas-webhook.dto';
 import { DynamoService } from './infra/dynamo.service';
@@ -14,6 +15,7 @@ export class AppService {
     private readonly asaas: AsaasService,
     private readonly sqs: SqsService,
     private readonly logger: Logger,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createPayment(dto: CreatePaymentDto) {
@@ -37,20 +39,38 @@ export class AppService {
         PK: customerPk,
         SK: customerSk,
         ...dto.customer,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date(new Date().toUTCString()).toISOString(),
       };
+      this.eventEmitter.emit('payments.invoice.customer_not_found', {
+        customerId: dto.customer.externalId,
+        timestamp: new Date(new Date().toUTCString()).toISOString(),
+        payload: { tenantId: dto.tenantId, customer: dto.customer },
+      });
 
       await this.dynamo.putItem('CustomersTable', customer);
+      this.eventEmitter.emit('payments.invoice.customer_created', {
+        customerId: dto.customer.externalId,
+        timestamp: new Date(new Date().toUTCString()).toISOString(),
+        payload: { tenantId: dto.tenantId, customer: dto.customer },
+      });
     }
 
-    const asaasPayment = await this.asaas.createPayment({
-      name: dto.customer.name,
-      description: dto.description,
-      dueDateLimitDays: 10,
-      externalReference: dto.customer.externalId,
-      billingType: 'UNDEFINED',
-      chargeType: 'DETACHED',
-      value: dto.amount,
+    const asaasPayment = await this.asaas.createPayment(
+      {
+        name: dto.customer.name,
+        description: dto.description,
+        dueDateLimitDays: 10,
+        externalReference: dto.customer.externalId,
+        billingType: 'UNDEFINED',
+        chargeType: 'DETACHED',
+        value: dto.amount,
+      },
+      this.eventEmitter,
+    );
+    this.eventEmitter.emit('payments.invoice.psp_integrated', {
+      customerId: dto.customer.externalId,
+      timestamp: new Date(new Date().toUTCString()).toISOString(),
+      payload: { tenantId: dto.tenantId, customer: dto.customer },
     });
 
     const paymentId = ulid();
@@ -62,10 +82,17 @@ export class AppService {
       status: asaasPayment.status,
       amount: dto.amount,
       payload: asaasPayment,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date(new Date().toUTCString()).toISOString(),
     };
 
     await this.dynamo.putItem('PaymentsTable', payment);
+    this.eventEmitter.emit('payments.invoice.pendente', {
+      customerId: dto.customer.externalId,
+      timestamp: new Date(new Date().toUTCString()).toISOString(),
+      payload: { tenantId: dto.tenantId, customer: dto.customer },
+    });
+
+    console.log('Payment created [payments.invoice.pendente]:', payment);
 
     return payment;
   }
@@ -83,7 +110,7 @@ export class AppService {
       PK: `PAYMENT#${payload.payment.id}`,
       SK: `EVENT#${payload.event}`,
       status: payload.payment.status,
-      receivedAt: new Date().toISOString(),
+      receivedAt: new Date(new Date().toUTCString()).toISOString(),
     };
 
     this.logger.log('Storing transaction', JSON.stringify(transaction));
@@ -98,5 +125,10 @@ export class AppService {
         status: payload.payment.status,
       },
     );
+    this.eventEmitter.emit('payments.invoice.confirmed', {
+      customerId: payload.payment.customer,
+      timestamp: new Date(new Date().toUTCString()).toISOString(),
+      payload,
+    });
   }
 }

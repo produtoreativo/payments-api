@@ -3,7 +3,7 @@ set -euo pipefail
 
 # WEBHOOK_URL="http://localhost:3000/webhook/payments"
 
-WEBHOOK_URL="http://8kjtuyp67bdzwkophftv5h1p5wxwvbzl.lambda-url.us-east-1.localhost.localstack.cloud:4566/webhook/payments"
+WEBHOOK_URL="http://bjz99eslfpx8tq72bk0l6ll4133ox8nh.lambda-url.us-east-1.localhost.localstack.cloud:4566/webhook/payments"
 
 echo "📡 Simulando webhook da Asaas"
 echo "➡️  POST $WEBHOOK_URL"
@@ -15,9 +15,9 @@ curl -X POST "$WEBHOOK_URL" \
   -d '{
     "event": "PAYMENT_CONFIRMED",
     "payment": {
-      "id": "pay_asaas_1234",
+      "id": "pay_asaas_1344",
       "status": "CONFIRMED",
-      "value": 199.90,
+      "value": 300.90,
       "billingType": "BOLETO",
       "customer": "cus_asaas_456",
       "description": "Mensalidade Turma 123",
