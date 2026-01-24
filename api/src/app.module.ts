@@ -39,7 +39,10 @@ import KafkaService from './infra/kafka.service';
             : undefined,
       },
     }),
-    EventEmitterModule.forRoot(),
+    EventEmitterModule.forRoot({
+      wildcard: true,
+      delimiter: '.',
+    }),
   ],
   controllers: [AppController],
   providers: [

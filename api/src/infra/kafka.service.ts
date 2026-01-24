@@ -1,12 +1,12 @@
 import { OnEvent } from '@nestjs/event-emitter';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 class KafkaService {
+  constructor(private readonly logger: Logger) {}
   @OnEvent('payments.invoice.confirmed')
   handlePaymentsConfirmedEvent(payload: any) {
-    // handle and process "OrderCreatedEvent" event
-    console.log(
+    this.logger.log(
       'KafkaService - payments.invoice.confirmed event received:',
       payload,
     );
@@ -14,7 +14,7 @@ class KafkaService {
   @OnEvent('**')
   handleAllEvent(payload: any) {
     // handle and process "OrderCreatedEvent" event
-    console.log('event received:', payload);
+    this.logger.log('event received:', payload);
   }
 }
 

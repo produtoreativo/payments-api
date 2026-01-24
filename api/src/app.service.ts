@@ -22,12 +22,6 @@ export class AppService {
     const customerPk = `TENANT#${dto.tenantId}`;
     const customerSk = `CUSTOMER#${dto.customer.externalId}`;
 
-    console.log({
-      table: 'CustomersTable',
-      PK: customerPk,
-      SK: customerSk,
-    });
-
     let customer = await this.dynamo.getItem(
       'CustomersTable',
       customerPk,
@@ -91,9 +85,6 @@ export class AppService {
       timestamp: new Date(new Date().toUTCString()).toISOString(),
       payload: { tenantId: dto.tenantId, customer: dto.customer },
     });
-
-    console.log('Payment created [payments.invoice.pendente]:', payment);
-
     return payment;
   }
 
