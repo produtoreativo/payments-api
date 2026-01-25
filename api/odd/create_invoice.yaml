@@ -1,0 +1,143 @@
+version: 1
+domain: payments
+name: Create Invoice
+description: Cria uma nova fatura para o cliente especificado
+externalDocs:
+  description: Documentação da API de Pagamentos
+  url: https://docs.payments.api/create-invoice
+operationId: createInvoice
+
+owner:
+  team: Payments Team
+  discord: payments-team
+  email: payments-team@produtoreativo.com
+
+touchpoints:
+  - name: Cobrança via Checkout
+    id: checkout_payment_completed
+    channel: api
+    criticality: high
+    description: Usuário finaliza pagamento no checkout
+    domainEvents:
+      - name: Cliente Não Encontrado
+        label: payments.customer.not_found
+        description: Evento disparado quando o cliente não é encontrado na base de dados
+        payload:
+          type: object
+          name: CustomerNotFoundDto
+          properties:
+            customerId:
+              type: string
+              description: ID do cliente não encontrado
+            tenantId:
+              type: string
+              description: ID do tenant associado ao cliente
+        actions:
+          - name: Cadastrar Cliente
+            touchpoint: customer_created
+      - name: Cliente Encontrado
+        label: payments.customer.found
+        description: Evento disparado quando o cliente é encontrado na base de dados
+        payload:
+          type: object
+          name: CustomerFoundDto
+          properties:
+            customerId:
+              type: string
+              description: ID do cliente encontrado
+            tenantId:
+              type: string
+              description: ID do tenant associado ao cliente
+      - name: Fatura Criada
+        label: payments.invoice.created
+        description: Evento disparado quando uma nova fatura é criada
+        payload:
+          type: object
+          name: CreatePaymentDto
+          properties:
+            paymentId:
+              type: string
+              description: ID da fatura criada
+            amount:
+              type: number
+              description: Valor da fatura criada
+            tenantId:
+              type: string
+              description: ID do tenant associado à fatura
+    services:
+      - name: Payments API
+        type: REST API
+        endpoint: /payments
+        method: POST
+        description: Endpoint para criação de faturas
+
+  - name: Cadastro de Cliente
+    id: customer_created
+    channel: api
+    criticality: medium
+    description: Serviço de cadastro de clientes
+    dependendsOn:
+      - id: checkout_payment_completed 
+    domainEvents:
+      - name: Cliente Criado
+        label: payments.customer.created
+        description: Evento disparado quando um novo cliente é criado
+        payload:
+          type: object
+          name: CustomerCreatedDto
+          properties:
+            customerId:
+              type: string
+              description: ID do cliente criado
+            tenantId:
+              type: string
+              description: ID do tenant associado ao cliente
+    services:
+      - name: Payments API
+        type: REST API
+        endpoint: /payments
+        method: POST
+        description: Endpoint para criação de faturas
+        dependencies:
+          - name: Customer Service
+            type: REST API
+            endpoint: https://api-sandbox.asaas.com/v3/customers
+            method: POST
+            description: Endpoint para criação de clientes
+
+  - name: Processamento de Pagamentos
+    id: payment_processed
+    channel: api
+    criticality: high
+    description: Serviço responsável pelo processamento de pagamentos
+    dependendsOn:
+      - id: checkout_payment_completed
+    domainEvents:
+      - name: Pagamento Processado
+        label: payments.payment.processed
+        description: Evento disparado quando um pagamento é processado com sucesso
+        payload:
+          type: object
+          name: PaymentProcessedDto
+          properties:
+            paymentId:
+              type: string
+              description: ID do pagamento processado
+            status:
+              type: string
+              description: Status do pagamento (e.g., aprovado, recusado)
+            tenantId:
+              type: string
+              description: ID do tenant associado ao pagamento
+    services:
+      - name: Payments API
+        type: REST API
+        endpoint: /payments
+        method: POST
+        description: Endpoint para criação de faturas
+        dependencies:
+          - name: Asaas Payment Gateway
+            type: REST API
+            endpoint: https://api-sandbox.asaas.com/v3/paymentLinks
+            method: POST
+            description: Endpoint para criação de clientes
