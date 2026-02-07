@@ -19,7 +19,28 @@ touchpoints:
     criticality: high
     description: Usuário finaliza pagamento no checkout
     domainEvents:
+      - name: Intenção de Pagamento Recebida
+        type: coadjuvant
+        label: payments.payment.intention_received
+        description: Evento disparado quando a intenção de pagamento é recebida
+        payload:
+          type: object
+          name: PaymentIntentionDto
+          properties:
+            amount:
+              type: number
+              description: Valor do pagamento
+            currency:
+              type: string
+              description: Moeda do pagamento
+            customerId:
+              type: string
+              description: ID do cliente que está realizando o pagamento
+            tenantId:
+              type: string
+              description: ID do tenant associado ao pagamento
       - name: Cliente Não Encontrado
+        type: coadjuvant
         label: payments.customer.not_found
         description: Evento disparado quando o cliente não é encontrado na base de dados
         payload:
@@ -36,8 +57,12 @@ touchpoints:
           - name: Cadastrar Cliente
             touchpoint: customer_created
       - name: Cliente Encontrado
+        type: coadjuvant
         label: payments.customer.found
         description: Evento disparado quando o cliente é encontrado na base de dados
+        actions:
+          - name: Processamento de Pagamentos
+            touchpoint: payment_processed
         payload:
           type: object
           name: CustomerFoundDto
@@ -49,6 +74,7 @@ touchpoints:
               type: string
               description: ID do tenant associado ao cliente
       - name: Fatura Criada
+        type: protagonist
         label: payments.invoice.created
         description: Evento disparado quando uma nova fatura é criada
         payload:
@@ -80,8 +106,12 @@ touchpoints:
       - id: checkout_payment_completed 
     domainEvents:
       - name: Cliente Criado
+        type: protagonist
         label: payments.customer.created
         description: Evento disparado quando um novo cliente é criado
+        actions:
+          - name: Processamento de Pagamentos
+            touchpoint: payment_processed
         payload:
           type: object
           name: CustomerCreatedDto
@@ -114,6 +144,7 @@ touchpoints:
       - id: checkout_payment_completed
     domainEvents:
       - name: Pagamento Processado
+        type: protagonist
         label: payments.payment.processed
         description: Evento disparado quando um pagamento é processado com sucesso
         payload:
