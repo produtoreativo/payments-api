@@ -4,6 +4,7 @@ Termos canônicos do Framework ProdOps. Um conceito = um nome. Um nome = um conc
 
 Para o fluxo completo do Framework, ver [`flow.md`](flow.md).
 Para os quatro Origin Streams, ver [`origin-streams.md`](origin-streams.md).
+Para a hierarquia de backlogs, ver [`backlogs.md`](backlogs.md).
 
 ---
 
@@ -33,7 +34,9 @@ Para os quatro Origin Streams, ver [`origin-streams.md`](origin-streams.md).
 
 **Quando não usar:** Intent não é backlog técnico, tarefa de sprint ou ticket de bug isolado. Essas são instâncias de execução derivadas de uma Intent, não Intents em si.
 
-**Relação com outros conceitos:** A Intent tem um Origin Stream (Business | Enterprise | Team | Technology). A Intent é transformada em OBC pela Exploration. Ver [`flow.md`](flow.md) e [`origin-streams.md`](origin-streams.md).
+**Ciclo de vida:** A Intent nasce na Tracking List como um sinal ainda não compreendido. Quando investigada e reconhecida como relevante, entra no Icebox Backlog — momento em que seu OBC é criado como draft. A partir daí, o OBC torna-se o identificador permanente do trabalho.
+
+**Relação com outros conceitos:** A Intent tem um Origin Stream (Business | Enterprise | Team | Technology). A Intent é transformada em OBC pela Exploration. Ver [`flow.md`](flow.md), [`origin-streams.md`](origin-streams.md) e [`backlogs.md`](backlogs.md).
 
 **Anteriormente chamado de:** Business Intent. O nome foi simplificado para Intent para eliminar a ambiguidade de que apenas necessidades de "Business" são capturáveis. O diretório `prodops/business-intents/` é preservado por retrocompatibilidade.
 
@@ -107,13 +110,27 @@ Para os quatro Origin Streams, ver [`origin-streams.md`](origin-streams.md).
 
 **Definição:** Contrato observável que define o comportamento esperado de uma Product Capability de forma verificável. É a transformação de uma Intent suficientemente compreendida em critérios mensuráveis de sucesso. Fica em `prodops/artifacts/obcs/`. Ancora cenários TDD a resultados de negócio.
 
-**Propósito:** Ser a linguagem compartilhada entre produto, engenharia e operação. O OBC é o critério de aceite formal que toda entrega Downstream deve satisfazer.
+**Propósito:** Ser a linguagem compartilhada entre produto, engenharia e operação. O OBC é o critério de aceite formal que toda entrega Downstream deve satisfazer. É também o **identificador permanente** do trabalho — nasce no Icebox e acompanha o item por toda a sua vida.
 
-**Quando usar:** Após a Exploration ter reduzido a incerteza suficientemente. O OBC committed em `prodops/artifacts/obcs/` é pré-condição obrigatória para iniciar o Downstream.
+**Ciclo de vida:**
 
-**Quando não usar:** O OBC **não** é a entrada do Framework. Não criar OBC sem Intent e Exploration precedentes. Não criar OBC prematuramente quando a incerteza ainda é alta.
+| Fase | Estado | O que acontece |
+|---|---|---|
+| Tracking List | Não existe | O item ainda não é uma Intent reconhecida |
+| Icebox | Draft | OBC criado como rascunho; captura a Intent e hipóteses iniciais |
+| Exploration (Discovery) | Draft em refinamento | Critérios emergem com os aprendizados do experimento |
+| Assessment Review | Candidato a committed | Revisado por PM + Tech Lead |
+| Release / Iteration Backlog | Committed | Aprovado; Downstream pode iniciar |
+| Delivery | Committed (em execução) | Guia a implementação; BDD Feature o operacionaliza |
+| Operation | Committed (validado) | Validado em produção; pode ser estendido por novas Intents |
 
-**Relação com outros conceitos:** O OBC é produzido pela Exploration a partir de uma Intent. Âncora a BDD Feature, o Iteration Plan, o Reliability Plan e toda a Delivery. Ver [`flow.md`](flow.md).
+O OBC registra o **histórico vivo do trabalho**: por quais backlogs passou, quando, decisões tomadas, como os critérios evoluíram.
+
+**Quando usar:** O OBC draft nasce quando a Intent entra no Icebox. O OBC committed em `prodops/artifacts/obcs/` é pré-condição obrigatória para iniciar o Downstream.
+
+**Quando não usar:** Não usar OBC como substituto de tarefa técnica isolada ou ticket de bug sem Intent correspondente.
+
+**Relação com outros conceitos:** O OBC nasce no Icebox, é refinado pela Exploration e commitado após Assessment Review. Âncora a BDD Feature, o Iteration Plan, o Reliability Plan e toda a Delivery. Ver [`flow.md`](flow.md) e [`backlogs.md`](backlogs.md).
 
 **Anteriormente definido incorretamente como:** "Outcome-Based Criterion". A definição canônica é **Observable Business Contract**.
 
@@ -306,3 +323,121 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 ## Release Trail
 
 **Definição:** O log append-only de evidências do Downstream. Fica em [`artifacts/trails/release-trail.md`](../artifacts/trails/release-trail.md).
+
+---
+
+## Tracking List
+
+**Definição:** O ponto de entrada do Framework ProdOps. Captura qualquer sinal ainda não compreendido o suficiente para ser tratado como uma Intent reconhecida.
+
+**Propósito:** Garantir que nenhum sinal relevante seja descartado prematuramente e que o time possa investigar antes de assumir compromissos.
+
+**Quando usar:** Ao registrar perguntas, dúvidas, problemas, oportunidades, ideias, riscos, hipóteses, feedbacks, requisitos incompletos, sinais de incidentes ou demandas de stakeholders sem refinamento suficiente.
+
+**Quando não usar:** A Tracking List não é um backlog de entrega. Não é um substituto de OBC ou Iteration Plan. Itens na Tracking List não têm compromisso de entrega.
+
+**Quando avançar:** Quando o item tiver sido investigado e reconhecido como uma Intent válida — transição para o Icebox Backlog.
+
+**Artefato canônico:** `prodops/artifacts/product/tracking-list.md`
+
+**Relação com outros conceitos:** Precede o Icebox Backlog na hierarquia. Ver [`backlogs.md`](backlogs.md).
+
+---
+
+## Icebox Backlog
+
+**Definição:** O primeiro backlog oficial do produto. Quando uma Intent entra no Icebox, seu OBC é criado como draft e torna-se o identificador permanente daquele trabalho.
+
+**Propósito:** Manter visibilidade de todas as Intents reconhecidas, mesmo sem compromisso de entrega ou data definida.
+
+**Quando usar:** Quando um item da Tracking List tiver sido investigado e reconhecido como uma Intent válida que o produto pretende endereçar em algum momento.
+
+**Quando não usar:** O Icebox não é um depósito de ideias sem curadoria. Itens entram com investigação mínima que justifique seu reconhecimento como Intent.
+
+**O que acontece ao entrar:** O OBC draft nasce. O item recebe um identificador estável. O histórico de evolução do trabalho começa.
+
+**Artefato canônico:** `prodops/artifacts/product/icebox-backlog.md`
+
+**Relação com outros conceitos:** Segundo nível da hierarquia. Sucede a Tracking List. Precede o Roadmap Backlog. Ver [`backlogs.md`](backlogs.md).
+
+---
+
+## Roadmap Backlog
+
+**Definição:** Representação do planejamento estratégico do produto. Agrupa Release Backlogs dentro de um horizonte de planejamento. Pode incluir Releases de múltiplos produtos ou repositórios.
+
+**Propósito:** Comunicar comprometimentos estratégicos de negócio e alinhar expectativas entre times, stakeholders e liderança.
+
+**Quando usar:** Quando um item do Icebox for priorizado para um horizonte estratégico definido.
+
+**Quando não usar:** O Roadmap Backlog não pertence ao repositório de produto. Ele vive em ferramentas externas (GitHub Projects, Jira Roadmap, Azure DevOps Plans, planilha estratégica). Não criar arquivos de Roadmap neste repositório.
+
+**Artefato canônico:** Ferramenta externa de gestão. O OBC registra quando o item entrou no Roadmap.
+
+**Relação com outros conceitos:** Terceiro nível da hierarquia. É composto por Release Backlogs. Ver [`backlogs.md`](backlogs.md).
+
+---
+
+## Release Backlog
+
+**Definição:** Conjunto de itens comprometidos para entrega em uma Release específica. Todo item presente neste backlog tem compromisso formal de entrega.
+
+**Propósito:** Definir o escopo de uma Release com clareza — o que entra, o que foi adiado, o que foi descartado.
+
+**Quando usar:** Quando um OBC for aprovado e commitado para uma Release. É neste momento que uma GitHub Issue normalmente nasce como representação operacional do compromisso.
+
+**Quando não usar:** Não incluir itens sem OBC committed e BDD Feature comprometida.
+
+**Artefato canônico:** `prodops/artifacts/plans/iteration-plan.md` (seção "Iteration Plan recomendado", itens com status `Entrou`).
+
+**Relação com outros conceitos:** Quarto nível da hierarquia. Participa de um Roadmap Backlog ou existe de forma independente. É composto por Iteration Backlogs. Ver [`backlogs.md`](backlogs.md).
+
+---
+
+## Iteration Backlog
+
+**Definição:** Organização operacional do trabalho dentro de uma Release. Representa o trabalho imediatamente antes da Delivery — uma Sprint, um Kanban, uma semana, um ciclo operacional, ou a própria Release quando não houver subdivisão.
+
+**Propósito:** Dar visibilidade operacional ao time sobre o que está em execução agora, o que é próximo e o que está bloqueado.
+
+**Quando usar:** Ao organizar o trabalho de uma Release em ciclos menores. Um Release pode ter uma ou várias Iterations.
+
+**Quando não usar:** A Iteration não é o compromisso de entrega — o Release Backlog é. A Iteration é a organização operacional de como o Release será executado.
+
+**Pré-requisitos obrigatórios para sair da Iteration para Delivery:** OBC committed, BDD Feature committed, entrada no Iteration Plan com status `Entrou`, riscos documentados, Reliability Plan.
+
+**Artefato canônico:** `prodops/artifacts/plans/iteration-plan.md` (seção "Iteration Backlog identificado").
+
+**Relação com outros conceitos:** Quinto nível da hierarquia — imediatamente antes da Delivery. Ver [`backlogs.md`](backlogs.md) e [`../execution-model/downstream.md`](../execution-model/downstream.md).
+
+---
+
+## Diligence
+
+**Definição:** Jornada transversal do Framework ProdOps responsável por manter o sistema de trabalho sincronizado e consistente ao longo do ciclo de vida do produto.
+
+**Propósito:** Fechar o gap entre as decisões produzidas pelo Assessment e o trabalho pronto para a Delivery. Garantir que o estado de cada OBC permaneça sincronizado em todos os backlogs, ferramentas e artefatos de gestão.
+
+**Princípio:** A Diligence é a guardiã da consistência do sistema de trabalho do ProdOps. Ela garante que o estado de cada Observable Business Contract permaneça sincronizado em todos os backlogs, ferramentas e artefatos de gestão, sem modificar o código do produto.
+
+**Quando usar:** Continuamente. A Diligence não tem início e fim por ciclo — acompanha o produto enquanto ele existir. É ativada por novos riscos, incidentes, postmortems, mudanças estratégicas ou divergências detectadas entre artefatos.
+
+**O que não faz:** Não implementa software. Não cria Pull Requests de implementação. Não modifica código do produto. Não toma decisões de produto que competem ao Assessment.
+
+**Relação com outros conceitos:** Jornada transversal. Consome artefatos do Assessment e alimenta a Delivery com trabalho organizado e rastreável. Ver [`../journeys/diligence/README.md`](../journeys/diligence/README.md) e [`backlogs.md`](backlogs.md).
+
+---
+
+## GitHub Issue
+
+**Definição:** Representação operacional de um compromisso já assumido no Framework ProdOps. Não é a origem do trabalho.
+
+**Propósito:** Tornar visível e gerenciável, em uma ferramenta de gestão, um OBC que já entrou em um Release Backlog ou Iteration Backlog.
+
+**Quando usar:** Normalmente quando um OBC entra em um Release Backlog ou Iteration Backlog — momento em que o compromisso foi assumido e o trabalho está pronto para execução operacional.
+
+**Quando não usar:** Issues não substituem OBCs. Não criar Issues como ponto de entrada do trabalho — o ponto de entrada é a Tracking List. Não usar Issues para capturar Intents que ainda não têm OBC.
+
+**Independência de ferramenta:** O Framework é independente de ferramenta. Uma GitHub Issue, um Jira Card e um Azure DevOps Work Item são representações operacionais do mesmo OBC em ferramentas diferentes. O OBC é a fonte de verdade; a Issue é a instância de execução.
+
+**Relação com outros conceitos:** Gerenciada pela Diligence. Referencia o OBC correspondente. Ver [`backlogs.md`](backlogs.md) e [`../journeys/diligence/README.md`](../journeys/diligence/README.md).

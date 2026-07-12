@@ -1,9 +1,11 @@
 # Tracking List
 
-> **Escopo:** itens de produto e engenharia derivados de experimentos Upstream e do Reliability Plan — decisões técnicas e de produto que precisam de refinamento antes de entrar em um OBC ou Iteration Plan.
+> **Propósito:** Ponto de entrada do Framework ProdOps. Captura qualquer sinal ainda não compreendido o suficiente para ser tratado como uma Intent reconhecida — problemas, oportunidades, hipóteses, riscos, feedbacks, requisitos incompletos, sinais de incidentes ou demandas sem refinamento.
 >
-> Existe uma segunda Tracking List de demandas operacionais e de stakeholders (Analytics, DataDog, ITSM) em:
-> [`prodops/artifacts/plans/iteration-backlog.md`](../plans/iteration-backlog.md)
+> Não há compromisso de entrega neste nível. O objetivo é investigar se o item representa uma Intent válida antes de movê-lo para o Icebox Backlog.
+>
+> → [Hierarquia de backlogs](../../framework/backlogs.md)
+> → [Icebox Backlog](icebox-backlog.md) — próximo nível; onde o OBC nasce
 
 | Item | Origem | Dimensão | Dono | Status | Próxima ação |
 | --- | --- | --- | --- | --- | --- |

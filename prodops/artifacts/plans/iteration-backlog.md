@@ -1,16 +1,12 @@
-# Tracking List — Payments API
+# Iteration Backlog — Demandas Operacionais
 
-> **Atenção — este arquivo não é o backlog de entrega da iteração.**
-> É uma lista de demandas operacionais e de stakeholders (Analytics, DataDog, ITSM) ainda em avaliação, derivadas do Premortem.
-> Esses itens precisam de refinamento antes de entrar em um OBC ou Iteration Plan.
+> **Propósito:** Registra demandas operacionais e de stakeholders (Analytics, DataDog, ITSM, Premortem) que ainda precisam de refinamento antes de entrar em um OBC ou Iteration Plan. Itens derivados do Premortem da release de Payments.
 >
-> Para o escopo de entrega aprovado (Entrou / Saiu / Adiada), consulte:
-> [`prodops/artifacts/plans/iteration-plan.md`](iteration-plan.md)
+> Este arquivo não é o Tracking List principal do produto — é um recorte operacional de demandas específicas desta release.
 >
-> Existe uma segunda Tracking List de itens de produto e engenharia derivados de experimentos Upstream em:
-> [`prodops/artifacts/product/tracking-list.md`](../product/tracking-list.md)
-
-> Derivado das solicitações associadas identificadas no Premortem da release de Payments.
+> → [Tracking List principal](../product/tracking-list.md) — ponto de entrada do Framework
+> → [Iteration Plan](iteration-plan.md) — escopo de entrega aprovado (Entrou / Saiu / Adiada)
+> → [Hierarquia de backlogs](../../framework/backlogs.md)
 
 ## Objetivo
 

@@ -63,9 +63,11 @@ A Diligence opera em paralelo ao Assessment e à Delivery — ela não é uma et
 
 ## Princípios
 
+> **Princípio arquitetural:** A Diligence é a guardiã da consistência do sistema de trabalho do ProdOps. Ela garante que o estado de cada Observable Business Contract permaneça sincronizado em todos os backlogs, ferramentas e artefatos de gestão, sem modificar o código do produto.
+
 ### A Diligence nunca implementa software
 
-A Diligence não altera código do produto. Não abre Pull Requests. Não modifica branches de desenvolvimento. Não implementa Features.
+A Diligence não altera código do produto. Não cria Pull Requests de implementação. Não modifica branches de desenvolvimento. Não implementa Features.
 
 Toda implementação pertence exclusivamente à jornada de Delivery.
 
@@ -141,19 +143,40 @@ A Diligence não tem início e fim por ciclo. Ela acompanha o produto enquanto e
 
 ---
 
-## Artefatos governados
+## Sistema de trabalho governado
 
-A Diligence não é a autora desses artefatos — ela garante que estejam sincronizados, consistentes e rastreáveis entre si e nas ferramentas de gestão:
+A Diligence não é a autora desses artefatos — ela garante que estejam sincronizados, consistentes e rastreáveis entre si e nas ferramentas de gestão.
 
-**Artefatos ProdOps**
-- OBCs (`prodops/artifacts/obcs/`)
-- BDD Features (`prodops/artifacts/bdd/`)
-- Iteration Plans (`prodops/artifacts/plans/`)
+### Hierarquia de backlogs
+
+```
+Tracking List         → prodops/artifacts/product/tracking-list.md
+      ↓
+Icebox Backlog        → prodops/artifacts/product/icebox-backlog.md  (OBC nasce aqui)
+      ↓
+Roadmap Backlog       → ferramenta externa (GitHub Projects, Jira Roadmap, ADO Plans)
+      ↓
+Release Backlog       → prodops/artifacts/plans/iteration-plan.md
+      ↓
+Iteration Backlog     → prodops/artifacts/plans/iteration-plan.md
+      ↓
+Delivery
+```
+
+→ [Hierarquia completa e definições](../../framework/backlogs.md)
+
+### Artefatos ProdOps
+
+- OBCs (`prodops/artifacts/obcs/`) — estado commitado de cada OBC
+- BDD Features (`prodops/artifacts/bdd/`) — critérios operacionalizados
+- Iteration Plans (`prodops/artifacts/plans/`) — Release e Iteration Backlogs
 - Reliability Plans (`prodops/journeys/assessment/reliability-plans/`)
 - Tracking List (`prodops/artifacts/product/tracking-list.md`)
+- Icebox Backlog (`prodops/artifacts/product/icebox-backlog.md`)
 - Release Trail (`prodops/artifacts/trails/release-trail.md`)
 
-**Ferramentas de gestão**
+### Ferramentas de gestão
+
 - GitHub Issues, Projects, Milestones, Labels, Roadmap
 - Jira Boards e Backlogs
 - Azure DevOps Boards

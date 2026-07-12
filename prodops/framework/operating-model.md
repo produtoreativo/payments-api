@@ -15,6 +15,8 @@ Observable Business Contract (OBC)
   ↓
 Continuous Assessment
   ↓
+Backlog Management (Diligence)        ← Tracking List → Icebox → Roadmap → Release → Iteration
+  ↓
 Execution Mode
 ├── Upstream
 └── Downstream
@@ -52,6 +54,8 @@ Artifacts
 ├── Trails
 └── Evidence
 ```
+
+→ [Hierarquia de backlogs: definições e modelo oficial](backlogs.md)
 
 → [Fluxo completo: como cada etapa funciona](flow.md)
 → [Origin Streams: os quatro tipos de origem](origin-streams.md)
@@ -123,9 +127,10 @@ Jornada transversal. Avalia riscos, oportunidades, OBCs e Iteration Plans.
 
 ### Diligence
 
-Jornada transversal. Observa a execução e garante consistência do Framework.
+Jornada transversal. Guardiã da consistência do sistema de trabalho. Mantém sincronizados a hierarquia de backlogs (Tracking List → Icebox → Roadmap → Release → Iteration), os OBCs e as ferramentas de gestão (GitHub, Jira, Azure DevOps). Nunca implementa software.
 
 → [prodops/journeys/diligence/README.md](../journeys/diligence/README.md)
+→ [Hierarquia de backlogs](backlogs.md)
 
 ---
 

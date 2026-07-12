@@ -15,6 +15,7 @@ Use esta tabela como fonte primária de navegação antes de ler ou escrever qua
 | Fluxo oficial do Framework | `prodops/framework/flow.md` |
 | Os quatro Origin Streams | `prodops/framework/origin-streams.md` |
 | Operating model | `prodops/framework/operating-model.md` |
+| Hierarquia de backlogs | `prodops/framework/backlogs.md` |
 | Localizações canônicas (este arquivo) | `prodops/framework/canonical-paths.md` |
 
 ---
