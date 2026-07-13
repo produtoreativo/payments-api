@@ -15,7 +15,7 @@ Definir e verificar requisitos de confiabilidade antes, durante e após a implem
 
 | Flow | Momento de uso |
 |---|---|
-| Bootstrap | Ler riscos e requisitos de confiabilidade do OBC |
+| Downstream readiness | Ler riscos e requisitos de confiabilidade do OBC |
 | Hack | Implementar timeout, retry, idempotência, exceções |
 | Finish | Definition of Done — itens de confiabilidade |
 | Promote | Rollback Readiness, riscos aceitos formalmente |

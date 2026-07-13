@@ -3,7 +3,7 @@
 The official ProdOps Framework flow describes the path every change takes from its origin to continuous operation.
 
 ```
-Origin Stream → Intent → Exploration → OBC → Iteration Plan → Reliability Plan → Delivery → Operation
+Origin Stream → Intent → OBC draft (Icebox) → Exploration + Assessment → Reliability Plan → Assessment Review → committed OBC/BDD → Iteration Plan → Delivery → Operation
 ```
 
 This document is the canonical reference for understanding **what happens at each step**, **what is produced**, and **when to advance**.

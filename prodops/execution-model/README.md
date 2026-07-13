@@ -2,14 +2,14 @@
 
 Upstream e Downstream são **modos de execução** do Framework ProdOps — não são jornadas.
 
-Cada modo utiliza as mesmas jornadas (Discovery, Delivery, Operation, Assessment, Diligence). A diferença está no nível de compromisso e nos critérios de qualidade aplicados.
+Cada modo utiliza todas as jornadas, inclusive Discovery. A diferença está no compromisso e no rigor aplicado, não na presença ou ausência de uma jornada.
 
 ## Upstream
 
-Modo de exploração e aprendizado.
+Modo permissivo e experimental, sem compromisso de entrega.
 
 **Características:**
-- Baixo compromisso
+- Sem compromisso de entrega
 - Liberdade para selecionar capabilities e práticas conforme necessidade
 - Código é descartável até ser promovido para Downstream
 - Evolução rápida de artefatos
@@ -21,7 +21,7 @@ Upstream transforma hipóteses em conhecimento validado.
 
 ## Downstream
 
-Modo de entrega governada.
+Modo com compromisso de entrega e aplicação completa dos quality gates vigentes.
 
 **Características:**
 - Compromisso formal com critérios de aceite (OBC + BDD Feature)
@@ -39,8 +39,8 @@ Downstream entrega software com o conhecimento validado pelo Upstream.
 | Situação | Modo |
 |---|---|
 | Hipótese a validar, incerteza alta | Upstream |
-| Item aprovado no Iteration Plan | Downstream |
+| Item com compromisso, sendo guiado até completar readiness | Downstream |
 | Explorar uma capability nova | Upstream |
-| Implementar OBC + BDD Feature existente | Downstream |
+| Executar item com todos os gates de readiness satisfeitos | Downstream |
 | Prototipar integração com provedor | Upstream |
 | Entregar feature com compromisso | Downstream |

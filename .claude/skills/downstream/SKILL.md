@@ -1,11 +1,22 @@
 ---
 name: downstream
-description: Execute governed ProdOps delivery. Use when implementing approved backlog items, following the Reliability Plan, applying TDD, updating OBCs, running quality gates, validating observability, shipping, or promoting release work.
+description: Execute ProdOps Downstream readiness and CI Sync, CI Async, or the complete delivery flow.
 ---
 
-Use the Agent tool to delegate to the downstream-agent:
-- subagent_type: "downstream-agent"
-- run_in_background: false
-- prompt: "Execute the full ProdOps CI Sync delivery flow. Capability: $ARGUMENTS"
+Parse `$ARGUMENTS` as `<scope> <capability>`.
 
-Wait for the agent result before reporting to the user.
+Supported scopes:
+
+- `ci-sync`
+- `ci-async`
+- `full`
+
+When scope is omitted, use `ci-sync` temporarily and report the default explicitly.
+
+Use the Agent tool to delegate to the downstream-agent:
+
+- subagent_type: `downstream-agent`
+- run_in_background: false
+- prompt: `Execute ProdOps Downstream. Scope: <scope>. Capability: <capability>.`
+
+Wait for the agent result before reporting. If readiness is incomplete, report the missing gate and next owning action; do not continue to a delivery phase.

@@ -138,7 +138,7 @@ O OBC registra o **histórico vivo do trabalho**: por quais backlogs passou, qua
 
 ## Exploration
 
-**Definição:** Etapa do fluxo do Framework entre Intent e OBC. Reduz incerteza transformando hipóteses em conhecimento validado.
+**Definição:** Etapa que refina o OBC draft nascido no Icebox, reduzindo incerteza e transformando hipóteses em conhecimento validado.
 
 **Propósito:** Garantir que o OBC seja construído sobre entendimento real, não sobre suposições. Sem Exploration suficiente, o OBC é frágil.
 
@@ -146,13 +146,13 @@ O OBC registra o **histórico vivo do trabalho**: por quais backlogs passou, qua
 
 **Quando não usar:** Quando a Intent é trivial, o comportamento já é bem compreendido e o OBC pode ser escrito diretamente. Neste caso, a Exploration é curta ou inexistente.
 
-**Relação com outros conceitos:** Exploration é implementada pela Jornada Discovery executada no modo Upstream. Os três termos descrevem aspectos diferentes da mesma fase:
+**Relação com outros conceitos:** Exploration é realizada pela jornada Discovery em ambos os modos. Discovery descreve a jornada; Upstream ou Downstream define compromisso e rigor.
 
 | Termo | Nível | Significado |
 |---|---|---|
 | **Exploration** | Etapa do fluxo | O que acontece: redução de incerteza entre Intent e OBC |
 | **Discovery** | Jornada | O nome da jornada do Framework que implementa Exploration |
-| **Upstream** | Execution Mode | O modo de execução (baixo compromisso) usado durante Discovery |
+| **Upstream / Downstream** | Execution Mode | O compromisso e o rigor aplicados durante Discovery |
 
 Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discovery/README.md) e [`../execution-model/upstream.md`](../execution-model/upstream.md).
 
@@ -164,11 +164,11 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Propósito:** Transformar hipóteses em conhecimento validado por meio de experimentos, spikes e protótipos. Produzir o Decision Package que fundamenta o OBC.
 
-**Quando usar:** Ao executar trabalho exploratório (modo Upstream) sobre uma Intent.
+**Quando usar:** Ao explorar uma Intent em Upstream ou Downstream, com o rigor correspondente ao modo.
 
-**Quando não usar:** Discovery não é sinônimo de Upstream (Upstream é o modo, Discovery é a jornada). Discovery não produz software de produção — produz conhecimento.
+**Quando não usar:** Discovery não é sinônimo de Upstream e não determina, sozinha, se haverá entrega.
 
-**Relação com outros conceitos:** Discovery é a jornada que implementa Exploration. Usa o modo Upstream. Ver [`../journeys/discovery/README.md`](../journeys/discovery/README.md).
+**Relação com outros conceitos:** Discovery é a jornada que implementa Exploration e existe nos modos Upstream e Downstream. Ver [`../journeys/discovery/README.md`](../journeys/discovery/README.md).
 
 ---
 
@@ -208,7 +208,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Reliability Plan
 
-**Definição:** O contrato de execução de um item Downstream. Define riscos, OBCs, SLOs e ações de mitigação. Fica em `prodops/journeys/assessment/reliability-plans/`.
+**Definição:** Produto da jornada transversal de Assessment que define riscos, OBCs, SLOs e ações de mitigação antes do compromisso no Iteration Plan. Fica em `prodops/journeys/assessment/reliability-plans/`.
 
 ---
 
@@ -226,19 +226,19 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Bootstrap
 
-**Definição:** O primeiro estágio do CI Sync. Prepara o ambiente, cria a branch e estabelece o contexto de produto (OBC, BDD Feature, testes existentes) antes de iniciar a implementação. Não produz código — produz contexto. Ver [`journeys/delivery/phases/bootstrap/README.md`](../journeys/delivery/phases/bootstrap/README.md).
+**Definição:** O primeiro estágio do CI Sync. Instala dependências, prepara infraestrutura local, verifica configuração e executa o smoke gate. Não lê código, testes ou artefatos de produto e não cria branch; Git flow pertence ao Hack Start. Ver [`journeys/delivery/phases/bootstrap/README.md`](../journeys/delivery/phases/bootstrap/README.md).
 
 ---
 
 ## Upstream
 
-**Definição:** O modo de execução exploratório. Objetivo: transformar hipóteses em conhecimento validado. Código é descartável até ser promovido para Downstream. O Upstream seleciona etapas do fluxo conforme a necessidade — não há sequência obrigatória. Um ciclo Upstream típico usa Bootstrap + Hack + Sync; Ship, Validate e Promote são usados apenas quando o experimento precisa de validação em staging ou de uma decisão de promoção. Ver [`prodops/journeys/discovery/README.md`](../journeys/discovery/README.md).
+**Definição:** Modo permissivo, experimental e sem compromisso de entrega. Pode usar todas as jornadas com maturidade variável; código é descartável até ser promovido. Não é sinônimo de Discovery. Ver [`prodops/journeys/discovery/README.md`](../journeys/discovery/README.md).
 
 ---
 
 ## Downstream
 
-**Definição:** O modo de entrega governado. Objetivo: entregar com confiança usando conhecimento validado. Todo item requer OBC + BDD Feature + entrada no Reliability Plan. O Downstream exige o fluxo completo: `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`. Ver [`prodops/execution-model/downstream.md`](../execution-model/downstream.md).
+**Definição:** Modo com compromisso de entrega que aplica todos os quality gates vigentes em todas as jornadas. Guia o item e para em cada lacuna até atingir readiness; então executa o fluxo completo `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`. Ver [`prodops/execution-model/downstream.md`](../execution-model/downstream.md).
 
 ---
 

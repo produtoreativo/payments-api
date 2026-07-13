@@ -7,13 +7,12 @@ O ProdOps organiza o trabalho de produto e engenharia em camadas hierárquicas, 
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓
-Intent
+Intent → OBC draft no Icebox
   ↓
 Exploration
+  ↔ Continuous Assessment → Reliability Plan → Assessment Review
   ↓
-Observable Business Contract (OBC)
-  ↓
-Continuous Assessment
+OBC + BDD committed
   ↓
 Backlog Management (Diligence)        ← Tracking List → Icebox → Roadmap → Release → Iteration
   ↓
@@ -65,15 +64,15 @@ Artifacts
 
 **Intent** — ponto de entrada do Framework. Uma intenção de gerar valor ainda não comprometida. A Intent registra o "porquê" sem prescrever o "como". *Anteriormente chamada de Business Intent.*
 
-**Exploration** — a etapa entre Intent e OBC. Reduz incerteza transformando hipóteses em conhecimento validado. Implementada pela Jornada Discovery no modo Upstream. Ver [`flow.md`](flow.md).
+**Exploration** — reduz incerteza e refina o OBC draft por meio da jornada Discovery. Discovery existe em ambos os modos; o rigor e o compromisso variam conforme Upstream ou Downstream. Ver [`flow.md`](flow.md).
 
-**OBC (Observable Business Contract)** — a transformação de uma Intent suficientemente compreendida em critérios observáveis e verificáveis de sucesso. É o resultado da Exploration, não a entrada do Framework. *Anteriormente definido incorretamente como Outcome-Based Criterion.*
+**OBC (Observable Business Contract)** — nasce como draft quando a Intent entra no Icebox, é refinado por Exploration e Assessment e torna-se committed somente após Assessment Review. *Anteriormente definido incorretamente como Outcome-Based Criterion.*
 
 **Continuous Assessment** — avalia continuamente riscos, oportunidades e decide o próximo passo.
 
 **Execution Mode** — o nível de compromisso e critérios de qualidade aplicados:
-- **Upstream** — exploração, baixo compromisso, foco em aprendizado
-- **Downstream** — entrega governada, critérios obrigatórios, rastreabilidade completa
+- **Upstream** — permissivo, experimental, sem compromisso de entrega e com maturidade variável
+- **Downstream** — compromisso de entrega; aplica todos os quality gates vigentes em todas as jornadas
 
 **Journey** — o caminho de trabalho dentro de um modo de execução:
 - Discovery, Delivery, Operation — jornadas clássicas
@@ -102,7 +101,7 @@ Artifacts
 
 ### Discovery
 
-Exploração. Implementa a etapa de Exploration do fluxo. Transforma hipóteses em conhecimento validado. Sem compromisso de entrega — apenas compromisso de aprendizado.
+Explora problemas, hipóteses e possibilidades. Discovery existe em Upstream e Downstream; não é sinônimo de nenhum dos modos.
 
 → [prodops/journeys/discovery/README.md](../journeys/discovery/README.md)
 
@@ -146,14 +145,15 @@ Origin Stream (Business | Enterprise | Team | Technology)
   ↓ gera
 Intent
   ↓ entra em
-Exploration — Upstream (Discovery)
+OBC draft no Icebox
+  ↓
+Exploration (Discovery) ↔ Assessment
   Experimento → aprendizado → Decision Package
-  ↓ quando hipótese respondida
+  Assessment → riscos + Reliability Plan
+  ↓ Assessment Review (PM + Tech Lead)
 OBC committed + BDD Feature committed
-  ↓ Assessment Review
-Revisão do Decision Package (PM + Tech Lead)
   ↓ se aprovado
-Iteration Plan (status: Entrou) + Reliability Plan
+Iteration Plan (status: Entrou)
   ↓ Downstream (Delivery)
 Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote
   ↓

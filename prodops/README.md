@@ -7,7 +7,7 @@ Este diretório é a fonte canônica do Framework ProdOps neste repositório.
 ## Fluxo oficial
 
 ```
-Origin Stream → Intent → Exploration → OBC → Iteration Plan → Reliability Plan → Delivery → Operation
+Origin Stream → Intent → OBC draft → Exploration + Assessment → Reliability Plan → Assessment Review → OBC/BDD committed → Iteration Plan → Delivery → Operation
 ```
 
 → [Fluxo completo explicado](framework/flow.md)
@@ -18,10 +18,9 @@ Origin Stream → Intent → Exploration → OBC → Iteration Plan → Reliabil
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓
-Intent
-  ↓
-Continuous Assessment
-  ↓
+Intent → OBC draft
+  ↔ Continuous Assessment → Reliability Plan
+  ↓ Assessment Review
 Execution Mode → Journey → Phase → Practice → Delivery Capability → Artifacts
 ```
 

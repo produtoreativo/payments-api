@@ -2,14 +2,14 @@
 
 Upstream and Downstream are **execution modes** of the ProdOps Framework — they are not journeys.
 
-Each mode uses the same journeys (Discovery, Delivery, Operation, Assessment, Diligence). The difference lies in the level of commitment and the quality criteria applied.
+Each mode uses every journey, including Discovery. The difference is commitment and applied rigor, not the presence or absence of a journey.
 
 ## Upstream
 
-Exploration and learning mode.
+Permissive, experimental mode with no delivery commitment.
 
 **Characteristics:**
-- Low commitment
+- No delivery commitment
 - Freedom to select capabilities and practices as needed
 - Code is disposable until promoted to Downstream
 - Rapid artifact evolution
@@ -21,7 +21,7 @@ Upstream transforms hypotheses into validated knowledge.
 
 ## Downstream
 
-Governed delivery mode.
+Delivery-commitment mode with complete application of current quality gates.
 
 **Characteristics:**
 - Formal commitment to acceptance criteria (OBC + BDD Feature)
@@ -39,8 +39,8 @@ Downstream delivers software with knowledge validated by Upstream.
 | Situation | Mode |
 |---|---|
 | Hypothesis to validate, high uncertainty | Upstream |
-| Item approved in the Iteration Plan | Downstream |
+| Committed item being guided toward complete readiness | Downstream |
 | Explore a new capability | Upstream |
-| Implement existing OBC + BDD Feature | Downstream |
+| Execute an item with every readiness gate satisfied | Downstream |
 | Prototype integration with a provider | Upstream |
 | Deliver feature with commitment | Downstream |

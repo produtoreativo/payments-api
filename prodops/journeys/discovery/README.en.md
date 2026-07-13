@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Discovery is the exploratory engineering flow of ProdOps.
+Discovery is the ProdOps exploration journey. It exists in both Upstream and Downstream and is not synonymous with Upstream.
 
 Its purpose is to reduce uncertainty before a capability enters the standard delivery flow.
 
-Unlike Downstream, Upstream is learning-driven, not delivery-commitment-driven.
+In Upstream, Discovery operates without delivery commitment and with variable maturity. In Downstream, it applies current quality gates to the explored context.
 
 An Upstream experiment may produce production-quality code, but that code is considered exploratory until the capability is promoted to Downstream.
 

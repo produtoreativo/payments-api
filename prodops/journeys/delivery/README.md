@@ -19,7 +19,7 @@ CI Async: Ship → Validate → Promote            (plataforma, pipelines, ambie
 
 | Fase | Descrição | Link |
 |---|---|---|
-| Bootstrap | Branch + ambiente + contexto ProdOps | [phases/bootstrap/README.md](phases/bootstrap/README.md) |
+| Bootstrap | Dependências + infraestrutura local + configuração + smoke gate | [phases/bootstrap/README.md](phases/bootstrap/README.md) |
 | Hack | Implementação via ProdOps TDD | [phases/hack/README.md](phases/hack/README.md) |
 | Sync | Consistência de artefatos | [phases/sync/README.md](phases/sync/README.md) |
 | Finish | Quality Gates + PR | [phases/finish/README.md](phases/finish/README.md) |

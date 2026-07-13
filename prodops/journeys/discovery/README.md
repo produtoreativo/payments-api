@@ -2,11 +2,11 @@
 
 ## Propósito
 
-Discovery é o fluxo de engenharia exploratória do ProdOps.
+Discovery é a jornada de exploração do ProdOps. Ela existe nos modos Upstream e Downstream; não é sinônimo de Upstream.
 
 Seu propósito é reduzir incerteza antes de uma capability entrar no fluxo padrão de entrega.
 
-Diferente do Downstream, o Upstream é orientado por aprendizado, não por compromissos de entrega.
+Em Upstream, Discovery opera sem compromisso de entrega e com maturidade variável. Em Downstream, aplica os quality gates vigentes ao contexto explorado.
 
 Um experimento Upstream pode produzir código de qualidade de produção, mas esse código é considerado exploratório até que a capability seja promovida para Downstream.
 

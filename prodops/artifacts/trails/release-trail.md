@@ -399,3 +399,31 @@ Refinamento conceitual da fase Sync em `prodops/journeys/delivery/phases/sync/`.
 
 - O `align` não reescreve decisões de produto upstream: se o diff divergir de BDD/OBC em intenção (não só em detalhe), a divergência é registrada no Release Trail e sinalizada ao Finish, em conformidade com a regra de Context Rules do `AGENTS.md`.
 - O `rebase` executa testes/lint apenas como smoke pós-integração (não quality gate); cobertura nova e correção de code smell herdado continuam sendo do Hack (Yellow Bar).
+
+## 2026-07-13 — Alinhamento de modos, readiness e CI Sync
+
+### Summary
+
+Alinhado o modelo ProdOps para distinguir modo de execução de jornada e preparar o fechamento da automação Claude de CI Sync.
+
+### Decisions implemented
+
+- `/downstream` passa a oferecer `ci-sync`, `ci-async` e `full`; enquanto CI Async está em evolução, ausência de escopo usa `ci-sync` e informa o default.
+- Upstream é permissivo, experimental e sem compromisso de entrega; Downstream tem compromisso, guia o item até readiness e só executa Delivery com todos os gates satisfeitos.
+- OBC nasce draft no Icebox, é refinado por Exploration e Assessment e torna-se committed após Assessment Review.
+- Assessment é transversal e produz riscos e Reliability Plan antes do compromisso no Iteration Plan.
+- Discovery existe em Upstream e Downstream; não é sinônimo de Upstream.
+- Bootstrap prepara apenas dependências, infraestrutura local, configuração e smoke gate.
+- Downstream readiness gera a context capsule; Hack Start decide branch e Git flow.
+
+### Deferred
+
+- Detalhamento operacional das jornadas Assessment e Diligence.
+- Matriz completa de rigor por jornada e modo.
+- Demais ajustes de manifest, doctor, políticas de teste e automações CI Async.
+
+### Validation
+
+- `prodops/scripts/validate-manifest.sh`: passou.
+- `git diff --check`: passou.
+- Mudanças exclusivamente em documentação e orquestração de agentes; código da aplicação não foi alterado.

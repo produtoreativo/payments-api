@@ -23,15 +23,15 @@ Deliver software with traceability, verifiable acceptance criteria, and evidence
 
 ## Mandatory preconditions
 
-Before starting any Downstream work:
+Downstream may start to guide a committed item toward readiness. Before executing any Delivery phase, all requirements below must be satisfied:
 
 1. OBC in `prodops/artifacts/obcs/`
 2. BDD Feature in `prodops/artifacts/bdd/`
-3. Entry in the Iteration Plan with status `Entrou` in `prodops/artifacts/plans/iteration-plan.md`
-4. Risks documented in `prodops/journeys/assessment/risks.md`
-5. Entry in the Reliability Plan in `prodops/journeys/assessment/reliability-plans/`
+3. Risks documented in `prodops/journeys/assessment/risks.md`
+4. Reliability Plan entry produced by Assessment in `prodops/journeys/assessment/reliability-plans/`
+5. Iteration Plan entry with status `Entrou` in `prodops/artifacts/plans/iteration-plan.md`
 
-Do not start Downstream without these artifacts.
+When a requirement is missing, Downstream stops before Delivery, identifies the owner, and guides the next action. Reliability precedes the Iteration Plan readiness decision.
 
 ## Mandatory sequence
 
@@ -50,7 +50,7 @@ CI Async: Ship → Validate → Promote            (platform, pipelines, environ
 
 | Phase | Description | Link |
 |---|---|---|
-| Bootstrap | Branch + environment + ProdOps context | [../journeys/delivery/phases/bootstrap/README.md](../journeys/delivery/phases/bootstrap/README.md) |
+| Bootstrap | Dependencies + local infrastructure + configuration + smoke gate | [../journeys/delivery/phases/bootstrap/README.md](../journeys/delivery/phases/bootstrap/README.md) |
 | Hack | Implementation via ProdOps TDD | [../journeys/delivery/phases/hack/README.md](../journeys/delivery/phases/hack/README.md) |
 | Sync | Branch sync (rebase) + artifact alignment (align) | [../journeys/delivery/phases/sync/README.md](../journeys/delivery/phases/sync/README.md) |
 | Finish | Quality Gates + PR | [../journeys/delivery/phases/finish/README.md](../journeys/delivery/phases/finish/README.md) |

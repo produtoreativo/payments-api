@@ -3,7 +3,7 @@ name: hack-agent
 description: >
   L2 orchestrator for the ProdOps TDD cycle.
   Spawns hack-start-agent, hack-tdd-agent, and hack-commit-agent in sequence.
-  Use only after Bootstrap has completed and a context packet is provided.
+  Use only after Bootstrap has prepared the environment and Downstream readiness has produced a context capsule.
 model: sonnet
 tools:
   - Agent

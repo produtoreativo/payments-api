@@ -3,7 +3,7 @@
 O fluxo oficial do Framework ProdOps descreve o caminho que toda mudança percorre desde a sua origem até a operação contínua.
 
 ```
-Origin Stream → Intent → Exploration → OBC → Iteration Plan → Reliability Plan → Delivery → Operation
+Origin Stream → Intent → OBC draft (Icebox) → Exploration + Assessment → Reliability Plan → Assessment Review → OBC/BDD committed → Iteration Plan → Delivery → Operation
 ```
 
 Este documento é a referência canônica para entender **o que acontece em cada etapa**, **o que é produzido** e **quando avançar**.
@@ -20,19 +20,27 @@ Este documento é a referência canônica para entender **o que acontece em cada
 flowchart TD
     OS["Origin Stream\n(Business | Enterprise | Team | Technology)"]
     I["Intent"]
-    EX["Exploration\n(Jornada: Discovery, Modo: Upstream)"]
-    OBC["Observable Business Contract\n(OBC)"]
-    IP["Iteration Plan"]
+    DRAFT["OBC draft\n(Icebox)"]
+    EX["Exploration\n(Discovery; rigor conforme o modo)"]
+    AS["Assessment\n(transversal)"]
     RP["Reliability Plan"]
-    D["Delivery\n(Jornada: Delivery, Modo: Downstream)"]
+    REV["Assessment Review"]
+    OBC["OBC + BDD\ncommitted"]
+    IP["Iteration Plan\n(status: Entrou)"]
+    D["Delivery\n(rigor conforme o modo)"]
     OP["Operation\n(Jornada: Operation)"]
 
     OS --> I
-    I --> EX
-    EX --> OBC
+    I --> DRAFT
+    DRAFT --> EX
+    EX --> REV
+    DRAFT -.-> AS
+    EX -.-> AS
+    AS --> RP
+    RP --> REV
+    REV --> OBC
     OBC --> IP
-    IP --> RP
-    RP --> D
+    IP --> D
     D --> OP
 
     EX -.->|"Descarte (aprendizado suficiente)"| X[Fechar sem avançar]
@@ -76,7 +84,7 @@ flowchart TD
 
 **Quando avançar:** Assim que a Intent estiver registrada e houver decisão de continuar (não descartar).
 
-> O OBC **não** é a entrada do Framework. É a saída da Exploration — a transformação de uma Intent suficientemente compreendida em um contrato observável.
+> O OBC **não** é a entrada do Framework. Seu draft mínimo nasce quando a Intent reconhecida entra no Icebox, é refinado durante Exploration e Assessment, e somente se torna committed após Assessment Review.
 
 → [Template de Intent](../templates/business-intents/intent.md)
 
@@ -86,12 +94,12 @@ flowchart TD
 
 **Objetivo:** Transformar a Intent em conhecimento validado, reduzindo incerteza antes de qualquer compromisso formal de entrega.
 
-**O que acontece:** A Intent entra no modo Upstream pela Jornada Discovery. Hipóteses são testadas por meio de experimentos, spikes, protótipos e Event Storming. Código gerado nesta fase é descartável. O aprendizado é o resultado primário.
+**O que acontece:** A jornada Discovery explora a Intent com o rigor definido pelo modo de execução. Em Upstream não há compromisso de entrega e a maturidade pode variar; em Downstream aplicam-se todos os gates vigentes. Hipóteses podem ser testadas por experimentos, spikes, protótipos e Event Storming.
 
 **O que é produzido:**
 - Experimento em `prodops/journeys/discovery/experiments/<NNN-slug>/`
 - Decision Package (hipótese respondida, recomendação clara, aprendizados)
-- OBC draft (candidato)
+- OBC draft refinado
 - BDD Feature draft
 - Atualização de riscos e oportunidades
 
@@ -108,7 +116,7 @@ flowchart TD
 
 **Objetivo:** Transformar o conhecimento validado pela Exploration em um contrato observável e verificável.
 
-**O que acontece:** O OBC draft produzido na Exploration é revisado, refinado e promovido para `prodops/artifacts/obcs/`. O OBC define critérios de sucesso mensuráveis que ancoram toda a implementação subsequente. Sem OBC committed, não há Downstream.
+**O que acontece:** O OBC draft nascido no Icebox é refinado pela Exploration e pela Assessment. O Reliability Plan é produzido antes da decisão de compromisso. Na Assessment Review, PM e Tech Lead revisam o conjunto; quando aprovado, OBC e BDD são promovidos para os diretórios committed. Sem esse conjunto committed, não há execução Downstream.
 
 **O que é produzido:**
 - OBC committed em `prodops/artifacts/obcs/<slug>.md`
@@ -121,35 +129,35 @@ flowchart TD
 
 ---
 
-### 5. Iteration Plan
+### 5. Reliability Plan
 
-**Objetivo:** Comprometer formalmente a capability na próxima iteração de entrega.
+**Objetivo:** Definir, pela jornada transversal de Assessment, as condições de confiabilidade necessárias antes do compromisso no Iteration Plan.
 
-**O que acontece:** O OBC approved entra no Iteration Plan com status `Entrou`. Isso representa o compromisso formal de entrega — o item sai do Backlog e entra no plano executável.
-
-**O que é produzido:**
-- Entrada no Iteration Plan em `prodops/artifacts/plans/iteration-plan.md` com status `Entrou`
-- Atualização da Tracking List se o item estava lá
-
-**Quando avançar:** Item no Iteration Plan com status `Entrou`.
-
-→ [Iteration Plan](../artifacts/plans/iteration-plan.md)
-
----
-
-### 6. Reliability Plan
-
-**Objetivo:** Definir as condições de confiabilidade que a entrega deve satisfazer antes de ser promovida.
-
-**O que acontece:** Os riscos identificados na Exploration são transformados em um plano de confiabilidade. SLOs, ações de mitigação, critérios de rollback e pontos de falha são documentados explicitamente.
+**O que acontece:** Os riscos identificados são transformados em um plano de confiabilidade. SLOs, ações de mitigação, critérios de rollback e pontos de falha são documentados explicitamente. Assessment corre em paralelo às demais jornadas.
 
 **O que é produzido:**
 - Entrada no Reliability Plan em `prodops/journeys/assessment/reliability-plans/`
 - Riscos atualizados em `prodops/journeys/assessment/risks.md`
 
-**Quando avançar:** Reliability Plan atualizado com os riscos do item a ser implementado.
+**Quando avançar:** Reliability Plan atualizado e Assessment Review concluída para o item.
 
 → [Reliability Plans](../journeys/assessment/reliability-plans/)
+
+---
+
+### 6. Iteration Plan
+
+**Objetivo:** Comprometer formalmente a capability na próxima iteração de entrega depois da Assessment Review.
+
+**O que acontece:** O conjunto aprovado — OBC, BDD Feature, riscos e Reliability Plan — entra no Iteration Plan com status `Entrou`. Isso representa compromisso formal de entrega; não é, isoladamente, prova de readiness.
+
+**O que é produzido:**
+- Entrada no Iteration Plan em `prodops/artifacts/plans/iteration-plan.md` com status `Entrou`
+- Atualização da Tracking List se o item estava lá
+
+**Quando avançar:** Todos os gates de readiness Downstream estão satisfeitos.
+
+→ [Iteration Plan](../artifacts/plans/iteration-plan.md)
 
 ---
 

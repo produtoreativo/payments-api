@@ -65,15 +65,15 @@ Artifacts
 
 **Intent** — Framework entry point. An intention to generate value not yet committed. The Intent registers the "why" without prescribing the "how". *Formerly called Business Intent.*
 
-**Exploration** — the step between Intent and OBC. Reduces uncertainty by transforming hypotheses into validated knowledge. Implemented by the Discovery Journey in Upstream mode. See [`flow.md`](flow.en.md).
+**Exploration** — refines the OBC draft and reduces uncertainty through the Discovery journey. Discovery exists in both modes; rigor and commitment vary between Upstream and Downstream. See [`flow.md`](flow.en.md).
 
-**OBC (Observable Business Contract)** — the transformation of a sufficiently understood Intent into observable and verifiable success criteria. It is the result of Exploration, not the Framework entry point. *Formerly incorrectly defined as Outcome-Based Criterion.*
+**OBC (Observable Business Contract)** — born as a draft when the Intent enters the Icebox, refined through Exploration and Assessment, and committed only after Assessment Review. *Formerly incorrectly defined as Outcome-Based Criterion.*
 
 **Continuous Assessment** — continuously evaluates risks, opportunities, and decides the next step.
 
 **Execution Mode** — the level of commitment and quality criteria applied:
-- **Upstream** — exploration, low commitment, focus on learning
-- **Downstream** — governed delivery, mandatory criteria, complete traceability
+- **Upstream** — permissive, experimental, no delivery commitment, variable maturity
+- **Downstream** — delivery commitment with every current quality gate applied across journeys
 
 **Journey** — the work path within an execution mode:
 - Discovery, Delivery, Operation — classic journeys
