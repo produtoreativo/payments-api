@@ -51,13 +51,7 @@ This file is the engineering reference; that file is the enforcement definition.
 
 ## Definition of Done
 
-A TDD iteration is complete when all of the following are true:
-
-- [ ] Red phase executed: test written and failure confirmed with behavioral reason
-- [ ] Red Bar output recorded (paste the Jest failure in the release trail)
-- [ ] Green phase: target test passes, no other tests broken
-- [ ] Refactor complete: code readable, no duplication, tests still green
-- [ ] Commit Workflow executed: format → lint --fix → lint exits 0 → unit tests pass → commit
-- [ ] Observability validated: checklist in `observability.md` passed
-- [ ] Evidence recorded in `prodops/artifacts/trails/release-trail.md`
-- [ ] No quality gate violation in `api/test/`
+The per-cycle exit checklist (Red → Green → Yellow) is canonical in
+[`../../../../journeys/delivery/phases/hack/quality-gates.en.md`](../../../../journeys/delivery/phases/hack/quality-gates.en.md).
+This engineering reference does not duplicate it — consult that file for the gates
+that a TDD iteration must satisfy before commit.

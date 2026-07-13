@@ -399,3 +399,32 @@ Refinamento conceitual da fase Sync em `prodops/journeys/delivery/phases/sync/`.
 
 - O `align` não reescreve decisões de produto upstream: se o diff divergir de BDD/OBC em intenção (não só em detalhe), a divergência é registrada no Release Trail e sinalizada ao Finish, em conformidade com a regra de Context Rules do `AGENTS.md`.
 - O `rebase` executa testes/lint apenas como smoke pós-integração (não quality gate); cobertura nova e correção de code smell herdado continuam sendo do Hack (Yellow Bar).
+
+## 2026-07-13 — Refinamento da fase Hack: steps sequenciais + quality gates por ciclo (issue #9)
+
+### Summary
+
+Refinamento de processo/documentação da fase Hack (issue #9, `type:refinement`). Sem mudança em código de aplicação. Reestruturação em torno de três distinções:
+
+- **Steps sequenciais vs. validações transversais.** `start → tdd → commit` permanecem sequenciais e independentemente invocáveis. Segurança, Qualidade e Documentação passam a ser explicitamente **transversais**, executadas no Yellow Bar de cada ciclo — não como steps extras.
+- **Quality gates como critério de saída do ciclo.** Novo arquivo canônico `prodops/journeys/delivery/phases/hack/quality-gates.md` (+ `.en.md`) com o checklist mínimo para commitar (Green, lint 0, sem mock proibido, sem secrets/PII, Release Trail, artefatos ProdOps).
+- **Referências de engenharia por step** (DDD, ProdOps TDD, Clean Code) linkadas em Red/Green/Yellow/commit.
+
+### Artifacts Updated
+
+- `prodops/journeys/delivery/phases/hack/README.md` (+ `.en.md`): seção "steps sequenciais vs. validações transversais"; terminologia padronizada em Red→Green→Yellow (antes "Refactor"); sequência reescrita em Red/Green/Yellow com validações transversais; referências por fase.
+- `prodops/journeys/delivery/phases/hack/quality-gates.md` (+ `.en.md`): **novo arquivo**, checklist canônico do ciclo.
+- `prodops/skills/hack/SKILL.md` (+ `.en.md`): tabela de quality gates obrigatórios (critério de saída do ciclo).
+- `prodops/skills/hack/steps/tdd/SKILL.md` (+ `.en.md`): gates de Segurança e Qualidade explícitos no Yellow Bar; referências por fase; post-conditions atualizadas.
+- `prodops/skills/references/engineering/tdd-prodops/quality-gates.md` (+ `.en.md`): Definition of Done deixa de duplicar e passa a apontar para o arquivo canônico de `phases/hack/`.
+- `.github/prompts/hack-tdd.prompt.md`: prompt reforça a execução dos quality gates no Yellow Bar.
+
+### Validation
+
+- **TDD não aplicável:** a mudança é exclusivamente documental (Markdown), sem superfície de runtime — registrado aqui conforme a guardrail do hack skill ("If TDD is not applicable, record why in the Release Trail").
+- Validações estilo Yellow Bar que se aplicam a docs, todas executadas:
+  - Sem secrets/PII no diff (varredura no `git diff` — apenas ocorrências da palavra "secrets" na prosa dos próprios gates).
+  - Todos os links relativos resolvem (checagem programática dos 11 arquivos alterados).
+  - Terminologia consistente: ciclo padronizado em Yellow, não Refactor, nos arquivos da fase Hack.
+  - Gêmeos pt/en em paridade (contagem de headings e links idêntica por par).
+- Event Storming e arquitetura preservados — nenhum evento de domínio ou estrutura alterados.

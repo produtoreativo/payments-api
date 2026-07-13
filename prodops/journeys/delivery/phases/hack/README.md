@@ -14,7 +14,7 @@ seguindo o ciclo Red→Green→Yellow, com evidência registrada no Release Trai
 
 ```
 Red (teste falha pela razão certa) → Green (mínimo que passa)
-→ Yellow (refactor + lint + fechamento de artefatos) → Commit → Evidência
+→ Yellow (refactor + validações transversais) → Commit → Evidência
 ```
 
 **Quando usar:** depois que o Bootstrap entregou branch limpa, ambiente pronto
@@ -43,5 +43,10 @@ segunda cópia:
 | [`tdd`](../../../../skills/hack/steps/tdd/SKILL.md) | Ciclo Red → Green → Yellow com fechamento de artefatos |
 | [`commit`](../../../../skills/hack/steps/commit/SKILL.md) | Stage, revisão do diff e commit com Conventional Commit |
 
-Quality gates (`lint`, `unit`, `acceptance`, `no_mocks`), tipos de commit e
-paths canônicos: [`prodops/exec/manifest.yaml`](../../../../exec/manifest.yaml).
+Os steps são sequenciais. As validações de **Segurança, Qualidade e
+Documentação não são steps** — são transversais e rodam no Yellow Bar de cada
+ciclo. O checklist canônico de saída do ciclo (os gates mínimos para
+commitar) está em [quality-gates.md](quality-gates.md).
+
+Quality gates de repositório (`lint`, `acceptance`, `no_mocks`), tipos de
+commit e paths canônicos: [`prodops/exec/manifest.yaml`](../../../../exec/manifest.yaml).
