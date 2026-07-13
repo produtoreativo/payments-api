@@ -19,7 +19,7 @@ As validações de **Segurança, Qualidade e Documentação não são steps**. E
 | Validação transversal | O que checar (no Yellow Bar) |
 |---|---|
 | **Segurança** | Sem secrets no diff; sem dependências vulneráveis; sem configs inseguras; sem PII em logs |
-| **Qualidade** | Lint limpo; cobertura mínima; sem mock proibido (`jest.fn()`, `.overrideProvider()`); sem `.only` |
+| **Qualidade** | Lint limpo; cobertura mínima; sem mock proibido (padrões: `gates.no_mocks` do manifest); sem `.only` |
 | **Documentação** | Event Storming se novo evento; arquitetura se nova estrutura; Release Trail com evidência do ciclo |
 
 ---
@@ -29,8 +29,8 @@ As validações de **Segurança, Qualidade e Documentação não são steps**. E
 Um ciclo Red → Green → Yellow está completo somente quando:
 
 - [ ] **Green** — teste focado passando
-- [ ] **Lint** — `npm run lint` sai com código 0 no pacote afetado
-- [ ] **Sem mock proibido** no diff (`jest.fn()`, `.overrideProvider()`)
+- [ ] **Lint** — gate `lint` do manifest (`prodops/exec/manifest.yaml`) sai com código 0 no pacote afetado
+- [ ] **Sem mock proibido** no diff (padrões: `gates.no_mocks` do manifest)
 - [ ] **Sem secrets ou PII** no diff
 - [ ] **Release Trail** atualizado com a evidência do ciclo
 - [ ] **Artefatos ProdOps impactados** atualizados (Event Storming, arquitetura)

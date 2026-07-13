@@ -76,11 +76,11 @@ next step — when every gate below is satisfied:
 
 | Gate | Check | Command / evidence |
 |---|---|---|
-| Green | Focused test passing | `cd api && npm run test` (or focused spec) |
-| Lint | Exits 0 for the affected package | `cd api && npm run lint` |
-| No forbidden mock | No `jest.fn()` / `.overrideProvider()` in the diff | review diff |
+| Green | Focused test passing | focused e2e spec via jest e2e config (there are no unit suites — see `gates` note in the manifest) |
+| Lint | Exits 0 for the affected package | manifest `gates.lint` |
+| No forbidden mock | No forbidden jest mock pattern in the diff | manifest `gates.no_mocks` |
 | No secrets or PII | None in the diff | review diff |
-| Release Trail | Cycle evidence appended | `prodops/artifacts/trails/release-trail.md` |
+| Release Trail | Cycle evidence appended | manifest `paths.release_trail` |
 | ProdOps artifacts | Event Storming / architecture updated when impacted | see [tdd step](steps/tdd/SKILL.md) |
 
 These gates are the minimum to commit. The canonical checklist lives in

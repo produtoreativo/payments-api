@@ -19,7 +19,7 @@ The **Security, Quality, and Documentation validations are not steps.** They are
 | Transversal validation | What to check (in the Yellow Bar) |
 |---|---|
 | **Security** | No secrets in diff; no vulnerable dependencies; no insecure configs; no PII in logs |
-| **Quality** | Lint clean; minimum coverage; no forbidden mock (`jest.fn()`, `.overrideProvider()`); no `.only` |
+| **Quality** | Lint clean; minimum coverage; no forbidden mock (patterns: manifest `gates.no_mocks`); no `.only` |
 | **Documentation** | Event Storming if new event; architecture if new structure; Release Trail with cycle evidence |
 
 ---
@@ -29,8 +29,8 @@ The **Security, Quality, and Documentation validations are not steps.** They are
 A Red → Green → Yellow cycle is complete only when:
 
 - [ ] **Green** — focused test passing
-- [ ] **Lint** — `npm run lint` exits 0 for the affected package
-- [ ] **No forbidden mock** in the diff (`jest.fn()`, `.overrideProvider()`)
+- [ ] **Lint** — manifest `lint` gate (`prodops/exec/manifest.yaml`) exits 0 for the affected package
+- [ ] **No forbidden mock** in the diff (patterns: manifest `gates.no_mocks`)
 - [ ] **No secrets or PII** in the diff
 - [ ] **Release Trail** updated with the cycle evidence
 - [ ] **Impacted ProdOps artifacts** updated (Event Storming, architecture)
