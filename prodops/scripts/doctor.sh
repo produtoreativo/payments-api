@@ -113,11 +113,12 @@ fi
 # expected to point at the current location, so trails are not exempt here.
 stale_pattern='api/test/create-invoice\.acceptance\.e2e-spec\.ts|prodops/journeys/discovery/features/'
 
-# Referências históricas anotadas com (migrado:|removido:|renomeado:) apontam
-# para a localização atual preservando a leitura append-only dos trails —
-# são consideradas resolvidas. PROJECT-REVIEW.md discute os paths como
-# findings de auditoria, mesma classe de documentation-review.md.
-stale_annotation='\((migrado|removido|renomeado):'
+# Referências históricas anotadas com (migrado:|removido:|renomeado:) — ou os
+# equivalentes em inglês nos twins .en.md — apontam para a localização atual
+# preservando a leitura append-only dos trails; são consideradas resolvidas.
+# PROJECT-REVIEW.md discute os paths como findings de auditoria, mesma classe
+# de documentation-review.md.
+stale_annotation='\((migrado|removido|renomeado|migrated|removed|renamed):'
 
 if have_rg; then
   stale_refs="$(
