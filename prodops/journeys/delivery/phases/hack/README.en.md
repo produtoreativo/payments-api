@@ -14,7 +14,7 @@ following the Red→Green→Yellow cycle, with evidence recorded in the Release 
 
 ```
 Red (test fails for the right reason) → Green (minimum that passes)
-→ Yellow (refactor + lint + artifact closure) → Commit → Evidence
+→ Yellow (refactor + transversal validations) → Commit → Evidence
 ```
 
 **When to use:** after Bootstrap has delivered a clean branch, a ready
@@ -43,5 +43,10 @@ second copy:
 | [`tdd`](../../../../skills/hack/steps/tdd/SKILL.md) | Red → Green → Yellow cycle with artifact closure |
 | [`commit`](../../../../skills/hack/steps/commit/SKILL.md) | Stage, diff review, and commit with Conventional Commit |
 
-Quality gates (`lint`, `unit`, `acceptance`, `no_mocks`), commit types, and
+The steps are sequential. **Security, Quality, and Documentation validations
+are not steps** — they are transversal and run in each cycle's Yellow Bar.
+The canonical cycle-exit checklist (the minimum gates to commit) lives in
+[quality-gates.en.md](quality-gates.en.md).
+
+Repository quality gates (`lint`, `acceptance`, `no_mocks`), commit types, and
 canonical paths: [`prodops/exec/manifest.yaml`](../../../../exec/manifest.yaml).

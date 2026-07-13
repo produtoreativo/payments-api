@@ -64,6 +64,30 @@ Feature listed in Required context above.
 2. **[tdd](steps/tdd/SKILL.md)** — Red → Green → Yellow TDD cycle with artifact closure
 3. **[commit](steps/commit/SKILL.md)** — stage, review diff, commit with Conventional Commit
 
+`start → tdd → commit` are **sequential steps**. Security, quality, and
+documentation validations are **not** extra steps — they are transversal and run
+inside each cycle's Yellow Bar. See
+[`../../journeys/delivery/phases/hack/README.md`](../../journeys/delivery/phases/hack/README.md#steps-sequenciais-vs-validações-transversais).
+
+## Quality Gates (mandatory — cycle exit criteria)
+
+A Red → Green → Yellow cycle is complete — and you may only commit and move to the
+next step — when every gate below is satisfied:
+
+| Gate | Check | Command / evidence |
+|---|---|---|
+| Green | Focused test passing | `cd api && npm run test` (or focused spec) |
+| Lint | Exits 0 for the affected package | `cd api && npm run lint` |
+| No forbidden mock | No `jest.fn()` / `.overrideProvider()` in the diff | review diff |
+| No secrets or PII | None in the diff | review diff |
+| Release Trail | Cycle evidence appended | `prodops/artifacts/trails/release-trail.md` |
+| ProdOps artifacts | Event Storming / architecture updated when impacted | see [tdd step](steps/tdd/SKILL.md) |
+
+These gates are the minimum to commit. The canonical checklist lives in
+[`../../journeys/delivery/phases/hack/quality-gates.md`](../../journeys/delivery/phases/hack/quality-gates.md).
+Release-blocking gates (what blocks merge) live in
+[`../../journeys/delivery/phases/finish/quality-gates.md`](../../journeys/delivery/phases/finish/quality-gates.md).
+
 ## Guardrails
 
 - Do not copy product context into this skill.
