@@ -199,7 +199,7 @@ A fronteira técnica e o estado atualmente implementado estão documentados no [
 | Backlog | `[link]` |
 | Postmortems | `[link]` |
 
-## 16. Tracking List inicial
+## 16. Repository Tracking List inicial
 
 | Item | Origem | Dimensão | Dono | Status | Próxima ação |
 | --- | --- | --- | --- | --- | --- |

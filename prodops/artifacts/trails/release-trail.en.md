@@ -26,7 +26,7 @@ Implemented in-repo Reliability Plan P0 hardening for payment confirmation: Dyna
 
 - Product Deck: not changed
 - Service Deck: not changed
-- Tracking List: not changed
+- Repository Tracking List: not changed
 - Reliability Plan: updated to reflect implemented Dynamo correlation and uncorrelated webhook observability
 - OBC: not changed
 
@@ -60,7 +60,7 @@ Updated the repository home in `README.md` to present payments-api as the ProdOp
 
 - Product Deck: referenced, not changed
 - Service Deck: referenced, not changed
-- Tracking List: referenced, not changed
+- Repository Tracking List: referenced, not changed
 - Reliability Plan: referenced, not changed
 - OBC: referenced, not changed
 
@@ -95,7 +95,7 @@ Removed the tracked frontend `node_modules` tree from Git and updated the reposi
 
 - Product Deck: not changed
 - Service Deck: not changed
-- Tracking List: not changed
+- Repository Tracking List: not changed
 - Reliability Plan: not changed
 - OBC: not changed
 

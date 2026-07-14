@@ -1,5 +1,32 @@
 # ProdOps Operating Model
 
+## Arquitetura do ProdOps
+
+O ProdOps é organizado em quatro níveis hierárquicos:
+
+```
+ProdOps Framework
+       ↓
+ProdOps Portfolio
+       ↓
+ProdOps Workspace
+       ↓
+Product Repository     ←  este repositório (payments-api)
+```
+
+| Nível | Responsabilidade | Não contém |
+|---|---|---|
+| **Framework** | Princípios, jornadas, capabilities, skills, templates, glossário | Roadmap, Backlogs, Business Intents, Releases, Features |
+| **Portfolio** | Global Tracking List, Roadmaps, Platform Releases, Milestones | Implementação de software |
+| **Workspace** | Integração e execução conjunta de Product Repositories | Roadmap, Business Intents |
+| **Product Repository** | Implementar e operar um produto específico | — |
+
+Este repositório (`payments-api`) é um **Product Repository**. Serve como implementação de referência do Framework ProdOps. Os níveis Portfolio e Workspace existem na arquitetura e são referenciados nesta documentação; ainda não possuem repositórios físicos criados.
+
+→ Ver [glossary.md](glossary.md) para definições canônicas de cada nível.
+
+---
+
 ## Modelo operacional
 
 O ProdOps organiza o trabalho de produto e engenharia em camadas hierárquicas, com origem rastreável desde a fonte da necessidade até os artefatos produzidos:
@@ -7,14 +34,14 @@ O ProdOps organiza o trabalho de produto e engenharia em camadas hierárquicas, 
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓
-Intent → OBC draft no Icebox
+Intent → OBC draft no Business Intent Backlog ou Product Intent Backlog
   ↓
-Exploration
+Exploration (Icebox)
   ↔ Continuous Assessment → Reliability Plan → Assessment Review
   ↓
 OBC + BDD committed
   ↓
-Backlog Management (Diligence)        ← Tracking List → Icebox → Roadmap → Release → Iteration
+Backlog Management (Diligence)        ← Repository Tracking List → Product Intent Backlog → Icebox → Iteration Backlog → Iteration Plan
   ↓
 Execution Mode
 ├── Upstream
@@ -66,7 +93,7 @@ Artifacts
 
 **Exploration** — reduz incerteza e refina o OBC draft por meio da jornada Discovery. Discovery existe em ambos os modos; o rigor e o compromisso variam conforme Upstream ou Downstream. Ver [`flow.md`](flow.md).
 
-**OBC (Observable Business Contract)** — nasce como draft quando a Intent entra no Icebox, é refinado por Exploration e Assessment e torna-se committed somente após Assessment Review. *Anteriormente definido incorretamente como Outcome-Based Criterion.*
+**OBC (Observable Business Contract)** — nasce como Draft quando a Intent entra no Business Intent Backlog (fluxo global) ou no Product Intent Backlog (fluxo local). É refinado pela Discovery no Icebox até atingir **Minimum OBC** (gate de entrada no Iteration Backlog). Fica **Active** durante a Delivery e **Operational** na Operation. *Anteriormente definido incorretamente como Outcome-Based Criterion.*
 
 **Continuous Assessment** — avalia continuamente riscos, oportunidades e decide o próximo passo.
 
@@ -145,9 +172,9 @@ Origin Stream (Business | Enterprise | Team | Technology)
   ↓ gera
 Intent
   ↓ entra em
-OBC draft no Icebox
+Business Intent Backlog (fluxo global) ou Product Intent Backlog (fluxo local) → OBC draft
   ↓
-Exploration (Discovery) ↔ Assessment
+Exploration (Discovery no Icebox) ↔ Assessment
   Experimento → aprendizado → Decision Package
   Assessment → riscos + Reliability Plan
   ↓ Assessment Review (PM + Tech Lead)

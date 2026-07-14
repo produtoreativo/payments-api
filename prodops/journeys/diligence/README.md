@@ -19,10 +19,10 @@ Fechar o gap entre as decisões produzidas pelo Assessment e o trabalho pronto p
 Sem a Diligence, o sistema de trabalho se fragmenta:
 
 - Um OBC comprometido existe em `prodops/artifacts/obcs/`, mas a GitHub Issue correspondente nunca foi criada.
-- Um item foi priorizado para a próxima Release, mas a Tracking List não foi atualizada.
+- Um item foi priorizado para a próxima Release, mas a Repository Tracking List não foi atualizada.
 - Um risco identificado no Premortem aparece nos planos, mas não foi refletido no Icebox ou na Iteration.
 - O estado do OBC evoluiu, mas as ferramentas externas (Jira, GitHub Projects) ainda mostram o estado antigo.
-- Um experimento terminou com decisão tomada, mas o Roadmap Backlog não foi atualizado.
+- Um experimento terminou com decisão tomada, mas o Roadmap não foi atualizado.
 
 A Diligence detecta esses gaps e os corrige antes que gerem confusão, retrabalho ou decisões baseadas em estado desatualizado.
 
@@ -55,7 +55,7 @@ A Diligence nunca implementa software. Nunca cria Pull Requests de implementaç�
 
 ### 2. OBC como identificador permanente
 
-O OBC nasce quando a Intent entra no Icebox e acompanha o trabalho por toda sua vida. A Diligence usa o OBC como âncora para todas as verificações de consistência. Cada ferramenta, cada backlog, cada artefato deve ser rastreável até um OBC.
+O OBC nasce quando a Intent entra no Business Intent Backlog (fluxo global) ou no Product Intent Backlog (fluxo local). A partir desse ponto, acompanha o trabalho por toda sua vida. A Diligence usa o OBC como âncora para todas as verificações de consistência. Cada ferramenta, cada backlog, cada artefato deve ser rastreável até um OBC.
 
 ### 3. Estado único, múltiplas representações
 
@@ -75,11 +75,11 @@ Intent → OBC → Issue → PR → Release → Operation. A Diligence garante q
 
 ### Sincronização de backlogs
 
-Manter o estado de cada OBC sincronizado entre Tracking List, Icebox, Roadmap Backlog, Release Backlog, Iteration Backlog e as ferramentas externas correspondentes.
+Manter o estado de cada OBC sincronizado entre Repository Tracking List, Product Intent Backlog, Icebox, Iteration Backlog, Iteration Plan e as ferramentas externas correspondentes.
 
 ### Criação e atualização de representações operacionais
 
-Criar ou atualizar GitHub Issues, Jira Cards e outras representações operacionais quando um OBC avança para um Release Backlog ou Iteration Backlog.
+Criar ou atualizar GitHub Issues, Jira Cards e outras representações operacionais quando um OBC avança para o Iteration Backlog ou Iteration Plan.
 
 ### Verificação de pré-requisitos da Delivery
 
@@ -91,7 +91,7 @@ Identificar proativamente gaps entre o estado dos OBCs nos artefatos ProdOps e o
 
 ### Evolução dos artefatos de gestão
 
-Atualizar artefatos de gestão (Iteration Plan, Release Backlog, Roadmap entries) quando decisões do Assessment ou resultados do Discovery mudam o estado do trabalho.
+Atualizar artefatos de gestão (Iteration Plan, Product Intent Backlog, entradas de Roadmap) quando decisões do Assessment ou resultados do Discovery mudam o estado do trabalho.
 
 ---
 
@@ -118,23 +118,49 @@ Atualizar artefatos de gestão (Iteration Plan, Release Backlog, Roadmap entries
 
 ## Sistema de trabalho governado
 
-A Diligence governa a hierarquia completa de backlogs do Framework ProdOps:
+A Diligence governa a hierarquia completa de backlogs do Framework ProdOps.
+
+**Fluxo global (Portfolio → Produto):**
 
 ```
-Tracking List
-      │  item investigado e reconhecido como Intent
+Global Tracking List
+      │  reconhecido como Intent
       ▼
-Icebox Backlog          ← OBC nasce aqui (draft)
-      │  priorizado para planejamento estratégico
+Business Intent Backlog   ← OBC Draft nasce aqui
+      │
       ▼
-Roadmap Backlog         ← vive fora do repositório
-      │  comprometido para uma Release
+Roadmap                   ← vive fora do repositório
+      │
       ▼
-Release Backlog
-      │  organizado operacionalmente
+Platform Release
+      │  aceito pelo Product Owner
+      ▼
+Product Intent Backlog
+```
+
+**Fluxo local (Produto):**
+
+```
+Repository Tracking List
+      │  Premortem + Reliability Plan + Owner Approval
+      ▼
+Product Intent Backlog    ← OBC Draft nasce aqui se ainda não existe
+```
+
+**Convergência — fluxo de Delivery:**
+
+```
+Product Intent Backlog
+      │
+      ▼
+Icebox                    ← Discovery Downstream ocorre aqui
+      │  OBC mínimo validado
       ▼
 Iteration Backlog
-      │  trabalho pronto para iniciar
+      │  OBC committed + BDD committed
+      ▼
+Iteration Plan
+      │
       ▼
 Delivery
 ```

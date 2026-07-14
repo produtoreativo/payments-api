@@ -2,9 +2,31 @@
 
 Delivery é a jornada de implementação do Framework ProdOps.
 
+## Responsabilidade
+
+Construir, validar e promover a solução. A Delivery representa a execução da iteração — não faz priorização, não faz Discovery, não substitui nenhum backlog.
+
+## Entrada
+
+A Delivery começa somente quando um item entra no **Iteration Plan**.
+
+A entrada da Delivery **não é**:
+- Business Intent
+- Icebox
+- Iteration Backlog
+
+Um item só entra no Iteration Plan quando possui OBC committed + BDD Feature committed + riscos documentados + Reliability Plan.
+
+## Fluxo
+
 ```
+Iteration Plan
+  ↓
 CI Sync: Bootstrap → Hack → Sync → Finish     (trabalho local, síncrono)
+  ↓
 CI Async: Ship → Validate → Promote            (plataforma, pipelines, ambientes)
+  ↓
+Operation
 ```
 
 ## CI Sync

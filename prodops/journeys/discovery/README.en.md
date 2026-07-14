@@ -2,19 +2,45 @@
 
 ## Purpose
 
-Discovery is the ProdOps exploration journey. It exists in both Upstream and Downstream and is not synonymous with Upstream.
+Discovery is the ProdOps exploration and preparation journey. It exists in both Upstream and Downstream with different responsibilities; it is not synonymous with Upstream.
 
-Its purpose is to reduce uncertainty before a capability enters the standard delivery flow.
+---
 
-In Upstream, Discovery operates without delivery commitment and with variable maturity. In Downstream, it applies current quality gates to the explored context.
+## Discovery in Upstream
+
+**Objective:** Explore.
+
+No obligation to complete artifacts. No mandatory gates. The engineer decides which Skills to use. The expected result is learning.
+
+Can include:
+
+- interviews and benchmarks
+- Event Storming
+- prototypes and spikes
+- experiments and vibecoding
+- research
 
 An Upstream experiment may produce production-quality code, but that code is considered exploratory until the capability is promoted to Downstream.
 
 ---
 
-# Objectives
+## Discovery in Downstream
 
-Upstream exists to:
+**Objective:** Prepare a committed item for Delivery.
+
+An item enters the Icebox after being accepted in the Product Intent Backlog. Discovery in Downstream occurs within the Icebox. The goal is to produce a minimum acceptable OBC through refinement:
+
+- functional — what the system must do
+- technical — how the system must do it
+- operational — how the system must behave in production
+
+At the end of Discovery in Downstream, the item has a validated minimum OBC and advances to the Iteration Backlog.
+
+---
+
+## General objectives
+
+Discovery exists to:
 
 - understand business problems;
 - validate technical approaches;
@@ -50,7 +76,7 @@ Record only as:
 
 - external dependency;
 - release risk;
-- Tracking List item;
+- Repository Tracking List item;
 - Reliability Plan note;
 - required evidence from the responsible system.
 
@@ -79,7 +105,7 @@ An Upstream activity may produce:
 - AsyncAPI updates;
 - Event Storming updates;
 - Reliability Plan updates;
-- Tracking List updates;
+- Repository Tracking List updates;
 - architecture decisions.
 
 ---
@@ -230,8 +256,8 @@ The complete Decision Package (sections of `experiment.md`):
 | **Promote** | Start the promotion process (see "Promotion to Downstream Process" section). BDD Feature + OBC moved. Capability enters the Iteration Plan. |
 | **Promote with restriction** | A subset of the capability is promoted. Restricted parts remain in Upstream for another experiment. |
 | **Requires another experiment** | Create a new experiment with a more specific hypothesis. Record the decision in the current experiment's `upstream-trail.md`. |
-| **Wait for business decision** | Block the experiment in the Tracking List with the decision-maker and expected date. Do not open a new experiment until the decision arrives. |
-| **Wait for external dependency** | Record the dependency in the Reliability Plan and Tracking List. Monitor in Continuous Assessment. |
+| **Wait for business decision** | Block the experiment in the Repository Tracking List with the decision-maker and expected date. Do not open a new experiment until the decision arrives. |
+| **Wait for external dependency** | Record the dependency in the Reliability Plan and Repository Tracking List. Monitor in Continuous Assessment. |
 | **Discard** | Record the learning in `prodops/journeys/discovery/learnings.md`. Close the experiment with justification in the `upstream-trail.md`. |
 
 ### Recording the decision
@@ -296,7 +322,7 @@ Before promoting, confirm that:
    not only in "Identified Iteration Backlog", as this section does not satisfy
    the formal Downstream precondition)
 
-4. Update Tracking List if the item was there:
+4. Update Repository Tracking List if the item was there:
    prodops/artifacts/product/tracking-list.md
    (change status to "Promoted to Downstream")
 

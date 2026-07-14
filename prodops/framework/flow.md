@@ -3,7 +3,7 @@
 O fluxo oficial do Framework ProdOps descreve o caminho que toda mudança percorre desde a sua origem até a operação contínua.
 
 ```
-Origin Stream → Intent → OBC draft (Icebox) → Exploration + Assessment → Reliability Plan → Assessment Review → OBC/BDD committed → Iteration Plan → Delivery → Operation
+Origin Stream → Intent → Modo (Upstream ou Downstream) → OBC draft (Business Intent Backlog / Product Intent Backlog) → Exploration + Assessment → Reliability Plan → Assessment Review → OBC/BDD committed → Iteration Plan → Delivery → Operation
 ```
 
 Este documento é a referência canônica para entender **o que acontece em cada etapa**, **o que é produzido** e **quando avançar**.
@@ -20,7 +20,7 @@ Este documento é a referência canônica para entender **o que acontece em cada
 flowchart TD
     OS["Origin Stream\n(Business | Enterprise | Team | Technology)"]
     I["Intent"]
-    DRAFT["OBC draft\n(Icebox)"]
+    DRAFT["OBC draft\n(Business Intent Backlog\nou Product Intent Backlog)"]
     EX["Exploration\n(Discovery; rigor conforme o modo)"]
     AS["Assessment\n(transversal)"]
     RP["Reliability Plan"]
@@ -84,7 +84,7 @@ flowchart TD
 
 **Quando avançar:** Assim que a Intent estiver registrada e houver decisão de continuar (não descartar).
 
-> O OBC **não** é a entrada do Framework. Seu draft mínimo nasce quando a Intent reconhecida entra no Icebox, é refinado durante Exploration e Assessment, e somente se torna committed após Assessment Review.
+> O OBC nasce automaticamente quando um Business Intent entra no **Business Intent Backlog** (fluxo global) ou no **Product Intent Backlog** (fluxo local) — **antes** do Discovery, antes do Upstream, antes do Downstream. Durante o Upstream, permanece em Draft. No Downstream, é refinado no Icebox até atingir o estado Minimum OBC, então controla toda a evolução da Delivery.
 
 → [Template de Intent](../templates/business-intents/intent.md)
 
@@ -116,7 +116,7 @@ flowchart TD
 
 **Objetivo:** Transformar o conhecimento validado pela Exploration em um contrato observável e verificável.
 
-**O que acontece:** O OBC draft nascido no Icebox é refinado pela Exploration e pela Assessment. O Reliability Plan é produzido antes da decisão de compromisso. Na Assessment Review, PM e Tech Lead revisam o conjunto; quando aprovado, OBC e BDD são promovidos para os diretórios committed. Sem esse conjunto committed, não há execução Downstream.
+**O que acontece:** O OBC Draft — nascido no Business Intent Backlog ou Product Intent Backlog — é refinado pela Exploration (Discovery no Icebox) e pela Assessment. O Reliability Plan é produzido antes da decisão de compromisso. Na Assessment Review, PM e Tech Lead revisam o conjunto; quando aprovado, OBC atinge estado Minimum OBC e BDD Feature são promovidos para os diretórios committed. Sem esse conjunto, não há execução Downstream.
 
 **O que é produzido:**
 - OBC committed em `prodops/artifacts/obcs/<slug>.md`

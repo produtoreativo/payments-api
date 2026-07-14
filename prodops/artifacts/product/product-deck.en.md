@@ -199,7 +199,7 @@ The technical boundary and currently implemented state are documented in the [Ar
 | Backlog | `[link]` |
 | Postmortems | `[link]` |
 
-## 16. Initial Tracking List
+## 16. Initial Repository Tracking List
 
 | Item | Origin | Dimension | Owner | Status | Next action |
 | --- | --- | --- | --- | --- | --- |

@@ -26,7 +26,7 @@ Implemented in-repo Reliability Plan P0 hardening for payment confirmation: Dyna
 
 - Product Deck: not changed
 - Service Deck: not changed
-- Tracking List: not changed
+- Repository Tracking List: not changed
 - Reliability Plan: updated to reflect implemented Dynamo correlation and uncorrelated webhook observability
 - OBC: not changed
 
@@ -60,7 +60,7 @@ Updated the repository home in `README.md` to present payments-api as the ProdOp
 
 - Product Deck: referenced, not changed
 - Service Deck: referenced, not changed
-- Tracking List: referenced, not changed
+- Repository Tracking List: referenced, not changed
 - Reliability Plan: referenced, not changed
 - OBC: referenced, not changed
 
@@ -95,7 +95,7 @@ Removed the tracked frontend `node_modules` tree from Git and updated the reposi
 
 - Product Deck: not changed
 - Service Deck: not changed
-- Tracking List: not changed
+- Repository Tracking List: not changed
 - Reliability Plan: not changed
 - OBC: not changed
 
@@ -410,7 +410,7 @@ Alinhado o modelo ProdOps para distinguir modo de execução de jornada e prepar
 
 - `/downstream` passa a oferecer `ci-sync`, `ci-async` e `full`; enquanto CI Async está em evolução, ausência de escopo usa `ci-sync` e informa o default.
 - Upstream é permissivo, experimental e sem compromisso de entrega; Downstream tem compromisso, guia o item até readiness e só executa Delivery com todos os gates satisfeitos.
-- OBC nasce draft no Icebox, é refinado por Exploration e Assessment e torna-se committed após Assessment Review.
+- OBC nasce Draft no Business Intent Backlog (fluxo global) ou no Product Intent Backlog (fluxo local), é refinado pela Discovery no Icebox até atingir Minimum OBC, fica Active durante a Delivery e Operational na Operation.
 - Assessment é transversal e produz riscos e Reliability Plan antes do compromisso no Iteration Plan.
 - Discovery existe em Upstream e Downstream; não é sinônimo de Upstream.
 - Bootstrap prepara apenas dependências, infraestrutura local, configuração e smoke gate.

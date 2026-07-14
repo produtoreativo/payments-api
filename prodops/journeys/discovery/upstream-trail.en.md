@@ -49,7 +49,7 @@ Example:
 
 - Validation Workbench
 - Reliability Plan
-- Tracking List
+- Repository Tracking List
 - OBC
 - BDD Feature
 
@@ -124,7 +124,7 @@ Migration of existing experiments to the per-experiment directory pattern.
 
 Flat files for experiments EXP-001, EXP-002, EXP-003 and EXP-005 were moved into `experiment.md` inside their own experiment directories. Each now has a local `upstream-trail.md` and an `evidence/` directory.
 
-EXP-004 was recovered as a reference record because the global trail, Reliability Plan and Tracking List referenced it, but the original flat experiment file was not present in the workspace.
+EXP-004 was recovered as a reference record because the global trail, Reliability Plan and Repository Tracking List referenced it, but the original flat experiment file was not present in the workspace.
 
 ### Artifacts Updated
 
@@ -354,7 +354,7 @@ Reference:
 
 ### Activity
 
-Experiment started after reviewing Current State, Tracking List, Reliability Plan, Premortem, Iteration Plan and existing Upstream experiments.
+Experiment started after reviewing Current State, Repository Tracking List, Reliability Plan, Premortem, Iteration Plan and existing Upstream experiments.
 
 ### Summary
 

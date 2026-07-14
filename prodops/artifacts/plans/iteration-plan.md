@@ -1,7 +1,11 @@
 # Iteration Plan - Payments Release
 
-> Documento gerado a partir de `prodops/journeys/assessment/reliability-plans/setup/iteration-plan.prompt.md`.
-> Foco: decisão de escopo de negócio para a próxima iteração. Este documento não substitui o Reliability Plan.
+> **Propósito:** Registro da execução de Delivery desta iteração. Contém os itens escolhidos do Iteration Backlog, a estratégia de execução, o acompanhamento das jornadas CI Sync e CI Async, as evidências produzidas e os critérios de saída.
+>
+> Este documento não é um backlog de planejamento ou priorização. Planejamento acontece no Iteration Backlog; priorização é responsabilidade do Product Owner.
+>
+> → [Hierarquia de backlogs](../../framework/backlogs.md)
+> → [Iteration Backlog](iteration-backlog.md) — itens prontos para desenvolvimento
 
 ## Executive Summary
 

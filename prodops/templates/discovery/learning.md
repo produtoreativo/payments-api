@@ -133,8 +133,8 @@ Artefatos possíveis:
 
 - Product Deck
 - Service Deck
-- Tracking List
-- Icebox Backlog
+- Repository Tracking List
+- Icebox
 - Event Storming
 - Reliability Plan
 - OBC

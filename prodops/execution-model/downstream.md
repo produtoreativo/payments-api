@@ -1,6 +1,10 @@
 # Modo Downstream
 
-Downstream é o modo de entrega governada do Framework ProdOps.
+Downstream é o **modo de compromisso** do Framework ProdOps.
+
+## Definição canônica
+
+Downstream representa um modo de compromisso. A partir do momento em que um Business Intent entra em Downstream, existe compromisso de entrega, qualidade e confiabilidade. Todo trabalho passa a seguir obrigatoriamente o modelo operacional do ProdOps.
 
 ## Propósito
 
@@ -8,11 +12,23 @@ Entregar software com rastreabilidade, critérios de aceite verificáveis e evid
 
 ## Características do modo
 
-- Compromisso formal com critérios de aceite (OBC + BDD Feature)
-- Governança e rastreabilidade completas
-- Artefatos obrigatórios antes do início
-- Evidências registradas em cada etapa
-- Sequência completa obrigatória
+No Downstream:
+
+- existe compromisso de implementação
+- existe compromisso de confiabilidade
+- existe governança
+- existe validação obrigatória
+- existe rastreabilidade
+- existe geração de evidências
+- existe conformidade com o modelo operacional
+
+As Skills deixam de ser opcionais. Passam a fazer parte do processo de execução — participam da validação das jornadas, produzem evidências e garantem consistência.
+
+## OBC no Downstream
+
+Ao entrar no Downstream, o OBC deixa de ser apenas um registro. Ele passa a ser o contrato operacional do trabalho.
+
+Durante o Discovery (no Icebox), será refinado até atingir um OBC mínimo aceitável. Esse OBC controla a evolução das jornadas seguintes: Iteration Backlog → Iteration Plan → Delivery.
 
 ## Quando usar o modo Downstream
 

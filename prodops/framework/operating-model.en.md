@@ -1,5 +1,32 @@
 # ProdOps Operating Model
 
+## ProdOps Architecture
+
+ProdOps is organized in four hierarchical levels:
+
+```
+ProdOps Framework
+       ↓
+ProdOps Portfolio
+       ↓
+ProdOps Workspace
+       ↓
+Product Repository     ←  this repository (payments-api)
+```
+
+| Level | Responsibility | Does not contain |
+|---|---|---|
+| **Framework** | Principles, journeys, capabilities, skills, templates, glossary | Roadmap, Backlogs, Business Intents, Releases, Features |
+| **Portfolio** | Global Tracking List, Roadmaps, Platform Releases, Milestones | Software implementation |
+| **Workspace** | Integration and joint execution of Product Repositories | Roadmap, Business Intents |
+| **Product Repository** | Implement and operate a specific product | — |
+
+This repository (`payments-api`) is a **Product Repository**. It serves as the reference implementation of the ProdOps Framework. The Portfolio and Workspace levels exist in the architecture and are referenced in this documentation; they do not yet have physical repositories created.
+
+→ See [glossary.en.md](glossary.en.md) for canonical definitions of each level.
+
+---
+
 ## Operating model
 
 ProdOps organizes product and engineering work in hierarchical layers, with traceable origin from the source of the need through to the produced artifacts:
@@ -15,7 +42,7 @@ Observable Business Contract (OBC)
   ↓
 Continuous Assessment
   ↓
-Backlog Management (Diligence)        ← Tracking List → Icebox → Roadmap → Release → Iteration
+Backlog Management (Diligence)        ← Repository Tracking List → Product Intent Backlog → Icebox → Iteration Backlog → Iteration Plan
   ↓
 Execution Mode
 ├── Upstream
@@ -67,7 +94,7 @@ Artifacts
 
 **Exploration** — refines the OBC draft and reduces uncertainty through the Discovery journey. Discovery exists in both modes; rigor and commitment vary between Upstream and Downstream. See [`flow.md`](flow.en.md).
 
-**OBC (Observable Business Contract)** — born as a draft when the Intent enters the Icebox, refined through Exploration and Assessment, and committed only after Assessment Review. *Formerly incorrectly defined as Outcome-Based Criterion.*
+**OBC (Observable Business Contract)** — born as a Draft when the Intent enters the Business Intent Backlog (global flow) or the Product Intent Backlog (local flow). Refined through Discovery in the Icebox until reaching **Minimum OBC** (entry gate to the Iteration Backlog). Becomes **Active** during Delivery and **Operational** in Operation. *Formerly incorrectly defined as Outcome-Based Criterion.*
 
 **Continuous Assessment** — continuously evaluates risks, opportunities, and decides the next step.
 
@@ -146,7 +173,9 @@ Origin Stream (Business | Enterprise | Team | Technology)
   ↓ generates
 Intent
   ↓ enters
-Exploration — Upstream (Discovery)
+Business Intent Backlog (global flow) or Product Intent Backlog (local flow) → OBC Draft
+  ↓
+Exploration — Upstream (Discovery in Icebox)
   Experiment → learning → Decision Package
   ↓ when hypothesis answered
 OBC committed + BDD Feature committed

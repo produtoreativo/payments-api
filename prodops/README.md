@@ -1,13 +1,20 @@
 [English](README.en.md) · [Por que este projeto é em português?](language.md)
 
-# ProdOps Framework
+# payments-api — Product Repository
 
-Este diretório é a fonte canônica do Framework ProdOps neste repositório.
+Este repositório é um **Product Repository** dentro da arquitetura ProdOps — o nível responsável por implementar e operar um produto específico. A documentação neste diretório ensina o funcionamento da arquitetura completa do ProdOps, da qual este repositório ocupa apenas o último nível.
+
+```
+ProdOps Framework  →  ProdOps Portfolio  →  ProdOps Workspace  →  Product Repository
+                                                                    (este repositório)
+```
+
+→ [Arquitetura completa e definições](framework/operating-model.md#arquitetura-do-prodops)
 
 ## Fluxo oficial
 
 ```
-Origin Stream → Intent → OBC draft → Exploration + Assessment → Reliability Plan → Assessment Review → OBC/BDD committed → Iteration Plan → Delivery → Operation
+Origin Stream → Intent → Modo (Upstream | Downstream) → OBC Draft → Exploration + Assessment → Reliability Plan → Assessment Review → Minimum OBC → Iteration Plan → Delivery → Operation
 ```
 
 → [Fluxo completo explicado](framework/flow.md)
@@ -18,9 +25,11 @@ Origin Stream → Intent → OBC draft → Exploration + Assessment → Reliabil
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓
-Intent → OBC draft
+Intent → OBC Draft (Business Intent Backlog ou Product Intent Backlog)
+  ↓
+Modo: Upstream (exploração) ou Downstream (compromisso)
   ↔ Continuous Assessment → Reliability Plan
-  ↓ Assessment Review
+  ↓ Assessment Review → Minimum OBC
 Execution Mode → Journey → Phase → Practice → Delivery Capability → Artifacts
 ```
 

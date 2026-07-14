@@ -49,7 +49,7 @@ Exemplo:
 
 - Validation Workbench
 - Reliability Plan
-- Tracking List
+- Repository Tracking List
 - OBC
 - BDD Feature
 
@@ -124,7 +124,7 @@ Migração dos experimentos existentes para o padrão de diretório por experime
 
 Arquivos planos dos experimentos EXP-001, EXP-002, EXP-003 e EXP-005 foram movidos para `experiment.md` dentro de seus próprios diretórios de experimento. Cada um agora possui um `upstream-trail.md` local e um diretório `evidence/`.
 
-O EXP-004 foi recuperado como registro de referência porque o trail global, o Reliability Plan e a Tracking List o referenciavam, mas o arquivo plano do experimento original não estava presente no workspace.
+O EXP-004 foi recuperado como registro de referência porque o trail global, o Reliability Plan e a Repository Tracking List o referenciavam, mas o arquivo plano do experimento original não estava presente no workspace.
 
 ### Artifacts Updated
 
@@ -354,7 +354,7 @@ Reference:
 
 ### Activity
 
-Início do experimento após revisão do Current State, Tracking List, Reliability Plan, Premortem, Iteration Plan e experimentos Upstream existentes.
+Início do experimento após revisão do Current State, Repository Tracking List, Reliability Plan, Premortem, Iteration Plan e experimentos Upstream existentes.
 
 ### Summary
 

@@ -1,8 +1,42 @@
 # Execution Model
 
-Upstream e Downstream são **modos de execução** do Framework ProdOps — não são jornadas.
+Upstream e Downstream são **modos de execução** do Framework ProdOps — não são jornadas, não são fases e não substituem as jornadas.
 
-Cada modo utiliza todas as jornadas, inclusive Discovery. A diferença está no compromisso e no rigor aplicado, não na presença ou ausência de uma jornada.
+## Terminologia canônica
+
+| Conceito | Definição |
+|---|---|
+| **Upstream** | Modo de exploração |
+| **Downstream** | Modo de compromisso |
+| **Discovery** | Jornada presente nos dois modos |
+| **Delivery** | Jornada exclusiva do Downstream |
+| **Operation** | Jornada exclusiva do Downstream |
+
+Os modos não substituem as jornadas. Eles definem como as jornadas serão executadas.
+
+## Fluxo de decisão do Business Intent
+
+Todo Business Intent criado no Business Intent Backlog deve seguir um dos dois modos. Essa decisão é do Product Owner e não acontece automaticamente.
+
+```
+Business Intent
+  ↓
+Escolha do modo (Product Owner)
+  ↓
+Upstream                    Downstream
+(exploração)                (compromisso)
+     │                           │
+  Discovery                  Product Intent Backlog
+  Experimentos                   → Icebox (Discovery)
+  Aprendizados                   → Iteration Backlog
+     │                           → Iteration Plan
+  (Eventualmente)                → Delivery
+  Downstream                     → Operation
+```
+
+Não existe transição automática entre os modos. A mudança deve ser uma decisão explícita.
+
+Cada modo utiliza as jornadas de forma diferente. A diferença está no compromisso e no rigor aplicado, não na presença ou ausência de uma jornada.
 
 ## Upstream
 

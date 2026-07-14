@@ -8,6 +8,12 @@ Downstream. Status `Entrou` em `prodops/artifacts/plans/iteration-plan.md` (seç
 
 Magazine Siará consegue criar cobranças via gateway de Payments sem acoplamento direto ao provedor Asaas. O Checkout envia um contrato único de invoice; o gateway resolve o provedor, cria ou reutiliza o cliente Asaas, garante idempotência por chave de pedido e retorna identificadores rastreáveis. A invoice nasce com status `OPEN` apenas quando o `providerPaymentId` está consolidado — nunca antes. Erros de validação são auditáveis sem expor segredos ou payload sensível.
 
+### Em linguagem executiva
+
+Uma cobrança só é considerada criada quando o Asaas confirma que a recebeu e registrou no sistema dele. Enquanto essa confirmação não chega, o sistema não exibe a cobrança como ativa para o cliente — ela não existe a meio caminho. É o equivalente a um comprovante bancário: o depósito só está feito quando o banco emite o comprovante.
+
+Isso protege o Magazine Siará de dois problemas: (1) mostrar ao cliente uma cobrança que o Asaas nunca chegou a registrar, e (2) cobrar duas vezes o mesmo pedido em caso de retentativa — o sistema reconhece a chave do pedido e devolve a cobrança já existente sem criar uma nova.
+
 ## Observable Events
 
 | Event | Meaning | Required dimensions |

@@ -27,7 +27,7 @@ locations and registering the capability in the Iteration Plan.
    in the main plan table — not merely in "Iteration Backlog identificado".
    This satisfies the Downstream pre-condition that requires status `Entrou`
    before Bootstrap can begin.
-5. If the capability had a Tracking List entry, update its status to
+5. If the capability had a Repository Tracking List entry, update its status to
    "Promovido para Downstream" in `prodops/artifacts/product/tracking-list.md`.
 6. Append a promotion entry to the experiment's trail:
    `prodops/journeys/discovery/experiments/<NNN-slug>/upstream-trail.md`

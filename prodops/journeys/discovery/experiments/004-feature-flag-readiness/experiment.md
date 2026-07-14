@@ -93,7 +93,7 @@ journey without abandoning in-flight orders.
 # Scope
 
 - Record Feature Flag readiness as an external dependency.
-- Keep P0 risk visible in Reliability Plan and Tracking List.
+- Keep P0 risk visible in Reliability Plan and Repository Tracking List.
 - Define evidence required from Checkout.
 
 ---
@@ -141,7 +141,7 @@ journeys.
 |----------|--------|----------|
 | Is the Feature Flag owned by this repository? | Answered | Reliability Plan and Premortem classify Checkout and Feature Flag as external dependencies. |
 | Can this repo implement the Feature Flag? | Answered | Repository Scope Gate rejects executable work here. |
-| What evidence is required from Checkout? | Answered | Risks and Tracking List enumerate bug, owner, rollout, audit, telemetry, rollback and in-flight order policy. |
+| What evidence is required from Checkout? | Answered | Risks and Repository Tracking List enumerate bug, owner, rollout, audit, telemetry, rollback and in-flight order policy. |
 
 ---
 
@@ -180,7 +180,7 @@ None.
 
 ## Updated Tracking Items
 
-Tracking List already contains Feature Flag readiness and rollback policy items.
+Repository Tracking List already contains Feature Flag readiness and rollback policy items.
 
 ## Updated OBCs
 

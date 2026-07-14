@@ -147,8 +147,8 @@ Use esta tabela como fonte primária de navegação antes de ler ou escrever qua
 | Visão geral dos artefatos | `prodops/artifacts/README.md` |
 | Product Deck | `prodops/artifacts/product/product-deck.md` |
 | Service Decks | `prodops/artifacts/product/service-decks/` |
-| Icebox Backlog | `prodops/artifacts/product/icebox-backlog.md` |
-| Tracking List | `prodops/artifacts/product/tracking-list.md` |
+| Icebox | `prodops/artifacts/product/icebox-backlog.md` |
+| Repository Tracking List | `prodops/artifacts/product/tracking-list.md` |
 | OBCs (committed) | `prodops/artifacts/obcs/` |
 | BDD Features (committed) | `prodops/artifacts/bdd/` |
 | Iteration Plan | `prodops/artifacts/plans/iteration-plan.md` |

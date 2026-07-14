@@ -1,6 +1,10 @@
 # Icebox Backlog - Payments
 
-> Backlog de oportunidades, problemas e features ainda não comprometidas em delivery. O objetivo do icebox é manter rastreabilidade entre estratégia de produto, operação, confiabilidade e descoberta contínua antes de uma iniciativa entrar no roadmap.
+> **Propósito:** Itens comprometidos pelo Product Owner que ainda estão sendo preparados para Delivery. O Discovery necessário ocorre aqui — funcional, técnico ou operacional. O objetivo é produzir um OBC mínimo aceitável. Enquanto isso não acontece, o item permanece no Icebox.
+>
+> Itens que concluem o OBC mínimo avançam para o Iteration Backlog (pronto para desenvolver).
+>
+> → [Hierarquia de backlogs](../../framework/backlogs.md)
 
 ## 1. Governança do Icebox
 

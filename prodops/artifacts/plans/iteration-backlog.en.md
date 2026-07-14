@@ -1,13 +1,15 @@
 # Iteration Backlog — Operational Demands
 
-> **Purpose:** Operational and stakeholder demands still under evaluation (Analytics, DataDog, ITSM). Derived from the Payments release Premortem. Items here need refinement before entering an OBC or Iteration Plan.
+> **Purpose:** Items with minimum OBC validated, ready for immediate Delivery. The only remaining decision is the priority defined by the Product Owner. This backlog is not for refinement — refinement happens in the Icebox.
+>
+> Items here can enter Delivery as soon as prioritized. To enter the Iteration Plan, they need OBC committed + BDD Feature committed.
 >
 > → [Backlog hierarchy](../../framework/backlogs.en.md)
 > → [Approved delivery scope](iteration-plan.en.md) — to see what's in/out/deferred
 
 ## Objective
 
-Record known demands that still need refinement, evaluation or planning before being incorporated into the Iteration Plan or a specific OBC.
+Record items that have completed Discovery in the Icebox and are ready for Delivery execution. Each item must already have a Minimum OBC validated.
 
 | ID | Area | Request | Type | Priority | Status | Next Step |
 |----|------|---------|------|----------|--------|-----------|
@@ -40,4 +42,4 @@ Each item may originate or update:
 - Iteration Plan
 - Iteration Backlog
 
-The Tracking List represents demands still under evaluation and serves as the main input source for Continuous Assessment.
+The Repository Tracking List represents demands still under evaluation and serves as the main input source for Continuous Assessment.

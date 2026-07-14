@@ -344,8 +344,8 @@ Simple payments continue via `POST /v1/invoices`. No mandatory field is removed 
 
 | Item | Classification | Note |
 |---|---|---|
-| Define partial failure policy (A, B or C) | **Tracking List — product decision** | Blocker for Downstream |
-| Validate `CompositePaymentConfirmed` contract with Order Management | **Tracking List** | External dependency |
+| Define partial failure policy (A, B or C) | **Repository Tracking List — product decision** | Blocker for Downstream |
+| Validate `CompositePaymentConfirmed` contract with Order Management | **Repository Tracking List** | External dependency |
 | Define DynamoDB strategy for CompositionsTable | **Candidate for Iteration Backlog** | After policy decision |
 | Create BDD Feature for payment composition | **Candidate for Iteration Backlog** | After policy defined |
 | Update Event Storming with new events | **Candidate for Iteration Backlog** | Can be done now |

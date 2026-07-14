@@ -237,4 +237,4 @@ Use this guide to locate any event in the Checkout → Payments → Asaas → No
 
 Every Payments log must have: `correlationId`, `tenantId`, `invoiceId` (when applicable), `level`, `msg`.
 
-If a log does not have these fields, the problem is in instrumentation — open an item in the observability Tracking List (`TL-003`).
+If a log does not have these fields, the problem is in instrumentation — open an item in the Repository Tracking List (`TL-003`).

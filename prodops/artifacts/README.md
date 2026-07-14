@@ -6,7 +6,7 @@ Artefatos produzidos pelo Framework ProdOps.
 
 | Área | Conteúdo |
 |---|---|
-| [product/](product/) | Product Deck, Service Decks, Tracking List, Icebox |
+| [product/](product/) | Product Deck, Service Decks, Repository Tracking List, Icebox |
 | [obcs/](obcs/) | Observable Business Contracts — OBCs committed |
 | [bdd/](bdd/) | BDD Features comprometidas (Gherkin) |
 | [plans/](plans/) | Iteration Plans, Reliability Iteration Backlogs |

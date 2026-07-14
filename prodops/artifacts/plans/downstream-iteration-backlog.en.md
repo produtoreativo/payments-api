@@ -8,7 +8,7 @@ The approved backlog for this release — with scope decisions — is at:
 
 This is the canonical document to see what is in, what is out, and what was deferred.
 
-## Demands under evaluation (Tracking List)
+## Demands under evaluation (Repository Tracking List)
 
 Stakeholder demands not yet sufficiently refined to enter an OBC are at:
 

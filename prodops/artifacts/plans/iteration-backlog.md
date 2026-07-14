@@ -1,6 +1,8 @@
 # Iteration Backlog — Demandas Operacionais
 
-> **Propósito:** Demandas operacionais e de stakeholders ainda em avaliação (Analytics, DataDog, ITSM). Derivado do Premortem da release de Payments. Itens aqui precisam de refinamento antes de entrar em um OBC ou Iteration Plan.
+> **Propósito:** Itens com OBC mínimo validado, prontos para Delivery imediata. A única decisão restante é a prioridade definida pelo Product Owner. Este backlog não é de refinamento — refinamento acontece no Icebox.
+>
+> Itens aqui podem entrar em Delivery assim que priorizados. Para entrar no Iteration Plan, precisam de OBC committed + BDD Feature committed.
 >
 > → [Hierarquia de backlogs](../../framework/backlogs.md)
 > → [Escopo de entrega aprovado](iteration-plan.md) — para ver o que entrou/saiu/foi adiado
@@ -40,4 +42,4 @@ Cada item poderá originar ou atualizar:
 - Iteration Plan
 - Iteration Backlog
 
-A Tracking List representa demandas ainda em avaliação e serve como principal fonte de entrada para o Continuous Assessment.
+A Repository Tracking List representa demandas ainda em avaliação e serve como principal fonte de entrada para o Continuous Assessment.
