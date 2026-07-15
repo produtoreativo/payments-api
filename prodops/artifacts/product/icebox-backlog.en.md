@@ -1,6 +1,10 @@
-# Icebox Backlog - Payments
+# Icebox - Payments
 
-> Backlog of opportunities, problems and features not yet committed to delivery. The purpose of the icebox is to maintain traceability between product strategy, operations, reliability and continuous discovery before an initiative enters the roadmap.
+> **Purpose:** Items committed by the Product Owner that are still being prepared for Delivery. The necessary Discovery occurs here — functional, technical or operational. The goal is to produce an acceptable Minimum OBC. Until that happens, the item remains in the Icebox.
+>
+> Items that complete the minimum OBC advance to the Iteration Backlog (ready to develop).
+>
+> → [Backlog hierarchy](../../framework/backlogs.en.md)
 
 ## 1. Icebox Governance
 
@@ -75,9 +79,9 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 
 | ID | Title | Type | Expected outcome | Status | Initial score | Source |
 | --- | --- | --- | --- | --- | --- | --- |
-| PAY-ICE-001 | Create invoice via gateway with single contract | Feature | Ecommerce issues charges without direct coupling to the Asaas provider. | Icebox | 16.4 | [create-invoice.feature](../bdd/create-invoice.feature) |
-| PAY-ICE-002 | Confirm payment via reliable webhook | Feature | Order and ecommerce receive confirmation exactly once, with auditable events. | Icebox | 20.8 | [payment-confirmation.feature](../bdd/payment-confirmation.feature) |
-| PAY-ICE-003 | Cancel pending invoice with idempotency | Feature | Open charges can be cancelled without undue payment or duplicate event. | Icebox | 13.7 | [cancel-invoice.feature](../bdd/cancel-invoice.feature) |
+| PAY-ICE-001 | Create invoice via gateway with single contract | Feature | Ecommerce issues charges without direct coupling to the Asaas provider. | Delivery | 16.4 | [create-invoice.feature](../bdd/create-invoice.feature) |
+| PAY-ICE-002 | Confirm payment via reliable webhook | Feature | Order and ecommerce receive confirmation exactly once, with auditable events. | Delivery | 20.8 | [payment-confirmation.feature](../bdd/payment-confirmation.feature) |
+| PAY-ICE-003 | Cancel pending invoice with idempotency | Feature | Open charges can be cancelled without undue payment or duplicate event. | Ready for Delivery | 13.7 | [cancel-invoice.feature](../bdd/cancel-invoice.feature) |
 
 ## 7. Detailed items
 
@@ -97,7 +101,7 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 | Minimum telemetry | Invoice created event, provider call attempt, provider latency, provider error code, idempotency hit/miss, rejection audit log. |
 | Acceptance criteria | Scenarios in [create-invoice.feature](../bdd/create-invoice.feature) pass; retry with the same key does not call the provider; 5xx failure does not return `OPEN` invoice without `providerPaymentId`; validation error is auditable without secrets. |
 | Score | Reach 4, Impact 5, Confidence 4, Effort 5, Operational Risk 2 = 16.4 |
-| Status | Icebox |
+| Status | Delivery — OBC committed at `prodops/artifacts/obcs/create-invoice.md`. Entered the Iteration Plan. |
 
 **Discovery questions**
 
@@ -121,7 +125,7 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 | Minimum telemetry | Webhook received, webhook rejected, event deduplication, invoice status transition, canonical event published, lag between receipt and publication. |
 | Acceptance criteria | Scenarios in [payment-confirmation.feature](../bdd/payment-confirmation.feature) pass; invalid webhook does not alter invoice; duplicate event returns technical success without republishing; `PAYMENT_RECEIVED` does not release the order a second time. |
 | Score | Reach 5, Impact 5, Confidence 4, Effort 5, Operational Risk 4 = 20.8 |
-| Status | Icebox |
+| Status | Delivery — OBC committed at `prodops/artifacts/obcs/payment-confirmation.md`. Entered the Iteration Plan. |
 
 **Discovery questions**
 
@@ -145,7 +149,7 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 | Minimum telemetry | Cancel request, provider delete latency/error, status transition, idempotency hit/miss, webhook `PAYMENT_DELETED`, canonical cancellation published. |
 | Acceptance criteria | Scenarios in [cancel-invoice.feature](../bdd/cancel-invoice.feature) pass; `CONFIRMED` invoice is not cancelled; retry with the same key does not call the provider; 404 does not publish `payment.cancelled` without explicit decision. |
 | Score | Reach 3, Impact 4, Confidence 4, Effort 4, Operational Risk 2 = 13.7 |
-| Status | Icebox |
+| Status | Ready for Delivery — OBC committed at `prodops/artifacts/obcs/cancel-invoice.md`. Deferred to next iteration. |
 
 **Discovery questions**
 

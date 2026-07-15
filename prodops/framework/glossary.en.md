@@ -225,7 +225,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 | Global Tracking List / Repository Tracking List | Does not exist | The item is not yet a recognized Intent |
 | Business Intent Backlog (global flow) | Draft | OBC created; captures the Intent and initial hypotheses |
 | Product Intent Backlog (local flow) | Draft | OBC created if not yet existing; records intent accepted by the Product Owner |
-| Icebox (Downstream Discovery) | Draft under refinement | Discovery refines the OBC until reaching Minimum OBC |
+| Icebox (Discovery) | Draft under refinement | Discovery refines the OBC until reaching Minimum OBC |
 | Iteration Backlog | Minimum OBC | Minimum validated OBC; entry gate to Delivery |
 | Iteration Plan / Delivery | Active | Guides implementation; BDD Feature operationalizes it |
 | Operation | Operational | In production; complemented with metrics, SLOs, incidents, postmortems |
@@ -257,13 +257,13 @@ The OBC records the **living history of the work**: which backlogs it passed thr
 
 **When not to use:** When the Intent is trivial, the behavior is already well understood, and the OBC can be written directly. In this case, Exploration is short or nonexistent.
 
-**Relationship with other concepts:** Exploration is implemented by the Discovery Journey executed in Upstream mode. The three terms describe different aspects of the same phase:
+**Relationship with other concepts:** Exploration is implemented by the Discovery Journey in both modes. Discovery describes the journey; Upstream or Downstream defines the commitment level and rigor.
 
 | Term | Level | Meaning |
 |---|---|---|
 | **Exploration** | Flow step | What happens: uncertainty reduction between Intent and OBC |
 | **Discovery** | Journey | The name of the Framework journey that implements Exploration |
-| **Upstream** | Execution Mode | The execution mode (low commitment) used during Discovery |
+| **Upstream / Downstream** | Execution Mode | The commitment level and rigor applied during Discovery |
 
 Exploration operates on OBC Drafts that were born at the Business Intent Backlog (global flow) or Product Intent Backlog (local flow) and are being refined in the Icebox.
 
@@ -277,11 +277,11 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 **Purpose:** Transform hypotheses into validated knowledge through experiments, spikes, and prototypes. Produce the Decision Package that grounds the OBC.
 
-**When to use:** When executing exploratory work (Upstream mode) on an Intent.
+**When to use:** When exploring an Intent in Upstream or Downstream, with the rigor corresponding to the mode.
 
 **When not to use:** Discovery is not synonymous with Upstream (Upstream is the mode, Discovery is the journey). Discovery does not produce production software — it produces knowledge.
 
-**Relationship with other concepts:** Discovery is the journey that implements Exploration. Uses Upstream mode. See [`../journeys/discovery/README.en.md`](../journeys/discovery/README.en.md).
+**Relationship with other concepts:** Discovery is the journey that implements Exploration. The execution mode (Upstream or Downstream) defines the commitment level and required rigor. See [`../journeys/discovery/README.en.md`](../journeys/discovery/README.en.md).
 
 ---
 
@@ -514,18 +514,6 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 ## Release Trail
 
 **Definition:** The append-only log of Downstream evidence. Each agent session produces its own file at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`. See model at [`artifacts/trails/release-trail.en.md`](../artifacts/trails/release-trail.en.md).
-
----
-
-## Roadmap
-
-**Definition:** Portfolio-level representation of strategic planning. Groups Platform Releases within a planning horizon coordinated by the Portfolio. Managed externally — does not belong to the product repository.
-
-**When not to use:** Do not create Roadmap files in this repository. The Roadmap is managed by the Portfolio.
-
-**Canonical artifact:** External management tool (GitHub Projects, Jira Roadmap, Azure DevOps Plans). The OBC records when an item entered the Roadmap.
-
-**Relationship with other concepts:** Part of the global flow. Managed by the Portfolio. Items flow from the Business Intent Backlog through Roadmap to Platform Release. See [`backlogs.en.md`](backlogs.en.md).
 
 ---
 

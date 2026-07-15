@@ -3,7 +3,7 @@
 The official ProdOps Framework flow describes the path every change takes from its origin to continuous operation.
 
 ```
-Origin Stream → Intent → OBC draft (Icebox) → Exploration + Assessment → Reliability Plan → Assessment Review → committed OBC/BDD → Iteration Plan → Delivery → Operation
+Origin Stream → Intent → Mode (Upstream or Downstream) → OBC draft (Business Intent Backlog / Product Intent Backlog) → Exploration + Assessment → Reliability Plan → Assessment Review → committed OBC/BDD → Iteration Plan → Delivery → Operation
 ```
 
 This document is the canonical reference for understanding **what happens at each step**, **what is produced**, and **when to advance**.
@@ -30,9 +30,9 @@ flowchart TD
     OS --> I
     I --> EX
     EX --> OBC
-    OBC --> IP
-    IP --> RP
-    RP --> D
+    OBC --> RP
+    RP --> IP
+    IP --> D
     D --> OP
 
     EX -.->|"Discard (sufficient learning)"| X[Close without advancing]
@@ -86,12 +86,12 @@ flowchart TD
 
 **Objective:** Transform the Intent into validated knowledge, reducing uncertainty before any formal delivery commitment.
 
-**What happens:** The Intent enters Upstream mode through the Discovery Journey. Hypotheses are tested through experiments, spikes, prototypes, and Event Storming. Code generated in this phase is disposable. Learning is the primary result.
+**What happens:** The Discovery Journey explores the Intent with the rigor defined by the execution mode. In Upstream there is no delivery commitment and maturity may vary; in Downstream all current gates apply. Hypotheses may be tested through experiments, spikes, prototypes, and Event Storming.
 
 **What is produced:**
 - Experiment in `prodops/journeys/discovery/experiments/<NNN-slug>/`
 - Decision Package (hypothesis answered, clear recommendation, learnings)
-- OBC draft (candidate)
+- OBC draft refined
 - BDD Feature draft
 - Risk and opportunity updates
 
@@ -121,35 +121,35 @@ flowchart TD
 
 ---
 
-### 5. Iteration Plan
+### 5. Reliability Plan
 
-**Objective:** Formally commit the capability to the next delivery iteration.
+**Objective:** Define, through the transversal Assessment journey, the reliability conditions required before commitment in the Iteration Plan.
 
-**What happens:** The approved OBC enters the Iteration Plan with status `In`. This represents the formal delivery commitment — the item leaves the Backlog and enters the executable plan.
-
-**What is produced:**
-- Entry in the Iteration Plan in `prodops/artifacts/plans/iteration-plan.md` with status `In`
-- Tracking List update if the item was there
-
-**When to advance:** Item in the Iteration Plan with status `In`.
-
-→ [Iteration Plan](../artifacts/plans/iteration-plan.en.md)
-
----
-
-### 6. Reliability Plan
-
-**Objective:** Define the reliability conditions that delivery must satisfy before being promoted.
-
-**What happens:** The risks identified in Exploration are transformed into a reliability plan. SLOs, mitigation actions, rollback criteria, and failure points are explicitly documented.
+**What happens:** Identified risks are transformed into a reliability plan. SLOs, mitigation actions, rollback criteria, and failure points are explicitly documented. Assessment runs in parallel with other journeys.
 
 **What is produced:**
 - Entry in the Reliability Plan in `prodops/journeys/assessment/reliability-plans/`
 - Risks updated in `prodops/journeys/assessment/risks.md`
 
-**When to advance:** Reliability Plan updated with the risks of the item to be implemented.
+**When to advance:** Reliability Plan updated and Assessment Review completed for the item.
 
 → [Reliability Plans](../journeys/assessment/reliability-plans/)
+
+---
+
+### 6. Iteration Plan
+
+**Objective:** Formally commit the capability to the next delivery iteration after Assessment Review.
+
+**What happens:** The approved set — OBC, BDD Feature, risks, and Reliability Plan — enters the Iteration Plan with status `In`. This represents the formal delivery commitment; it is not, in isolation, proof of readiness.
+
+**What is produced:**
+- Entry in the Iteration Plan in `prodops/artifacts/plans/iteration-plan.md` with status `In`
+- Repository Tracking List update if the item was there
+
+**When to advance:** All Downstream readiness gates are satisfied.
+
+→ [Iteration Plan](../artifacts/plans/iteration-plan.en.md)
 
 ---
 

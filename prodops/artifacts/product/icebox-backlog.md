@@ -1,4 +1,4 @@
-# Icebox Backlog - Payments
+# Icebox - Payments
 
 > **Propósito:** Itens comprometidos pelo Product Owner que ainda estão sendo preparados para Delivery. O Discovery necessário ocorre aqui — funcional, técnico ou operacional. O objetivo é produzir um OBC mínimo aceitável. Enquanto isso não acontece, o item permanece no Icebox.
 >

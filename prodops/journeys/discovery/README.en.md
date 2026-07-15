@@ -245,7 +245,7 @@ The complete Decision Package (sections of `experiment.md`):
 - **Recommended Decision** — the author's recommendation (see options below)
 - **Updated Risks** — new or mitigated risks
 - **Updated Opportunities** — identified opportunities
-- **Updated Tracking Items** — items that need to enter the Tracking Lists
+- **Updated Tracking Items** — items that need to enter the Repository Tracking Lists or Global Tracking Lists
 - **Updated OBCs** — proposed success criteria
 - **Recommended Downstream Scope** — what enters the next iteration, if approved
 

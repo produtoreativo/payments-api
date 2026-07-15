@@ -225,7 +225,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 | Global Tracking List / Repository Tracking List | Não existe | O item ainda não é uma Intent reconhecida |
 | Business Intent Backlog (fluxo global) | Draft | OBC criado; captura a Intent e hipóteses iniciais |
 | Product Intent Backlog (fluxo local) | Draft | OBC criado se ainda não existe; registra intenção aceita pelo Product Owner |
-| Icebox (Discovery no Downstream) | Draft em refinamento | Discovery refina o OBC até atingir Minimum OBC |
+| Icebox (Discovery) | Draft em refinamento | Discovery refina o OBC até atingir Minimum OBC |
 | Iteration Backlog | Minimum OBC | OBC mínimo validado; gate de entrada em Delivery |
 | Iteration Plan / Delivery | Active | Guia a implementação; BDD Feature o operacionaliza |
 | Operation | Operational | Em produção; complementado com métricas, SLOs, incidentes, postmortems |

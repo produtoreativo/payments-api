@@ -153,7 +153,7 @@ flowchart TD
 
 **O que é produzido:**
 - Entrada no Iteration Plan em `prodops/artifacts/plans/iteration-plan.md` com status `Entrou`
-- Atualização da Tracking List se o item estava lá
+- Atualização da Repository Tracking List se o item estava lá
 
 **Quando avançar:** Todos os gates de readiness Downstream estão satisfeitos.
 

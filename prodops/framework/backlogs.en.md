@@ -245,6 +245,16 @@ The OBC accompanies work throughout its entire life — from the moment the Inte
 | Delivery | Committed (in execution) | OBC guides implementation; BDD Feature operationalizes it |
 | Operation | Committed (validated) | OBC validated in production; can be extended by new Intents |
 
+### What the OBC records
+
+The OBC is the **living history of the work**:
+- Original Intent and Origin Stream
+- Which backlogs it passed through and when
+- Decisions made and discarded
+- Acceptance criteria and how they evolved
+- References to experiments, risks, and Reliability Plan
+- Production validation evidence
+
 ---
 
 ## GitHub Issue as operational representation

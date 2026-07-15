@@ -63,10 +63,10 @@ Consider, when they exist:
 
 * Product Deck
 * Service Deck
-* Release Plan
+* Reliability Plan
 * Premortem
 * Postmortem
-* Tracking List
+* Repository Tracking List
 * OBC
 * Assessment
 * Product Blueprint

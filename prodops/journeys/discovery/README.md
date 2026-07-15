@@ -245,7 +245,7 @@ O Decision Package completo (seções do `experiment.md`):
 - **Recommended Decision** — a recomendação do autor (ver opções abaixo)
 - **Updated Risks** — novos riscos ou riscos mitigados
 - **Updated Opportunities** — oportunidades identificadas
-- **Updated Tracking Items** — itens que precisam entrar nas Tracking Lists
+- **Updated Tracking Items** — itens que precisam entrar nas Repository Tracking Lists ou Global Tracking Lists
 - **Updated OBCs** — critérios de sucesso propostos
 - **Recommended Downstream Scope** — o que entra na próxima iteração, se aprovado
 
