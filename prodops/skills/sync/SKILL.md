@@ -32,7 +32,7 @@ If the requested step is not listed, run the full flow.
 - `AGENTS.md`
 - `prodops/artifacts/product/`
 - `prodops/journeys/assessment/`
-- `prodops/artifacts/trails/release-trail.md`
+- `prodops/artifacts/trails/sessions/` (active session trail)
 
 ## Flow
 

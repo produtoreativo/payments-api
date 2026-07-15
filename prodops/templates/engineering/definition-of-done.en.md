@@ -46,7 +46,7 @@ An implementation is done when all of the following are true:
 
 ## Evidence
 
-- [ ] Evidence added to `prodops/artifacts/trails/release-trail.md` (Downstream) or to the experiment trail (Upstream).
+- [ ] Evidence added to the active session trail at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` (Downstream) or to the experiment trail (Upstream).
 - [ ] Evidence includes: test output, lint output, and a summary of what changed.
 
 ## Ready for Sync + Finish

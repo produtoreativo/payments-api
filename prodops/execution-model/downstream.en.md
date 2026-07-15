@@ -76,7 +76,7 @@ CI Async: Ship → Validate → Promote            (platform, pipelines, environ
 
 ## Evidence
 
-Record significant delivery evidence in `prodops/artifacts/trails/release-trail.md`.
+Record significant delivery evidence in the active session trail at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`.
 
 ## Downstream must preserve
 

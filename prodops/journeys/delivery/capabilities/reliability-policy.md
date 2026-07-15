@@ -48,4 +48,4 @@ Para detalhes sobre como aplicar durante o TDD cycle: [ProdOps TDD — Confiabil
 
 ## Validação pós-deploy
 
-Após o deploy, validar os critérios de confiabilidade definidos no OBC. Registrar evidências em `prodops/artifacts/trails/release-trail.md` e `prodops/journeys/operation/operational-trail.md`.
+Após o deploy, validar os critérios de confiabilidade definidos no OBC. Registrar evidências no trail da sessão ativa em `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` e em `prodops/journeys/operation/operational-trail.md`.

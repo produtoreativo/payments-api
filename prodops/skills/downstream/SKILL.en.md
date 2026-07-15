@@ -41,7 +41,7 @@ only in `prodops/artifacts/obcs/`.
 4. Use TDD for behavior changes.
 5. Update impacted OBCs, BDDs, Reliability Plan items, and operational artifacts.
 6. Validate with concrete evidence.
-7. Append delivery evidence to `prodops/artifacts/trails/release-trail.md`.
+7. Append delivery evidence to the active session trail (`prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`).
 
 ## Guardrails
 

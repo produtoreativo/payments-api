@@ -22,7 +22,7 @@ Crie um diretório `evidence/` ao lado do experimento quando precisar de outputs
 
 | Template | Uso | Localização canônica |
 |---|---|---|
-| [delivery/release-entry.md](delivery/release-entry.md) | Entrada no Release Trail | acrescentar em `prodops/artifacts/trails/release-trail.md` |
+| [delivery/release-entry.md](delivery/release-entry.md) | Entrada no Release Trail | acrescentar no trail da sessão ativa em `prodops/artifacts/trails/sessions/` |
 | [delivery/pull-request-checklist.md](delivery/pull-request-checklist.md) | Checklist de PR antes do Finish | usado na revisão do Pull Request |
 
 ---

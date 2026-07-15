@@ -76,7 +76,7 @@ CI Async: Ship → Validate → Promote            (plataforma, pipelines, ambie
 
 ## Evidências
 
-Registrar evidências significativas de entrega em `prodops/artifacts/trails/release-trail.md`.
+Registrar evidências significativas de entrega no trail da sessão ativa em `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`.
 
 ## O Downstream deve preservar
 

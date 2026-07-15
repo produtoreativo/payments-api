@@ -513,7 +513,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## Release Trail
 
-**Definition:** The append-only log of Downstream evidence. Lives in [`artifacts/trails/release-trail.md`](../artifacts/trails/release-trail.en.md).
+**Definition:** The append-only log of Downstream evidence. Each agent session produces its own file at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`. See model at [`artifacts/trails/release-trail.en.md`](../artifacts/trails/release-trail.en.md).
 
 ---
 

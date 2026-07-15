@@ -153,7 +153,8 @@ Use this table as the primary navigation source before reading or writing any ar
 | Iteration Plan | `prodops/artifacts/plans/iteration-plan.md` |
 | Iteration Backlog | `prodops/artifacts/plans/iteration-backlog.md` |
 | Downstream Iteration Backlog | `prodops/artifacts/plans/downstream-iteration-backlog.md` |
-| Release Trail | `prodops/artifacts/trails/release-trail.md` |
+| Release Trail (model docs) | `prodops/artifacts/trails/release-trail.md` |
+| Release Trail (active session) | `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` |
 | Evidence (committed) | `prodops/artifacts/evidence/` |
 
 ---

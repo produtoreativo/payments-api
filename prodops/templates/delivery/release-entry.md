@@ -1,6 +1,6 @@
 # Release Trail Entry
 
-Localização canônica: acrescentar em `prodops/artifacts/trails/release-trail.md`
+Localização canônica: acrescentar no trail da sessão ativa em `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`
 
 ---
 

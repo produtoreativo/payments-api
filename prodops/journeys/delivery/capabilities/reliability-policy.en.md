@@ -48,4 +48,4 @@ For details on how to apply during the TDD cycle: [ProdOps TDD — Reliability i
 
 ## Post-deploy validation
 
-After deploy, validate the reliability criteria defined in the OBC. Record evidence in `prodops/artifacts/trails/release-trail.md` and `prodops/journeys/operation/operational-trail.md`.
+After deploy, validate the reliability criteria defined in the OBC. Record evidence in the active session trail at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` and in `prodops/journeys/operation/operational-trail.md`.

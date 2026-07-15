@@ -34,7 +34,7 @@
 - [ ] OBC (`prodops/artifacts/obcs/`)
 - [ ] Architecture diagram (if structural change)
 - [ ] Event Storming (if new/changed events)
-- [ ] Release Trail (`prodops/artifacts/trails/release-trail.md`)
+- [ ] Release Trail (active session trail at `prodops/artifacts/trails/sessions/`)
 
 ## Checklist
 
