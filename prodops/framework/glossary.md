@@ -319,7 +319,11 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Reliability Plan
 
-**Definição:** Produto da jornada transversal de Assessment que define riscos, OBCs, SLOs e ações de mitigação antes do compromisso no Iteration Plan. Fica em `prodops/journeys/assessment/reliability-plans/`.
+**Definição:** Produto da jornada transversal de Assessment que define riscos, SLOs e ações de mitigação para um item comprometido. Fica em `prodops/journeys/assessment/reliability-plans/`.
+
+**Obrigatoriedade:** Recomendado, não obrigatório. Fortemente recomendado para itens com risco operacional relevante (complexidade técnica alta, impacto financeiro, novos domínios ou integrações externas). Quando existe, deve ser revisado antes da decisão de readiness do Iteration Plan.
+
+**No fluxo local (pré-PIB):** O Premortem é o artefato adequado para análise de risco antes do Owner Approval. O Reliability Plan formal é produzido durante o Icebox, após o compromisso do Product Owner.
 
 ---
 
@@ -353,7 +357,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Não contém:** OBC. Compromisso. Identificador permanente.
 
-**Relação com outros conceitos:** Primeiro nível do fluxo local. Itens avançam via Premortem + Reliability Plan + Owner Approval para o Product Intent Backlog. Ver [`backlogs.md`](backlogs.md).
+**Relação com outros conceitos:** Primeiro nível do fluxo local. Itens avançam via Premortem + Análise de Risco Preliminar + Owner Approval para o Product Intent Backlog. (O Reliability Plan formal é produzido depois, durante o Icebox — é recomendado, não obrigatório para entrar no PIB.) Ver [`backlogs.md`](backlogs.md).
 
 ---
 
@@ -363,7 +367,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Pergunta:** O que foi oficialmente aceito pelo Product Owner?
 
-**Dois caminhos de entrada:** (1) Business Intent do Portfolio via Platform Release; (2) Repository Tracking Item via Premortem + Reliability Plan com Owner Approval.
+**Dois caminhos de entrada:** (1) Business Intent do Portfolio via Platform Release; (2) Repository Tracking Item via Premortem + Análise de Risco Preliminar com Owner Approval.
 
 **Após a entrada, a origem deixa de importar.** Todos os itens seguem a mesma jornada: Icebox → Iteration Backlog → Iteration Plan → Delivery.
 

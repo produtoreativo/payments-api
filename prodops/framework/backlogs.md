@@ -35,7 +35,7 @@ Delivery
 ```
 Repository Tracking List   ← O que merece atenção neste produto?
           ↓
-Premortem + Reliability Plan
+Premortem + Análise de Risco Preliminar
           ↓
 Owner Approval
           ↓
@@ -43,6 +43,8 @@ Product Intent Backlog     ← O que foi oficialmente aceito pelo Product Owner?
           ↓
 [continua no fluxo comum acima]
 ```
+
+> **Nota sobre Reliability Plan no fluxo local:** A etapa pré-PIB exige um **Premortem** e uma análise de risco preliminar — não o artefato formal Reliability Plan de `reliability-plans/`. O Reliability Plan formal é produzido pela jornada Assessment durante o Icebox, após o compromisso do Product Owner. O Premortem é suficiente para a decisão de entrada no PIB. O Reliability Plan formal é **recomendado** antes da Delivery, não obrigatório.
 
 Após entrar no **Product Intent Backlog**, a origem do item deixa de importar. Todos os itens seguem exatamente a mesma jornada — independente de terem vindo do Portfolio ou do fluxo local.
 
@@ -159,6 +161,8 @@ Após entrar no **Product Intent Backlog**, a origem do item deixa de importar. 
 
 **Após a entrada, a origem deixa de importar.** Todos os itens seguem a mesma jornada: Icebox → Iteration Backlog → Iteration Plan → Delivery.
 
+> **Exceção — promoção de Upstream:** Um item promovido de Upstream para Downstream já possui OBC, BDD Feature e riscos documentados. Ele entra **diretamente no Iteration Plan** (status `Entrou`), pulando o Iteration Backlog. O Iteration Backlog é a fila de espera para itens que ainda não estão prontos para iniciar Delivery — itens promovidos de Upstream já satisfazem esse critério.
+
 **Compromisso:** O Product Owner comprometeu-se a investigar e eventualmente entregar este item.
 
 **Quando avançar:** Quando a Intent tiver evidência suficiente para entrar no Icebox (preparação para Delivery).
@@ -201,7 +205,7 @@ Após entrar no **Product Intent Backlog**, a origem do item deixa de importar. 
 - BDD Feature committed em `prodops/artifacts/bdd/`
 - Entrada no Iteration Plan com status `In`
 - Riscos documentados em `prodops/journeys/assessment/risks.md`
-- Entrada no Reliability Plan em `prodops/journeys/assessment/reliability-plans/`
+- *(Recomendado)* Entrada no Reliability Plan em `prodops/journeys/assessment/reliability-plans/` — não é gate obrigatório, mas fortemente recomendado para itens com risco operacional relevante
 
 **Artefato canônico:** `prodops/artifacts/plans/iteration-backlog.md`
 
@@ -241,9 +245,9 @@ O OBC acompanha o trabalho por toda a sua vida — do momento em que a Intent é
 | Product Intent Backlog (fluxo local) | **Draft** | OBC criado ao ser aceito pelo Product Owner |
 | Icebox | Draft em refinamento | OBC refinado pelo Discovery; critérios emergem |
 | Assessment Review | Candidato a committed | OBC revisado por PM + Tech Lead |
-| Iteration Backlog | Committed | OBC aprovado; Downstream pode iniciar |
-| Delivery | Committed (em execução) | OBC guia a implementação; BDD Feature o operacionaliza |
-| Operation | Committed (validado) | OBC validado em produção; pode ser estendido por novas Intents |
+| Iteration Backlog | Minimum OBC | OBC mínimo validado; Downstream pode iniciar |
+| Delivery | Active | OBC guia a implementação; BDD Feature o operacionaliza |
+| Operation | Operational | OBC validado em produção; pode ser estendido por novas Intents |
 
 ### O que o OBC registra
 

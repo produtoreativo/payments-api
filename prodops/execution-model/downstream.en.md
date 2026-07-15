@@ -44,10 +44,11 @@ Downstream may start to guide a committed item toward readiness. Before executin
 1. OBC in `prodops/artifacts/obcs/`
 2. BDD Feature in `prodops/artifacts/bdd/`
 3. Risks documented in `prodops/journeys/assessment/risks.md`
-4. Reliability Plan entry produced by Assessment in `prodops/journeys/assessment/reliability-plans/`
-5. Iteration Plan entry with status `Entrou` in `prodops/artifacts/plans/iteration-plan.md`
+4. Iteration Plan entry with status `Entrou` in `prodops/artifacts/plans/iteration-plan.md`
 
-When a requirement is missing, Downstream stops before Delivery, identifies the owner, and guides the next action. Reliability precedes the Iteration Plan readiness decision.
+**Reliability Plan (recommended):** Not a mandatory gate, but strongly recommended for items with relevant operational risks. When it exists, it must be reviewed before the readiness decision — produced by the Assessment journey at `prodops/journeys/assessment/reliability-plans/`.
+
+When a mandatory requirement is missing, Downstream stops before Delivery, identifies the owner, and guides the next action.
 
 ## Mandatory sequence
 

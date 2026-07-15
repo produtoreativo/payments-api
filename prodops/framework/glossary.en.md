@@ -321,7 +321,11 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## Reliability Plan
 
-**Definition:** The execution contract of a Downstream item. Defines risks, OBCs, SLOs, and mitigation actions. Lives in `prodops/journeys/assessment/reliability-plans/`.
+**Definition:** Product of the transversal Assessment journey that defines risks, SLOs, and mitigation actions for a committed item. Lives in `prodops/journeys/assessment/reliability-plans/`.
+
+**Mandatory:** Recommended, not mandatory. Strongly recommended for items with relevant operational risk (high technical complexity, financial impact, new domains, or external integrations). When it exists, it must be reviewed before the Iteration Plan readiness decision.
+
+**In the local flow (pre-PIB):** The Premortem is the appropriate artifact for risk analysis before Owner Approval. The formal Reliability Plan is produced during the Icebox, after the Product Owner's commitment.
 
 ---
 
@@ -355,7 +359,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 **Does not contain:** OBC. Commitment. Permanent identifier.
 
-**Relationship with other concepts:** First level of the local flow. Items advance via Premortem + Reliability Plan + Owner Approval to the Product Intent Backlog. See [`backlogs.en.md`](backlogs.en.md).
+**Relationship with other concepts:** First level of the local flow. Items advance via Premortem + Preliminary Risk Analysis + Owner Approval to the Product Intent Backlog. (The formal Reliability Plan is produced later, during the Icebox — it is recommended, not mandatory for PIB entry.) See [`backlogs.en.md`](backlogs.en.md).
 
 ---
 
@@ -365,7 +369,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 **Question:** What has been officially accepted by the Product Owner?
 
-**Two entry paths:** (1) Business Intent from the Portfolio via Platform Release; (2) Repository Tracking Item via Premortem + Reliability Plan with Owner Approval.
+**Two entry paths:** (1) Business Intent from the Portfolio via Platform Release; (2) Repository Tracking Item via Premortem + Preliminary Risk Analysis with Owner Approval.
 
 **After entry, the origin no longer matters.** All items follow the same journey: Icebox → Iteration Backlog → Iteration Plan → Delivery.
 
@@ -429,7 +433,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## Downstream
 
-**Definition:** The governed delivery mode. Objective: deliver with confidence using validated knowledge. Every item requires OBC + BDD Feature + entry in the Reliability Plan. Downstream requires the full flow: `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`. See [`prodops/execution-model/downstream.en.md`](../execution-model/downstream.en.md).
+**Definition:** The governed delivery mode. Objective: deliver with confidence using validated knowledge. Every item requires OBC + BDD Feature + risks documented + entry in the Iteration Plan. The Reliability Plan is recommended but not mandatory. Downstream requires the full flow: `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`. See [`prodops/execution-model/downstream.en.md`](../execution-model/downstream.en.md).
 
 ---
 

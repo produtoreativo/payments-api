@@ -34,8 +34,8 @@ only in `prodops/artifacts/obcs/`.
 1. Confirm the item has status `Entrou` in the Iteration Plan at
    `prodops/artifacts/plans/iteration-plan.md` (section "Iteration Plan recomendado")
    or has an explicit release decision.
-2. Read the relevant Current State, Assessment, Reliability Plan, and BDD
-   Feature.
+2. Read the relevant Current State, Assessment, BDD Feature, and Reliability Plan
+   if one exists (recommended but not mandatory).
 3. Execute the full flow:
    `Bootstrap -> Hack -> Sync -> Finish -> Ship -> Validate -> Promote`.
 4. Use TDD for behavior changes.

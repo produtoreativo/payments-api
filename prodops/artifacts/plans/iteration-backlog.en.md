@@ -9,7 +9,7 @@
 
 ## Objective
 
-Record items that have completed Discovery in the Icebox and are ready for Delivery execution. Each item must already have a Minimum OBC validated.
+Record items with a validated Minimum OBC that have completed Discovery in the Icebox and are ready for Delivery execution. The only remaining decision is prioritization by the Product Owner.
 
 | ID | Area | Request | Type | Priority | Status | Next Step |
 |----|------|---------|------|----------|--------|-----------|
@@ -24,10 +24,9 @@ Record items that have completed Discovery in the Icebox and are ready for Deliv
 
 An item leaves the Iteration Backlog when:
 
-- It has been refined sufficiently to compose an OBC.
-- It has been discarded by business decision.
-- It has been consolidated into an epic or Iteration Plan.
-- It has been implemented and closed.
+- It has been prioritized and entered the Iteration Plan (OBC committed + BDD Feature committed).
+- It has been discarded by business decision (record the reason).
+- It has been returned to the Icebox due to a need for further refinement (exception — record the gap).
 
 ---
 

@@ -44,10 +44,11 @@ O modo Downstream pode ser iniciado para guiar um item comprometido até readine
 1. OBC em `prodops/artifacts/obcs/`
 2. BDD Feature em `prodops/artifacts/bdd/`
 3. Riscos documentados em `prodops/journeys/assessment/risks.md`
-4. Entrada no Reliability Plan, produzido pela Assessment, em `prodops/journeys/assessment/reliability-plans/`
-5. Entrada no Iteration Plan com status `Entrou` em `prodops/artifacts/plans/iteration-plan.md`
+4. Entrada no Iteration Plan com status `Entrou` em `prodops/artifacts/plans/iteration-plan.md`
 
-Quando faltar um requisito, o Downstream para antes da Delivery, indica o responsável e orienta a próxima ação. Reliability precede a decisão de readiness do Iteration Plan.
+**Reliability Plan (recomendado):** Não é gate obrigatório, mas é fortemente recomendado para items com riscos operacionais relevantes. Quando existe, deve ser revisado antes da decisão de readiness — produzido pela jornada Assessment em `prodops/journeys/assessment/reliability-plans/`.
+
+Quando faltar um requisito obrigatório, o Downstream para antes da Delivery, indica o responsável e orienta a próxima ação.
 
 ## Sequência obrigatória
 

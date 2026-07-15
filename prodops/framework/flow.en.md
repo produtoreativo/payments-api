@@ -20,18 +20,26 @@ This document is the canonical reference for understanding **what happens at eac
 flowchart TD
     OS["Origin Stream\n(Business | Enterprise | Team | Technology)"]
     I["Intent"]
-    EX["Exploration\n(Journey: Discovery, Mode: Upstream)"]
-    OBC["Observable Business Contract\n(OBC)"]
-    IP["Iteration Plan"]
-    RP["Reliability Plan"]
+    DRAFT["OBC draft\n(BIB or PIB)"]
+    EX["Exploration\n(Journey: Discovery; rigor by mode)"]
+    AS["Assessment\n(transversal)"]
+    RP["Reliability Plan\n(recommended)"]
+    REV["Assessment Review\n(PM + Tech Lead)"]
+    OBC["OBC + BDD\ncommitted"]
+    IP["Iteration Plan\n(status: Entrou)"]
     D["Delivery\n(Journey: Delivery, Mode: Downstream)"]
-    OP["Operation\n(Jornada: Operation)"]
+    OP["Operation\n(Journey: Operation)"]
 
     OS --> I
-    I --> EX
-    EX --> OBC
-    OBC --> RP
-    RP --> IP
+    I --> DRAFT
+    DRAFT --> EX
+    EX --> REV
+    DRAFT -.-> AS
+    EX -.-> AS
+    AS -.-> RP
+    RP -.-> REV
+    REV --> OBC
+    OBC --> IP
     IP --> D
     D --> OP
 
@@ -76,7 +84,7 @@ flowchart TD
 
 **When to advance:** As soon as the Intent is registered and there is a decision to continue (not discard).
 
-> The OBC is **not** the Framework entry point. It is the output of Exploration — the transformation of a sufficiently understood Intent into an observable contract.
+> The OBC Draft is born automatically when a Business Intent enters the **Business Intent Backlog** (global flow) or the **Product Intent Backlog** (local flow) — **before** Discovery, before Upstream, before Downstream. During Upstream it remains in Draft. In Downstream, it is refined in the Icebox until reaching Minimum OBC, then controls the entire Delivery evolution.
 
 → [Intent template](../templates/business-intents/intent.en.md)
 

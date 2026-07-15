@@ -4,7 +4,7 @@ Reliability is planned before implementation and validated before promotion.
 
 ## Reliability Plan
 
-Every Downstream capability requires an entry in the Reliability Plan. The plan defines:
+A Reliability Plan is **recommended** for every Downstream capability, but is not mandatory. It is strongly recommended for items with relevant operational risk (high complexity, financial impact, new integrations). When it exists, the plan defines:
 - Risks and mitigations
 - OBCs (Observable Business Contracts) with measurable success thresholds
 - SLO suggestions for events on the critical path

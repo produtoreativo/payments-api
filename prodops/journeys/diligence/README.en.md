@@ -83,7 +83,7 @@ Create or update GitHub Issues, Jira Cards, and other operational representation
 
 ### Delivery prerequisites verification
 
-Ensure all mandatory prerequisites are satisfied before an item enters Delivery: committed OBC, committed BDD Feature, Iteration Plan entry, documented risks, Reliability Plan.
+Ensure all mandatory prerequisites are satisfied before an item enters Delivery: committed OBC, committed BDD Feature, Iteration Plan entry, documented risks. Verify whether a Reliability Plan exists — if so, confirm it was reviewed before the readiness decision (recommended, not mandatory).
 
 ### Divergence detection
 

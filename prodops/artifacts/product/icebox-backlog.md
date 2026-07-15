@@ -30,7 +30,7 @@
 
 | Estado | Significado | Critério de movimentação |
 | --- | --- | --- |
-| Icebox | Ideia, oportunidade ou necessidade conhecida, ainda sem compromisso. | Existe problema ou feature mapeada, mas faltam evidências, prioridade ou capacidade. |
+| Icebox | Item comprometido pelo Product Owner (vindo do PIB), sendo refinado pelo Discovery para atingir Minimum OBC. | OBC Draft em refinamento; falta completar Discovery funcional, técnico ou operacional. |
 | Discovery | Item em investigação de produto, negócio, técnica, operação ou dados. | Existe pergunta clara, dono e prazo de aprendizado. |
 | Ready for Delivery | Item pronto para planejamento de sprint/kanban. | Critérios de aceite, dependências, métricas e riscos estão claros. |
 | Delivery | Item em implementação. | Time assumiu compromisso e iniciou execução. |

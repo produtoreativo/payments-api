@@ -9,7 +9,7 @@
 
 ## Objetivo
 
-Registrar demandas conhecidas que ainda precisam de refinamento, avaliação ou planejamento antes de serem incorporadas ao Iteration Plan ou a um OBC específico.
+Registrar itens com OBC mínimo validado que concluíram o Discovery no Icebox e estão prontos para execução de Delivery. A única decisão pendente é a priorização pelo Product Owner.
 
 | ID | Área | Solicitação | Tipo | Prioridade | Status | Próximo Passo |
 |----|------|-------------|------|------------|--------|---------------|
@@ -24,10 +24,9 @@ Registrar demandas conhecidas que ainda precisam de refinamento, avaliação ou 
 
 Um item deixa o Iteration Backlog quando:
 
-- Foi refinado suficientemente para compor um OBC.
-- Foi descartado por decisão de negócio.
-- Foi consolidado em um épico ou Iteration Plan.
-- Foi implementado e encerrado.
+- Foi priorizado e entrou no Iteration Plan (OBC committed + BDD Feature committed).
+- Foi descartado por decisão de negócio (registrar motivo).
+- Foi retornado ao Icebox por necessidade de refinamento adicional (exceção — registrar lacuna).
 
 ---
 
