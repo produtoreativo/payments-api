@@ -5,45 +5,82 @@ description: Close technical work with quality gates. Use before considering a t
 
 # FINISH
 
-Use this skill to close a task with explicit quality evidence.
+Use this skill to close CI Sync: validate quality locally, ensure the automatic
+PR rules are valid, publish the commits, and open the PR in auto-approval mode.
+
+Finish has **three invocable steps** plus a publish step, each with a single
+responsibility and an explicit boundary of what it is **not** responsible for —
+so each step is auditable in isolation, with no cross-cutting side effects (a
+validation step does not commit, a review step does not run the pipeline, etc.):
+
+- **`validate` — static quality analysis** (runs all static analysis steps; the
+  single dynamic exception is acceptance/integration).
+- **`review` — pipeline inspection** (ensures the rules for an automatic PR are
+  valid, without running the pipeline).
+- **push origin** — publishes the commits to the origin branch (git, no force push).
+- **`request` — opens the PR in auto-approval mode** (auto-merge if CI passes).
+
+When invoked with a step argument (`/finish <step>`), run only that step.
+Otherwise, run the full flow in order.
+
+Finish does **not** implement or read product code (that is Hack), does **not**
+run the remote pipeline (that is CI), and does **not** rewrite product decisions
+(that is upstream).
+
+## Steps
+
+| Step | File | When to use |
+|---|---|---|
+| `validate` | [steps/validate/SKILL.md](steps/validate/SKILL.md) | Before push — replicate locally what the remote pipeline will run |
+| `review` | [steps/review/SKILL.md](steps/review/SKILL.md) | Confirm the conditions for safe auto-approval are present in the repository |
+| `request` | [steps/request/SKILL.md](steps/request/SKILL.md) | Open the PR with title and body from the template, with auto-merge configured |
+
+If the requested step is not listed, run the full flow.
 
 ## Inputs
 
 - `AGENTS.md`
 - `prodops/framework/journeys/delivery/phases/finish/quality-gates.md`
 - `prodops/framework/journeys/delivery/phases/finish/done-criteria.md`
+- `prodops/exec/manifest.yaml` — canonical gate commands and criteria
 - Current diff and test output
 
 ## Flow
 
-1. Review changed files and confirm scope.
-2. Check quality gates relevant to the task.
-3. Run targeted validation and broader validation when risk warrants it.
-4. Confirm ProdOps artifacts were updated only where impacted.
-5. Confirm Release Trail evidence exists.
-6. Push the feature branch and open the PR:
+When invoked without a step argument, run in order:
+
+1. **[validate](steps/validate/SKILL.md)** — run the static analysis suite
+   (format, lint, coverage, build) plus acceptance when behavior or contracts
+   changed. If any fails locally, the step fails and does not advance — fix
+   first. Failing on the remote pipeline after a push costs more (rework,
+   notifications, red PR) than failing locally before.
+2. **[review](steps/review/SKILL.md)** — confirm the pipeline has the required
+   checks, that branch protection on the target branch enforces them, and that
+   no required reviewer blocks auto-merge. A missing condition is a **blocker**
+   to record before enabling auto-approval.
+3. **push origin** — after a clean `validate` and a `review` with no blockers,
+   publish the commits to the **origin branch** (the branch the current one was
+   derived from), with no force push:
+
    ```bash
-   git push origin <branch>
-   gh pr create --title "[DS-<id>]: <slug>" \
-     --body "<description and issue reference>" \
-     --base master
+   git push origin HEAD:<origin-branch>
    ```
-7. Enable auto-merge on the PR immediately after creation:
-   ```bash
-   gh pr merge <number> --auto --squash
-   ```
-   This queues the squash merge to execute automatically once all required
-   CI checks pass. The agent does **not** wait idle — it emits `Finish.Completed`
-   as soon as auto-merge is enabled and the PR is confirmed open.
-8. Record the PR number and auto-merge status in the Release Trail.
-9. Leave explicit next steps for any incomplete item.
+4. **[request](steps/request/SKILL.md)** — open the PR with the template filled
+   with evidence and enable auto-merge immediately after creation
+   (`gh pr merge <number> --auto --squash`), then update the Release Trail with
+   the PR link and auto-merge status. Auto-merge queues the squash to execute
+   once all required CI checks pass. The agent does **not** wait idle — it emits
+   `Finish.Completed` as soon as auto-merge is enabled and the PR is confirmed
+   open.
 
 ## Guardrails
 
 - Do not mark work complete without evidence.
 - Do not hide skipped tests; record why they were skipped.
 - Do not expand scope during finish work.
+- Do not force push.
 - Do not merge manually. Auto-merge is the only authorized merge path from Finish.
+- Do not enable auto-approval while branch protection is not configured.
 - Do not emit `Finish.Completed` before auto-merge is successfully enabled on the PR.
 
 ## Engineering References

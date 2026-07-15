@@ -5,7 +5,39 @@ description: Close technical work with quality gates. Emits Finish.Started and F
 
 # FINISH
 
-Use this skill to close a task with explicit quality evidence.
+Use este skill para fechar o CI Sync: validar a qualidade localmente, garantir
+que as regras de PR automático estão válidas, publicar os commits e abrir o PR
+em modo auto aprovação.
+
+O Finish tem **três steps invocáveis** mais um passo de publicação, cada um com
+responsabilidade única e uma fronteira explícita do que **não** é sua
+responsabilidade — para que cada passo seja auditável isoladamente, sem efeitos
+colaterais cruzados (um passo de validação não commita, um passo de review não
+executa pipeline, etc.):
+
+- **`validate` — análise estática de qualidade** (roda todos os passos de
+  análise estática; a exceção dinâmica única é a aceitação/integração).
+- **`review` — inspeção da pipeline** (garante que as regras para um PR
+  automático estão válidas, sem executar a pipeline).
+- **push origin** — publica os commits na branch de origem (git, sem force push).
+- **`request` — abre o PR em modo auto aprovação** (auto-merge se o CI aprovar).
+
+Quando invocado com um argumento de step (`/finish <step>`), execute apenas
+aquele step. Caso contrário, execute o fluxo completo em ordem.
+
+O Finish **não** implementa nem lê código de produto (isso é Hack), **não**
+executa a pipeline remota (isso é o CI), e **não** reescreve decisões de produto
+(isso é upstream).
+
+## Steps
+
+| Step | File | When to use |
+|---|---|---|
+| `validate` | [steps/validate/SKILL.md](steps/validate/SKILL.md) | Antes do push — replicar localmente o que a pipeline remota vai executar |
+| `review` | [steps/review/SKILL.md](steps/review/SKILL.md) | Confirmar que as condições para auto aprovação segura estão presentes no repositório |
+| `request` | [steps/request/SKILL.md](steps/request/SKILL.md) | Abrir o PR com título e body segundo o template, com auto-merge configurado |
+
+Se o step pedido não estiver listado, execute o fluxo completo.
 
 ## Required input context
 
@@ -67,39 +99,47 @@ Do not emit `Finish.Completed` if any quality gate fails or evidence is incomple
 - `AGENTS.md`
 - `prodops/framework/journeys/delivery/phases/finish/quality-gates.md`
 - `prodops/framework/journeys/delivery/phases/finish/done-criteria.md`
+- `prodops/exec/manifest.yaml` — comandos e critérios canônicos dos gates
 - Current diff and test output
 
 ## Flow
 
-1. Review changed files and confirm scope.
-2. Check quality gates relevant to the task.
-3. Run targeted validation and broader validation when risk warrants it.
-4. Confirm ProdOps artifacts were updated only where impacted.
-5. Confirm Release Trail evidence exists.
-6. Push the feature branch and open the PR:
+Quando invocado sem argumento de step, execute em ordem:
+
+1. **[validate](steps/validate/SKILL.md)** — rodar a suíte de análise estática
+   (format, lint, cobertura, build) mais a aceitação quando comportamento ou
+   contratos mudaram. Se algum falha localmente, o passo falha e não se avança —
+   corrigir primeiro. Falhar na pipeline remota depois de um push custa mais
+   (retrabalho, notificações, PR vermelho) do que falhar localmente antes.
+2. **[review](steps/review/SKILL.md)** — confirmar que a pipeline tem os checks
+   obrigatórios, que a branch protection na branch de destino os exige, e que
+   não há reviewer obrigatório bloqueando o auto-merge. Condição ausente é um
+   **bloqueador** a registrar antes de ativar auto aprovação.
+3. **push origin** — após `validate` limpo e `review` sem bloqueadores, publicar
+   os commits na **branch de origem** (a branch da qual a atual foi derivada),
+   sem force push:
+
    ```bash
-   git push origin <branch>
-   gh pr create --title "[DS-<id>]: <slug>" \
-     --body "<description and issue reference>" \
-     --base master
+   git push origin HEAD:<branch-de-origem>
    ```
-7. Enable auto-merge on the PR immediately after creation:
-   ```bash
-   gh pr merge <number> --auto --squash
-   ```
-   This queues the squash merge to execute automatically once all required
-   CI checks pass. The agent does **not** wait idle — it emits `Finish.Completed`
-   as soon as auto-merge is enabled and the PR is confirmed open.
-8. Record the PR number and auto-merge status in the Release Trail.
-9. Leave explicit next steps for any incomplete item.
+4. **[request](steps/request/SKILL.md)** — abrir o PR com o template preenchido
+   com evidências e ativar auto-merge imediatamente após a criação
+   (`gh pr merge <number> --auto --squash`), e atualizar o Release Trail com o
+   link do PR e o status do auto-merge. O auto-merge enfileira o squash para
+   executar assim que os checks obrigatórios passarem. O agente **não** espera
+   ocioso — emite `Finish.Completed` assim que o auto-merge estiver ativo e o PR
+   confirmado aberto.
 
 ## Guardrails
 
-- Do not mark work complete without evidence.
-- Do not hide skipped tests; record why they were skipped.
-- Do not expand scope during finish work.
-- Do not merge manually. Auto-merge is the only authorized merge path from Finish.
-- Do not emit `Finish.Completed` before auto-merge is successfully enabled on the PR.
+- Não marcar trabalho completo sem evidência.
+- Não esconder testes pulados; registrar o motivo.
+- Não expandir escopo durante o Finish.
+- Não fazer force push.
+- Não fazer merge manual. Auto-merge é o único caminho de merge autorizado a
+  partir do Finish.
+- Não ativar auto aprovação enquanto a branch protection não estiver configurada.
+- Não emitir `Finish.Completed` antes do auto-merge estar ativo no PR.
 
 ## Engineering References
 

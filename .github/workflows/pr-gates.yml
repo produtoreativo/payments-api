@@ -35,13 +35,23 @@ name: PR Quality Gates
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  # push (any branch) runs the same gates as a PR and establishes the coverage
+  # baseline for that branch, so a PR targeting it can be compared. Running the
+  # full gate set — not just acceptance — means the baseline always comes from a
+  # lint/build/no_mocks-verified state, mirroring the local /finish validate
+  # step. Keeping this unfiltered — instead of pinning to master — matches the
+  # ProdOps flow where a feature branch is derived from an arbitrary origin
+  # branch, and that origin branch is the PR target that needs a baseline.
+  push:
 
 permissions:
   contents: read
 
-# One run per PR; new pushes cancel the previous run.
+# One run per ref; new pushes cancel the previous run. On pull_request the ref
+# is the PR head; on push it is the pushed branch. Falling back to run_id keeps
+# the group unique when neither is present.
 concurrency:
-  group: pr-gates-${{ github.event.pull_request.number }}
+  group: pr-gates-${{ github.event.pull_request.number || github.ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
@@ -90,6 +100,13 @@ jobs:
       run:
         working-directory: api
 
+    # code-quality: write lets the coverage upload step publish the Cobertura
+    # report to GitHub Code Quality. Scoped to this job — the other gates keep
+    # the workflow-wide read-only default.
+    permissions:
+      contents: read
+      code-quality: write
+
     services:
       localstack:
         image: localstack/localstack:4
@@ -130,8 +147,29 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # test:acceptance uses test/jest-e2e.json, which now collects coverage
+      # over src/ (instrumented while the e2e suites run) and emits a Cobertura
+      # XML at api/coverage/cobertura-coverage.xml. There are no unit suites on
+      # api/src, so the acceptance run is the source of coverage.
       - name: Acceptance tests
         run: npm run test:acceptance
+
+      # Publishes the Cobertura report to GitHub Code Quality (public preview) as
+      # the branch baseline that later PRs are compared against. Restricted to
+      # push: when a branch with an open PR receives a commit, GitHub fires both
+      # `push` and `pull_request: synchronize` for the same HEAD — uploading on
+      # both would publish two concurrent baselines for the same commit. The
+      # acceptance job itself still runs on both events (it stays a PR gate);
+      # only the baseline upload is push-only. Informative for now — no threshold
+      # blocks the merge. Requires Code Quality enabled on the repo/org;
+      # otherwise the summary simply does not render.
+      - name: Upload coverage report
+        if: github.event_name == 'push'
+        uses: actions/upload-code-coverage@v1
+        with:
+          file: api/coverage/cobertura-coverage.xml
+          language: typescript
+          label: acceptance
 
   # ── Gate: build ─────────────────────────────────────────────────────────────
   # Manifest: gates.build ("cd api && npm run build", expect exit0).
