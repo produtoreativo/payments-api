@@ -73,7 +73,9 @@ exit gates. The full checklist is in
    `prodops/journeys/assessment/architecture/overview.md`:
    - edit the Mermaid diagram;
    - add a row to the History table with today's date and a one-line description.
+
 7. **Release Trail** — append evidence to the active session trail (`prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`):
+
    - red test output (or reason TDD was not applicable);
    - green test output;
    - lint result;
