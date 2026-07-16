@@ -53,6 +53,7 @@ Use this table as the primary navigation source before reading or writing any ar
 | Experiment trail | `prodops/journeys/discovery/experiments/<NNN-slug>/upstream-trail.md` |
 | Experiment evidence | `prodops/journeys/discovery/experiments/<NNN-slug>/evidence/` |
 | Exploratory OBCs (in experiment) | `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` |
+| Exploratory BDD Features (in experiment) | `prodops/journeys/discovery/experiments/<NNN-slug>/features/` |
 | Global discovery trail | `prodops/journeys/discovery/upstream-trail.md` |
 | Consolidated learnings | `prodops/journeys/discovery/learnings.md` |
 | Spikes | `prodops/journeys/discovery/spikes.md` |

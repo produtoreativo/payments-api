@@ -19,7 +19,7 @@ OBC files: `prodops/artifacts/obcs/`
 
 ## Definition of Done
 
-A capability is not complete until the [Definition of Done](../../../templates/engineering/definition-of-done.md) is satisfied, including the reliability criteria.
+A capability is not complete until the [Definition of Done](../../../templates/engineering/definition-of-done.en.md) is satisfied, including the reliability criteria.
 
 ## Failure modes
 
@@ -42,9 +42,9 @@ For each behavior implemented in the Hack Flow, verify the following requirement
 | **HTTP codes** | Status codes match semantics: 201 (created), 400 (invalid input), 404 (not found), 409 (conflict/invalid state), 422 (business rule). |
 | **Controlled degradation** | External dependency failure (provider, SQS, DynamoDB) does not bring down independent flows. |
 
-These requirements are verified in the [Definition of Done](../../../templates/engineering/definition-of-done.md) — Reliability section.
+These requirements are verified in the [Definition of Done](../../../templates/engineering/definition-of-done.en.md) — Reliability section.
 
-For details on how to apply during the TDD cycle: [ProdOps TDD — Reliability in the cycle](../practices/prodops-tdd.md).
+For details on how to apply during the TDD cycle: [ProdOps TDD — Reliability in the cycle](../practices/prodops-tdd.en.md).
 
 ## Post-deploy validation
 

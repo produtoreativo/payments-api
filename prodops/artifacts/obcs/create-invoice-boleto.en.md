@@ -2,7 +2,7 @@
 
 ## Status
 
-Downstream. Status `Entrou` in `prodops/artifacts/plans/iteration-plan.md` (section "Iteration Plan recomendado").
+Downstream. Status `In` in `prodops/artifacts/plans/iteration-plan.md` (section "Recommended Iteration Plan").
 
 ## Business Outcome
 

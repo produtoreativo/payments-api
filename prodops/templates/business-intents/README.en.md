@@ -6,4 +6,4 @@ Templates for recording Intents — the entry point of the Framework before deci
 |---|---|
 | [intent.md](intent.md) | New Intent |
 
-→ [prodops/templates/README.md](../README.md)
+→ [prodops/templates/README.en.md](../README.en.md)

@@ -5,6 +5,7 @@
 > Promoted items follow the local flow: Premortem + Reliability Plan + Owner Approval → Product Intent Backlog.
 >
 > → [Backlog hierarchy](../../framework/backlogs.en.md)
+> → [Icebox](icebox-backlog.en.md) — next level; where the OBC is refined to Minimum OBC
 
 | Item | Origin | Dimension | Owner | Status | Next action |
 | --- | --- | --- | --- | --- | --- |

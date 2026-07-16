@@ -44,7 +44,7 @@ Downstream may start to guide a committed item toward readiness. Before executin
 1. OBC in `prodops/artifacts/obcs/`
 2. BDD Feature in `prodops/artifacts/bdd/`
 3. Risks documented in `prodops/journeys/assessment/risks.md`
-4. Iteration Plan entry with status `Entrou` in `prodops/artifacts/plans/iteration-plan.md`
+4. Iteration Plan entry with status `In` in `prodops/artifacts/plans/iteration-plan.md`
 
 **Reliability Plan (recommended):** Not a mandatory gate, but strongly recommended for items with relevant operational risks. When it exists, it must be reviewed before the readiness decision — produced by the Assessment journey at `prodops/journeys/assessment/reliability-plans/`.
 
@@ -67,13 +67,13 @@ CI Async: Ship → Validate → Promote            (platform, pipelines, environ
 
 | Phase | Description | Link |
 |---|---|---|
-| Bootstrap | Dependencies + local infrastructure + configuration + smoke gate | [../journeys/delivery/phases/bootstrap/README.md](../journeys/delivery/phases/bootstrap/README.md) |
-| Hack | Implementation via ProdOps TDD | [../journeys/delivery/phases/hack/README.md](../journeys/delivery/phases/hack/README.md) |
-| Sync | Branch sync (rebase) + artifact alignment (align) | [../journeys/delivery/phases/sync/README.md](../journeys/delivery/phases/sync/README.md) |
-| Finish | Quality Gates + PR | [../journeys/delivery/phases/finish/README.md](../journeys/delivery/phases/finish/README.md) |
-| Ship | Preparation + Deployment | [../journeys/delivery/phases/ship/README.md](../journeys/delivery/phases/ship/README.md) |
-| Validate | Runtime + observability + SLO | [../journeys/delivery/phases/validate/README.md](../journeys/delivery/phases/validate/README.md) |
-| Promote | Formal approval + Release Trail | [../journeys/delivery/phases/promote/README.md](../journeys/delivery/phases/promote/README.md) |
+| Bootstrap | Dependencies + local infrastructure + configuration + smoke gate | [../journeys/delivery/phases/bootstrap/README.en.md](../journeys/delivery/phases/bootstrap/README.en.md) |
+| Hack | Implementation via ProdOps TDD | [../journeys/delivery/phases/hack/README.en.md](../journeys/delivery/phases/hack/README.en.md) |
+| Sync | Branch sync (rebase) + artifact alignment (align) | [../journeys/delivery/phases/sync/README.en.md](../journeys/delivery/phases/sync/README.en.md) |
+| Finish | Quality Gates + PR | [../journeys/delivery/phases/finish/README.en.md](../journeys/delivery/phases/finish/README.en.md) |
+| Ship | Preparation + Deployment | [../journeys/delivery/phases/ship/README.en.md](../journeys/delivery/phases/ship/README.en.md) |
+| Validate | Runtime + observability + SLO | [../journeys/delivery/phases/validate/README.en.md](../journeys/delivery/phases/validate/README.en.md) |
+| Promote | Formal approval + Release Trail | [../journeys/delivery/phases/promote/README.en.md](../journeys/delivery/phases/promote/README.en.md) |
 
 ## Evidence
 

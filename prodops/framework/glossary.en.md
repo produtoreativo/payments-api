@@ -323,7 +323,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 **Definition:** Product of the transversal Assessment journey that defines risks, SLOs, and mitigation actions for a committed item. Lives in `prodops/journeys/assessment/reliability-plans/`.
 
-**Mandatory:** Recommended, not mandatory. Strongly recommended for items with relevant operational risk (high technical complexity, financial impact, new domains, or external integrations). When it exists, it must be reviewed before the Iteration Plan readiness decision.
+**Requirement level:** Recommended, not mandatory. Strongly recommended for items with relevant operational risk (high technical complexity, financial impact, new domains, or external integrations). When it exists, it must be reviewed before the Iteration Plan readiness decision.
 
 **In the local flow (pre-PIB):** The Premortem is the appropriate artifact for risk analysis before Owner Approval. The formal Reliability Plan is produced during the Icebox, after the Product Owner's commitment.
 
@@ -421,7 +421,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## Bootstrap
 
-**Definition:** The first stage of CI Sync. Prepares the environment, creates the branch, and establishes the product context (OBC, BDD Feature, existing tests) before starting implementation. Produces no code — produces context. See [`journeys/delivery/phases/bootstrap/README.en.md`](../journeys/delivery/phases/bootstrap/README.en.md).
+**Definition:** The first stage of CI Sync. Installs dependencies, prepares local infrastructure, verifies configuration, and runs the smoke gate. Does not read code, tests, or product artifacts, and does not create a branch — Git flow belongs to Hack Start. See [`journeys/delivery/phases/bootstrap/README.en.md`](../journeys/delivery/phases/bootstrap/README.en.md).
 
 ---
 

@@ -4,7 +4,7 @@
 
 The approved backlog for this release — with scope decisions — is at:
 
-- [`prodops/artifacts/plans/iteration-plan.md`](iteration-plan.md) → section **Iteration Plan recomendado**
+- [`prodops/artifacts/plans/iteration-plan.md`](iteration-plan.md) → section **Recommended Iteration Plan**
 
 This is the canonical document to see what is in, what is out, and what was deferred.
 

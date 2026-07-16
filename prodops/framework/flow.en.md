@@ -26,7 +26,7 @@ flowchart TD
     RP["Reliability Plan\n(recommended)"]
     REV["Assessment Review\n(PM + Tech Lead)"]
     OBC["OBC + BDD\ncommitted"]
-    IP["Iteration Plan\n(status: Entrou)"]
+    IP["Iteration Plan\n(status: In)"]
     D["Delivery\n(Journey: Delivery, Mode: Downstream)"]
     OP["Operation\n(Journey: Operation)"]
 
@@ -116,7 +116,7 @@ flowchart TD
 
 **Objective:** Transform the knowledge validated by Exploration into an observable and verifiable contract.
 
-**What happens:** The OBC draft produced in Exploration is reviewed, refined, and promoted to `prodops/artifacts/obcs/`. The OBC defines measurable success criteria that anchor all subsequent implementation. Without a committed OBC, there is no Downstream.
+**What happens:** The OBC Draft — born at the Business Intent Backlog or Product Intent Backlog — is refined through Exploration (Discovery in the Icebox) and Assessment. The Reliability Plan is produced before the commitment decision. In the Assessment Review, PM and Tech Lead review the full set; when approved, the OBC reaches Minimum OBC state and the BDD Feature are promoted to the committed directories. Without this set, there is no Downstream execution.
 
 **What is produced:**
 - OBC committed in `prodops/artifacts/obcs/<slug>.md`

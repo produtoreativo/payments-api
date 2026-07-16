@@ -1,3 +1,5 @@
+[English](README.en.md)
+
 # Payments API — ProdOps University Reference Project
 
 Payments API é um projeto de referência da [ProdOps University](https://prodops.university/) que demonstra como código, contratos, especificações, observabilidade, confiabilidade, operação e artefatos de produto se conectam na evolução de um produto digital.
@@ -6,7 +8,7 @@ Payments API é um projeto de referência da [ProdOps University](https://prodop
 
 ---
 
-## Quick Start
+## Início Rápido
 
 ### Pré-requisitos
 
@@ -38,7 +40,7 @@ cd api && npm run lint              # lint + format check
 ./scripts/test-acceptance.sh        # acceptance tests (requer LocalStack)
 ```
 
-### Commit Workflow
+### Configurar Commit Workflow
 
 ```bash
 git config core.hooksPath prodops/journeys/delivery/capabilities/commit-workflow/hooks

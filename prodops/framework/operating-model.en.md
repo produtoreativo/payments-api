@@ -34,13 +34,12 @@ ProdOps organizes product and engineering work in hierarchical layers, with trac
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓
-Intent
+Intent → OBC Draft (Business Intent Backlog or Product Intent Backlog)
   ↓
-Exploration
+Exploration (Icebox)
+  ↔ Continuous Assessment → Reliability Plan → Assessment Review
   ↓
-Observable Business Contract (OBC)
-  ↓
-Continuous Assessment
+OBC + BDD committed
   ↓
 Backlog Management (Diligence)        ← Repository Tracking List → Product Intent Backlog → Icebox → Iteration Backlog → Iteration Plan
   ↓
@@ -129,7 +128,7 @@ Artifacts
 
 ### Discovery
 
-Exploration. Implements the Exploration step of the flow. Transforms hypotheses into validated knowledge. No delivery commitment — only a learning commitment.
+Explores problems, hypotheses, and possibilities. Discovery exists in both Upstream and Downstream modes; it is not synonymous with either.
 
 → [prodops/journeys/discovery/README.en.md](../journeys/discovery/README.en.md)
 
@@ -175,14 +174,13 @@ Intent
   ↓ enters
 Business Intent Backlog (global flow) or Product Intent Backlog (local flow) → OBC Draft
   ↓
-Exploration — Upstream (Discovery in Icebox)
+Exploration (Discovery in Icebox) ↔ Assessment
   Experiment → learning → Decision Package
-  ↓ when hypothesis answered
+  Assessment → risks + Reliability Plan
+  ↓ Assessment Review (PM + Tech Lead)
 OBC committed + BDD Feature committed
-  ↓ Assessment Review
-Decision Package review (PM + Tech Lead)
   ↓ if approved
-Iteration Plan (status: In) + Reliability Plan
+Iteration Plan (status: In)
   ↓ Downstream (Delivery)
 Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote
   ↓

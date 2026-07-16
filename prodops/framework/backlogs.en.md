@@ -161,7 +161,7 @@ After entering the **Product Intent Backlog**, the item's origin no longer matte
 
 **After entry, the origin no longer matters.** All items follow the same journey: Icebox → Iteration Backlog → Iteration Plan → Delivery.
 
-> **Exception — Upstream promotion:** An item promoted from Upstream to Downstream already has an OBC, BDD Feature, and documented risks. It enters **directly into the Iteration Plan** (status `Entrou`), skipping the Iteration Backlog. The Iteration Backlog is the queue for items not yet ready to start Delivery — items promoted from Upstream already satisfy that criterion.
+> **Exception — Upstream promotion:** An item promoted from Upstream to Downstream already has an OBC, BDD Feature, and documented risks. It enters **directly into the Iteration Plan** (status `In`), skipping the Iteration Backlog. The Iteration Backlog is the queue for items not yet ready to start Delivery — items promoted from Upstream already satisfy that criterion.
 
 **Commitment:** The Product Owner has committed to investigating and eventually delivering this item.
 
@@ -276,6 +276,12 @@ A GitHub Issue is not the origin of work in the ProdOps Framework. It is an **op
 Diligence is the journey responsible for keeping backlogs synchronized at all levels — platform and product.
 
 > **Principle:** Diligence ensures that the state of each OBC remains synchronized across all backlogs, tools, and management artifacts, without modifying product code.
+
+**What Diligence keeps synchronized:**
+- OBC state in each backlog (Product Intent, Icebox, Iteration Backlog, Iteration Plan)
+- Operational representations in tools (GitHub Issues, Jira, Azure DevOps)
+- Traceability Intent → OBC → Issue → PR → Release → Operation
+- Consistency between ProdOps artifacts and external tools
 
 → [Diligence Journey](../journeys/diligence/README.en.md)
 
