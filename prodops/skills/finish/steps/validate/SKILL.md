@@ -100,10 +100,17 @@ Informativo — não bloqueia merge.
 
 ## Critério
 
-Se algum desses falha localmente, o passo falha e **não se avança**. Corrigir
-primeiro. A justificativa é simples: falhar na pipeline remota depois de um push
-tem custo maior (retrabalho, notificações, PR com status vermelho) do que falhar
+Se algum desses falha localmente, o passo falha e **não se avança**. A
+justificativa é simples: falhar na pipeline remota depois de um push tem custo
+maior (retrabalho, notificações, PR com status vermelho) do que falhar
 localmente antes.
+
+**Em caso de falha, retorne ao `hack tdd` — não corrija aqui.** `validate` é um
+passo de inspeção, sem escrita em código (ver Guardrails); a correção de uma
+falha (lint, build ou aceitação vermelha) é mudança de produto e pertence ao
+ciclo TDD do Hack. Encaminhe a falha ao [`hack tdd`](../../../hack/steps/tdd/SKILL.md)
+(Red → Green → Refactor) e só reexecute `validate` depois que o Hack fechar em
+verde. Um `validate` verde é pré-condição para `review` e o push.
 
 ## Guardrails
 

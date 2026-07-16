@@ -108,9 +108,12 @@ Quando invocado sem argumento de step, execute em ordem:
 
 1. **[validate](steps/validate/SKILL.md)** — rodar a suíte de análise estática
    (format, lint, cobertura, build) mais a aceitação quando comportamento ou
-   contratos mudaram. Se algum falha localmente, o passo falha e não se avança —
-   corrigir primeiro. Falhar na pipeline remota depois de um push custa mais
-   (retrabalho, notificações, PR vermelho) do que falhar localmente antes.
+   contratos mudaram. Se algum falha localmente, o passo falha e **não se
+   avança**: a correção pertence ao ciclo TDD do Hack, então retorne ao
+   [`hack tdd`](../hack/steps/tdd/SKILL.md) e só reexecute `validate` depois de
+   fechar em verde — `validate` não escreve código. Falhar na pipeline remota
+   depois de um push custa mais (retrabalho, notificações, PR vermelho) do que
+   falhar localmente antes.
 2. **[review](steps/review/SKILL.md)** — confirmar que a pipeline tem os checks
    obrigatórios, que a branch protection na branch de destino os exige, e que
    não há reviewer obrigatório bloqueando o auto-merge. Condição ausente é um
