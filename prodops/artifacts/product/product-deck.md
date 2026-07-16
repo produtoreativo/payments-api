@@ -184,7 +184,42 @@ A fronteira técnica e o estado atualmente implementado estão documentados no [
 | Plataforma/SRE | Operabilidade, SLO, incidentes. | Padrões de observabilidade e resposta. | `[link]` |
 | Segurança/Antifraude | Risco, fraude e compliance. | Políticas de aprovação e bloqueio. | `[link]` |
 
-## 15. Links
+## 15. Maturidade de Delivery (DORA)
+
+O ProdOps avalia a maturidade de delivery do produto por meio das 7 métricas DORA estendidas, com pesos ajustados conforme o estágio atual.
+
+**Estágio atual do produto:** MVP → IPR
+
+**Perfil de avaliação adotado:** `balanced`
+
+**Métricas e pesos prioritários neste estágio (MVP pesos / IPR pesos):**
+
+| Métrica | Peso MVP | Peso IPR | Foco atual |
+|---|---|---|---|
+| Lead Time for Change | 8 | 5 | Alto — velocidade de aprendizado ainda crítica |
+| Reaction Time | 5 | 3 | Médio — responsividade do sistema |
+| Release Frequency | 5 | 8 | Crescente — aumentar cadência de deploys |
+| Change Fail Rate | 3 | 5 | Crescente — qualidade de testes e gates |
+| Mean Time to Recovery | 1 | 3 | Baixo ainda — runbooks e alertas em construção |
+| Availability | 2 | 3 | Crescente — SLOs estabelecidos por OBC |
+| Rate of Return | 3 | 5 | Crescente — reduzir retentativas e estornos |
+
+**Lacunas de instrumentação para cobertura completa:**
+
+| Gap | Métrica afetada | Ação recomendada |
+|---|---|---|
+| Sem integração CI/CD com observabilidade | Lead Time, Release Frequency | Intent Technology: pipeline → DataDog |
+| Sem incident management integrado | MTTR | Intent Technology: PagerDuty ou equivalente |
+| Change Fail Rate sem correlação temporal de deploy | Change Fail Rate | Intent Technology: deployment events |
+
+**Assessment de maturidade:** executar no Certificare com perfil `balanced` para obter score 0–5 por métrica e roadmap priorizado.
+
+→ Definições e pesos completos: [`../../framework/dora-metrics.md`](../../framework/dora-metrics.md)
+→ Mapeamento Observable Events → DORA: [`../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+
+---
+
+## 16. Links
 
 | Tipo | Link |
 | --- | --- |
@@ -199,7 +234,7 @@ A fronteira técnica e o estado atualmente implementado estão documentados no [
 | Backlog | `[link]` |
 | Postmortems | `[link]` |
 
-## 16. Repository Tracking List inicial
+## 17. Repository Tracking List inicial
 
 | Item | Origem | Dimensão | Dono | Status | Próxima ação |
 | --- | --- | --- | --- | --- | --- |
@@ -209,7 +244,7 @@ A fronteira técnica e o estado atualmente implementado estão documentados no [
 | Validar evento `GatewayFallbackAcionado`. | Reliability Plan | Tecnologia/Dados | Payments | Aberto | Implementar ou confirmar evento. |
 | Revisar fluxo PagamentoConfirmado -> PedidoLiberado. | Matriz de Confiabilidade | Fluxos/Times | Payments + Orders | Aberto | Desenhar Service Blueprint. |
 
-## 17. Próximos artefatos recomendados
+## 18. Próximos artefatos recomendados
 
 - Service Deck da jornada `Compra com Pix`.
 - Matriz de Confiabilidade detalhada para `PagamentoConfirmado -> PedidoLiberado`.

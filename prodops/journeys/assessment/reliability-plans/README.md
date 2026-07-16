@@ -193,6 +193,43 @@ Estas melhorias estão relacionadas a funcionalidades que não fazem parte do es
 - `Integração corporativa de incidentes/ITSM` (`Saiu`): planejar integração DataDog/APM com ITSM em iniciativa própria.
 - `Gateway fallback/Itaú` (`Saiu`): planejar roteamento/fallback multi-provedor apenas quando houver decisão de negócio e contrato técnico aprovado.
 
+## DORA como referência de confiabilidade
+
+As métricas DORA estendidas complementam o Reliability Plan com uma visão de maturidade de delivery. Para cada funcionalidade com risco operacional relevante, declarar quais métricas DORA serão monitoradas após o deploy.
+
+**Mapeamento SLIs dos OBCs → métricas DORA para esta Release:**
+
+| OBC / Funcionalidade | SLI existente | Métrica DORA alimentada |
+|---|---|---|
+| Criar invoice via Pix | `invoice.created` com `providerPaymentId` — 99.9% | Availability |
+| Criar invoice via Pix | `invoice.creation_failed` correlacionado com deploy | Change Fail Rate |
+| Criar invoice via Pix | Latência de criação | Reaction Time |
+| Confirmação de pagamento | `payment.confirmed` publicado 1x — 100% | Availability |
+| Confirmação de pagamento | `webhook.received` → `payment.confirmed` gap | Reaction Time |
+| Confirmação de pagamento | `webhook.delivery.failed` → `webhook.delivery.sent` gap | MTTR |
+| Criar invoice via Boleto | `payment.boleto.created` — 99.9% | Availability |
+| Cartão de Crédito | Card outcome em até 5min — 99% | Reaction Time |
+| Cartão de Crédito | `payment.card.refund.requested` taxa | Rate of Return |
+| Webhook Configuration | `webhook.delivery.sent` em até 5s — 95% | Reaction Time + Availability |
+| API Token Validation | `api.token.validated` sem latência adicional >5ms — 99.9% | Availability + Reaction Time |
+
+**Lacunas de cobertura DORA identificadas para esta Release:**
+
+| Métrica DORA | Status | Gap |
+|---|---|---|
+| Lead Time for Change | ✗ Não coberta | Requer integração CI/CD com observabilidade |
+| Release Frequency | ✗ Não coberta | Requer integração CI/CD |
+| Change Fail Rate | ⚠ Parcial | Eventos mapeados; falta correlação temporal com deploys |
+| MTTR | ⚠ Parcial | Pares de eventos mapeados; falta incident management |
+| Reaction Time | ✅ Coberta | SLIs existentes nos OBCs já alimentam diretamente |
+| Rate of Return | ✅ Coberta | Eventos de idempotência e estorno mapeados |
+| Availability | ✅ Coberta | SLIs 99.9%/100% dos OBCs são métricas de Availability |
+
+→ Ver mapeamento completo em [`../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ Ver definições e pesos em [`../../framework/dora-metrics.md`](../../framework/dora-metrics.md)
+
+---
+
 ## Premissas
 
 - A palavra `Entrou` foi interpretada de forma estrita conforme o prompt. `Entrou como MVP` não foi considerado no escopo deste Reliability Plan.

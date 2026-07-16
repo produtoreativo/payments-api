@@ -136,6 +136,93 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 ---
 
+## Product Stage
+
+**Definition:** Classification of a product's maturity moment within the ProdOps lifecycle. Defines which delivery metrics carry the most weight and what the team's focus should be at that point.
+
+**The six stages in order:** PoC → MVP → IPR → MVR → MVT → MLP
+
+**Two macro-phases:**
+- **Hypothesis Validation** (PoC, MVP, IPR): prove the idea is viable before scaling
+- **Acceleration** (MVR, MVT, MLP): grow with repeatability, traction, and delight
+
+**Relationship with other concepts:** The stage influences DORA metric weights and Reliability Plan focus. See [`product-stages.en.md`](product-stages.en.md) and [`dora-metrics.en.md`](dora-metrics.en.md).
+
+---
+
+## PoC (Proof of Concept)
+
+**Definition:** First product stage. Validates whether an idea or approach is viable with a **real customer**.
+
+**Central characteristic:** The customer is always involved. No customer means it is not a PoC — it is a Spike Solution.
+
+**Relationship with other concepts:** See **Product Stage**, **Spike Solution**, and [`product-stages.en.md`](product-stages.en.md).
+
+---
+
+## DORA Metrics (Extended)
+
+**Definition:** A 7-metric delivery health model adopted by ProdOps to assess delivery maturity. Extends the 4 original metrics from the DORA Research Program with 3 product- and operation-oriented extensions.
+
+**The 7 metrics:**
+
+| Metric | Type | What it measures |
+|---|---|---|
+| **Lead Time for Change** | DORA Core | Time from commit to production |
+| **Release Frequency** | DORA Core | Deployment frequency |
+| **Change Fail Rate** | DORA Core | % of changes that cause failure |
+| **Mean Time to Recovery** | DORA Core | Mean time to recovery after failure |
+| **Reaction Time** | ProdOps Extension | Time between external signal and first processed action |
+| **Rate of Return** | ProdOps Extension | Escaped defects and rework — retries, refunds |
+| **Availability** | ProdOps Extension | Service operational uptime |
+
+**Weights by stage:** each product stage defines weights 1–8 per metric. In early stages (PoC/MVP), Lead Time and Reaction Time carry maximum weight. In advanced stages (MVT/MLP), Change Fail Rate, MTTR, and Availability dominate.
+
+**Relationship with other concepts:** See [`dora-metrics.en.md`](dora-metrics.en.md), [`product-stages.en.md`](product-stages.en.md). Maturity assessment is run on the Certificare platform.
+
+---
+
+## Maturity Level (Delivery)
+
+**Definition:** ProdOps delivery maturity scale, from 0 to 5. Used by Certificare to position the product and generate an improvement roadmap.
+
+| Level | Name | Description |
+|---|---|---|
+| 0 | Inexistent | No established practices |
+| 1 | Initial | Ad-hoc practices, no repeatability |
+| 2 | Repeatable | Basic practices without systematization |
+| 3 | Defined | Documented processes consistently followed |
+| 4 | Managed | Metrics collected and used for decisions |
+| 5 | Excellence | Continuous optimization based on data |
+
+**Top-down strategy:** starts at level 5 and drops at the first unsatisfied mandatory criterion.
+
+**Relationship with other concepts:** See [`dora-metrics.en.md`](dora-metrics.en.md).
+
+---
+
+## Spike Solution
+
+**Definition:** A time-boxed technical investigation whose only output is a decision — not a product, not deliverable code. It answers a single specific technical question that is blocking progress.
+
+**Central characteristic:** No customer is ever involved. If there is a customer, it is a PoC. Code is always disposable.
+
+**When to use:** Any product stage, any experiment phase — including inside a PoC or any Upstream journey.
+
+**Critical difference from PoC:**
+
+| | PoC | Spike Solution |
+|---|---|---|
+| Customer involved | Always | Never |
+| Objective | Validate with real feedback | Answer a technical question |
+| Code | May be demonstrable | Always disposable |
+
+**Where to record:** `prodops/journeys/discovery/spikes.md` (if isolated) or the experiment's `upstream-trail.md` (if inside an active Upstream).
+
+**Relationship with other concepts:** See **PoC**, **Product Stage**, [`product-stages.en.md`](product-stages.en.md), and [`../journeys/discovery/spikes.md`](../journeys/discovery/spikes.md).
+
+---
+
 ## Conception
 
 **Definition:** Phase covering the period from the emergence of a signal to entry into the Product Intent Backlog. The Intent exists as a possibility — the Product Owner has not yet made a commitment.
