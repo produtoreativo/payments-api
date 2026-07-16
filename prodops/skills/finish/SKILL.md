@@ -131,9 +131,12 @@ Quando invocado sem argumento de step, execute em ordem:
 2. Emitir Finish.Started.
 3. **[validate](steps/validate/SKILL.md)** — rodar a suíte de análise estática
    (format, lint, cobertura, build) mais a aceitação quando comportamento ou
-   contratos mudaram. Se algum falha localmente, o passo falha e não se avança —
-   corrigir primeiro. Falhar na pipeline remota depois de um push custa mais
-   (retrabalho, notificações, PR vermelho) do que falhar localmente antes.
+   contratos mudaram. Se algum falha localmente, o passo falha e **não se
+   avança**: a correção pertence ao ciclo TDD do Hack, então retorne ao
+   [`hack tdd`](../hack/steps/tdd/SKILL.md) e só reexecute `validate` depois de
+   fechar em verde — `validate` não escreve código. Falhar na pipeline remota
+   depois de um push custa mais (retrabalho, notificações, PR vermelho) do que
+   falhar localmente antes.
 4. Confirmar que artefatos ProdOps foram atualizados apenas onde impactados.
 5. Confirmar que evidência existe no Release Trail.
 6. **[review](steps/review/SKILL.md)** — confirmar que a pipeline tem os checks

@@ -70,9 +70,12 @@ When invoked without a step argument, run in order:
 2. Emit Finish.Started.
 3. **[validate](steps/validate/SKILL.md)** — run the static analysis suite
    (format, lint, coverage, build) plus acceptance when behavior or contracts
-   changed. If any fails locally, the step fails and does not advance — fix
-   first. Failing on the remote pipeline after a push costs more (rework,
-   notifications, red PR) than failing locally before.
+   changed. If any fails locally, the step fails and **does not advance**: the
+   fix belongs to Hack's TDD cycle, so return to
+   [`hack tdd`](../hack/steps/tdd/SKILL.md) and only re-run `validate` after it
+   closes green — `validate` writes no code. Failing on the remote pipeline
+   after a push costs more (rework, notifications, red PR) than failing locally
+   before.
 4. Confirm ProdOps artifacts were updated only where impacted.
 5. Confirm Release Trail evidence exists.
 6. **[review](steps/review/SKILL.md)** — confirm the pipeline has the required
