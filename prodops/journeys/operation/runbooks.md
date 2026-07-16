@@ -237,4 +237,4 @@ Use este guia para localizar qualquer evento na cadeia Checkout → Payments →
 
 Todo log do Payments deve ter: `correlationId`, `tenantId`, `invoiceId` (quando aplicável), `level`, `msg`.
 
-Se um log não tiver esses campos, o problema está na instrumentação — abrir item no Tracking List de observabilidade (`TL-003`).
+Se um log não tiver esses campos, o problema está na instrumentação — abrir item na Repository Tracking List de observabilidade (`TL-003`).

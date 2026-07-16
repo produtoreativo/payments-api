@@ -157,7 +157,7 @@ Partial promotion: hosted card entry → Downstream. Remaining flows → continu
 ### Artifacts Updated
 
 - Shared with EXP-003: BDD Feature and OBC moved to committed locations.
-- Tracking List items for saved-card, tokenized card and refund remain Open.
+- Repository Tracking List items for saved-card, tokenized card and refund remain Open.
 
 ### Next Steps
 

@@ -1,6 +1,10 @@
-# Icebox Backlog - Payments
+# Icebox - Payments
 
-> Backlog de oportunidades, problemas e features ainda não comprometidas em delivery. O objetivo do icebox é manter rastreabilidade entre estratégia de produto, operação, confiabilidade e descoberta contínua antes de uma iniciativa entrar no roadmap.
+> **Propósito:** Itens comprometidos pelo Product Owner que ainda estão sendo preparados para Delivery. O Discovery necessário ocorre aqui — funcional, técnico ou operacional. O objetivo é produzir um OBC mínimo aceitável. Enquanto isso não acontece, o item permanece no Icebox.
+>
+> Itens que concluem o OBC mínimo avançam para o Iteration Backlog (pronto para desenvolver).
+>
+> → [Hierarquia de backlogs](../../framework/backlogs.md)
 
 ## 1. Governança do Icebox
 
@@ -26,7 +30,7 @@
 
 | Estado | Significado | Critério de movimentação |
 | --- | --- | --- |
-| Icebox | Ideia, oportunidade ou necessidade conhecida, ainda sem compromisso. | Existe problema ou feature mapeada, mas faltam evidências, prioridade ou capacidade. |
+| Icebox | Item comprometido pelo Product Owner (vindo do PIB), sendo refinado pelo Discovery para atingir Minimum OBC. | OBC Draft em refinamento; falta completar Discovery funcional, técnico ou operacional. |
 | Discovery | Item em investigação de produto, negócio, técnica, operação ou dados. | Existe pergunta clara, dono e prazo de aprendizado. |
 | Ready for Delivery | Item pronto para planejamento de sprint/kanban. | Critérios de aceite, dependências, métricas e riscos estão claros. |
 | Delivery | Item em implementação. | Time assumiu compromisso e iniciou execução. |

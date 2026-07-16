@@ -344,8 +344,8 @@ Pagamentos simples continuam via `POST /v1/invoices`. Nenhum campo obrigatório 
 
 | Item | Classificação | Observação |
 |---|---|---|
-| Definir política de falha parcial (A, B ou C) | **Tracking List — decisão de produto** | Bloqueante para Downstream |
-| Validar com Order Management o contrato de `PagamentoCompostoConfirmado` | **Tracking List** | Dependência externa |
+| Definir política de falha parcial (A, B ou C) | **Repository Tracking List — decisão de produto** | Bloqueante para Downstream |
+| Validar com Order Management o contrato de `PagamentoCompostoConfirmado` | **Repository Tracking List** | Dependência externa |
 | Definir estratégia de DynamoDB para CompositionsTable | **Candidato ao Iteration Backlog** | Depois da decisão de política |
 | Criar BDD Feature para composição de pagamento | **Candidato ao Iteration Backlog** | Após política definida |
 | Atualizar Event Storming com novos eventos | **Candidato ao Iteration Backlog** | Pode fazer agora |

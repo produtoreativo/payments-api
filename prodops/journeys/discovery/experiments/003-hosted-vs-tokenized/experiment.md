@@ -265,7 +265,7 @@ Update when necessary:
 
 - Product Deck.
 - Service Deck.
-- Tracking List.
+- Repository Tracking List.
 - Reliability Plan.
 - Event Storming.
 - OBC.
@@ -290,8 +290,8 @@ Update when necessary:
 
 | Item | Classification | Priority |
 |------|----------------|----------|
-| Review hosted payment UX with Checkout/Product. | Tracking List | P0 |
-| Define token ownership before tokenized card Downstream. | Tracking List | P0 |
+| Review hosted payment UX with Checkout/Product. | Repository Tracking List | P0 |
+| Define token ownership before tokenized card Downstream. | Repository Tracking List | P0 |
 | Keep direct raw card capture outside first slice. | Discarded for first slice | P0 |
 | Define refund/reversal boundary for card payment. | Candidate for Iteration Backlog | P0 |
 

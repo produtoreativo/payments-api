@@ -13,7 +13,7 @@ For detailed Codex submission mechanics, read `references/workflow.md`.
 
 - `AGENTS.md`
 - `prodops/journeys/assessment/reliability-plans/`
-- `prodops/artifacts/trails/release-trail.md`
+- `prodops/artifacts/trails/sessions/` (active session trail)
 - `prodops/journeys/delivery/phases/finish/quality-gates.md`
 - Current branch diff and validation evidence
 

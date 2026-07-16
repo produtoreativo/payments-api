@@ -1,15 +1,49 @@
 # Execution Model
 
-Upstream e Downstream são **modos de execução** do Framework ProdOps — não são jornadas.
+Upstream e Downstream são **modos de execução** do Framework ProdOps — não são jornadas, não são fases e não substituem as jornadas.
 
-Cada modo utiliza as mesmas jornadas (Discovery, Delivery, Operation, Assessment, Diligence). A diferença está no nível de compromisso e nos critérios de qualidade aplicados.
+## Terminologia canônica
+
+| Conceito | Definição |
+|---|---|
+| **Upstream** | Modo de exploração |
+| **Downstream** | Modo de compromisso |
+| **Discovery** | Jornada presente nos dois modos |
+| **Delivery** | Jornada exclusiva do Downstream |
+| **Operation** | Jornada exclusiva do Downstream |
+
+Os modos não substituem as jornadas. Eles definem como as jornadas serão executadas.
+
+## Fluxo de decisão do Business Intent
+
+Todo Business Intent criado no Business Intent Backlog deve seguir um dos dois modos. Essa decisão é do Product Owner e não acontece automaticamente.
+
+```
+Business Intent
+  ↓
+Escolha do modo (Product Owner)
+  ↓
+Upstream                    Downstream
+(exploração)                (compromisso)
+     │                           │
+  Discovery                  Product Intent Backlog
+  Experimentos                   → Icebox (Discovery)
+  Aprendizados                   → Iteration Backlog
+     │                           → Iteration Plan
+  (Eventualmente)                → Delivery
+  Downstream                     → Operation
+```
+
+Não existe transição automática entre os modos. A mudança deve ser uma decisão explícita.
+
+Cada modo utiliza as jornadas de forma diferente. A diferença está no compromisso e no rigor aplicado, não na presença ou ausência de uma jornada.
 
 ## Upstream
 
-Modo de exploração e aprendizado.
+Modo permissivo e experimental, sem compromisso de entrega.
 
 **Características:**
-- Baixo compromisso
+- Sem compromisso de entrega
 - Liberdade para selecionar capabilities e práticas conforme necessidade
 - Código é descartável até ser promovido para Downstream
 - Evolução rápida de artefatos
@@ -21,7 +55,7 @@ Upstream transforma hipóteses em conhecimento validado.
 
 ## Downstream
 
-Modo de entrega governada.
+Modo com compromisso de entrega e aplicação completa dos quality gates vigentes.
 
 **Características:**
 - Compromisso formal com critérios de aceite (OBC + BDD Feature)
@@ -39,8 +73,8 @@ Downstream entrega software com o conhecimento validado pelo Upstream.
 | Situação | Modo |
 |---|---|
 | Hipótese a validar, incerteza alta | Upstream |
-| Item aprovado no Iteration Plan | Downstream |
+| Item com compromisso, sendo guiado até completar readiness | Downstream |
 | Explorar uma capability nova | Upstream |
-| Implementar OBC + BDD Feature existente | Downstream |
+| Executar item com todos os gates de readiness satisfeitos | Downstream |
 | Prototipar integração com provedor | Upstream |
 | Entregar feature com compromisso | Downstream |

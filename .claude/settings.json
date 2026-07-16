@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git fetch --prune)",
+      "Bash(git branch*)",
+      "Bash(git config core.hooksPath*)",
+      "Bash(cd api && npm run lint)",
+      "Bash(cd api && npm run build)",
+      "Bash(./scripts/test-acceptance.sh*)"
+    ],
+    "deny": [
+      "Bash(git push --force*)"
+    ]
+  }
+}

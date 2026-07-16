@@ -1,13 +1,15 @@
 # Iteration Backlog — Demandas Operacionais
 
-> **Propósito:** Demandas operacionais e de stakeholders ainda em avaliação (Analytics, DataDog, ITSM). Derivado do Premortem da release de Payments. Itens aqui precisam de refinamento antes de entrar em um OBC ou Iteration Plan.
+> **Propósito:** Itens com OBC mínimo validado, prontos para Delivery imediata. A única decisão restante é a prioridade definida pelo Product Owner. Este backlog não é de refinamento — refinamento acontece no Icebox.
+>
+> Itens aqui podem entrar em Delivery assim que priorizados. Para entrar no Iteration Plan, precisam de OBC committed + BDD Feature committed.
 >
 > → [Hierarquia de backlogs](../../framework/backlogs.md)
 > → [Escopo de entrega aprovado](iteration-plan.md) — para ver o que entrou/saiu/foi adiado
 
 ## Objetivo
 
-Registrar demandas conhecidas que ainda precisam de refinamento, avaliação ou planejamento antes de serem incorporadas ao Iteration Plan ou a um OBC específico.
+Registrar itens com OBC mínimo validado que concluíram o Discovery no Icebox e estão prontos para execução de Delivery. A única decisão pendente é a priorização pelo Product Owner.
 
 | ID | Área | Solicitação | Tipo | Prioridade | Status | Próximo Passo |
 |----|------|-------------|------|------------|--------|---------------|
@@ -22,10 +24,9 @@ Registrar demandas conhecidas que ainda precisam de refinamento, avaliação ou 
 
 Um item deixa o Iteration Backlog quando:
 
-- Foi refinado suficientemente para compor um OBC.
-- Foi descartado por decisão de negócio.
-- Foi consolidado em um épico ou Iteration Plan.
-- Foi implementado e encerrado.
+- Foi priorizado e entrou no Iteration Plan (OBC committed + BDD Feature committed).
+- Foi descartado por decisão de negócio (registrar motivo).
+- Foi retornado ao Icebox por necessidade de refinamento adicional (exceção — registrar lacuna).
 
 ---
 
@@ -40,4 +41,4 @@ Cada item poderá originar ou atualizar:
 - Iteration Plan
 - Iteration Backlog
 
-A Tracking List representa demandas ainda em avaliação e serve como principal fonte de entrada para o Continuous Assessment.
+A Repository Tracking List representa demandas ainda em avaliação e serve como principal fonte de entrada para o Continuous Assessment.

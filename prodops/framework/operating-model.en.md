@@ -1,5 +1,32 @@
 # ProdOps Operating Model
 
+## ProdOps Architecture
+
+ProdOps is organized in four hierarchical levels:
+
+```
+ProdOps Framework
+       ↓
+ProdOps Portfolio
+       ↓
+ProdOps Workspace
+       ↓
+Product Repository     ←  this repository (payments-api)
+```
+
+| Level | Responsibility | Does not contain |
+|---|---|---|
+| **Framework** | Principles, journeys, capabilities, skills, templates, glossary | Roadmap, Backlogs, Business Intents, Releases, Features |
+| **Portfolio** | Global Tracking List, Roadmaps, Platform Releases, Milestones | Software implementation |
+| **Workspace** | Integration and joint execution of Product Repositories | Roadmap, Business Intents |
+| **Product Repository** | Implement and operate a specific product | — |
+
+This repository (`payments-api`) is a **Product Repository**. It serves as the reference implementation of the ProdOps Framework. The Portfolio and Workspace levels exist in the architecture and are referenced in this documentation; they do not yet have physical repositories created.
+
+→ See [glossary.en.md](glossary.en.md) for canonical definitions of each level.
+
+---
+
 ## Operating model
 
 ProdOps organizes product and engineering work in hierarchical layers, with traceable origin from the source of the need through to the produced artifacts:
@@ -7,15 +34,14 @@ ProdOps organizes product and engineering work in hierarchical layers, with trac
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓
-Intent
+Intent → OBC Draft (Business Intent Backlog or Product Intent Backlog)
   ↓
-Exploration
+Exploration (Icebox)
+  ↔ Continuous Assessment → Reliability Plan → Assessment Review
   ↓
-Observable Business Contract (OBC)
+OBC + BDD committed
   ↓
-Continuous Assessment
-  ↓
-Backlog Management (Diligence)        ← Tracking List → Icebox → Roadmap → Release → Iteration
+Backlog Management (Diligence)        ← Repository Tracking List → Product Intent Backlog → Icebox → Iteration Backlog → Iteration Plan
   ↓
 Execution Mode
 ├── Upstream
@@ -65,15 +91,15 @@ Artifacts
 
 **Intent** — Framework entry point. An intention to generate value not yet committed. The Intent registers the "why" without prescribing the "how". *Formerly called Business Intent.*
 
-**Exploration** — the step between Intent and OBC. Reduces uncertainty by transforming hypotheses into validated knowledge. Implemented by the Discovery Journey in Upstream mode. See [`flow.md`](flow.en.md).
+**Exploration** — refines the OBC draft and reduces uncertainty through the Discovery journey. Discovery exists in both modes; rigor and commitment vary between Upstream and Downstream. See [`flow.md`](flow.en.md).
 
-**OBC (Observable Business Contract)** — the transformation of a sufficiently understood Intent into observable and verifiable success criteria. It is the result of Exploration, not the Framework entry point. *Formerly incorrectly defined as Outcome-Based Criterion.*
+**OBC (Observable Business Contract)** — born as a Draft when the Intent enters the Business Intent Backlog (global flow) or the Product Intent Backlog (local flow). Refined through Discovery in the Icebox until reaching **Minimum OBC** (entry gate to the Iteration Backlog). Becomes **Active** during Delivery and **Operational** in Operation. *Formerly incorrectly defined as Outcome-Based Criterion.*
 
 **Continuous Assessment** — continuously evaluates risks, opportunities, and decides the next step.
 
 **Execution Mode** — the level of commitment and quality criteria applied:
-- **Upstream** — exploration, low commitment, focus on learning
-- **Downstream** — governed delivery, mandatory criteria, complete traceability
+- **Upstream** — permissive, experimental, no delivery commitment, variable maturity
+- **Downstream** — delivery commitment with every current quality gate applied across journeys
 
 **Journey** — the work path within an execution mode:
 - Discovery, Delivery, Operation — classic journeys
@@ -102,7 +128,7 @@ Artifacts
 
 ### Discovery
 
-Exploration. Implements the Exploration step of the flow. Transforms hypotheses into validated knowledge. No delivery commitment — only a learning commitment.
+Explores problems, hypotheses, and possibilities. Discovery exists in both Upstream and Downstream modes; it is not synonymous with either.
 
 → [prodops/journeys/discovery/README.en.md](../journeys/discovery/README.en.md)
 
@@ -146,14 +172,15 @@ Origin Stream (Business | Enterprise | Team | Technology)
   ↓ generates
 Intent
   ↓ enters
-Exploration — Upstream (Discovery)
+Business Intent Backlog (global flow) or Product Intent Backlog (local flow) → OBC Draft
+  ↓
+Exploration (Discovery in Icebox) ↔ Assessment
   Experiment → learning → Decision Package
-  ↓ when hypothesis answered
+  Assessment → risks + Reliability Plan
+  ↓ Assessment Review (PM + Tech Lead)
 OBC committed + BDD Feature committed
-  ↓ Assessment Review
-Decision Package review (PM + Tech Lead)
   ↓ if approved
-Iteration Plan (status: In) + Reliability Plan
+Iteration Plan (status: In)
   ↓ Downstream (Delivery)
 Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote
   ↓

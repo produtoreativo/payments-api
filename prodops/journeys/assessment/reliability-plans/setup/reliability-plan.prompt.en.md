@@ -38,7 +38,7 @@ Consider especially:
 * Iteration Plan
 * Premortem
 * Postmortem
-* Tracking List
+* Repository Tracking List
 * OBC
 * technical documentation
 * architecture

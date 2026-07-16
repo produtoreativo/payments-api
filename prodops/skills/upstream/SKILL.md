@@ -74,7 +74,7 @@ directly exercise at least one of:
 
 If the request belongs primarily to another repository or system, do not create
 Features, experiments, prototypes, or implementation artifacts here. Capture it
-only as an external dependency, release risk, Tracking List item, Reliability
+only as an external dependency, release risk, Repository Tracking List item, Reliability
 Plan note, or required evidence from the owning team.
 
 Out-of-repository examples:
@@ -113,7 +113,7 @@ An experiment may produce:
 - OBC drafts;
 - Event Storming updates;
 - Reliability Plan updates;
-- Tracking List items;
+- Repository Tracking List items;
 - architecture findings.
 
 Documentation alone is acceptable only when the experiment is explicitly documentation-only.

@@ -232,8 +232,8 @@ Examples:
 
 - Product Deck (`prodops/artifacts/product/product-deck.md`)
 - Service Deck (`prodops/artifacts/product/service-decks/`)
-- Tracking List (`prodops/artifacts/product/tracking-list.md`)
-- Icebox Backlog (`prodops/artifacts/product/icebox-backlog.md`)
+- Repository Tracking List (`prodops/artifacts/product/tracking-list.md`)
+- Icebox (`prodops/artifacts/product/icebox-backlog.md`)
 - Event Storming (`prodops/journeys/assessment/event-storming/`)
 - Reliability Plan (`prodops/journeys/assessment/reliability-plans/`)
 - OBC (`prodops/artifacts/obcs/`)
@@ -259,8 +259,8 @@ List work discovered during the experiment.
 
 Classify each item as:
 
-- Tracking List
-- Icebox Backlog
+- Repository Tracking List
+- Icebox
 - Iteration Backlog candidate
 - Discarded
 

@@ -1,6 +1,10 @@
 # Downstream Mode
 
-Downstream is the governed delivery mode of the ProdOps Framework.
+Downstream is the **commitment mode** of the ProdOps Framework.
+
+## Canonical definition
+
+Downstream represents a commitment mode. From the moment a Business Intent enters Downstream, there is a commitment to delivery, quality, and reliability. All work must mandatorily follow the ProdOps operational model.
 
 ## Purpose
 
@@ -8,11 +12,23 @@ Deliver software with traceability, verifiable acceptance criteria, and evidence
 
 ## Mode characteristics
 
-- Formal commitment to acceptance criteria (OBC + BDD Feature)
-- Complete governance and traceability
-- Mandatory artifacts before start
-- Evidence recorded at each step
-- Full mandatory sequence
+In Downstream:
+
+- there is an implementation commitment
+- there is a reliability commitment
+- there is governance
+- there is mandatory validation
+- there is traceability
+- there is evidence generation
+- there is conformance with the operational model
+
+Skills are no longer optional. They become part of the execution process — they participate in journey validation, produce evidence, and guarantee consistency.
+
+## OBC in Downstream
+
+When entering Downstream, the OBC is no longer just a record. It becomes the operational contract of the work.
+
+During Discovery (in the Icebox), it will be refined until reaching a minimum acceptable OBC. That OBC controls the evolution of the subsequent journeys: Iteration Backlog → Iteration Plan → Delivery.
 
 ## When to use Downstream mode
 
@@ -23,15 +39,16 @@ Deliver software with traceability, verifiable acceptance criteria, and evidence
 
 ## Mandatory preconditions
 
-Before starting any Downstream work:
+Downstream may start to guide a committed item toward readiness. Before executing any Delivery phase, all requirements below must be satisfied:
 
 1. OBC in `prodops/artifacts/obcs/`
 2. BDD Feature in `prodops/artifacts/bdd/`
-3. Entry in the Iteration Plan with status `Entrou` in `prodops/artifacts/plans/iteration-plan.md`
-4. Risks documented in `prodops/journeys/assessment/risks.md`
-5. Entry in the Reliability Plan in `prodops/journeys/assessment/reliability-plans/`
+3. Risks documented in `prodops/journeys/assessment/risks.md`
+4. Iteration Plan entry with status `In` in `prodops/artifacts/plans/iteration-plan.md`
 
-Do not start Downstream without these artifacts.
+**Reliability Plan (recommended):** Not a mandatory gate, but strongly recommended for items with relevant operational risks. When it exists, it must be reviewed before the readiness decision — produced by the Assessment journey at `prodops/journeys/assessment/reliability-plans/`.
+
+When a mandatory requirement is missing, Downstream stops before Delivery, identifies the owner, and guides the next action.
 
 ## Mandatory sequence
 
@@ -50,17 +67,17 @@ CI Async: Ship → Validate → Promote            (platform, pipelines, environ
 
 | Phase | Description | Link |
 |---|---|---|
-| Bootstrap | Branch + environment + ProdOps context | [../journeys/delivery/phases/bootstrap/README.md](../journeys/delivery/phases/bootstrap/README.md) |
-| Hack | Implementation via ProdOps TDD | [../journeys/delivery/phases/hack/README.md](../journeys/delivery/phases/hack/README.md) |
-| Sync | Branch sync (rebase) + artifact alignment (align) | [../journeys/delivery/phases/sync/README.md](../journeys/delivery/phases/sync/README.md) |
-| Finish | Quality Gates + PR | [../journeys/delivery/phases/finish/README.md](../journeys/delivery/phases/finish/README.md) |
-| Ship | Preparation + Deployment | [../journeys/delivery/phases/ship/README.md](../journeys/delivery/phases/ship/README.md) |
-| Validate | Runtime + observability + SLO | [../journeys/delivery/phases/validate/README.md](../journeys/delivery/phases/validate/README.md) |
-| Promote | Formal approval + Release Trail | [../journeys/delivery/phases/promote/README.md](../journeys/delivery/phases/promote/README.md) |
+| Bootstrap | Dependencies + local infrastructure + configuration + smoke gate | [../journeys/delivery/phases/bootstrap/README.en.md](../journeys/delivery/phases/bootstrap/README.en.md) |
+| Hack | Implementation via ProdOps TDD | [../journeys/delivery/phases/hack/README.en.md](../journeys/delivery/phases/hack/README.en.md) |
+| Sync | Branch sync (rebase) + artifact alignment (align) | [../journeys/delivery/phases/sync/README.en.md](../journeys/delivery/phases/sync/README.en.md) |
+| Finish | Quality Gates + PR | [../journeys/delivery/phases/finish/README.en.md](../journeys/delivery/phases/finish/README.en.md) |
+| Ship | Preparation + Deployment | [../journeys/delivery/phases/ship/README.en.md](../journeys/delivery/phases/ship/README.en.md) |
+| Validate | Runtime + observability + SLO | [../journeys/delivery/phases/validate/README.en.md](../journeys/delivery/phases/validate/README.en.md) |
+| Promote | Formal approval + Release Trail | [../journeys/delivery/phases/promote/README.en.md](../journeys/delivery/phases/promote/README.en.md) |
 
 ## Evidence
 
-Record significant delivery evidence in `prodops/artifacts/trails/release-trail.md`.
+Record significant delivery evidence in the active session trail at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`.
 
 ## Downstream must preserve
 

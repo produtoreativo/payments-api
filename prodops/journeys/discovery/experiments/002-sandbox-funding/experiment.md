@@ -276,7 +276,7 @@ Update the Reliability Plan with:
 Update when necessary:
 
 - Validation Workbench.
-- Tracking List.
+- Repository Tracking List.
 - Reliability Plan.
 - Event Storming.
 - OBC.
@@ -303,9 +303,9 @@ Update when necessary:
 
 | Item | Classification | Priority |
 |------|----------------|----------|
-| Collect Asaas sandbox test card evidence. | Tracking List | P0 |
+| Collect Asaas sandbox test card evidence. | Repository Tracking List | P0 |
 | Add deterministic card fixtures to Validation Workbench when sandbox cannot reproduce a scenario. | Candidate for Upstream execution | P0 |
-| Document sandbox scenarios that require local simulation. | Tracking List | P0 |
+| Document sandbox scenarios that require local simulation. | Repository Tracking List | P0 |
 
 ---
 

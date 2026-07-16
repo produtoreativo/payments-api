@@ -1,22 +1,44 @@
 # Modo Upstream
 
-Upstream é o modo de execução exploratório do Framework ProdOps.
+Upstream é o **modo de exploração** do Framework ProdOps.
+
+## Definição canônica
+
+Upstream representa um modo de exploração. Seu objetivo é reduzir incertezas antes de assumir qualquer compromisso de entrega. O Upstream não representa uma promessa — representa um espaço para aprender. Todo trabalho realizado no Upstream é considerado experimental.
 
 ## Propósito
 
-Reduzir incerteza antes de uma capability entrar no fluxo padrão de entrega.
-
-Diferente do Downstream, o Upstream é orientado por aprendizado, não por compromissos de entrega.
+Produzir conhecimento. Não produzir software comprometido.
 
 ## Características do modo
 
-- Baixo compromisso formal
-- Liberdade para selecionar capabilities e práticas conforme necessidade
-- Código é descartável até ser promovido para Downstream
-- Evolução rápida de artefatos
-- Foco em aprendizado, não em entrega
+No Upstream:
+
+- não existem gates obrigatórios
+- não existe obrigação de concluir artefatos
+- não existe obrigação de produzir um OBC mínimo
+- não existe obrigação de seguir todas as Skills
+- o engenheiro decide quais Skills utilizar
+- vibecoding é permitido
+- experimentação é incentivada
+- falhar faz parte do processo
+
+O objetivo é aprender o mais rápido possível.
 
 Um experimento Upstream pode produzir código de qualidade de produção, mas esse código é considerado exploratório até que a capability seja promovida para Downstream.
+
+## OBC no Upstream
+
+Quando um Business Intent entra no Business Intent Backlog, um OBC é criado como Draft.
+
+Durante o Upstream:
+
+- o OBC permanece em Draft
+- pode ser atualizado continuamente
+- pode permanecer incompleto
+- não bloqueia o avanço dos experimentos
+
+O OBC funciona como memória do aprendizado — não como mecanismo de validação.
 
 ## Quando usar o modo Upstream
 
@@ -31,6 +53,17 @@ Um experimento Upstream pode produzir código de qualidade de produção, mas es
 → [Jornada Discovery](../journeys/discovery/README.md)
 
 A jornada Discovery documenta o workflow completo de exploração, experimentos, revisão de Decision Package e processo de promoção para Downstream.
+
+## Encerramento do Upstream
+
+Ao final do Upstream podem ocorrer quatro resultados:
+
+1. **Descartar** o Business Intent — aprendizado suficiente, mas não vale a pena avançar.
+2. **Arquivar** para uso futuro — aprendizado registrado, decisão adiada.
+3. **Retornar** ao Business Intent Backlog — aguardar decisão de negócio ou dependência externa.
+4. **Promover** para Downstream — decisão explícita do Product Owner, com Decision Package completo.
+
+A promoção para Downstream deve ser uma decisão explícita. Não existe transição automática.
 
 ## Resultado esperado
 

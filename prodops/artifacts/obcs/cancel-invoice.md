@@ -8,6 +8,18 @@ Committed. Adiado para próxima iteração — ver `prodops/artifacts/plans/iter
 
 O ecommerce Magazine Siará consegue cancelar uma invoice pendente via gateway de Payments sem acoplamento direto ao provedor Asaas. O cancelamento garante idempotência por chave de pedido, impede cancelamento após confirmação de pagamento e publica o evento canônico `payment.cancelled` apenas quando o cancelamento está efetivamente confirmado. Divergências do provedor (404, timeout) são tratadas com decisão operacional explícita — sem publicação de evento sem confirmação.
 
+### Em linguagem executiva
+
+Um cancelamento só é considerado concluído quando o Asaas confirma que removeu a cobrança do sistema dele. Enquanto essa confirmação não chega, a cobrança está "em processo de cancelamento" — não cancelada.
+
+Três regras de negócio protegem o Magazine Siará:
+
+**1. Cobrança paga não pode ser cancelada.** Se o cliente já pagou, a operação correta é um estorno — não um cancelamento. O gateway bloqueia a tentativa de cancelar uma cobrança confirmada antes de fazer qualquer chamada ao Asaas.
+
+**2. Cancelar duas vezes não cancela duas vezes.** Se o Checkout enviar a mesma solicitação de cancelamento mais de uma vez (retentativa por timeout, por exemplo), o gateway reconhece que já processou aquele pedido e devolve o status atual sem chamar o Asaas novamente.
+
+**3. "Não encontrei" não é cancelamento.** Se o Asaas responder que não reconhece aquela cobrança, o gateway não declara o cancelamento automaticamente — o caso fica marcado para investigação da equipe de operações. Nenhum pedido é alterado sem certeza.
+
 ## Observable Events
 
 | Event | Meaning | Required dimensions |

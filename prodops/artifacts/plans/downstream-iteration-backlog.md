@@ -8,7 +8,7 @@ O backlog aprovado para esta release — com as decisões de escopo — está em
 
 Este é o documento canônico para saber o que entra, o que saiu e o que foi adiado.
 
-## Demandas em avaliação (Tracking List)
+## Demandas em avaliação (Repository Tracking List)
 
 Demandas de stakeholders ainda sem refinamento suficiente para entrar em um OBC estão em:
 

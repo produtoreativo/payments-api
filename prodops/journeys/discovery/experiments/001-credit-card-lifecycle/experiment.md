@@ -857,9 +857,9 @@ The Reliability Plan should include:
 | Item | Classification | Priority |
 |------|----------------|----------|
 | Implement saved-card metadata store with protected provider token reference. | Candidate for Upstream or Downstream after Security approval | P0 |
-| Define Cart/Checkout contract for card listing and saved-card payment. | Tracking List | P0 |
+| Define Cart/Checkout contract for card listing and saved-card payment. | Repository Tracking List | P0 |
 | Decide whether raw-card transit through Payments is allowed. | Security/Architecture decision | P0 |
-| Define refund endpoint and financial reconciliation boundary. | Tracking List | P0 |
+| Define refund endpoint and financial reconciliation boundary. | Repository Tracking List | P0 |
 | Add OpenAPI draft for card endpoints. | Candidate for Upstream | P1 |
 
 ---

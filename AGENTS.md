@@ -22,6 +22,8 @@ manifest e nos artefatos do card — **não pré-leia a documentação do framew
   faltando → parar e reportar, não improvisar.
 - Downstream exige: OBC committed + BDD Feature committed + entrada no
   Iteration Plan com status `Entrou` + riscos documentados.
+- Reliability Plan é **recomendado** antes de iniciar Delivery; quando existe,
+  deve ser revisado antes da decisão de readiness. Não é gate obrigatório.
 - Conflito entre diretriz nova e regra existente: preservar a regra existente e
   registrar em Decision Trail (`prodops/templates/assessment/decision-trail.md`).
 - Commits seguem Conventional Commits (tipos e limite de summary: no manifest).

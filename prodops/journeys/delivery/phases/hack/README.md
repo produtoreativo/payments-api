@@ -17,10 +17,11 @@ Red (teste falha pela razão certa) → Green (mínimo que passa)
 → Yellow (refactor + validações transversais) → Commit → Evidência
 ```
 
-**Quando usar:** depois que o Bootstrap entregou branch limpa, ambiente pronto
-e contrato verificado — e antes do Sync. Vale para Upstream e Downstream. O
-Hack começa diretamente no TDD; se o contrato ou o critério de aceite estiver
-ausente, volte ao Bootstrap.
+**Quando usar:** depois que o Bootstrap entregou o ambiente pronto e o gate de
+readiness do modo confirmou o contexto necessário — e antes do Sync. Vale para
+Upstream e Downstream. O step `start` estabelece o Git flow; o step `tdd` começa
+no Red Bar. Se contrato ou critério estiver ausente em Downstream, volte ao
+readiness, não ao Bootstrap.
 
 **Posição no fluxo:**
 

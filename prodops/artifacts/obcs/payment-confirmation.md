@@ -8,6 +8,16 @@ Downstream. Status `Entrou` em `prodops/artifacts/plans/iteration-plan.md` (seç
 
 O ecommerce Magazine Siará recebe confirmação confiável de pagamento e libera o pedido exatamente uma vez, mesmo quando o webhook do provedor chega duplicado, atrasado ou antes da consolidação interna da invoice. O evento canônico `payment.confirmed` é publicado apenas após validação do token de autenticação e correlação com a invoice correta. Eventos brutos do provedor são sempre persistidos para auditoria, independente do resultado do processamento.
 
+### Em linguagem executiva
+
+Quando um cliente paga via Pix, o Asaas envia uma notificação automática ao gateway avisando que o pagamento foi realizado. O gateway precisa garantir três coisas:
+
+**1. A notificação é legítima.** Qualquer sistema na internet poderia fingir ser o Asaas e enviar uma notificação falsa dizendo "esse pedido foi pago". O gateway verifica uma senha secreta em cada notificação antes de fazer qualquer coisa — notificação sem senha válida é descartada sem afetar nenhum pedido.
+
+**2. O pedido é liberado exatamente uma vez.** O Asaas pode enviar a mesma notificação várias vezes (rede instável, retentativa automática). O gateway reconhece as duplicatas e ignora — o pedido é liberado na primeira notificação válida e só nela.
+
+**3. Toda notificação é salva, mesmo as que falham.** Se algo der errado no processamento, o registro da notificação original ainda existe para auditoria e reprocessamento. Nenhuma confirmação de pagamento se perde sem rastro.
+
 ## Observable Events
 
 | Event | Meaning | Required dimensions |

@@ -1,13 +1,15 @@
 # Iteration Backlog — Operational Demands
 
-> **Purpose:** Operational and stakeholder demands still under evaluation (Analytics, DataDog, ITSM). Derived from the Payments release Premortem. Items here need refinement before entering an OBC or Iteration Plan.
+> **Purpose:** Items with minimum OBC validated, ready for immediate Delivery. The only remaining decision is the priority defined by the Product Owner. This backlog is not for refinement — refinement happens in the Icebox.
+>
+> Items here can enter Delivery as soon as prioritized. To enter the Iteration Plan, they need OBC committed + BDD Feature committed.
 >
 > → [Backlog hierarchy](../../framework/backlogs.en.md)
 > → [Approved delivery scope](iteration-plan.en.md) — to see what's in/out/deferred
 
 ## Objective
 
-Record known demands that still need refinement, evaluation or planning before being incorporated into the Iteration Plan or a specific OBC.
+Record items with a validated Minimum OBC that have completed Discovery in the Icebox and are ready for Delivery execution. The only remaining decision is prioritization by the Product Owner.
 
 | ID | Area | Request | Type | Priority | Status | Next Step |
 |----|------|---------|------|----------|--------|-----------|
@@ -22,10 +24,9 @@ Record known demands that still need refinement, evaluation or planning before b
 
 An item leaves the Iteration Backlog when:
 
-- It has been refined sufficiently to compose an OBC.
-- It has been discarded by business decision.
-- It has been consolidated into an epic or Iteration Plan.
-- It has been implemented and closed.
+- It has been prioritized and entered the Iteration Plan (OBC committed + BDD Feature committed).
+- It has been discarded by business decision (record the reason).
+- It has been returned to the Icebox due to a need for further refinement (exception — record the gap).
 
 ---
 
@@ -40,4 +41,4 @@ Each item may originate or update:
 - Iteration Plan
 - Iteration Backlog
 
-The Tracking List represents demands still under evaluation and serves as the main input source for Continuous Assessment.
+The Repository Tracking List represents demands still under evaluation and serves as the main input source for Continuous Assessment.

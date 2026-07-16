@@ -15,7 +15,7 @@ Execute only the artifact alignment step of the Sync flow.
 - `prodops/artifacts/bdd/` — BDD Features
 - `prodops/journeys/assessment/event-storming/plan.json` — Event Storming
 - `prodops/journeys/assessment/architecture/overview.md` — architecture diagram
-- `prodops/artifacts/trails/release-trail.md` — Release Trail
+- `prodops/artifacts/trails/sessions/` — active session trail
 - Relevant OBC in `prodops/artifacts/obcs/`
 
 ## Action
@@ -58,7 +58,7 @@ Check that all internal links in updated files resolve. Verify changed Markdown 
 
 ### 5. Record in the Release Trail
 
-Append an entry to `prodops/artifacts/trails/release-trail.md` when the alignment is meaningful (behavior change, structural update, or contract correction). Include:
+Append an entry to the active session trail (`prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`) when the alignment is meaningful (behavior change, structural update, or contract correction). Include:
 
 - what artifact was updated
 - why it was stale (what the implementation introduced)

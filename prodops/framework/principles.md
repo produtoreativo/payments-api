@@ -1,10 +1,10 @@
 # ProdOps Principles
 
 ## 1. Product context first
-Nenhuma mudança de código começa sem um artefato de produto: OBC, BDD Feature ou entrada no Reliability Plan. Agentes não devem inventar contexto de negócio ausente.
+Nenhuma mudança de código começa sem contexto compatível com o modo de execução. Upstream é permissivo, experimental e sem compromisso de entrega. Downstream é completo: antes de executar Delivery, exige todos os artefatos e gates de readiness definidos pelo Framework. Agentes não devem inventar contexto de negócio ausente.
 
 ## 2. Upstream before commitment
-Hipóteses, experimentos e spikes pertencem ao Upstream. Código é descartável até ser promovido para Downstream. Ver [AGENTS.md Upstream Path](../../AGENTS.md).
+Upstream não é uma jornada: é o modo sem compromisso de entrega, no qual qualquer jornada pode operar com rigor experimental e maturidade variável. Código é descartável até ser promovido para Downstream. Downstream também pode executar qualquer jornada, mas aplica todos os quality gates vigentes. Ver [AGENTS.md Upstream Path](../../AGENTS.md).
 
 ## 3. Contracts before implementation
 Identificar ou criar um contrato verificável (OpenAPI, AsyncAPI, BDD Feature, schema) antes de escrever código de produção. O contrato é a linguagem compartilhada entre teste e implementação.

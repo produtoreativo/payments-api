@@ -23,11 +23,11 @@ Capturar, preservar e apresentar evidências de cada etapa do fluxo de entrega, 
 
 ## Artefatos produzidos
 
-- Entradas no Release Trail: `prodops/artifacts/trails/release-trail.md`
+- Entradas no Release Trail: `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` (trail da sessão ativa)
 - Entradas no Upstream Trail: `prodops/journeys/discovery/experiments/<id>/upstream-trail.md`
 - PR preenchido com evidências (template: `prodops/journeys/delivery/capabilities/commit-workflow/templates/pull_request.md`)
 
 ## Dependências
 
-- Release Trail: `prodops/artifacts/trails/release-trail.md`
+- Release Trail: `prodops/artifacts/trails/sessions/` (trail da sessão ativa)
 - Task-closing template: `prodops/journeys/delivery/capabilities/commit-workflow/templates/task-closing.md`

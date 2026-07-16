@@ -4,7 +4,7 @@ Reliability is planned before implementation and validated before promotion.
 
 ## Reliability Plan
 
-Every Downstream capability requires an entry in the Reliability Plan. The plan defines:
+A Reliability Plan is **recommended** for every Downstream capability, but is not mandatory. It is strongly recommended for items with relevant operational risk (high complexity, financial impact, new integrations). When it exists, the plan defines:
 - Risks and mitigations
 - OBCs (Observable Business Contracts) with measurable success thresholds
 - SLO suggestions for events on the critical path
@@ -19,7 +19,7 @@ OBC files: `prodops/artifacts/obcs/`
 
 ## Definition of Done
 
-A capability is not complete until the [Definition of Done](../../../templates/engineering/definition-of-done.md) is satisfied, including the reliability criteria.
+A capability is not complete until the [Definition of Done](../../../templates/engineering/definition-of-done.en.md) is satisfied, including the reliability criteria.
 
 ## Failure modes
 
@@ -42,10 +42,10 @@ For each behavior implemented in the Hack Flow, verify the following requirement
 | **HTTP codes** | Status codes match semantics: 201 (created), 400 (invalid input), 404 (not found), 409 (conflict/invalid state), 422 (business rule). |
 | **Controlled degradation** | External dependency failure (provider, SQS, DynamoDB) does not bring down independent flows. |
 
-These requirements are verified in the [Definition of Done](../../../templates/engineering/definition-of-done.md) — Reliability section.
+These requirements are verified in the [Definition of Done](../../../templates/engineering/definition-of-done.en.md) — Reliability section.
 
-For details on how to apply during the TDD cycle: [ProdOps TDD — Reliability in the cycle](../practices/prodops-tdd.md).
+For details on how to apply during the TDD cycle: [ProdOps TDD — Reliability in the cycle](../practices/prodops-tdd.en.md).
 
 ## Post-deploy validation
 
-After deploy, validate the reliability criteria defined in the OBC. Record evidence in `prodops/artifacts/trails/release-trail.md` and `prodops/journeys/operation/operational-trail.md`.
+After deploy, validate the reliability criteria defined in the OBC. Record evidence in the active session trail at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` and in `prodops/journeys/operation/operational-trail.md`.

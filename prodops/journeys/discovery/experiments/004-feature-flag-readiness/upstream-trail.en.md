@@ -17,7 +17,7 @@ Reference:
 
 ### Activity
 
-Started experiment after reviewing Current State, Tracking List, Reliability
+Started experiment after reviewing Current State, Repository Tracking List, Reliability
 Plan, Premortem, Iteration Plan and existing Upstream experiments.
 
 ### Summary

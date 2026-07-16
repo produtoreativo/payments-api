@@ -4,7 +4,7 @@ Confiabilidade é planejada antes da implementação e validada antes da promoç
 
 ## Reliability Plan
 
-Toda capability Downstream requer uma entrada no Reliability Plan. O plano define:
+O Reliability Plan é **recomendado** para toda capability Downstream, mas não é obrigatório. É fortemente recomendado para itens com risco operacional relevante (alta complexidade, impacto financeiro, novas integrações). Quando existe, o plano define:
 - Riscos e mitigações
 - OBCs (Observable Business Contracts) com thresholds de sucesso mensuráveis
 - Sugestões de SLO para eventos no caminho crítico
@@ -48,4 +48,4 @@ Para detalhes sobre como aplicar durante o TDD cycle: [ProdOps TDD — Confiabil
 
 ## Validação pós-deploy
 
-Após o deploy, validar os critérios de confiabilidade definidos no OBC. Registrar evidências em `prodops/artifacts/trails/release-trail.md` e `prodops/journeys/operation/operational-trail.md`.
+Após o deploy, validar os critérios de confiabilidade definidos no OBC. Registrar evidências no trail da sessão ativa em `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` e em `prodops/journeys/operation/operational-trail.md`.

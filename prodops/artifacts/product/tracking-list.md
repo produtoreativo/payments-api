@@ -1,9 +1,11 @@
-# Tracking List
+# Repository Tracking List
 
-> **Propósito:** Ponto de entrada do Framework ProdOps. Captura qualquer sinal ainda não compreendido o suficiente para ser tratado como uma Intent reconhecida. Itens aqui não têm compromisso de entrega.
+> **Propósito:** Captura qualquer sinal local do produto ainda não compreendido o suficiente para ser tratado como um compromisso formal. Itens aqui não têm OBC, não têm identificador permanente e não têm compromisso de entrega.
+>
+> Itens promovidos seguem o fluxo local: Premortem + Reliability Plan + Owner Approval → Product Intent Backlog.
 >
 > → [Hierarquia de backlogs](../../framework/backlogs.md)
-> → [Icebox Backlog](icebox-backlog.md) — próximo nível; onde o OBC nasce
+> → [Icebox](icebox-backlog.md) — próximo nível; onde o OBC é refinado até Minimum OBC
 
 | Item | Origem | Dimensão | Dono | Status | Próxima ação |
 | --- | --- | --- | --- | --- | --- |

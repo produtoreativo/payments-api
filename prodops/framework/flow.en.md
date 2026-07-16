@@ -3,7 +3,7 @@
 The official ProdOps Framework flow describes the path every change takes from its origin to continuous operation.
 
 ```
-Origin Stream → Intent → Exploration → OBC → Iteration Plan → Reliability Plan → Delivery → Operation
+Origin Stream → Intent → Mode (Upstream or Downstream) → OBC draft (Business Intent Backlog / Product Intent Backlog) → Exploration + Assessment → Reliability Plan → Assessment Review → committed OBC/BDD → Iteration Plan → Delivery → Operation
 ```
 
 This document is the canonical reference for understanding **what happens at each step**, **what is produced**, and **when to advance**.
@@ -20,19 +20,27 @@ This document is the canonical reference for understanding **what happens at eac
 flowchart TD
     OS["Origin Stream\n(Business | Enterprise | Team | Technology)"]
     I["Intent"]
-    EX["Exploration\n(Journey: Discovery, Mode: Upstream)"]
-    OBC["Observable Business Contract\n(OBC)"]
-    IP["Iteration Plan"]
-    RP["Reliability Plan"]
+    DRAFT["OBC draft\n(BIB or PIB)"]
+    EX["Exploration\n(Journey: Discovery; rigor by mode)"]
+    AS["Assessment\n(transversal)"]
+    RP["Reliability Plan\n(recommended)"]
+    REV["Assessment Review\n(PM + Tech Lead)"]
+    OBC["OBC + BDD\ncommitted"]
+    IP["Iteration Plan\n(status: In)"]
     D["Delivery\n(Journey: Delivery, Mode: Downstream)"]
-    OP["Operation\n(Jornada: Operation)"]
+    OP["Operation\n(Journey: Operation)"]
 
     OS --> I
-    I --> EX
-    EX --> OBC
+    I --> DRAFT
+    DRAFT --> EX
+    EX --> REV
+    DRAFT -.-> AS
+    EX -.-> AS
+    AS -.-> RP
+    RP -.-> REV
+    REV --> OBC
     OBC --> IP
-    IP --> RP
-    RP --> D
+    IP --> D
     D --> OP
 
     EX -.->|"Discard (sufficient learning)"| X[Close without advancing]
@@ -76,7 +84,7 @@ flowchart TD
 
 **When to advance:** As soon as the Intent is registered and there is a decision to continue (not discard).
 
-> The OBC is **not** the Framework entry point. It is the output of Exploration — the transformation of a sufficiently understood Intent into an observable contract.
+> The OBC Draft is born automatically when a Business Intent enters the **Business Intent Backlog** (global flow) or the **Product Intent Backlog** (local flow) — **before** Discovery, before Upstream, before Downstream. During Upstream it remains in Draft. In Downstream, it is refined in the Icebox until reaching Minimum OBC, then controls the entire Delivery evolution.
 
 → [Intent template](../templates/business-intents/intent.en.md)
 
@@ -86,12 +94,12 @@ flowchart TD
 
 **Objective:** Transform the Intent into validated knowledge, reducing uncertainty before any formal delivery commitment.
 
-**What happens:** The Intent enters Upstream mode through the Discovery Journey. Hypotheses are tested through experiments, spikes, prototypes, and Event Storming. Code generated in this phase is disposable. Learning is the primary result.
+**What happens:** The Discovery Journey explores the Intent with the rigor defined by the execution mode. In Upstream there is no delivery commitment and maturity may vary; in Downstream all current gates apply. Hypotheses may be tested through experiments, spikes, prototypes, and Event Storming.
 
 **What is produced:**
 - Experiment in `prodops/journeys/discovery/experiments/<NNN-slug>/`
 - Decision Package (hypothesis answered, clear recommendation, learnings)
-- OBC draft (candidate)
+- OBC draft refined
 - BDD Feature draft
 - Risk and opportunity updates
 
@@ -108,7 +116,7 @@ flowchart TD
 
 **Objective:** Transform the knowledge validated by Exploration into an observable and verifiable contract.
 
-**What happens:** The OBC draft produced in Exploration is reviewed, refined, and promoted to `prodops/artifacts/obcs/`. The OBC defines measurable success criteria that anchor all subsequent implementation. Without a committed OBC, there is no Downstream.
+**What happens:** The OBC Draft — born at the Business Intent Backlog or Product Intent Backlog — is refined through Exploration (Discovery in the Icebox) and Assessment. The Reliability Plan is produced before the commitment decision. In the Assessment Review, PM and Tech Lead review the full set; when approved, the OBC reaches Minimum OBC state and the BDD Feature are promoted to the committed directories. Without this set, there is no Downstream execution.
 
 **What is produced:**
 - OBC committed in `prodops/artifacts/obcs/<slug>.md`
@@ -121,35 +129,35 @@ flowchart TD
 
 ---
 
-### 5. Iteration Plan
+### 5. Reliability Plan
 
-**Objective:** Formally commit the capability to the next delivery iteration.
+**Objective:** Define, through the transversal Assessment journey, the reliability conditions required before commitment in the Iteration Plan.
 
-**What happens:** The approved OBC enters the Iteration Plan with status `In`. This represents the formal delivery commitment — the item leaves the Backlog and enters the executable plan.
-
-**What is produced:**
-- Entry in the Iteration Plan in `prodops/artifacts/plans/iteration-plan.md` with status `In`
-- Tracking List update if the item was there
-
-**When to advance:** Item in the Iteration Plan with status `In`.
-
-→ [Iteration Plan](../artifacts/plans/iteration-plan.en.md)
-
----
-
-### 6. Reliability Plan
-
-**Objective:** Define the reliability conditions that delivery must satisfy before being promoted.
-
-**What happens:** The risks identified in Exploration are transformed into a reliability plan. SLOs, mitigation actions, rollback criteria, and failure points are explicitly documented.
+**What happens:** Identified risks are transformed into a reliability plan. SLOs, mitigation actions, rollback criteria, and failure points are explicitly documented. Assessment runs in parallel with other journeys.
 
 **What is produced:**
 - Entry in the Reliability Plan in `prodops/journeys/assessment/reliability-plans/`
 - Risks updated in `prodops/journeys/assessment/risks.md`
 
-**When to advance:** Reliability Plan updated with the risks of the item to be implemented.
+**When to advance:** Reliability Plan updated and Assessment Review completed for the item.
 
 → [Reliability Plans](../journeys/assessment/reliability-plans/)
+
+---
+
+### 6. Iteration Plan
+
+**Objective:** Formally commit the capability to the next delivery iteration after Assessment Review.
+
+**What happens:** The approved set — OBC, BDD Feature, risks, and Reliability Plan — enters the Iteration Plan with status `In`. This represents the formal delivery commitment; it is not, in isolation, proof of readiness.
+
+**What is produced:**
+- Entry in the Iteration Plan in `prodops/artifacts/plans/iteration-plan.md` with status `In`
+- Repository Tracking List update if the item was there
+
+**When to advance:** All Downstream readiness gates are satisfied.
+
+→ [Iteration Plan](../artifacts/plans/iteration-plan.en.md)
 
 ---
 

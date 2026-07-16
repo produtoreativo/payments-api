@@ -1,22 +1,44 @@
 # Upstream Mode
 
-Upstream is the exploratory execution mode of the ProdOps Framework.
+Upstream is the **exploration mode** of the ProdOps Framework.
+
+## Canonical definition
+
+Upstream represents an exploration mode. Its goal is to reduce uncertainty before assuming any delivery commitment. Upstream does not represent a promise — it represents a space for learning. All work done in Upstream is considered experimental.
 
 ## Purpose
 
-Reduce uncertainty before a capability enters the standard delivery flow.
-
-Unlike Downstream, Upstream is driven by learning, not delivery commitments.
+Produce knowledge. Not committed software.
 
 ## Mode characteristics
 
-- Low formal commitment
-- Freedom to select capabilities and practices as needed
-- Code is disposable until promoted to Downstream
-- Rapid artifact evolution
-- Focus on learning, not delivery
+In Upstream:
+
+- no mandatory gates
+- no obligation to complete artifacts
+- no obligation to produce a minimum OBC
+- no obligation to follow all Skills
+- the engineer decides which Skills to use
+- vibecoding is allowed
+- experimentation is encouraged
+- failing is part of the process
+
+The goal is to learn as fast as possible.
 
 An Upstream experiment can produce production-quality code, but that code is considered exploratory until the capability is promoted to Downstream.
+
+## OBC in Upstream
+
+When a Business Intent enters the Business Intent Backlog, an OBC is created as a Draft.
+
+During Upstream:
+
+- the OBC remains in Draft
+- can be continuously updated
+- can remain incomplete
+- does not block the progress of experiments
+
+The OBC works as memory of learning — not as a validation mechanism.
 
 ## When to use Upstream mode
 
@@ -31,6 +53,17 @@ An Upstream experiment can produce production-quality code, but that code is con
 → [Discovery Journey](../journeys/discovery/README.md)
 
 The Discovery journey documents the complete exploration workflow, experiments, Decision Package review, and the promotion process to Downstream.
+
+## Upstream closure
+
+At the end of Upstream, four outcomes are possible:
+
+1. **Discard** the Business Intent — sufficient learning, but not worth advancing.
+2. **Archive** for future use — learning recorded, decision deferred.
+3. **Return** to the Business Intent Backlog — waiting for a business decision or external dependency.
+4. **Promote** to Downstream — explicit Product Owner decision, with complete Decision Package.
+
+Promotion to Downstream must be an explicit decision. There is no automatic transition.
 
 ## Expected outcome
 

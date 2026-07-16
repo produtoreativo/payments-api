@@ -1,10 +1,10 @@
 # ProdOps Principles
 
 ## 1. Product context first
-No code change begins without a product artifact: OBC, BDD Feature, or an entry in the Reliability Plan. Agents must not invent missing business context.
+No code change begins without context compatible with its execution mode. Upstream is permissive, experimental and carries no delivery commitment. Downstream is complete: before Delivery execution, it requires every readiness artifact and gate defined by the Framework. Agents must not invent missing business context.
 
 ## 2. Upstream before commitment
-Hypotheses, experiments, and spikes belong to Upstream. Code is disposable until promoted to Downstream. See [AGENTS.md Upstream Path](../../AGENTS.md).
+Upstream is not a journey: it is the no-delivery-commitment mode, where any journey may operate with experimental rigor and variable maturity. Code is disposable until promoted to Downstream. Downstream may also execute any journey, but applies every current quality gate. See [AGENTS.md Upstream Path](../../AGENTS.md).
 
 ## 3. Contracts before implementation
 Identify or create a verifiable contract (OpenAPI, AsyncAPI, BDD Feature, schema) before writing production code. The contract is the shared language between test and implementation.
