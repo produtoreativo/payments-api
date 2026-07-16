@@ -136,6 +136,44 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 ---
 
+## Concepção
+
+**Definição:** Fase que compreende o período desde o surgimento do sinal até a entrada no Product Intent Backlog. A Intent existe como possibilidade — o Product Owner ainda não assumiu compromisso.
+
+**Pergunta central:** Existe valor real aqui?
+
+**Backlogs:** Global Tracking List / Repository Tracking List → Business Intent Backlog (fluxo global).
+
+**Estado do OBC:** Não existe nas Tracking Lists. Nasce como Draft ao entrar no Business Intent Backlog (fluxo global). No fluxo local, nasce como Draft apenas ao entrar no PIB.
+
+**Compromisso:** Nenhum. A Intent pode ser descartada sem registro formal de aprendizado.
+
+**Fronteira de saída:** Owner Approval — entrada no Product Intent Backlog (início da Inception).
+
+**Relação com outros conceitos:** Ver [`phases.md`](phases.md), [`backlogs.md`](backlogs.md).
+
+---
+
+## Inception
+
+**Definição:** Fase que compreende o período desde a entrada no Product Intent Backlog até o OBC atingir o estado Minimum OBC (Iteration Backlog). O Product Owner assumiu compromisso formal de investigação.
+
+**Pergunta central:** O Product Owner está comprometendo atenção e capacidade para investigar isso agora?
+
+**Backlogs:** Product Intent Backlog → Icebox → Iteration Backlog.
+
+**Estado do OBC:** Draft → Draft em refinamento (Icebox) → Minimum OBC (Iteration Backlog).
+
+**Compromisso:** Formal. Qualquer encerramento exige registro de aprendizado rastreável no OBC.
+
+**Modo de execução:** Upstream (alta incerteza) ou Downstream (clareza suficiente), definido pelo Product Owner ao aceitar a Intent no PIB.
+
+**Fronteira de saída:** Assessment Review aprovada, OBC em estado Minimum OBC, BDD Feature committed — entrada no Iteration Backlog.
+
+**Relação com outros conceitos:** Ver [`phases.md`](phases.md), [`backlogs.md`](backlogs.md).
+
+---
+
 ## Business (Origin Stream)
 
 **Definição:** Origin Stream que representa necessidades geradas pelo mercado, pelo cliente ou pelas oportunidades de crescimento do produto.

@@ -133,9 +133,9 @@ Após entrar no **Product Intent Backlog**, a origem do item deixa de importar. 
 
 **Não contém:** OBC. Compromisso. Identificador permanente.
 
-**Compromisso:** Nenhum. Nem todo item precisa virar uma Intent global — alguns podem ser resolvidos localmente via fluxo de Premortem + Reliability Plan.
+**Compromisso:** Nenhum. Nem todo item precisa virar uma Intent global — alguns podem ser resolvidos localmente via fluxo de Premortem + Análise de Risco Preliminar.
 
-**Quando avançar:** Via Premortem + Reliability Plan + Owner Approval → Product Intent Backlog.
+**Quando avançar:** Via Premortem + Análise de Risco Preliminar + Owner Approval → Product Intent Backlog.
 
 **Artefato canônico:** `prodops/artifacts/product/tracking-list.md`
 
@@ -152,7 +152,7 @@ Após entrar no **Product Intent Backlog**, a origem do item deixa de importar. 
 | Origem | Caminho de entrada |
 |---|---|
 | Plataforma | Business Intent do Portfolio, após Platform Release coordenar a entrega |
-| Local | Repository Tracking Item promovido via Premortem + Reliability Plan com Owner Approval |
+| Local | Repository Tracking Item promovido via Premortem + Análise de Risco Preliminar com Owner Approval |
 
 **O que acontece ao entrar neste backlog:**
 - O Product Owner formaliza a aceitação.

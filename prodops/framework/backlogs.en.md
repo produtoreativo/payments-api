@@ -133,9 +133,9 @@ After entering the **Product Intent Backlog**, the item's origin no longer matte
 
 **Does not contain:** OBC. Commitment. Permanent identifier.
 
-**Commitment:** None. Not every item needs to become a global Intent — some can be resolved locally via the Premortem + Reliability Plan flow.
+**Commitment:** None. Not every item needs to become a global Intent — some can be resolved locally via the Premortem + Preliminary Risk Analysis flow.
 
-**When to advance:** Via Premortem + Reliability Plan + Owner Approval → Product Intent Backlog.
+**When to advance:** Via Premortem + Preliminary Risk Analysis + Owner Approval → Product Intent Backlog.
 
 **Canonical artifact:** `prodops/artifacts/product/tracking-list.md`
 
@@ -152,7 +152,7 @@ After entering the **Product Intent Backlog**, the item's origin no longer matte
 | Origin | Entry path |
 |---|---|
 | Platform | Business Intent from Portfolio, after Platform Release coordinates delivery |
-| Local | Repository Tracking Item promoted via Premortem + Reliability Plan with Owner Approval |
+| Local | Repository Tracking Item promoted via Premortem + Preliminary Risk Analysis with Owner Approval |
 
 **What happens when an item enters this backlog:**
 - The Product Owner formalizes acceptance.

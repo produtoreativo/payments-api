@@ -218,6 +218,7 @@ When describing the macro flow, use **Exploration**. When referencing the specif
 
 → [Origin Streams](origin-streams.en.md)
 → [Glossary](glossary.en.md)
+→ [Intent Phases: Conception and Inception](phases.en.md)
 → [Operating model](operating-model.en.md)
 → [Execution Model](../execution-model/README.en.md)
 → [Journeys](../journeys/README.en.md)

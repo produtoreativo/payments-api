@@ -218,6 +218,7 @@ Ao descrever o fluxo macro, use **Exploration**. Ao referenciar a jornada espec�
 
 → [Origin Streams](origin-streams.md)
 → [Glossário](glossary.md)
+→ [Fases da Intenção: Concepção e Inception](phases.md)
 → [Modelo operacional](operating-model.md)
 → [Execution Model](../execution-model/README.md)
 → [Jornadas](../journeys/README.md)
