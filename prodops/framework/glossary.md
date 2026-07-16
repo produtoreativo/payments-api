@@ -231,7 +231,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Backlogs:** Global Tracking List / Repository Tracking List → Business Intent Backlog (fluxo global).
 
-**Estado do OBC:** Não existe nas Tracking Lists. Nasce como Draft ao entrar no Business Intent Backlog (fluxo global). No fluxo local, nasce como Draft apenas ao entrar no PIB.
+**Estado do OBC:** Não existe nas Tracking Lists. No fluxo global, o **Global OBC** nasce como Draft ao entrar no Business Intent Backlog. No fluxo local, o **Local OBC** nasce como Draft ao entrar no PIB.
 
 **Compromisso:** Nenhum. A Intent pode ser descartada sem registro formal de aprendizado.
 
@@ -243,19 +243,19 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 ## Inception
 
-**Definição:** Fase que compreende o período desde a entrada no Product Intent Backlog até o OBC atingir o estado Minimum OBC (Iteration Backlog). O Product Owner assumiu compromisso formal de investigação.
+**Definição:** Fase que compreende o período desde a entrada no Product Intent Backlog até o Local OBC atingir o estado Committed (Iteration Backlog). O Product Owner assumiu compromisso formal de investigação.
 
 **Pergunta central:** O Product Owner está comprometendo atenção e capacidade para investigar isso agora?
 
 **Backlogs:** Product Intent Backlog → Icebox → Iteration Backlog.
 
-**Estado do OBC:** Draft → Draft em refinamento (Icebox) → Minimum OBC (Iteration Backlog).
+**Estado do Local OBC:** Draft → Refining (Icebox) → Committed (Iteration Backlog).
 
 **Compromisso:** Formal. Qualquer encerramento exige registro de aprendizado rastreável no OBC.
 
-**Modo de execução:** Upstream (alta incerteza) ou Downstream (clareza suficiente), definido pelo Product Owner ao aceitar a Intent no PIB.
+**Modo de execução:** Upstream ou Downstream — são **modos**, não fases. Definido pelo Product Owner ao aceitar a Intent no PIB. Pode mudar ao longo da Inception.
 
-**Fronteira de saída:** Assessment Review aprovada, OBC em estado Minimum OBC, BDD Feature committed — entrada no Iteration Backlog.
+**Fronteira de saída:** Assessment Review aprovada, Local OBC em estado Committed, BDD Feature committed — entrada no Iteration Backlog.
 
 **Relação com outros conceitos:** Ver [`phases.md`](phases.md), [`backlogs.md`](backlogs.md).
 
@@ -327,15 +327,79 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 ## OBC (Observable Business Contract)
 
-**Definição:** O contrato vivo que representa uma intenção de negócio durante todo o seu ciclo de vida. É a fonte de verdade do trabalho — conecta negócio, produto, arquitetura, engenharia, operação, observabilidade e confiabilidade.
+**Definição:** O contrato vivo que representa uma intenção de negócio durante todo o seu ciclo de vida. Existe em dois níveis: **Global OBC** (contrato de negócio estratégico, pertence ao BIB/Portfolio) e **Local OBC** (contrato de produto, pertence ao PIB/Product Owner). Ver entradas separadas abaixo.
 
-**Estados:** Draft → Minimum OBC → Active → Operational → Archived.
+**Estados (maturidade do contrato):** Draft → Refining → Committed → Implemented → Operational → Archived.
 
-**Criação:** Nasce quando uma Intent é aceita. No fluxo global, ao entrar no Business Intent Backlog. No fluxo local, ao entrar no Product Intent Backlog.
+**Criação:** O Global OBC nasce ao entrar no Business Intent Backlog. O Local OBC nasce após o Particionamento do OBC (fluxo global) ou ao entrar no Product Intent Backlog (fluxo local).
 
 **Relação com outros conceitos:** Âncora a BDD Feature, o Iteration Plan, o Reliability Plan e toda a Delivery. A Diligence mantém o estado do OBC sincronizado entre backlogs e ferramentas.
 
 → **Definição completa, composição, ciclo de vida e governança:** [`obc.md`](obc.md)
+
+---
+
+## Global OBC
+
+**Definição:** Nível estratégico do Observable Business Contract. Representa uma intenção de negócio completa — independente de produtos, times ou repositórios. É o contrato canônico da capability de negócio. Pertence ao BIB (Portfolio), nunca a um produto.
+
+**Foco:** estratégico. Não contém detalhes de implementação, APIs, repositórios, BDD ou critérios de aceite técnicos.
+
+**Contém:** Objetivo de Negócio, Valor de Negócio, Stakeholders, Regras de Negócio, Eventos de Negócio, KPIs, Value Stream, Produtos envolvidos (quando conhecidos), Rastreabilidade dos Local OBCs.
+
+**Localização:** `prodops/artifacts/obcs/global/<slug>.md`
+
+**Ciclo de vida:** Draft → Refining → Operational → Archived. Não desaparece após a decomposição — continua evoluindo.
+
+**Relação com outros conceitos:** Decomposto em N Local OBCs pelo OBC Partitioning. Nunca use os termos "pai" ou "filho" — use decomposição/especialização/partição.
+
+→ **Definição completa:** [`obc.md`](obc.md) | [Template](../templates/obcs/global-obc.md)
+
+---
+
+## Local OBC
+
+**Definição:** Nível de produto do Observable Business Contract. Representa a responsabilidade de um único produto dentro da implementação do Global OBC. Pertence a exatamente um Product Intent Backlog.
+
+**Foco:** implementação e entrega de produto. Contém o contrato técnico e operacional do produto.
+
+**Contém:** Referência ao Global OBC (obrigatória), Produto/Repositório/Bounded Context, APIs e Eventos, BDD/Critérios de Aceite, Observabilidade, Regras de Confiabilidade, Contrato de Resposta, Dependências Técnicas, Evidências.
+
+**Localização:** `prodops/artifacts/obcs/local/<slug>.md`
+
+**Ciclo de vida:** Draft → Refining → Committed → Implemented → Operational → Archived.
+
+**Não duplica:** conteúdo estratégico do Global OBC. Sempre referencia, nunca copia.
+
+**Relação com outros conceitos:** Especialização/partição do Global OBC. Nunca use os termos "filho" ou "herança".
+
+→ **Definição completa:** [`obc.md`](obc.md) | [Template](../templates/obcs/local-obc.md)
+
+---
+
+## OBC Partitioning
+
+**Definição:** Capability responsável por transformar um Global OBC em Local OBCs — um por produto envolvido. Ocorre entre o Discovery no BIB e a criação de itens nos PIBs dos produtos.
+
+**Responsabilidades:** identificar produtos envolvidos, identificar repositórios, identificar Bounded Contexts, decompor o Global OBC, criar os Local OBCs, manter rastreabilidade.
+
+**Quem executa:** Portfolio PM + Tech Leads dos produtos envolvidos.
+
+**Relação com outros conceitos:** Etapa entre BIB e PIB no fluxo global. Resultado: tabela de rastreabilidade no Global OBC + Local OBC Draft em cada PIB.
+
+→ Ver [`backlogs.md`](backlogs.md) e [`obc.md`](obc.md)
+
+---
+
+## Refinamento Contínuo do OBC
+
+**Definição:** Princípio segundo o qual o OBC nunca é considerado finalizado. Continua evoluindo durante Discovery, Delivery e Operation. Toda nova evidência — experimentos, decisões de implementação, incidentes, postmortems, métricas operacionais — atualiza o contrato.
+
+**Propósito:** Garantir que o OBC reflita o estado atual do conhecimento sobre a capability — não apenas a intenção original.
+
+**Relação com outros conceitos:** Aplica-se a ambos os níveis (Global OBC e Local OBC). Alimentado pela jornada Operation e pelo Continuous Assessment.
+
+→ Ver [`obc.md`](obc.md) e [`flow.md`](flow.md)
 
 ---
 
@@ -433,11 +497,11 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Business Intent Backlog
 
-**Definição:** Backlog de plataforma que representa Intents aceitas para Discovery. O OBC nasce como Draft ao entrar neste backlog. Gerenciado pelo Portfolio.
+**Definição:** Backlog estratégico da plataforma que representa Intents aceitas para Discovery. O **Global OBC** nasce como Draft ao entrar neste backlog. Contém apenas Global OBCs — nunca Local OBCs. Gerenciado pelo Portfolio.
 
 **Pergunta:** O que merece Discovery?
 
-**Relação com outros conceitos:** Segundo nível do fluxo global. O OBC Draft nasce aqui. Itens avançam para o Roadmap. Ver [`backlogs.md`](backlogs.md).
+**Relação com outros conceitos:** Segundo nível do fluxo global. O Global OBC Draft nasce aqui. Após Discovery, o OBC Partitioning cria Local OBCs nos PIBs dos produtos. Ver [`backlogs.md`](backlogs.md).
 
 ---
 
@@ -455,13 +519,13 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Product Intent Backlog
 
-**Definição:** Backlog de produto que representa todo trabalho formalmente aceito pelo Product Owner. Ponto de entrada único do produto para o ciclo de Delivery — independente de onde o item veio (Portfolio ou fluxo local). Se o item ainda não tem OBC Draft, ele é criado ao entrar neste backlog.
+**Definição:** Backlog de produto que representa todo trabalho formalmente aceito pelo Product Owner. Contém exclusivamente **Local OBCs** — nunca Global OBCs. Ponto de entrada único do produto para o ciclo de Delivery. Views: **Icebox** (Refining), **Iteration Backlog** (Committed) e **Release** (agrupado por versão).
 
 **Pergunta:** O que foi oficialmente aceito pelo Product Owner?
 
-**Dois caminhos de entrada:** (1) Business Intent do Portfolio via Platform Release; (2) Repository Tracking Item via Premortem + Análise de Risco Preliminar com Owner Approval.
+**Dois caminhos de entrada:** (1) Local OBC via OBC Partitioning, direcionado pelo Portfolio após Discovery no BIB; (2) Repository Tracking Item via Premortem + Análise de Risco Preliminar com Owner Approval (Local OBC Draft nasce aqui).
 
-**Após a entrada, a origem deixa de importar.** Todos os itens seguem a mesma jornada: Icebox → Iteration Backlog → Iteration Plan → Delivery.
+**Após a entrada, a origem deixa de importar.** Todos os itens seguem a mesma jornada: Icebox (Refining) → Iteration Backlog (Committed) → Iteration Plan (Implemented) → Operation (Operational).
 
 **Relação com outros conceitos:** Ponto de convergência dos fluxos global e local. Ver [`backlogs.md`](backlogs.md).
 
@@ -469,21 +533,37 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Icebox
 
-**Definição:** Backlog de produto que representa itens comprometidos ainda sendo preparados para Delivery. O Discovery funcional, técnico e operacional necessário ocorre aqui. Objetivo: produzir um OBC mínimo aceitável. Artefato: `prodops/artifacts/product/icebox-backlog.md`.
+**Definição:** View sobre o Product Intent Backlog que representa itens em refinamento — Local OBC em estado **Refining**, Discovery em andamento, decisões em aberto. O Discovery funcional, técnico e operacional necessário ocorre neste estado. Artefato: `prodops/artifacts/product/icebox-backlog.md`.
 
-**Pergunta:** O que ainda está sendo preparado para Delivery?
+**Pergunta:** Quais itens do PIB ainda estão sendo refinados para Delivery?
 
-**Relação com outros conceitos:** Recebe itens do Product Intent Backlog. Itens avançam para o Iteration Backlog após OBC mínimo validado. Ver [`backlogs.md`](backlogs.md).
+**Estado do Local OBC:** Refining.
+
+**Relação com outros conceitos:** View sobre o PIB. Itens transitam para a view Iteration Backlog quando o Local OBC atinge o estado Committed. Ver [`backlogs.md`](backlogs.md).
 
 ---
 
 ## Iteration Backlog
 
-**Definição:** Backlog de produto que representa itens com OBC mínimo validado, prontos para Delivery imediata. Não é um backlog de refinamento — refinamento acontece no Icebox. A única decisão restante é a prioridade do Product Owner. Artefato: `prodops/artifacts/plans/iteration-backlog.md`.
+**Definição:** View sobre o Product Intent Backlog que representa itens com Local OBC no estado **Committed**, prontos para Delivery imediata. Não é um backlog de refinamento — refinamento acontece no estado Icebox. A única decisão restante é a prioridade do Product Owner. Artefato: `prodops/artifacts/plans/iteration-backlog.md`.
 
-**Pergunta:** O que está pronto para ser desenvolvido?
+**Pergunta:** Quais itens do PIB estão prontos para ser desenvolvidos?
 
-**Relação com outros conceitos:** Recebe itens do Icebox. Itens avançam para o Iteration Plan após OBC committed + BDD Feature committed. Ver [`backlogs.md`](backlogs.md).
+**Estado do Local OBC:** Committed.
+
+**Relação com outros conceitos:** View sobre o PIB. Itens avançam para o Iteration Plan após Local OBC committed em arquivo + BDD Feature committed. Ver [`backlogs.md`](backlogs.md).
+
+---
+
+## Release (view do PIB)
+
+**Definição:** View sobre o Product Intent Backlog que representa itens agrupados por versão de release do produto. Facilita o planejamento, comunicação e acompanhamento de versões. Não confundir com Platform Release (view do BIB, responsabilidade do Portfolio).
+
+**Pergunta:** Quais itens do PIB fazem parte desta versão de release?
+
+**Gerenciado por:** Product Owner.
+
+**Relação com outros conceitos:** View sobre o PIB. Ver **Platform Release** e [`backlogs.md`](backlogs.md).
 
 ---
 
@@ -517,13 +597,19 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Upstream
 
-**Definição:** Modo permissivo, experimental e sem compromisso de entrega. Pode usar todas as jornadas com maturidade variável; código é descartável até ser promovido. Não é sinônimo de Discovery. Ver [`prodops/journeys/discovery/README.md`](../journeys/discovery/README.md).
+**Definição:** **Modo de execução** permissivo, experimental e sem compromisso de entrega. Pode usar todas as jornadas com maturidade variável; código é descartável até ser promovido. Não é sinônimo de Discovery. Não é uma fase — é um modo que pode iniciar em **qualquer estágio** do ciclo de vida. Quando concluído, o item retorna ao estágio original.
+
+**Importante:** Upstream não muda o estágio do item. Um item em Discovery que inicia Upstream continua em Discovery; quando o Upstream termina, retorna ao estágio em que estava.
+
+Ver [`prodops/journeys/discovery/README.md`](../journeys/discovery/README.md).
 
 ---
 
 ## Downstream
 
-**Definição:** Modo com compromisso de entrega que aplica todos os quality gates vigentes em todas as jornadas. Guia o item e para em cada lacuna até atingir readiness; então executa o fluxo completo `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`. Ver [`prodops/execution-model/downstream.md`](../execution-model/downstream.md).
+**Definição:** **Modo de execução** padrão, com compromisso de entrega que aplica todos os quality gates vigentes em todas as jornadas. Guia o item e para em cada lacuna até atingir readiness; então executa o fluxo completo `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`. Não é uma fase — é um modo de execução. Pode iniciar em qualquer estágio do ciclo de vida.
+
+Ver [`prodops/execution-model/downstream.md`](../execution-model/downstream.md).
 
 ---
 

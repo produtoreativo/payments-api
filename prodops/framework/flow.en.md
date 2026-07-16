@@ -3,7 +3,7 @@
 The official ProdOps Framework flow describes the path every change takes from its origin to continuous operation.
 
 ```
-Origin Stream → Intent → Mode (Upstream or Downstream) → OBC draft (Business Intent Backlog / Product Intent Backlog) → Exploration + Assessment → Reliability Plan → Assessment Review → committed OBC/BDD → Iteration Plan → Delivery → Operation
+Origin Stream → Intent → Global OBC Draft (BIB) → Discovery → OBC Partitioning → Local OBC Draft (PIB) → Exploration + Assessment → Assessment Review → Committed Local OBC + BDD committed → Iteration Plan → Delivery → Operation → Continuous OBC Refinement
 ```
 
 This document is the canonical reference for understanding **what happens at each step**, **what is produced**, and **when to advance**.
@@ -20,36 +20,48 @@ This document is the canonical reference for understanding **what happens at eac
 flowchart TD
     OS["Origin Stream\n(Business | Enterprise | Team | Technology)"]
     I["Intent"]
-    DRAFT["OBC draft\n(BIB or PIB)"]
-    EX["Exploration\n(Journey: Discovery; rigor by mode)"]
+    GBIB["Global OBC Draft\n(Business Intent Backlog)"]
+    EX1["Discovery in BIB\n(reduces strategic uncertainty)"]
+    PART["OBC Partitioning\n(Global OBC → Local OBCs)"]
+    LPIB["Local OBC Draft\n(Product Intent Backlog)"]
+    EX2["Exploration in Icebox\n(Journey: Discovery; rigor by mode)"]
     AS["Assessment\n(transversal)"]
     RP["Reliability Plan\n(recommended)"]
     REV["Assessment Review\n(PM + Tech Lead)"]
-    OBC["OBC + BDD\ncommitted"]
+    OBC["Committed Local OBC + BDD\ncommitted"]
     IP["Iteration Plan\n(status: In)"]
     D["Delivery\n(Journey: Delivery, Mode: Downstream)"]
     OP["Operation\n(Journey: Operation)"]
+    REF["Continuous OBC Refinement"]
 
     OS --> I
-    I --> DRAFT
-    DRAFT --> EX
-    EX --> REV
-    DRAFT -.-> AS
-    EX -.-> AS
+    I --> GBIB
+    GBIB --> EX1
+    EX1 --> PART
+    PART --> LPIB
+    LPIB --> EX2
+    EX2 --> REV
+    LPIB -.-> AS
+    EX2 -.-> AS
     AS -.-> RP
     RP -.-> REV
     REV --> OBC
     OBC --> IP
     IP --> D
     D --> OP
+    OP --> REF
+    REF -.->|"new Intents"| OS
 
-    EX -.->|"Discard (sufficient learning)"| X[Close without advancing]
-    EX -.->|"Requires further exploration"| EX
+    EX2 -.->|"Discard (sufficient learning)"| X[Close without advancing]
+    EX2 -.->|"Requires further exploration"| EX2
 
     style OS fill:#e2e3e5,stroke:#6c757d
+    style GBIB fill:#fff3cd,stroke:#856404
+    style PART fill:#e2d9f3,stroke:#6f42c1
     style OBC fill:#cce5ff,stroke:#004085
     style D fill:#d4edda,stroke:#155724
     style X fill:#f8d7da,stroke:#721c24
+    style REF fill:#d1ecf1,stroke:#0c5460
 ```
 
 ---
@@ -84,53 +96,98 @@ flowchart TD
 
 **When to advance:** As soon as the Intent is registered and there is a decision to continue (not discard).
 
-> The OBC Draft is born automatically when a Business Intent enters the **Business Intent Backlog** (global flow) or the **Product Intent Backlog** (local flow) — **before** Discovery, before Upstream, before Downstream. During Upstream it remains in Draft. In Downstream, it is refined in the Icebox until reaching Minimum OBC, then controls the entire Delivery evolution.
-
 → [Intent template](../templates/business-intents/intent.en.md)
 
 ---
 
-### 3. Exploration
+### 3. Global OBC Draft (BIB)
 
-**Objective:** Transform the Intent into validated knowledge, reducing uncertainty before any formal delivery commitment.
+**Objective:** Create the strategic business contract that represents the intention before product-level decomposition.
 
-**What happens:** The Discovery Journey explores the Intent with the rigor defined by the execution mode. In Upstream there is no delivery commitment and maturity may vary; in Downstream all current gates apply. Hypotheses may be tested through experiments, spikes, prototypes, and Event Storming.
+**What happens:** The Intent enters the Business Intent Backlog. A **Global OBC Draft** is born — it captures the business goal, value, stakeholders, rules, and initial hypotheses. The Global OBC exists **before** Discovery, **before** partitioning, **before** any product commitment.
 
 **What is produced:**
-- Experiment in `prodops/journeys/discovery/experiments/<NNN-slug>/`
+- Global OBC Draft in the BIB (`prodops/artifacts/obcs/global/<slug>.md` when committed)
+- Permanent identifier for the Intent
+
+**When to advance:** Global OBC Draft created and Discovery in BIB initiated.
+
+→ [Full OBC definition](obc.en.md)
+
+---
+
+### 4. Discovery (Journey)
+
+**Objective:** An ACTIVITY — not a backlog. Reduce uncertainty about the business intention before partitioning.
+
+**What happens:** The Discovery journey explores the Intent at the platform level. Experiments, benchmarks, spikes, research, interviews, prototypes, and premortems may be conducted. All learnings return to the Global OBC.
+
+**What is produced:**
+- Experiments in `prodops/journeys/discovery/experiments/<NNN-slug>/`
 - Decision Package (hypothesis answered, clear recommendation, learnings)
-- OBC draft refined
+- Refined Global OBC (state: Refining)
+- Understanding of involved products and bounded contexts
+
+**Upstream vs Downstream:** Discovery can occur in Upstream mode (high uncertainty, disposable code) or Downstream mode (sufficient clarity, mandatory gates). The mode never changes the stage — an item in Discovery can start Upstream and transition to Downstream without changing phases.
+
+**When to advance:** When the central hypothesis has been answered and the remaining uncertainty is acceptable for partitioning.
+
+→ [Discovery Journey](../journeys/discovery/README.en.md)
+
+---
+
+### 5. OBC Partitioning
+
+**Objective:** Transform the Global OBC into Local OBCs — one per product involved.
+
+**What happens:** Portfolio PM and Tech Leads of the products identify each product's responsibilities, the involved repositories, and the bounded contexts. The Global OBC is decomposed into specialized Local OBCs. Each Local OBC references the Global OBC and contains only the contract for that product's responsibility.
+
+**What is produced:**
+- Local OBC Draft for each product (at `prodops/artifacts/obcs/local/<slug>.md`)
+- Updated traceability table in the Global OBC
+- Items created in the PIBs of the involved products
+
+**When to advance:** Each product has received its Local OBC and has begun refinement in the Icebox.
+
+→ [OBC Partitioning](obc.en.md#obc-partitioning)
+
+---
+
+### 6. Exploration (in Icebox)
+
+**Objective:** Transform the Local OBC Draft into a verifiable contract ready for delivery.
+
+**What happens:** The Discovery journey continues at the product level — now in the Icebox. The Local OBC is refined with acceptance criteria, observable events, reliability rules, and response contract. In Upstream there is no delivery commitment and maturity may vary; in Downstream all current gates apply.
+
+**What is produced:**
+- Refined Local OBC (state: Refining → Committed)
 - BDD Feature draft
 - Risk and opportunity updates
 
-**When to advance:** When the central hypothesis has been answered, the expected behavior is sufficiently understood, and the remaining uncertainty is acceptable to enter Downstream. The decision to advance is explicit (PM + Tech Lead).
-
-**When not to advance:** If the hypothesis was refuted, uncertainty is still too high, or an external business decision is missing. In these cases: record the learning and close the experiment without promoting.
+**When to advance:** When the expected behavior is sufficiently understood and the remaining uncertainty is acceptable to enter Downstream. The decision to advance is explicit (PM + Tech Lead — Assessment Review).
 
 → [Discovery Journey](../journeys/discovery/README.en.md)
-→ [Execution Mode Upstream](../execution-model/upstream.en.md)
 
 ---
 
-### 4. Observable Business Contract (OBC)
+### 7. Committed Local OBC + BDD
 
-**Objective:** Transform the knowledge validated by Exploration into an observable and verifiable contract.
+**Objective:** Transform the validated knowledge into an observable and verifiable contract — ready for Delivery.
 
-**What happens:** The OBC Draft — born at the Business Intent Backlog or Product Intent Backlog — is refined through Exploration (Discovery in the Icebox) and Assessment. The Reliability Plan is produced before the commitment decision. In the Assessment Review, PM and Tech Lead review the full set; when approved, the OBC reaches Minimum OBC state and the BDD Feature are promoted to the committed directories. Without this set, there is no Downstream execution.
+**What happens:** The Local OBC Draft is refined through Exploration (Discovery in the Icebox) and Assessment. In the Assessment Review, PM and Tech Lead review the full set; when approved, the Local OBC reaches the Committed state and the BDD Feature is promoted to the committed directories. Without this set, there is no Downstream execution.
 
 **What is produced:**
-- OBC committed in `prodops/artifacts/obcs/<slug>.md`
+- Local OBC committed in `prodops/artifacts/obcs/local/<slug>.md`
 - BDD Feature committed in `prodops/artifacts/bdd/<slug>.feature`
 
-**When to advance:** OBC is in `prodops/artifacts/obcs/`, BDD Feature is in `prodops/artifacts/bdd/`, both reviewed and approved.
+**When to advance:** Local OBC committed, BDD Feature committed, both reviewed and approved.
 
 → [Full OBC definition](obc.en.md)
 → [OBC artifacts](../artifacts/obcs/)
-→ [Promotion process](../journeys/discovery/README.en.md#promotion-to-downstream-process)
 
 ---
 
-### 5. Reliability Plan
+### 8. Reliability Plan
 
 **Objective:** Define, through the transversal Assessment journey, the reliability conditions required before commitment in the Iteration Plan.
 
@@ -146,11 +203,11 @@ flowchart TD
 
 ---
 
-### 6. Iteration Plan
+### 9. Iteration Plan
 
 **Objective:** Formally commit the capability to the next delivery iteration after Assessment Review.
 
-**What happens:** The approved set — OBC, BDD Feature, risks, and Reliability Plan — enters the Iteration Plan with status `In`. This represents the formal delivery commitment; it is not, in isolation, proof of readiness.
+**What happens:** The approved set — Committed Local OBC, BDD Feature, risks, and Reliability Plan — enters the Iteration Plan with status `In`. This represents the formal delivery commitment; it is not, in isolation, proof of readiness.
 
 **What is produced:**
 - Entry in the Iteration Plan in `prodops/artifacts/plans/iteration-plan.md` with status `In`
@@ -162,17 +219,17 @@ flowchart TD
 
 ---
 
-### 7. Delivery
+### 10. Delivery
 
 **Objective:** Implement the capability with traceability, verifiable acceptance criteria, and evidence recorded at each step.
 
-**What happens:** Downstream work follows the mandatory sequence `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`, divided into CI Sync (local work) and CI Async (platform and pipelines).
+**What happens:** Downstream work follows the mandatory sequence `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`, divided into CI Sync (local work) and CI Async (platform and pipelines). The Local OBC transitions to the Implemented state.
 
 **What is produced:**
 - Delivered and promoted software
 - Updated Release Trail
 - Recorded evidence
-- Validated OBC
+- Local OBC in Implemented state
 
 **When to advance:** Promote completed, Release Trail updated, OBC validated in production.
 
@@ -181,13 +238,15 @@ flowchart TD
 
 ---
 
-### 8. Operation
+### 11. Operation + Continuous Refinement
 
-**Objective:** Continuously operate and monitor the delivered software, ensuring that OBC criteria are maintained over time.
+**Objective:** Continuously operate and monitor the delivered software, maintaining OBC criteria and continuously refining the contract with operational evidence.
 
-**What happens:** Runbooks, SLO monitoring, alerts, incident response, postmortems, operational trail updates. Operation feeds Continuous Assessment, which can generate new Intents.
+**What happens:** Runbooks, SLO monitoring, alerts, incident response, postmortems, operational trail updates. Operation feeds Continuous OBC Refinement — every new operational piece of evidence updates the contract (Global and Local). Operation generates new Intents.
 
 **What is produced:**
+- Local OBC in Operational state (updated with evidence)
+- Global OBC in Operational state (updated with consolidated evidence)
 - Updated Operational Trail
 - Documented incidents
 - Postmortems when relevant
@@ -201,13 +260,20 @@ flowchart TD
 
 ## Naming notes
 
-**Exploration vs Discovery vs Upstream**
+**Upstream and Downstream are modes, not phases**
 
-These three terms describe different aspects of the same phase of the flow:
+Upstream and Downstream describe the **execution mode** — the commitment and rigor applied. They are not flow phases.
+
+- **Upstream:** permissive mode; disposable code; no mandatory gates. Can start at any stage. When finished, returns to the original stage.
+- **Downstream:** delivery-committed mode; all current quality gates apply.
+
+An item can transition between modes within the same stage. The mode never determines the stage.
+
+**Exploration vs Discovery vs Upstream**
 
 | Term | Level | Meaning |
 |---|---|---|
-| **Exploration** | Flow step | What happens between Intent and OBC: uncertainty reduction |
+| **Exploration** | Flow step | What happens between Intent and Committed OBC: uncertainty reduction |
 | **Discovery** | Journey | The name of the Framework journey that implements Exploration |
 | **Upstream** | Execution Mode | The execution mode (low commitment) used during Discovery |
 

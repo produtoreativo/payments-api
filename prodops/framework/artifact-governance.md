@@ -29,7 +29,8 @@ Este documento define a governança de todos os artefatos do Framework ProdOps: 
 
 ### Portfolio (ProdOps Portfolio)
 
-- Gerencia a Global Tracking List, Business Intent Backlog, Roadmap, Platform Releases e Milestones.
+- Gerencia a Global Tracking List, Business Intent Backlog, Global OBCs, Roadmap, Platform Releases e Milestones.
+- Executa o OBC Partitioning para decompor Global OBCs em Local OBCs.
 - Decide o que a plataforma entrega, quando e em que sequência.
 - Não implementa software diretamente.
 - Repositório: `prodops-portfolio` (ainda não criado; conceitos documentados aqui como referência).
@@ -44,7 +45,7 @@ Este documento define a governança de todos os artefatos do Framework ProdOps: 
 ### Product Repository
 
 - Implementa e opera um produto específico.
-- Governa Repository Tracking List, Product Intent Backlog, Icebox, Iteration Backlog, Iteration Plan, OBCs, Reliability Plans.
+- Governa Repository Tracking List, Product Intent Backlog, Icebox, Iteration Backlog, Iteration Plan, Local OBCs, Reliability Plans.
 - Este repositório (`payments-api`) é um Product Repository.
 
 ---
@@ -54,21 +55,19 @@ Este documento define a governança de todos os artefatos do Framework ProdOps: 
 ```
 Global Tracking List
   ↓ reconhecido como Intent
-Business Intent Backlog       ← OBC Draft nasce aqui
-  ↓ priorizado
-Roadmap
-  ↓ comprometido para release
-Platform Release
-  ↓ aceito pelo Product Owner
-Product Intent Backlog
+Business Intent Backlog       ← Global OBC Draft nasce aqui
+  ↓ Discovery no BIB
+OBC Partitioning              ← Global OBC → Local OBCs
+  ↓ Local OBCs direcionados
+Product Intent Backlog        ← Local OBC Draft nasce aqui (ou chega via Partitioning)
 ```
 
 ## Fluxo local (Product)
 
 ```
 Repository Tracking List
-  ↓ Premortem + Reliability Plan + Owner Approval
-Product Intent Backlog        ← OBC Draft nasce aqui se ainda não existe
+  ↓ Premortem + Análise de Risco Preliminar + Owner Approval
+Product Intent Backlog        ← Local OBC Draft nasce aqui se ainda não existe
 ```
 
 ## Convergência — fluxo de Delivery
@@ -76,15 +75,17 @@ Product Intent Backlog        ← OBC Draft nasce aqui se ainda não existe
 ```
 Product Intent Backlog
   ↓ Discovery (Icebox)
-Icebox
-  ↓ Minimum OBC validado
-Iteration Backlog
-  ↓ OBC committed + BDD committed
-Iteration Plan
+Icebox                        ← Local OBC em estado Refining
+  ↓ Local OBC Committed validado
+Iteration Backlog             ← Local OBC em estado Committed
+  ↓ Local OBC committed + BDD committed
+Iteration Plan                ← Local OBC em estado Implemented
   ↓
 Delivery (CI Sync → CI Async)
   ↓
-Operation
+Operation                     ← Local OBC e Global OBC em estado Operational
+  ↓
+Refinamento Contínuo do OBC
 ```
 
 ---
@@ -113,10 +114,10 @@ Operation
 | **Repositório** | `prodops-portfolio` (externo) |
 | **Quem modifica** | Product Manager Portfolio |
 | **Quem aprova** | Product Manager Portfolio |
-| **Consumidores** | Roadmap, Product Intent Backlog (via Platform Release) |
-| **OBC** | Draft criado ao entrar neste backlog |
-| **Ciclo de vida** | Intent aceita → OBC Draft criado → Discovery → Roadmap ou descartado |
-| **Jornadas** | Assessment (Portfolio), Discovery (Upstream) |
+| **Consumidores** | Roadmap, OBC Partitioning, Product Intent Backlog (via Local OBCs) |
+| **OBC** | Global OBC Draft criado ao entrar neste backlog |
+| **Ciclo de vida** | Intent aceita → Global OBC Draft criado → Discovery → OBC Partitioning → distribuído para PIBs |
+| **Jornadas** | Assessment (Portfolio), Discovery (Upstream/Downstream) |
 
 ### Roadmap
 
@@ -157,12 +158,12 @@ Operation
 | **Artefato canônico** | `prodops/artifacts/product/tracking-list.md` |
 | **Quem modifica** | Qualquer membro do time |
 | **Quem aprova** | Product Owner |
-| **Consumidores** | Product Intent Backlog (via Premortem + Reliability Plan + Owner Approval), Assessment |
+| **Consumidores** | Product Intent Backlog (via Premortem + Análise de Risco Preliminar + Owner Approval), Assessment |
 | **Critério de entrada** | Qualquer sinal de negócio, técnico ou operacional sem compromisso |
 | **Critério de saída** | Aprovado pelo Product Owner → Product Intent Backlog; ou descartado |
 | **Jornadas** | Assessment, Diligence, Operation (como destino de aprendizados operacionais) |
 
-### Product Intent Backlog (anteriormente: Committed Backlog)
+### Product Intent Backlog
 
 | Campo | Valor |
 |---|---|
@@ -172,8 +173,8 @@ Operation
 | **Quem modifica** | Product Owner + Diligence |
 | **Quem aprova** | Product Owner (Owner Approval obrigatório para fluxo local) |
 | **Consumidores** | Icebox, Assessment |
-| **OBC** | Draft criado ao entrar (se ainda não existia via Business Intent Backlog) |
-| **Critério de entrada** | Fluxo global: Platform Release aceita pelo Product Owner; Fluxo local: Premortem + Reliability Plan + Owner Approval |
+| **OBC** | Local OBC Draft criado ao entrar (se ainda não existia via OBC Partitioning) |
+| **Critério de entrada** | Fluxo global: Local OBC via OBC Partitioning; Fluxo local: Premortem + Análise de Risco Preliminar + Owner Approval |
 | **Critério de saída** | Item aceito no Icebox para Discovery |
 | **Jornadas** | Assessment, Diligence |
 
@@ -187,9 +188,9 @@ Operation
 | **Quem modifica** | Product Team (Product Manager, Tech Lead, engenheiros) |
 | **Quem aprova** | Product Owner + Tech Lead (para saída do Icebox) |
 | **Consumidores** | Iteration Backlog |
-| **OBC** | Draft em refinamento (Discovery); atinge Minimum OBC ao sair |
+| **OBC** | Local OBC em estado Refining (Discovery); atinge Committed ao sair |
 | **Critério de entrada** | Item aceito no Product Intent Backlog |
-| **Critério de saída** | OBC Minimum OBC validado → Iteration Backlog |
+| **Critério de saída** | Local OBC Committed validado → Iteration Backlog |
 | **Jornadas** | Discovery (Downstream), Assessment |
 
 ### Iteration Backlog
@@ -197,14 +198,14 @@ Operation
 | Campo | Valor |
 |---|---|
 | **Owner** | Product Owner |
-| **Onde nasce** | Product Repository — item com Minimum OBC saindo do Icebox |
+| **Onde nasce** | Product Repository — item com Local OBC Committed saindo do Icebox |
 | **Artefato canônico** | `prodops/artifacts/plans/iteration-backlog.md` |
 | **Quem modifica** | Product Owner, Diligence |
 | **Quem aprova** | Product Owner (priorização) |
 | **Consumidores** | Iteration Plan |
-| **OBC** | Minimum OBC → Committed (ao sair para Iteration Plan) |
-| **Critério de entrada** | OBC Minimum OBC + BDD Feature draft |
-| **Critério de saída** | OBC committed + BDD Feature committed + entrada no Iteration Plan |
+| **OBC** | Local OBC Committed (ao sair para Iteration Plan) |
+| **Critério de entrada** | Local OBC Committed + BDD Feature draft |
+| **Critério de saída** | Local OBC committed em arquivo + BDD Feature committed + entrada no Iteration Plan |
 | **Jornadas** | Diligence, Assessment |
 
 ### Iteration Plan
@@ -217,20 +218,33 @@ Operation
 | **Quem modifica** | Equipe de Delivery |
 | **Quem aprova** | Product Owner + Tech Lead (para entrada de itens) |
 | **Consumidores** | Delivery (CI Sync, CI Async), Release Trail |
-| **OBC** | Active (durante Delivery) |
-| **Critério de entrada** | OBC committed + BDD Feature committed + Reliability Plan |
+| **OBC** | Local OBC em estado Implemented (durante Delivery) |
+| **Critério de entrada** | Local OBC committed + BDD Feature committed + Reliability Plan |
 | **Critério de saída** | Delivery concluído + evidências registradas |
 | **Jornadas** | Delivery, Diligence |
 
-### Observable Business Contract (OBC)
+### Global OBC
 
 → **Definição completa, composição, ciclo de vida e governança:** [`obc.md`](obc.md)
 
 | Campo | Valor |
 |---|---|
-| **Owner** | Product Manager + Tech Lead do item |
-| **Artefato canônico** | `prodops/artifacts/obcs/<slug>.md` (quando committed) |
-| **Ciclo de vida** | Draft → Minimum OBC → Active → Operational → Archived |
+| **Owner** | Portfolio PM |
+| **Onde nasce** | Business Intent Backlog |
+| **Artefato canônico** | `prodops/artifacts/obcs/global/<slug>.md` |
+| **Ciclo de vida** | Draft → Refining → Operational → Archived |
+| **Jornadas** | Discovery (BIB), Operation |
+
+### Local OBC
+
+→ **Definição completa, composição, ciclo de vida e governança:** [`obc.md`](obc.md)
+
+| Campo | Valor |
+|---|---|
+| **Owner** | Product Manager + Tech Lead do produto |
+| **Onde nasce** | Product Intent Backlog (após OBC Partitioning ou Owner Approval fluxo local) |
+| **Artefato canônico** | `prodops/artifacts/obcs/local/<slug>.md` (quando committed) |
+| **Ciclo de vida** | Draft → Refining → Committed → Implemented → Operational → Archived |
 | **Jornadas** | Discovery, Delivery, Operation, Assessment, Diligence |
 
 ### Reliability Plan
@@ -254,7 +268,7 @@ Operation
 | Artefato | Owner | Quem modifica | Quem aprova | Consumidores principais |
 |---|---|---|---|---|
 | Global Tracking List | Portfolio PM | Portfolio PM + stakeholders | Portfolio PM | Business Intent Backlog |
-| Business Intent Backlog | Portfolio PM | Portfolio PM | Portfolio PM | Roadmap, PIB |
+| Business Intent Backlog | Portfolio PM | Portfolio PM | Portfolio PM | Roadmap, OBC Partitioning |
 | Roadmap | Portfolio | Portfolio PM | Portfolio Leadership | Platform Release |
 | Platform Release | Portfolio | Portfolio Manager | Portfolio Leadership | PIB, Workspace |
 | Repository Tracking List | Product Owner | Qualquer membro do time | Product Owner | PIB (via aprovação) |
@@ -262,7 +276,8 @@ Operation
 | Icebox | Product Owner | Product Team | PO + Tech Lead | Iteration Backlog |
 | Iteration Backlog | Product Owner | PO + Diligence | Product Owner | Iteration Plan |
 | Iteration Plan | Tech Lead / PO | Equipe de Delivery | PO + Tech Lead | Delivery, Release Trail |
-| OBC | PM + Tech Lead | PM, TL, engenheiros | PM + Tech Lead (Assessment Review) | Delivery, BDD, Release Trail |
+| Global OBC | Portfolio PM | Portfolio PM, Tech Leads | Portfolio PM | Local OBCs, Roadmap |
+| Local OBC | PM + Tech Lead | PM, TL, engenheiros | PM + Tech Lead (Assessment Review) | Delivery, BDD, Release Trail |
 | Reliability Plan | Tech Lead + SRE | TL, SRE, engenheiros | TL + PO | Iteration Plan, Delivery |
 | BDD Feature | Tech Lead | PM, TL, engenheiros | Tech Lead | Hack, testes, Release Trail |
 | Release Trail | Delivery team | Equipe de Delivery (append-only) | — | Operation, retrospectivas |
@@ -272,6 +287,6 @@ Operation
 ## Referências
 
 → [Hierarquia de backlogs](backlogs.md)
-→ [OBC: ciclo de vida completo](glossary.md#obc-observable-business-contract)
+→ [OBC: ciclo de vida completo](obc.md)
 → [Modelo operacional](operating-model.md)
 → [Fluxo oficial](flow.md)

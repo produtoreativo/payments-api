@@ -2,120 +2,195 @@
 
 The **Observable Business Contract** is the living contract that represents a business intent throughout its entire lifecycle. It is the source of truth for the work — connecting business, product, architecture, engineering, operation, observability, and reliability. No other document should play this role.
 
-→ [OBC Template](../templates/obcs/obc.en.md)
-→ [Committed OBCs](../artifacts/obcs/)
+The OBC exists at two distinct levels: **Global OBC** and **Local OBC**. They are not hierarchical in the inheritance sense — they are scope specializations.
+
+→ [Global OBC Template](../templates/obcs/global-obc.en.md)
+→ [Local OBC Template](../templates/obcs/local-obc.en.md)
+→ [Product OBCs](../artifacts/obcs/)
 → [Framework Flow](flow.en.md)
 → [Backlog Hierarchy](backlogs.en.md)
 
 ---
 
-## What it is
+## The two OBC levels
 
-**Definition:** A product artifact that describes the expected behavior of a capability in observable terms: what the system must do, which events it emits, what service levels it offers, and how it responds to failures.
+### Global OBC
 
-**Purpose:** To be the shared language between product, engineering, and operation throughout the entire life of the intent. The OBC does not end with Delivery — it continues evolving during Operation.
+The **Global OBC** represents a complete business intention — independent of products, teams, or repositories. It is the canonical contract of the business capability.
 
-**Creation:** Born when an Intent is accepted. In the global flow, upon entry into the Business Intent Backlog. In the local flow, upon entry into the Product Intent Backlog. The OBC exists **before** Discovery, **before** Upstream, **before** Downstream.
+**Focus:** strategic.
 
-**Historical note:** previously incorrectly defined as "Outcome-Based Criterion". The canonical definition is **Observable Business Contract**.
+**Belongs to:** platform (BIB). Never to a product.
+
+**Born at:** Business Intent Backlog, when an Intent is accepted.
+
+**Lives throughout:** the entire lifecycle of the intention — it does not disappear after decomposition. It continues evolving during Discovery, Delivery, and Operation.
+
+**Contains:**
+- Business Goal
+- Business Value
+- Stakeholders
+- Business Rules
+- Business Events
+- KPIs / Expected Outcomes
+- Value Stream
+- Products involved (when known)
+- Local OBC traceability
+
+**Does not contain:** implementation details, specific APIs, repositories, BDD, technical acceptance criteria.
+
+**Location:** `prodops/artifacts/obcs/global/<slug>.md`
 
 ---
 
-## Composition
+### Local OBC
 
-An OBC is composed of seven sections. Sections marked as required for Minimum OBC must be present before entry into the Iteration Backlog.
+The **Local OBC** represents the responsibility of **a single product** within the Global OBC implementation. It belongs to exactly one Product Intent Backlog.
 
-| Section | Content | Required for Minimum OBC |
-|---|---|---|
-| **Status** | Current state (Draft / Minimum OBC / Active / Operational / Archived) and backlog location | Yes |
-| **Business Outcome** | The business result the capability delivers, in product language | Yes |
-| **Observable Events** | Table of events the system emits; each event has meaning and traceable dimensions | Yes |
-| **Initial SLIs** | Initial service level indicators with declared targets | Yes |
-| **Reliability Rules** | Reliability rules governing behavior in failures and edge cases | Yes |
-| **Response Contract** | API or event response contract (expected payload, required fields) | Yes |
-| **Related Artifacts** | Links to BDD Feature, Iteration Plan, Icebox, related OBCs | Recommended |
+**Focus:** product implementation and delivery.
 
-### Status
+**Belongs to:** Product Intent Backlog of a specific product.
 
-Indicates the current state of the OBC and where it is located in the backlog cycle. Must be updated at each transition.
+**Born at:** Product Intent Backlog, after OBC Partitioning.
 
-### Business Outcome
+**Relationship with the Global OBC:** it is not a copy — it is a **specialization/partition** of it. Must always reference the Global OBC. Never duplicates strategic content.
 
-Describes the result the system delivers from a business perspective — not the technical implementation. Must answer: *for whom, what, and with what guarantee*.
+**Contains:**
+- Reference to the Global OBC (mandatory)
+- Product / Repository / Bounded Context
+- APIs and Events
+- BDD / Acceptance Criteria
+- Observability (Observable Events)
+- Reliability Rules
+- Response Contract
+- Technical Dependencies
+- Evidence
 
-May contain an "In executive language" subsection with a jargon-free explanation, useful for alignment with non-technical stakeholders.
+**Location:** `prodops/artifacts/obcs/local/<slug>.md`
 
-### Observable Events
+---
 
-Lists the events the system emits to signal each relevant outcome. Each event must have:
-- **Canonical event name** (e.g., `invoice.created`)
-- **Meaning** — what this event represents
-- **Required dimensions** — fields the event must carry for traceability
+## Relationship between levels
 
-Failure events are as important as success events. The absence of an event within an SLO window is itself an observable signal.
+```
+1 Global OBC
+↓
+N Local OBCs
+```
 
-### Initial SLIs
+Never the inverse. Use the terms: **decomposition**, **specialization**, **partition**. NEVER use: parent, child, inheritance.
 
-Defines initial service level indicators with quantitative targets. Must be observable via the events declared above. The alignment between events and SLIs is what makes the OBC verifiable.
+---
 
-### Reliability Rules
+## OBC Partitioning
 
-Explicit rules governing system behavior in failure situations, retry, idempotency, and degradation. These are the invariants the implementation cannot violate.
+**OBC Partitioning** is the capability responsible for transforming a Global OBC into Local OBCs. It occurs between Discovery in the BIB and the creation of items in the products' PIBs.
 
-### Response Contract
+**Partitioning responsibilities:**
+- Identify the products involved
+- Identify the repositories
+- Identify the Bounded Contexts
+- Decompose the Global OBC
+- Create the Local OBCs
+- Maintain traceability between them
 
-Defines the response contract of the capability — returned payload, required fields, conditional fields. Serves as the contract between the capability producer and its consumers.
+**Result:** each product receives a Local OBC in its PIB. The Global OBC receives an updated traceability table with the Local OBCs created.
 
-### Related Artifacts
-
-Lists artifacts directly related to the OBC: corresponding BDD Feature, position in the Iteration Plan, position in the Icebox, and OBCs with direct dependency.
+**Who executes:** Portfolio PM + Tech Leads of the involved products.
 
 ---
 
 ## States
 
+States represent **contract maturity**, not software state.
+
 | State | When | Description |
 |---|---|---|
-| **Draft** | Business Intent Backlog / Product Intent Backlog | Created; may be incomplete; records initial intent, hypotheses, and learnings |
-| **Minimum OBC** | Iteration Backlog | Minimum set of information required for Delivery entry; gate between Discovery and Delivery |
-| **Active** | Iteration Plan → Delivery | In execution; tracks implementation, evidence, validations, and decisions |
-| **Operational** | Operation | Feature in production; updated with operational information |
-| **Archived** | — | No longer part of active evolution; history preserved |
+| **Draft** | BIB / PIB — entry | Created; may be incomplete; records initial intent and hypotheses |
+| **Refining** | PIB — Icebox view | Under active refinement; Discovery/Upstream may be occurring |
+| **Committed** | PIB — Iteration Backlog view | Minimum information validated; ready for Delivery |
+| **Implemented** | Iteration Plan → Delivery | In execution; implementation in progress |
+| **Operational** | Operation | In production; updated with operational evidence |
+| **Archived** | — | Intent closed; history preserved |
 
 ---
 
 ## Lifecycle
 
-| Backlog / Phase | OBC State | What happens |
-|---|---|---|
-| Global Tracking List / Repository Tracking List | Does not exist | The item is not yet a recognized Intent |
-| Business Intent Backlog (global flow) | Draft | OBC created; captures the Intent and initial hypotheses |
-| Product Intent Backlog (local flow) | Draft | OBC created upon acceptance by the Product Owner |
-| Icebox (Discovery) | Draft in refinement | Discovery refines the OBC; criteria emerge; Upstream may occur |
-| Assessment Review | Minimum OBC candidate | OBC reviewed by PM + Tech Lead; required sections validated |
-| Iteration Backlog | Minimum OBC | Minimum OBC validated; Downstream can begin |
-| Iteration Plan / Delivery | Active | Guides implementation; BDD Feature operationalizes it |
-| Operation | Operational | In production; complemented with metrics, SLOs, incidents, postmortems |
-| — | Archived | Intent closed; history preserved |
+### Global OBC
 
-The OBC records the **living history of the work**: which backlogs it passed through, when, decisions made, how criteria evolved, references to experiments and risks.
+| Where the item is | Global OBC State | What happens |
+|---|---|---|
+| Global Tracking List | Does not exist | Signal is not yet a recognized Intent |
+| Business Intent Backlog | Draft | Global OBC created; captures Intent and initial hypotheses |
+| BIB — Roadmap view | Draft | Item positioned in strategic horizon |
+| BIB — Platform Release view | Draft | Item grouped in platform version |
+| Discovery (BIB) | Refining | Exploration refines the Global OBC; hypotheses tested |
+| OBC Partitioning | Refining | Local OBCs created; traceability established |
+| Operation | Operational | Updated with consolidated evidence from all products |
+| — | Archived | Intent closed |
+
+### Local OBC
+
+| Where the item is | Local OBC State | What happens |
+|---|---|---|
+| OBC Partitioning | Draft | Local OBC created with reference to the Global OBC |
+| PIB — Icebox view | Refining | Discovery refines the Local OBC; criteria emerge |
+| Assessment Review | Committed candidate | OBC reviewed by PM + Tech Lead; required sections validated |
+| PIB — Iteration Backlog view | Committed | Minimum OBC validated; Downstream can begin |
+| Iteration Plan / Delivery | Implemented | Guides implementation; BDD Feature operationalizes it |
+| Operation | Operational | In production; complemented with metrics, SLOs, incidents |
+| — | Archived | Intent closed |
+
+The OBC records the **living history of the work**: which states it passed through, when, decisions made, how criteria evolved, references to experiments and risks.
+
+---
+
+## Traceability
+
+Traceability must work in **both directions**.
+
+```
+Business Intent → Global OBC → Local OBC A → Repository A
+                             → Local OBC B → Repository B
+                             → Local OBC C → Repository C
+```
+
+**Downward navigation:** from the Global OBC, reach any Local OBC and the repository that implements it.
+
+**Upward navigation:** from any Local OBC, reach the Global OBC and the original business Intent.
+
+The Global OBC maintains the traceability table. Each Local OBC maintains the link back to the Global OBC.
+
+---
+
+## Continuous OBC Refinement
+
+The OBC is never considered finished. It continues evolving during:
+- **Discovery:** new hypotheses and experiments update the contract
+- **Delivery:** implementation decisions refine the criteria
+- **Operation:** operational evidence, incidents, and postmortems enrich the contract
+
+Every new piece of evidence updates the contract. The OBC is a living document — not an artifact generated once and archived.
 
 ---
 
 ## OBC in Upstream
 
-During Upstream, the OBC remains in Draft. It can be freely modified, may be incomplete, and does not block experiments. It records learnings, hypotheses, and decisions produced by experiments. No Skill should require a complete OBC during Upstream.
+During Upstream, the OBC remains in Draft or Refining. It can be freely modified, may be incomplete, and does not block experiments. It records learnings, hypotheses, and decisions produced by experiments. No Skill should require a complete OBC during Upstream.
 
-OBCs produced within Upstream experiments remain in the experiment directory (`prodops/journeys/discovery/experiments/<NNN-slug>/obcs/`) until formal promotion to `prodops/artifacts/obcs/`.
+OBCs produced within Upstream experiments remain in the experiment directory (`prodops/journeys/discovery/experiments/<NNN-slug>/obcs/`) until formal promotion.
+
+**Note on modes:** Upstream and Downstream are **execution modes**, not phases or stages. An item can start Upstream at any lifecycle stage — when finished, it returns to the original stage. The mode never changes the stage.
 
 ---
 
 ## OBC in Downstream
 
-Upon entering Downstream, the OBC ceases to be merely a record — it becomes the operational contract of the delivery. It is refined in the Icebox until reaching Minimum OBC, then controls the entire evolution of subsequent journeys.
+Upon entering Downstream, the Local OBC ceases to be merely a record — it becomes the operational contract of the delivery. It is refined in the Icebox until reaching the Committed state, then controls the entire evolution of subsequent journeys.
 
 The minimum set required to start Downstream:
-- OBC committed in `prodops/artifacts/obcs/<slug>.md` with Minimum OBC state
+- Local OBC committed in `prodops/artifacts/obcs/local/<slug>.md` with Committed state
 - BDD Feature committed in `prodops/artifacts/bdd/<slug>.feature`
 - Reliability Plan updated in `prodops/journeys/assessment/reliability-plans/`
 
@@ -123,21 +198,36 @@ The minimum set required to start Downstream:
 
 ## OBC and Skills
 
-All Downstream Skills use the OBC as their primary source of context. Skills never generate parallel information that replaces the OBC. New artifacts produced by Skills complement or reference the OBC. The OBC remains the single source of truth for the intent.
+All Downstream Skills use the Local OBC as their primary source of context. Skills never generate parallel information that replaces the OBC. New artifacts produced by Skills complement or reference the OBC. The OBC remains the single source of truth for the intent.
 
 ---
 
 ## Governance
 
+### Global OBC
+
 | Field | Value |
 |---|---|
-| **Owner** | Product Manager + Tech Lead of the item |
-| **Where it's born** | Business Intent Backlog (global flow) or Product Intent Backlog (local flow) |
-| **Canonical artifact** | `prodops/artifacts/obcs/<slug>.md` (when committed) |
+| **Owner** | Portfolio PM |
+| **Where born** | Business Intent Backlog |
+| **Canonical artifact** | `prodops/artifacts/obcs/global/<slug>.md` |
+| **Who modifies** | Portfolio PM, Tech Leads (with change record) |
+| **Who approves** | Portfolio PM |
+| **Consumers** | Local OBCs, OBC Partitioning, Roadmap, Platform Release |
+| **Lifecycle** | Draft → Refining → Operational → Archived |
+| **Journeys** | Discovery (BIB), Operation |
+
+### Local OBC
+
+| Field | Value |
+|---|---|
+| **Owner** | Product Manager + Tech Lead of the product |
+| **Where born** | Product Intent Backlog (after OBC Partitioning) |
+| **Canonical artifact** | `prodops/artifacts/obcs/local/<slug>.md` (when committed) |
 | **Who modifies** | Product Manager, Tech Lead, engineers (with change record) |
 | **Who approves** | Product Manager + Tech Lead (Assessment Review) |
 | **Consumers** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |
-| **Lifecycle** | Draft → Minimum OBC → Active → Operational → Archived |
+| **Lifecycle** | Draft → Refining → Committed → Implemented → Operational → Archived |
 | **Journeys** | Discovery, Delivery, Operation, Assessment, Diligence |
 
 ---
@@ -147,9 +237,8 @@ All Downstream Skills use the OBC as their primary source of context. Skills nev
 | Situation | Location |
 |---|---|
 | Exploratory OBC (in Upstream experiment) | `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md` |
-| Committed OBC (ready for Downstream) | `prodops/artifacts/obcs/<slug>.md` |
-
-Every committed OBC must have its own file in `prodops/artifacts/obcs/`. Product Decks, Service Decks, BDD Features, Reliability Plans, and other artifacts must reference the corresponding OBC without duplicating its definition.
+| Committed Global OBC | `prodops/artifacts/obcs/global/<slug>.md` |
+| Committed Local OBC | `prodops/artifacts/obcs/local/<slug>.md` |
 
 ---
 
@@ -161,8 +250,9 @@ Do not use OBC as a substitute for an isolated technical task or bug ticket with
 
 ## References
 
-→ [OBC Template](../templates/obcs/obc.en.md)
-→ [Committed OBCs](../artifacts/obcs/)
+→ [Global OBC Template](../templates/obcs/global-obc.en.md)
+→ [Local OBC Template](../templates/obcs/local-obc.en.md)
+→ [Product OBCs](../artifacts/obcs/)
 → [Framework Flow](flow.en.md)
 → [Backlog Hierarchy](backlogs.en.md)
 → [Artifact Governance](artifact-governance.en.md)
