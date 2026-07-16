@@ -116,7 +116,7 @@ flowchart TD
 
 **Objetivo:** Transformar o conhecimento validado pela Exploration em um contrato observável e verificável.
 
-**O que acontece:** O OBC Draft — nascido no Business Intent Backlog ou Product Intent Backlog — é refinado pela Exploration (Discovery no Icebox) e pela Assessment. O Reliability Plan é produzido antes da decisão de compromisso. Na Assessment Review, PM e Tech Lead revisam o conjunto; quando aprovado, OBC atinge estado Minimum OBC e BDD Feature são promovidos para os diretórios committed. Sem esse conjunto, não há execução Downstream.
+**O que acontece:** O OBC Draft — nascido no Business Intent Backlog ou Product Intent Backlog — é refinado pela Exploration (Discovery no Icebox) e pela Assessment. Na Assessment Review, PM e Tech Lead revisam o conjunto; quando aprovado, OBC atinge estado Minimum OBC e BDD Feature são promovidos para os diretórios committed. Sem esse conjunto, não há execução Downstream.
 
 **O que é produzido:**
 - OBC committed em `prodops/artifacts/obcs/<slug>.md`
@@ -124,6 +124,7 @@ flowchart TD
 
 **Quando avançar:** OBC está em `prodops/artifacts/obcs/`, BDD Feature está em `prodops/artifacts/bdd/`, ambos revisados e aprovados.
 
+→ [Definição completa do OBC](obc.md)
 → [Artefatos OBC](../artifacts/obcs/)
 → [Processo de promoção](../journeys/discovery/README.md#processo-de-promoção-para-downstream)
 

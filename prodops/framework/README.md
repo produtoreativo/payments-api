@@ -13,7 +13,19 @@ Este diretório contém a documentação do Framework aplicada a este **Product 
 | `skills/` | Skills executáveis para agentes |
 | `templates/` | Templates reutilizáveis para planos, trilhas e checklists |
 
-Para governança de artefatos (onde cada artefato nasce, quem é dono, quem aprova, quem consome), ver [artifact-governance.md](artifact-governance.md).
+## Documentos canônicos do framework
+
+| Documento | Propósito |
+|---|---|
+| [glossary.md](glossary.md) | Vocabulário canônico de todos os termos |
+| [flow.md](flow.md) | Fluxo oficial do framework |
+| [backlogs.md](backlogs.md) | Hierarquia de backlogs |
+| [phases.md](phases.md) | Fases Concepção e Inception |
+| [obc.md](obc.md) | Observable Business Contract — definição completa |
+| [artifact-governance.md](artifact-governance.md) | Governança de artefatos |
+| [origin-streams.md](origin-streams.md) | As quatro origens de Intents |
+| [product-stages.md](product-stages.md) | Estágios de produto (PoC→MLP) |
+| [dora-metrics.md](dora-metrics.md) | Métricas DORA estendidas |
 
 Para contexto de trabalho, ver os diretórios [assessment](../journeys/assessment/README.md), [product](../artifacts/product/) e [downstream](../execution-model/downstream.md).
 

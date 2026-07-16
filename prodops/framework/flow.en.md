@@ -124,6 +124,7 @@ flowchart TD
 
 **When to advance:** OBC is in `prodops/artifacts/obcs/`, BDD Feature is in `prodops/artifacts/bdd/`, both reviewed and approved.
 
+→ [Full OBC definition](obc.en.md)
 → [OBC artifacts](../artifacts/obcs/)
 → [Promotion process](../journeys/discovery/README.en.md#promotion-to-downstream-process)
 

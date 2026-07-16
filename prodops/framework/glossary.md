@@ -327,48 +327,15 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 ## OBC (Observable Business Contract)
 
-**Definição:** O contrato vivo que representa uma intenção de negócio durante todo o seu ciclo de vida. É a fonte de verdade do trabalho — conecta negócio, produto, arquitetura, engenharia, operação, observabilidade e confiabilidade. Não deve existir outro documento exercendo esse papel.
+**Definição:** O contrato vivo que representa uma intenção de negócio durante todo o seu ciclo de vida. É a fonte de verdade do trabalho — conecta negócio, produto, arquitetura, engenharia, operação, observabilidade e confiabilidade.
 
-**Criação:** Nasce automaticamente quando um Business Intent entra no Business Intent Backlog (fluxo global) ou no Product Intent Backlog (fluxo local). O OBC existe **antes** do Discovery, **antes** do Upstream, **antes** do Downstream.
+**Estados:** Draft → Minimum OBC → Active → Operational → Archived.
 
-**Propósito:** Ser a linguagem compartilhada entre produto, engenharia e operação ao longo de toda a vida da intenção. O OBC não termina com o Delivery — continua evoluindo durante a Operation.
+**Criação:** Nasce quando uma Intent é aceita. No fluxo global, ao entrar no Business Intent Backlog. No fluxo local, ao entrar no Product Intent Backlog.
 
-**Estados do OBC:**
+**Relação com outros conceitos:** Âncora a BDD Feature, o Iteration Plan, o Reliability Plan e toda a Delivery. A Diligence mantém o estado do OBC sincronizado entre backlogs e ferramentas.
 
-| Estado | Quando | Descrição |
-|---|---|---|
-| **Draft** | Business Intent Backlog / Product Intent Backlog | Criado; pode estar incompleto; registra intenção inicial, hipóteses e aprendizados |
-| **Minimum OBC** | Iteration Backlog | Menor conjunto de informações necessárias para entrada em Delivery; gate entre Discovery e Delivery |
-| **Active** | Iteration Plan → Delivery | Em execução; acompanha implementação, evidências, validações e decisões |
-| **Operational** | Operation | Funcionalidade em produção; atualizado com informações operacionais |
-| **Archived** | — | Não faz mais parte da evolução ativa; histórico preservado |
-
-**Ciclo de vida:**
-
-| Backlog / Fase | Estado | O que acontece |
-|---|---|---|
-| Global Tracking List / Repository Tracking List | Não existe | O item ainda não é uma Intent reconhecida |
-| Business Intent Backlog (fluxo global) | Draft | OBC criado; captura a Intent e hipóteses iniciais |
-| Product Intent Backlog (fluxo local) | Draft | OBC criado se ainda não existe; registra intenção aceita pelo Product Owner |
-| Icebox (Discovery) | Draft em refinamento | Discovery refina o OBC até atingir Minimum OBC |
-| Iteration Backlog | Minimum OBC | OBC mínimo validado; gate de entrada em Delivery |
-| Iteration Plan / Delivery | Active | Guia a implementação; BDD Feature o operacionaliza |
-| Operation | Operational | Em produção; complementado com métricas, SLOs, incidentes, postmortems |
-| — | Archived | Intenção encerrada; histórico preservado |
-
-O OBC registra o **histórico vivo do trabalho**: por quais backlogs passou, quando, decisões tomadas, como os critérios evoluíram.
-
-**OBC no Upstream:** Durante o Upstream, o OBC permanece em Draft, pode ser alterado livremente, pode estar incompleto, não bloqueia experimentos, registra aprendizados, hipóteses e decisões. Nenhuma Skill deve exigir OBC completo durante o Upstream.
-
-**OBC no Downstream:** Ao entrar no Downstream, o OBC deixa de ser apenas um registro — passa a ser o contrato operacional da entrega. É refinado no Icebox até atingir Minimum OBC, então controla toda a evolução das jornadas seguintes.
-
-**OBC e as Skills:** Todas as Skills do Downstream utilizam o OBC como principal fonte de contexto. As Skills nunca geram informações paralelas que substituam o OBC. Novos artefatos produzidos por Skills complementam ou referenciam o OBC. O OBC permanece como a única fonte de verdade da intenção.
-
-**Quando não usar:** Não usar OBC como substituto de tarefa técnica isolada ou ticket de bug sem Intent correspondente.
-
-**Relação com outros conceitos:** O OBC nasce no Business Intent Backlog ou Product Intent Backlog, é refinado pela Discovery no Icebox, atinge Minimum OBC ao entrar no Iteration Backlog, fica Active durante a Delivery e Operational na Operation. Âncora a BDD Feature, o Iteration Plan, o Reliability Plan e toda a Delivery. Ver [`flow.md`](flow.md) e [`backlogs.md`](backlogs.md).
-
-**Anteriormente definido incorretamente como:** "Outcome-Based Criterion". A definição canônica é **Observable Business Contract**.
+→ **Definição completa, composição, ciclo de vida e governança:** [`obc.md`](obc.md)
 
 ---
 

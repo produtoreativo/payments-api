@@ -234,30 +234,9 @@ Após entrar no **Product Intent Backlog**, a origem do item deixa de importar. 
 
 ## OBC como identificador permanente
 
-O OBC acompanha o trabalho por toda a sua vida — do momento em que a Intent é aceita até a operação em produção.
+O OBC acompanha o trabalho por toda a sua vida — do momento em que a Intent é aceita até a operação em produção. Cada transição de backlog acima representa também uma transição de estado do OBC.
 
-### Ciclo de vida do OBC
-
-| Fase | Estado do OBC | O que acontece |
-|---|---|---|
-| Global Tracking List / Repository Tracking List | Não existe | O item ainda não é uma Intent reconhecida |
-| Business Intent Backlog (fluxo global) | **Draft** | OBC criado; captura a Intent e hipóteses iniciais |
-| Product Intent Backlog (fluxo local) | **Draft** | OBC criado ao ser aceito pelo Product Owner |
-| Icebox | Draft em refinamento | OBC refinado pelo Discovery; critérios emergem |
-| Assessment Review | Candidato a committed | OBC revisado por PM + Tech Lead |
-| Iteration Backlog | Minimum OBC | OBC mínimo validado; Downstream pode iniciar |
-| Delivery | Active | OBC guia a implementação; BDD Feature o operacionaliza |
-| Operation | Operational | OBC validado em produção; pode ser estendido por novas Intents |
-
-### O que o OBC registra
-
-O OBC é o **histórico vivo do trabalho**:
-- Intent original e Origin Stream
-- Por quais backlogs passou e quando
-- Decisões tomadas e descartadas
-- Critérios de aceite e como evoluíram
-- Referências a experimentos, riscos e Reliability Plan
-- Evidências de validação em produção
+→ **Ciclo de vida completo, composição e governança do OBC:** [`obc.md`](obc.md)
 
 ---
 

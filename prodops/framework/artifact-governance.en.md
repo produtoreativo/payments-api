@@ -224,14 +224,12 @@ Operation
 
 ### Observable Business Contract (OBC)
 
+→ **Full definition, composition, lifecycle, and governance:** [`obc.en.md`](obc.en.md)
+
 | Field | Value |
 |---|---|
 | **Owner** | Product Manager + Tech Lead of the item |
-| **Where born** | Business Intent Backlog (global flow) or Product Intent Backlog (local flow) |
 | **Canonical artifact** | `prodops/artifacts/obcs/<slug>.md` (when committed) |
-| **Who modifies** | Product Manager, Tech Lead, engineers (with change record) |
-| **Who approves** | Product Manager + Tech Lead (Assessment Review) |
-| **Consumers** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |
 | **Lifecycle** | Draft → Minimum OBC → Active → Operational → Archived |
 | **Journeys** | Discovery, Delivery, Operation, Assessment, Diligence |
 
