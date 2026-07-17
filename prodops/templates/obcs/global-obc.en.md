@@ -1,4 +1,4 @@
-# Global OBC - <Business Intent Name>
+# Global OBC - <Intent Name>
 
 <!-- NOTE: This template is for use in the platform PORTFOLIO repository, not in this product repository. -->
 <!-- Global OBCs belong to the platform level. Product repositories contain only Local OBCs. -->

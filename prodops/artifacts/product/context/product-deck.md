@@ -27,7 +27,7 @@ Payments é a fonte interna, auditável e reconciliável para invoices, cobranç
 
 Payments mantém os identificadores internos, a associação com pedido, tenant e cliente, o provedor selecionado, os identificadores externos, a idempotência e o histórico de transições. Estados e eventos externos devem ser traduzidos para o modelo canônico sem perder os dados necessários para auditoria e conciliação.
 
-A fronteira técnica e o estado atualmente implementado estão documentados no [Architecture Overview](../../artifacts/product/architecture/overview.md). A adoção desta visão não aprova automaticamente estados, eventos ou comportamentos ainda ausentes dos OBCs e BDD Features committed.
+A fronteira técnica e o estado atualmente implementado estão documentados no [Architecture Overview](../architecture/overview.md). A adoção desta visão não aprova automaticamente estados, eventos ou comportamentos ainda ausentes dos OBCs e BDD Features committed.
 
 ## 3. Problemas e oportunidades
 
@@ -72,7 +72,7 @@ A fronteira técnica e o estado atualmente implementado estão documentados no [
 
 ## 6. Arquitetura do produto
 
-> Diagrama de componentes: [`prodops/artifacts/product/architecture/overview.md`](../../artifacts/product/architecture/overview.md)
+> Diagrama de componentes: [`prodops/artifacts/product/architecture/overview.md`](../architecture/overview.md)
 >
 > O diagrama é a fonte canônica da estrutura do sistema. Atualizar sempre que
 > houver mudança estrutural (novo módulo, rota, dependência externa, tabela ou
@@ -214,8 +214,8 @@ O ProdOps avalia a maturidade de delivery do produto por meio das 7 métricas DO
 
 **Assessment de maturidade:** executar no Certificare com perfil `balanced` para obter score 0–5 por métrica e roadmap priorizado.
 
-→ Definições e pesos completos: [`../../framework/dora-metrics.md`](../../framework/dora-metrics.md)
-→ Mapeamento Observable Events → DORA: [`../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ Definições e pesos completos: [`../../../framework/dora-metrics.md`](../../../framework/dora-metrics.md)
+→ Mapeamento Observable Events → DORA: [`../../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
 
 ---
 

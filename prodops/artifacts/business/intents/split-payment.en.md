@@ -1,4 +1,4 @@
-# Business Intent — Support for Multiple Payments at Checkout
+# Intent — Support for Multiple Payments at Checkout
 
 ## Identification
 

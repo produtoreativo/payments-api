@@ -20,7 +20,7 @@ Draft. Located at `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>
 <!-- Mandatory field. Reference the Global OBC from which this Local OBC was derived.
      If this is a local-flow Local OBC (no Global OBC), record "Local — direct flow". -->
 
-→ `<path-in-portfolio-repo>/obcs/<global-slug>.md` — <Business Intent Name>
+→ `<path-in-portfolio-repo>/obcs/<global-slug>.md` — <Intent Name>
 
 ## Product / Repository / Bounded Context
 

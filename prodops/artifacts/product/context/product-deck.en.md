@@ -27,7 +27,7 @@ Payments is the internal, auditable and reconcilable source for invoices, charge
 
 Payments maintains internal identifiers, order, tenant and customer associations, the selected provider, external identifiers, idempotency and transition history. External states and events must be translated into the canonical model without losing data required for audit and reconciliation.
 
-The technical boundary and currently implemented state are documented in the [Architecture Overview](../../artifacts/product/architecture/overview.en.md). This vision does not automatically approve states, events or behaviors absent from committed OBCs and BDD Features.
+The technical boundary and currently implemented state are documented in the [Architecture Overview](../architecture/overview.en.md). This vision does not automatically approve states, events or behaviors absent from committed OBCs and BDD Features.
 
 ## 3. Problems and opportunities
 
@@ -72,7 +72,7 @@ The technical boundary and currently implemented state are documented in the [Ar
 
 ## 6. Product architecture
 
-> Component diagram: [`prodops/artifacts/product/architecture/overview.md`](../../artifacts/product/architecture/overview.md)
+> Component diagram: [`prodops/artifacts/product/architecture/overview.md`](../architecture/overview.md)
 >
 > The diagram is the canonical source of the system structure. Update whenever
 > there is a structural change (new module, route, external dependency, table or
