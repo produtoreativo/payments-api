@@ -39,7 +39,7 @@ O **Global OBC** representa uma intenção de negócio completa — independente
 
 **Não contém:** detalhes de implementação, APIs específicas, repositórios, BDD, critérios de aceite técnicos.
 
-**Localização:** `prodops/artifacts/obcs/global/<slug>.md`
+**Localização:** Repositório de portfólio da plataforma (externo a este repositório de produto).
 
 ---
 
@@ -66,7 +66,7 @@ O **Local OBC** representa a responsabilidade de **um único produto** dentro da
 - Dependências Técnicas
 - Evidências
 
-**Localização:** `prodops/artifacts/obcs/local/<slug>.md`
+**Localização:** `prodops/artifacts/obcs/<slug>.md`
 
 ---
 
@@ -137,7 +137,7 @@ Os estados representam **maturidade do contrato**, não estado do software.
 | Particionamento do OBC | Draft | Local OBC criado com referência ao Global OBC |
 | PIB — view Icebox | Refining | Discovery refina o Local OBC; critérios emergem |
 | Assessment Review | Candidato a Committed | OBC revisado por PM + Tech Lead; seções obrigatórias validadas |
-| PIB — view Iteration Backlog | Committed | OBC mínimo validado; Downstream pode iniciar |
+| PIB — view Iteration Backlog | Committed | Critérios mínimos validados; Downstream pode iniciar |
 | Iteration Plan / Delivery | Implemented | Guia a implementação; BDD Feature o operacionaliza |
 | Operation | Operational | Em produção; complementado com métricas, SLOs, incidentes |
 | — | Archived | Intenção encerrada |
@@ -190,7 +190,7 @@ OBCs produzidos dentro de experimentos Upstream permanecem no diretório do expe
 Ao entrar no Downstream, o Local OBC deixa de ser apenas um registro — passa a ser o contrato operacional da entrega. É refinado no Icebox até atingir o estado Committed, então controla toda a evolução das jornadas seguintes.
 
 O conjunto mínimo exigido para iniciar o Downstream:
-- Local OBC committed em `prodops/artifacts/obcs/local/<slug>.md` com estado Committed
+- Local OBC committed em `prodops/artifacts/obcs/<slug>.md` com estado Committed
 - BDD Feature committed em `prodops/artifacts/bdd/<slug>.feature`
 - Reliability Plan atualizado em `prodops/journeys/assessment/reliability-plans/`
 
@@ -210,7 +210,7 @@ Todas as Skills do Downstream utilizam o Local OBC como principal fonte de conte
 |---|---|
 | **Owner** | Portfolio PM |
 | **Onde nasce** | Business Intent Backlog |
-| **Artefato canônico** | `prodops/artifacts/obcs/global/<slug>.md` |
+| **Artefato canônico** | Repositório de portfólio da plataforma (externo a repositórios de produto) |
 | **Quem modifica** | Portfolio PM, Tech Leads (com registro de mudanças) |
 | **Quem aprova** | Portfolio PM |
 | **Consumidores** | Local OBCs, Particionamento do OBC, Roadmap, Platform Release |
@@ -223,7 +223,7 @@ Todas as Skills do Downstream utilizam o Local OBC como principal fonte de conte
 |---|---|
 | **Owner** | Product Manager + Tech Lead do produto |
 | **Onde nasce** | Product Intent Backlog (após Particionamento do OBC) |
-| **Artefato canônico** | `prodops/artifacts/obcs/local/<slug>.md` (quando committed) |
+| **Artefato canônico** | `prodops/artifacts/obcs/<slug>.md` (quando committed) |
 | **Quem modifica** | Product Manager, Tech Lead, engenheiros (com registro de mudanças) |
 | **Quem aprova** | Product Manager + Tech Lead (Assessment Review) |
 | **Consumidores** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |
@@ -237,8 +237,8 @@ Todas as Skills do Downstream utilizam o Local OBC como principal fonte de conte
 | Situação | Localização |
 |---|---|
 | OBC exploratório (em experimento Upstream) | `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md` |
-| Global OBC committed | `prodops/artifacts/obcs/global/<slug>.md` |
-| Local OBC committed | `prodops/artifacts/obcs/local/<slug>.md` |
+| Global OBC committed | Repositório de portfólio da plataforma (externo a este repositório) |
+| Local OBC committed | `prodops/artifacts/obcs/<slug>.md` |
 
 ---
 

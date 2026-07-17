@@ -14,12 +14,12 @@ Upstream and Downstream are **execution modes** of the ProdOps Framework — the
 
 Modes do not replace journeys. They define how journeys will be executed.
 
-## Business Intent decision flow
+## Intent decision flow
 
-Every Business Intent created in the Business Intent Backlog must follow one of the two modes. This decision belongs to the Product Owner and does not happen automatically.
+Every Intent created in the Business Intent Backlog must follow one of the two modes. This decision belongs to the Product Owner and does not happen automatically.
 
 ```
-Business Intent
+Intent
   ↓
 Mode choice (Product Owner)
   ↓

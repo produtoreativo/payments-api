@@ -154,7 +154,7 @@ Product Intent Backlog
       │
       ▼
 Icebox                    ← Discovery Downstream ocorre aqui
-      │  OBC mínimo validado
+      │  OBC Committed
       ▼
 Iteration Backlog
       │  OBC committed + BDD committed

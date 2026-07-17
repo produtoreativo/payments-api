@@ -14,7 +14,7 @@ ProdOps Framework  →  ProdOps Portfolio  →  ProdOps Workspace  →  Product 
 ## Fluxo oficial
 
 ```
-Origin Stream → Intent → Modo (Upstream | Downstream) → OBC Draft → Exploration + Assessment → Reliability Plan → Assessment Review → Minimum OBC → Iteration Plan → Delivery → Operation
+Origin Stream → Intent → Modo (Upstream | Downstream) → OBC Draft → Exploration + Assessment → Reliability Plan → Assessment Review → OBC Committed → Iteration Plan → Delivery → Operation
 ```
 
 → [Fluxo completo explicado](framework/flow.md)
@@ -29,7 +29,7 @@ Intent → OBC Draft (Business Intent Backlog ou Product Intent Backlog)
   ↓
 Modo: Upstream (exploração) ou Downstream (compromisso)
   ↔ Continuous Assessment → Reliability Plan
-  ↓ Assessment Review → Minimum OBC
+  ↓ Assessment Review → OBC Committed
 Execution Mode → Journey → Phase → Practice → Delivery Capability → Artifacts
 ```
 

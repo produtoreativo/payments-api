@@ -29,8 +29,7 @@ This document defines the governance of all ProdOps Framework artifacts: where e
 
 ### Portfolio (ProdOps Portfolio)
 
-- Manages the Global Tracking List, Business Intent Backlog, Global OBCs, Roadmap, Platform Releases, and Milestones.
-- Executes OBC Partitioning to decompose Global OBCs into Local OBCs.
+- Manages the Global Tracking List, Business Intent Backlog, Roadmap, Platform Releases, and Milestones.
 - Decides what the platform delivers, when, and in what sequence.
 - Does not implement software directly.
 - Repository: `prodops-portfolio` (not yet created; concepts documented here as reference).
@@ -45,7 +44,7 @@ This document defines the governance of all ProdOps Framework artifacts: where e
 ### Product Repository
 
 - Implements and operates a specific product.
-- Governs Repository Tracking List, Product Intent Backlog, Icebox, Iteration Backlog, Iteration Plan, Local OBCs, Reliability Plans.
+- Governs Repository Tracking List, Product Intent Backlog, Icebox, Iteration Backlog, Iteration Plan, OBCs, Reliability Plans.
 - This repository (`payments-api`) is a Product Repository.
 
 ---
@@ -55,19 +54,21 @@ This document defines the governance of all ProdOps Framework artifacts: where e
 ```
 Global Tracking List
   ↓ recognized as Intent
-Business Intent Backlog       ← Global OBC Draft born here
-  ↓ Discovery in BIB
-OBC Partitioning              ← Global OBC → Local OBCs
-  ↓ Local OBCs routed
-Product Intent Backlog        ← Local OBC Draft arrives here (or born locally)
+Business Intent Backlog       ← OBC Draft born here
+  ↓ prioritized
+Roadmap
+  ↓ committed to a release
+Platform Release
+  ↓ accepted by Product Owner
+Product Intent Backlog
 ```
 
 ## Local flow (Product)
 
 ```
 Repository Tracking List
-  ↓ Premortem + Preliminary Risk Analysis + Owner Approval
-Product Intent Backlog        ← Local OBC Draft born here if not yet existing
+  ↓ Premortem + Reliability Plan + Owner Approval
+Product Intent Backlog        ← OBC Draft born here if not yet existing
 ```
 
 ## Convergence — Delivery flow
@@ -75,17 +76,15 @@ Product Intent Backlog        ← Local OBC Draft born here if not yet existing
 ```
 Product Intent Backlog
   ↓ Discovery (Icebox)
-Icebox                        ← Local OBC in Refining state
-  ↓ Committed Local OBC validated
-Iteration Backlog             ← Local OBC in Committed state
-  ↓ committed Local OBC + committed BDD
-Iteration Plan                ← Local OBC in Implemented state
+Icebox
+  ↓ OBC Committed
+Iteration Backlog
+  ↓ OBC committed + BDD committed
+Iteration Plan
   ↓
 Delivery (CI Sync → CI Async)
   ↓
-Operation                     ← Local OBC and Global OBC in Operational state
-  ↓
-Continuous OBC Refinement
+Operation
 ```
 
 ---
@@ -114,17 +113,17 @@ Continuous OBC Refinement
 | **Repository** | `prodops-portfolio` (external) |
 | **Who modifies** | Portfolio Product Manager |
 | **Who approves** | Portfolio Product Manager |
-| **Consumers** | Roadmap, OBC Partitioning, Product Intent Backlog (via Local OBCs) |
-| **OBC** | Global OBC Draft created upon entry to this backlog |
-| **Lifecycle** | Intent accepted → Global OBC Draft created → Discovery → OBC Partitioning → distributed to PIBs |
-| **Journeys** | Assessment (Portfolio), Discovery (Upstream/Downstream) |
+| **Consumers** | Roadmap, Product Intent Backlog (via Platform Release) |
+| **OBC** | Draft created upon entry to this backlog |
+| **Lifecycle** | Intent accepted → OBC Draft created → Discovery → Roadmap or discarded |
+| **Journeys** | Assessment (Portfolio), Discovery (Upstream) |
 
 ### Roadmap
 
 | Field | Value |
 |---|---|
 | **Owner** | Portfolio |
-| **Where born** | Portfolio — Business Intent prioritized for a strategic horizon |
+| **Where born** | Portfolio — Intent prioritized for a strategic horizon |
 | **Repository** | External tool (GitHub Projects, Jira, Azure DevOps) |
 | **Who modifies** | Portfolio Product Manager |
 | **Who approves** | Portfolio Leadership |
@@ -137,7 +136,7 @@ Continuous OBC Refinement
 | Field | Value |
 |---|---|
 | **Owner** | Portfolio |
-| **Where born** | Portfolio — set of Business Intents committed for coordinated delivery |
+| **Where born** | Portfolio — set of Intents committed for coordinated delivery |
 | **Repository** | `prodops-portfolio` (external) |
 | **Who modifies** | Portfolio Manager |
 | **Who approves** | Portfolio Leadership |
@@ -158,12 +157,12 @@ Continuous OBC Refinement
 | **Canonical artifact** | `prodops/artifacts/product/tracking-list.md` |
 | **Who modifies** | Any team member |
 | **Who approves** | Product Owner |
-| **Consumers** | Product Intent Backlog (via Premortem + Preliminary Risk Analysis + Owner Approval), Assessment |
+| **Consumers** | Product Intent Backlog (via Premortem + Reliability Plan + Owner Approval), Assessment |
 | **Entry criteria** | Any business, technical, or operational signal without commitment |
 | **Exit criteria** | Approved by Product Owner → Product Intent Backlog; or discarded |
 | **Journeys** | Assessment, Diligence, Operation (as destination of operational learnings) |
 
-### Product Intent Backlog
+### Product Intent Backlog (formerly: Committed Backlog)
 
 | Field | Value |
 |---|---|
@@ -173,8 +172,8 @@ Continuous OBC Refinement
 | **Who modifies** | Product Owner + Diligence |
 | **Who approves** | Product Owner (Owner Approval mandatory for local flow) |
 | **Consumers** | Icebox, Assessment |
-| **OBC** | Local OBC Draft created upon entry (if not already existing via OBC Partitioning) |
-| **Entry criteria** | Global flow: Local OBC via OBC Partitioning; Local flow: Premortem + Preliminary Risk Analysis + Owner Approval |
+| **OBC** | Draft created upon entry (if not already existing via Business Intent Backlog) |
+| **Entry criteria** | Global flow: Platform Release accepted by Product Owner; Local flow: Premortem + Reliability Plan + Owner Approval |
 | **Exit criteria** | Item accepted in Icebox for Discovery |
 | **Journeys** | Assessment, Diligence |
 
@@ -188,9 +187,9 @@ Continuous OBC Refinement
 | **Who modifies** | Product Team (Product Manager, Tech Lead, engineers) |
 | **Who approves** | Product Owner + Tech Lead (for exit from Icebox) |
 | **Consumers** | Iteration Backlog |
-| **OBC** | Local OBC in Refining state (Discovery); reaches Committed upon exit |
+| **OBC** | Refining (Discovery); reaches Committed upon exit |
 | **Entry criteria** | Item accepted in Product Intent Backlog |
-| **Exit criteria** | Committed Local OBC validated → Iteration Backlog |
+| **Exit criteria** | OBC Committed → Iteration Backlog |
 | **Journeys** | Discovery (Downstream), Assessment |
 
 ### Iteration Backlog
@@ -198,14 +197,14 @@ Continuous OBC Refinement
 | Field | Value |
 |---|---|
 | **Owner** | Product Owner |
-| **Where born** | Product Repository — item with Committed Local OBC exiting the Icebox |
+| **Where born** | Product Repository — item with OBC Committed exiting the Icebox |
 | **Canonical artifact** | `prodops/artifacts/plans/iteration-backlog.md` |
 | **Who modifies** | Product Owner, Diligence |
 | **Who approves** | Product Owner (prioritization) |
 | **Consumers** | Iteration Plan |
-| **OBC** | Local OBC in Committed state (upon exit to Iteration Plan) |
-| **Entry criteria** | Committed Local OBC + BDD Feature draft |
-| **Exit criteria** | committed Local OBC file + committed BDD Feature + Iteration Plan entry |
+| **OBC** | Committed |
+| **Entry criteria** | OBC Committed + BDD Feature draft |
+| **Exit criteria** | OBC committed + BDD Feature committed + Iteration Plan entry |
 | **Journeys** | Diligence, Assessment |
 
 ### Iteration Plan
@@ -218,32 +217,21 @@ Continuous OBC Refinement
 | **Who modifies** | Delivery team |
 | **Who approves** | Product Owner + Tech Lead (for item entry) |
 | **Consumers** | Delivery (CI Sync, CI Async), Release Trail |
-| **OBC** | Local OBC in Implemented state (during Delivery) |
-| **Entry criteria** | committed Local OBC + committed BDD Feature + Reliability Plan |
+| **OBC** | Implemented (during Delivery) |
+| **Entry criteria** | OBC committed + BDD Feature committed + *(Reliability Plan — recommended, mandatory when there is relevant operational risk)* |
 | **Exit criteria** | Delivery completed + evidence recorded |
 | **Journeys** | Delivery, Diligence |
 
-### Global OBC
-
-→ **Full definition, composition, lifecycle, and governance:** [`obc.en.md`](obc.en.md)
+### Observable Business Contract (OBC)
 
 | Field | Value |
 |---|---|
-| **Owner** | Portfolio PM |
-| **Where born** | Business Intent Backlog |
-| **Canonical artifact** | `prodops/artifacts/obcs/global/<slug>.md` |
-| **Lifecycle** | Draft → Refining → Operational → Archived |
-| **Journeys** | Discovery (BIB), Operation |
-
-### Local OBC
-
-→ **Full definition, composition, lifecycle, and governance:** [`obc.en.md`](obc.en.md)
-
-| Field | Value |
-|---|---|
-| **Owner** | Product Manager + Tech Lead of the product |
-| **Where born** | Product Intent Backlog (after OBC Partitioning or local flow Owner Approval) |
-| **Canonical artifact** | `prodops/artifacts/obcs/local/<slug>.md` (when committed) |
+| **Owner** | Product Manager + Tech Lead of the item |
+| **Where born** | Business Intent Backlog (global flow) or Product Intent Backlog (local flow) |
+| **Canonical artifact** | `prodops/artifacts/obcs/<slug>.md` (when committed) |
+| **Who modifies** | Product Manager, Tech Lead, engineers (with change record) |
+| **Who approves** | Product Manager + Tech Lead (Assessment Review) |
+| **Consumers** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |
 | **Lifecycle** | Draft → Refining → Committed → Implemented → Operational → Archived |
 | **Journeys** | Discovery, Delivery, Operation, Assessment, Diligence |
 
@@ -268,7 +256,7 @@ Continuous OBC Refinement
 | Artifact | Owner | Who modifies | Who approves | Main consumers |
 |---|---|---|---|---|
 | Global Tracking List | Portfolio PM | Portfolio PM + stakeholders | Portfolio PM | Business Intent Backlog |
-| Business Intent Backlog | Portfolio PM | Portfolio PM | Portfolio PM | Roadmap, OBC Partitioning |
+| Business Intent Backlog | Portfolio PM | Portfolio PM | Portfolio PM | Roadmap, PIB |
 | Roadmap | Portfolio | Portfolio PM | Portfolio Leadership | Platform Release |
 | Platform Release | Portfolio | Portfolio Manager | Portfolio Leadership | PIB, Workspace |
 | Repository Tracking List | Product Owner | Any team member | Product Owner | PIB (via approval) |
@@ -276,8 +264,7 @@ Continuous OBC Refinement
 | Icebox | Product Owner | Product Team | PO + Tech Lead | Iteration Backlog |
 | Iteration Backlog | Product Owner | PO + Diligence | Product Owner | Iteration Plan |
 | Iteration Plan | Tech Lead / PO | Delivery team | PO + Tech Lead | Delivery, Release Trail |
-| Global OBC | Portfolio PM | Portfolio PM, Tech Leads | Portfolio PM | Local OBCs, Roadmap |
-| Local OBC | PM + Tech Lead | PM, TL, engineers | PM + Tech Lead (Assessment Review) | Delivery, BDD, Release Trail |
+| OBC | PM + Tech Lead | PM, TL, engineers | PM + Tech Lead (Assessment Review) | Delivery, BDD, Release Trail |
 | Reliability Plan | Tech Lead + SRE | TL, SRE, engineers | TL + PO | Iteration Plan, Delivery |
 | BDD Feature | Tech Lead | PM, TL, engineers | Tech Lead | Hack, tests, Release Trail |
 | Release Trail | Delivery team | Delivery team (append-only) | — | Operation, retrospectives |
@@ -287,6 +274,6 @@ Continuous OBC Refinement
 ## References
 
 → [Backlog hierarchy](backlogs.en.md)
-→ [OBC: full lifecycle](obc.en.md)
+→ [OBC: full lifecycle](glossary.en.md#obc-observable-business-contract)
 → [Operating model](operating-model.en.md)
 → [Official flow](flow.en.md)

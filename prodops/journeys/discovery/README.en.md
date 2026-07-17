@@ -28,13 +28,13 @@ An Upstream experiment may produce production-quality code, but that code is con
 
 **Objective:** Prepare a committed item for Delivery.
 
-An item enters the Icebox after being accepted in the Product Intent Backlog. Discovery in Downstream occurs within the Icebox. The goal is to produce a minimum acceptable OBC through refinement:
+An item enters the Icebox after being accepted in the Product Intent Backlog. Discovery in Downstream occurs within the Icebox. The goal is to produce a Local OBC in the Committed state through refinement:
 
 - functional — what the system must do
 - technical — how the system must do it
 - operational — how the system must behave in production
 
-At the end of Discovery in Downstream, the item has a validated minimum OBC and advances to the Iteration Backlog.
+At the end of Discovery in Downstream, the item has a Local OBC in the Committed state and advances to the Iteration Backlog.
 
 ---
 

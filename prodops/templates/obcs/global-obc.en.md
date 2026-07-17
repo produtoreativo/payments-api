@@ -1,7 +1,8 @@
 # Global OBC - <Business Intent Name>
 
+<!-- NOTE: This template is for use in the platform PORTFOLIO repository, not in this product repository. -->
+<!-- Global OBCs belong to the platform level. Product repositories contain only Local OBCs. -->
 <!-- Rename this file to the intent slug: e.g. split-payment.md -->
-<!-- Location: prodops/artifacts/obcs/global/<slug>.md (Draft) -->
 <!-- Full format definition: prodops/framework/obc.en.md -->
 <!-- Owner: Portfolio PM -->
 
@@ -11,7 +12,7 @@
      Possible states: Draft | Refining | Operational | Archived
      A Global OBC goes from Draft → Refining (during Discovery in BIB) → Operational (when all derived Local OBCs are in production) -->
 
-Draft. Located at `prodops/artifacts/obcs/global/<slug>.md`.
+Draft.
 
 ## Business Goal
 
@@ -85,7 +86,7 @@ Draft. Located at `prodops/artifacts/obcs/global/<slug>.md`.
 
 | Product | Local OBC | State | Last updated |
 |---|---|---|---|
-| <repository-name> | `prodops/artifacts/obcs/local/<slug>.md` | Draft | <date> |
+| <repository-name> | `prodops/artifacts/obcs/<slug>.md` | Draft | <date> |
 
 ## Discovery Notes
 

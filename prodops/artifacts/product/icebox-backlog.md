@@ -1,8 +1,8 @@
 # Icebox - Payments
 
-> **Propósito:** Itens comprometidos pelo Product Owner que ainda estão sendo preparados para Delivery. O Discovery necessário ocorre aqui — funcional, técnico ou operacional. O objetivo é produzir um OBC mínimo aceitável. Enquanto isso não acontece, o item permanece no Icebox.
+> **Propósito:** Itens comprometidos pelo Product Owner que ainda estão sendo preparados para Delivery. O Discovery necessário ocorre aqui — funcional, técnico ou operacional. O objetivo é produzir um Local OBC no estado Committed. Enquanto isso não acontece, o item permanece no Icebox.
 >
-> Itens que concluem o OBC mínimo avançam para o Iteration Backlog (pronto para desenvolver).
+> Itens que concluem o estado Committed avançam para o Iteration Backlog (pronto para desenvolver).
 >
 > → [Hierarquia de backlogs](../../framework/backlogs.md)
 
@@ -30,7 +30,7 @@
 
 | Estado | Significado | Critério de movimentação |
 | --- | --- | --- |
-| Icebox | Item comprometido pelo Product Owner (vindo do PIB), sendo refinado pelo Discovery para atingir Minimum OBC. | OBC Draft em refinamento; falta completar Discovery funcional, técnico ou operacional. |
+| Icebox | Item comprometido pelo Product Owner (vindo do PIB), sendo refinado pelo Discovery para atingir o estado Committed. | OBC Draft em refinamento; falta completar Discovery funcional, técnico ou operacional. |
 | Discovery | Item em investigação de produto, negócio, técnica, operação ou dados. | Existe pergunta clara, dono e prazo de aprendizado. |
 | Ready for Delivery | Item pronto para planejamento de sprint/kanban. | Critérios de aceite, dependências, métricas e riscos estão claros. |
 | Delivery | Item em implementação. | Time assumiu compromisso e iniciou execução. |

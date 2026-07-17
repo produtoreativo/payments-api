@@ -1,6 +1,6 @@
 # Iteration Backlog — Demandas Operacionais
 
-> **Propósito:** Itens com OBC mínimo validado, prontos para Delivery imediata. A única decisão restante é a prioridade definida pelo Product Owner. Este backlog não é de refinamento — refinamento acontece no Icebox.
+> **Propósito:** Itens com Local OBC no estado Committed, prontos para Delivery imediata. A única decisão restante é a prioridade definida pelo Product Owner. Este backlog não é de refinamento — refinamento acontece no Icebox.
 >
 > Itens aqui podem entrar em Delivery assim que priorizados. Para entrar no Iteration Plan, precisam de OBC committed + BDD Feature committed.
 >
@@ -9,7 +9,7 @@
 
 ## Objetivo
 
-Registrar itens com OBC mínimo validado que concluíram o Discovery no Icebox e estão prontos para execução de Delivery. A única decisão pendente é a priorização pelo Product Owner.
+Registrar itens com Local OBC no estado Committed que concluíram o Discovery no Icebox e estão prontos para execução de Delivery. A única decisão pendente é a priorização pelo Product Owner.
 
 | ID | Área | Solicitação | Tipo | Prioridade | Status | Próximo Passo |
 |----|------|-------------|------|------------|--------|---------------|

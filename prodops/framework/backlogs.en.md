@@ -253,7 +253,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 - Risks identified in `prodops/journeys/assessment/risks.md`
 
 **Criteria to enter the Iteration Plan (begin execution):**
-- Local OBC committed in `prodops/artifacts/obcs/local/`
+- Local OBC committed in `prodops/artifacts/obcs/`
 - BDD Feature committed in `prodops/artifacts/bdd/`
 - *(Recommended)* Reliability Plan entry — not a mandatory gate, but strongly recommended for items with relevant operational risk
 

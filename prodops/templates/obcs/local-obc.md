@@ -1,7 +1,7 @@
 # Local OBC - <Nome da Capability>
 
 <!-- Renomeie este arquivo para o slug da capability: ex. split-payment-api.md -->
-<!-- Mova para prodops/artifacts/obcs/local/<slug>.md ao promover para Committed -->
+<!-- Mova para prodops/artifacts/obcs/<slug>.md ao promover para Committed -->
 <!-- Definição completa do formato: prodops/framework/obc.md -->
 <!-- Owner: Product Manager + Tech Lead do produto -->
 
@@ -11,7 +11,7 @@
      Estados possíveis: Draft | Refining | Committed | Implemented | Operational | Archived
      Localização por estado:
        Draft/Refining: prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md
-       Committed+:     prodops/artifacts/obcs/local/<slug>.md -->
+       Committed+:     prodops/artifacts/obcs/<slug>.md -->
 
 Draft. Localizado em `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md`.
 
@@ -20,7 +20,7 @@ Draft. Localizado em `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<sl
 <!-- Campo obrigatório. Referencie o Global OBC do qual este Local OBC foi derivado.
      Se este é um Local OBC de fluxo local (sem Global OBC), registre "Local — fluxo direto". -->
 
-→ `prodops/artifacts/obcs/global/<slug-global>.md` — <Nome da Intenção de Negócio>
+→ `<path-no-repo-portfolio>/obcs/<slug-global>.md` — <Nome da Intenção de Negócio>
 
 ## Produto / Repositório / Bounded Context
 

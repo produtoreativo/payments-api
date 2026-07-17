@@ -1,6 +1,6 @@
 # Iteration Backlog — Operational Demands
 
-> **Purpose:** Items with minimum OBC validated, ready for immediate Delivery. The only remaining decision is the priority defined by the Product Owner. This backlog is not for refinement — refinement happens in the Icebox.
+> **Purpose:** Items with Local OBC in the Committed state, ready for immediate Delivery. The only remaining decision is the priority defined by the Product Owner. This backlog is not for refinement — refinement happens in the Icebox.
 >
 > Items here can enter Delivery as soon as prioritized. To enter the Iteration Plan, they need OBC committed + BDD Feature committed.
 >
@@ -9,7 +9,7 @@
 
 ## Objective
 
-Record items with a validated Minimum OBC that have completed Discovery in the Icebox and are ready for Delivery execution. The only remaining decision is prioritization by the Product Owner.
+Record items with a Local OBC in the Committed state that have completed Discovery in the Icebox and are ready for Delivery execution. The only remaining decision is prioritization by the Product Owner.
 
 | ID | Area | Request | Type | Priority | Status | Next Step |
 |----|------|---------|------|----------|--------|-----------|

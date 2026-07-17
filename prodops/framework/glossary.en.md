@@ -361,7 +361,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 - Local OBC Traceability table (links to all derived Local OBCs)
 - Discovery Notes
 
-**Location:** `prodops/artifacts/obcs/global/<slug>.md` (when committed)
+**Location:** Platform portfolio repository (external to product repositories).
 
 **Lifecycle:** Draft → Refining (during Discovery in BIB) → Operational (after all derived Local OBCs are in production) → Archived
 
@@ -390,7 +390,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 - Technical Dependencies
 - Evidence (after Delivery)
 
-**Location:** `prodops/artifacts/obcs/local/<slug>.md` (when committed)
+**Location:** `prodops/artifacts/obcs/<slug>.md` (when committed)
 
 **Lifecycle:** Draft → Refining (Icebox) → Committed (Iteration Backlog) → Implemented (Delivery) → Operational (Operation) → Archived
 

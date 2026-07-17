@@ -107,7 +107,7 @@ flowchart TD
 **What happens:** The Intent enters the Business Intent Backlog. A **Global OBC Draft** is born — it captures the business goal, value, stakeholders, rules, and initial hypotheses. The Global OBC exists **before** Discovery, **before** partitioning, **before** any product commitment.
 
 **What is produced:**
-- Global OBC Draft in the BIB (`prodops/artifacts/obcs/global/<slug>.md` when committed)
+- Global OBC Draft in the BIB (lives in the portfolio repository when committed)
 - Permanent identifier for the Intent
 
 **When to advance:** Global OBC Draft created and Discovery in BIB initiated.
@@ -143,7 +143,7 @@ flowchart TD
 **What happens:** Portfolio PM and Tech Leads of the products identify each product's responsibilities, the involved repositories, and the bounded contexts. The Global OBC is decomposed into specialized Local OBCs. Each Local OBC references the Global OBC and contains only the contract for that product's responsibility.
 
 **What is produced:**
-- Local OBC Draft for each product (at `prodops/artifacts/obcs/local/<slug>.md`)
+- Local OBC Draft for each product (at `prodops/artifacts/obcs/<slug>.md`)
 - Updated traceability table in the Global OBC
 - Items created in the PIBs of the involved products
 
@@ -177,7 +177,7 @@ flowchart TD
 **What happens:** The Local OBC Draft is refined through Exploration (Discovery in the Icebox) and Assessment. In the Assessment Review, PM and Tech Lead review the full set; when approved, the Local OBC reaches the Committed state and the BDD Feature is promoted to the committed directories. Without this set, there is no Downstream execution.
 
 **What is produced:**
-- Local OBC committed in `prodops/artifacts/obcs/local/<slug>.md`
+- Local OBC committed in `prodops/artifacts/obcs/<slug>.md`
 - BDD Feature committed in `prodops/artifacts/bdd/<slug>.feature`
 
 **When to advance:** Local OBC committed, BDD Feature committed, both reviewed and approved.

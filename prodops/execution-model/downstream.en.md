@@ -4,7 +4,7 @@ Downstream is the **commitment mode** of the ProdOps Framework.
 
 ## Canonical definition
 
-Downstream represents a commitment mode. From the moment a Business Intent enters Downstream, there is a commitment to delivery, quality, and reliability. All work must mandatorily follow the ProdOps operational model.
+Downstream represents a commitment mode. From the moment an Intent enters Downstream, there is a commitment to delivery, quality, and reliability. All work must mandatorily follow the ProdOps operational model.
 
 ## Purpose
 
@@ -28,7 +28,7 @@ Skills are no longer optional. They become part of the execution process — the
 
 When entering Downstream, the OBC is no longer just a record. It becomes the operational contract of the work.
 
-During Discovery (in the Icebox), it will be refined until reaching a minimum acceptable OBC. That OBC controls the evolution of the subsequent journeys: Iteration Backlog → Iteration Plan → Delivery.
+During Discovery (in the Icebox), it will be refined until reaching the Committed state. That OBC controls the evolution of the subsequent journeys: Iteration Backlog → Iteration Plan → Delivery.
 
 ## When to use Downstream mode
 

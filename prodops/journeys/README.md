@@ -34,7 +34,7 @@ Upstream e Downstream são modos, não jornadas. A Discovery é a jornada — el
 ## Fluxo Upstream
 
 ```
-Business Intent
+Intent
   ↓
 Upstream
   ↓
@@ -45,14 +45,14 @@ Aprendizados / Protótipos / Experimentos
 (Eventualmente) → Downstream
 ```
 
-Não existe compromisso de entrega. O objetivo é reduzir incerteza. Um Business Intent pode permanecer indefinidamente no Upstream, ser descartado, retornar ao Portfolio ou seguir para Downstream.
+Não existe compromisso de entrega. O objetivo é reduzir incerteza. Uma Intent pode permanecer indefinidamente no Upstream, ser descartada, retornar ao Portfolio ou seguir para Downstream.
 
 ---
 
 ## Fluxo Downstream
 
 ```
-Business Intent
+Intent
   ↓
 Product Intent Backlog
   ↓

@@ -1,8 +1,8 @@
 # Icebox - Payments
 
-> **Purpose:** Items committed by the Product Owner that are still being prepared for Delivery. The necessary Discovery occurs here — functional, technical or operational. The goal is to produce an acceptable Minimum OBC. Until that happens, the item remains in the Icebox.
+> **Purpose:** Items committed by the Product Owner that are still being prepared for Delivery. The necessary Discovery occurs here — functional, technical or operational. The goal is to produce a Local OBC in the Committed state. Until that happens, the item remains in the Icebox.
 >
-> Items that complete the minimum OBC advance to the Iteration Backlog (ready to develop).
+> Items that complete the Committed state advance to the Iteration Backlog (ready to develop).
 >
 > → [Backlog hierarchy](../../framework/backlogs.en.md)
 
@@ -30,7 +30,7 @@
 
 | State | Meaning | Movement criterion |
 | --- | --- | --- |
-| Icebox | Item committed by the Product Owner (from PIB), being refined through Discovery to reach Minimum OBC. | OBC Draft under refinement; functional, technical or operational Discovery still in progress. |
+| Icebox | Item committed by the Product Owner (from PIB), being refined through Discovery to reach the Committed state. | OBC Draft under refinement; functional, technical or operational Discovery still in progress. |
 | Discovery | Item under product, business, technical, operations or data investigation. | Clear question, owner and learning deadline exist. |
 | Ready for Delivery | Item ready for sprint/kanban planning. | Acceptance criteria, dependencies, metrics and risks are clear. |
 | Delivery | Item under implementation. | Team assumed commitment and started execution. |

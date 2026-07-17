@@ -14,12 +14,12 @@ Upstream e Downstream são **modos de execução** do Framework ProdOps — não
 
 Os modos não substituem as jornadas. Eles definem como as jornadas serão executadas.
 
-## Fluxo de decisão do Business Intent
+## Fluxo de decisão da Intent
 
-Todo Business Intent criado no Business Intent Backlog deve seguir um dos dois modos. Essa decisão é do Product Owner e não acontece automaticamente.
+Toda Intent criada no Business Intent Backlog deve seguir um dos dois modos. Essa decisão é do Product Owner e não acontece automaticamente.
 
 ```
-Business Intent
+Intent
   ↓
 Escolha do modo (Product Owner)
   ↓

@@ -224,7 +224,7 @@ Um item pode estar no BIB, associado a um Roadmap e a uma Platform Release, ao m
 
 **Pergunta:** Quais itens do PIB ainda estão sendo refinados para Delivery?
 
-**O que representa:** Um item está na view Icebox enquanto ainda não tem Local OBC mínimo validado. O Discovery necessário ocorre neste estado. O estado do Local OBC é **Refining**.
+**O que representa:** Um item está na view Icebox enquanto o Local OBC ainda não atingiu o estado Committed. O Discovery necessário ocorre neste estado. O estado do Local OBC é **Refining**.
 
 **O Discovery no estado Icebox pode ser:**
 - **Funcional** — entender o que deve ser construído
@@ -253,7 +253,7 @@ Um item pode estar no BIB, associado a um Roadmap e a uma Platform Release, ao m
 - Riscos identificados em `prodops/journeys/assessment/risks.md`
 
 **Critérios para entrar no Iteration Plan (iniciar execução):**
-- Local OBC committed em `prodops/artifacts/obcs/local/`
+- Local OBC committed em `prodops/artifacts/obcs/`
 - BDD Feature committed em `prodops/artifacts/bdd/`
 - *(Recomendado)* Entrada no Reliability Plan — não é gate obrigatório, mas fortemente recomendado para itens com risco operacional relevante
 

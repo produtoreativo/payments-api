@@ -34,7 +34,7 @@ Upstream and Downstream are modes, not journeys. Discovery is the journey — it
 ## Upstream flow
 
 ```
-Business Intent
+Intent
   ↓
 Upstream
   ↓
@@ -45,14 +45,14 @@ Learnings / Prototypes / Experiments
 (Eventually) → Downstream
 ```
 
-No delivery commitment. The goal is to reduce uncertainty. A Business Intent may remain indefinitely in Upstream, be discarded, return to the Portfolio, or proceed to Downstream.
+No delivery commitment. The goal is to reduce uncertainty. An Intent may remain indefinitely in Upstream, be discarded, return to the Portfolio, or proceed to Downstream.
 
 ---
 
 ## Downstream flow
 
 ```
-Business Intent
+Intent
   ↓
 Product Intent Backlog
   ↓
