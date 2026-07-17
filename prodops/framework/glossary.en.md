@@ -375,12 +375,12 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 ## Local OBC
 
-**Definition:** Product-level Observable Business Contract. Represents the specific responsibility of one product (one repository, one bounded context) in delivering part of a business intent.
+**Definition:** Product-level Observable Business Contract. Represents the specific responsibility of one product. It may specialize a Global OBC or originate directly from a local Intent.
 
 **Focus:** Implementation contract — APIs, events, BDD, observability, reliability, response contract. **Does not duplicate** strategic content from the Global OBC.
 
 **Content:**
-- Reference to Global OBC (mandatory field)
+- Mandatory origin reference: Global OBC in the global flow or Intent + Repository Tracking Item in the local flow
 - Product / Repo / Bounded Context
 - APIs and Events (this product's responsibility)
 - BDD / Acceptance Criteria
@@ -396,7 +396,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **Owner:** Product Manager + Tech Lead of the product
 
-**Relationship with other concepts:** Each Local OBC derives from exactly one Global OBC. Multiple Local OBCs may derive from the same Global OBC (one per involved product). A Local OBC never duplicates the strategic content of its Global OBC — it only specifies the product's specific responsibility.
+**Relationship with other concepts:** In the global flow, each Local OBC derives from exactly one Global OBC and never duplicates its strategic content. In the local flow, it directly represents an accepted Intent and references its Repository Tracking Item.
 
 → [`obc.en.md`](obc.en.md)
 

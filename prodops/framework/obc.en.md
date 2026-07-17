@@ -45,18 +45,18 @@ The **Global OBC** represents a complete business intention — independent of p
 
 ### Local OBC
 
-The **Local OBC** represents the responsibility of **a single product** within the Global OBC implementation. It belongs to exactly one Product Intent Backlog.
+The **Local OBC** represents the responsibility of **a single product**. In the global flow it specializes part of a Global OBC; in the local flow it directly represents an Intent accepted by the product. It belongs to exactly one Product Intent Backlog.
 
 **Focus:** product implementation and delivery.
 
 **Belongs to:** Product Intent Backlog of a specific product.
 
-**Born at:** Product Intent Backlog, after OBC Partitioning.
+**Born at:** Product Intent Backlog, through OBC Partitioning in the global flow or Owner Approval in the local flow.
 
-**Relationship with the Global OBC:** it is not a copy — it is a **specialization/partition** of it. Must always reference the Global OBC. Never duplicates strategic content.
+**Relationship with its origin:** when originated by Portfolio, it is not a copy — it is a **specialization/partition** of the Global OBC and must reference it. When originated locally, it must reference the Intent and Repository Tracking Item that justified Owner Approval.
 
 **Contains:**
-- Reference to the Global OBC (mandatory)
+- Mandatory origin reference: Global OBC (global flow) or Intent + Repository Tracking Item (local flow)
 - Product / Repository / Bounded Context
 - APIs and Events
 - BDD / Acceptance Criteria
@@ -73,9 +73,8 @@ The **Local OBC** represents the responsibility of **a single product** within t
 ## Relationship between levels
 
 ```
-1 Global OBC
-↓
-N Local OBCs
+Global flow: 1 Global OBC → N Local OBCs
+Local flow:  1 local Intent → 1 Local OBC
 ```
 
 Never the inverse. Use the terms: **decomposition**, **specialization**, **partition**. NEVER use: parent, child, inheritance.

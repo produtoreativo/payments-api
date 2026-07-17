@@ -14,7 +14,7 @@ ProdOps Framework  →  ProdOps Portfolio  →  ProdOps Workspace  →  Product 
 ## Fluxo oficial
 
 ```
-Origin Stream → Intent → Modo (Upstream | Downstream) → OBC Draft → Exploration + Assessment → Reliability Plan → Assessment Review → OBC Committed → Iteration Plan → Delivery → Operation
+Origin Stream → Intent → Fluxo Global ou Local → Local OBC Draft no PIB → Modo (Upstream | Downstream) → Discovery + Assessment → Assessment Review → OBC Committed → Iteration Backlog → Iteration Plan → Delivery → Operation
 ```
 
 → [Fluxo completo explicado](framework/flow.md)

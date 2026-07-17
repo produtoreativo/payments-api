@@ -3,7 +3,7 @@
 O fluxo oficial do Framework ProdOps descreve o caminho que toda mudança percorre desde a sua origem até a operação contínua.
 
 ```
-Origin Stream → Intent → Global OBC Draft (BIB) → Discovery → OBC Partitioning → Local OBC Draft (PIB) → Exploration + Assessment → Assessment Review → Local OBC Committed + BDD committed → Iteration Plan → Delivery → Operation → Refinamento Contínuo do OBC
+Origin Stream → Intent → [Fluxo Global ou Fluxo Local] → Local OBC Draft (PIB) → Exploration + Assessment → Assessment Review → Local OBC Committed + BDD committed → Iteration Backlog → Iteration Plan → Delivery → Operation → Refinamento Contínuo do OBC
 ```
 
 Este documento é a referência canônica para entender **o que acontece em cada etapa**, **o que é produzido** e **quando avançar**.
@@ -20,6 +20,8 @@ Este documento é a referência canônica para entender **o que acontece em cada
 flowchart TD
     OS["Origin Stream\n(Business | Enterprise | Team | Technology)"]
     I["Intent"]
+    CHOICE{"Escopo conhecido?"}
+    RTL["Repository Tracking List\nPremortem + risco preliminar"]
     GBIB["Global OBC Draft\n(Business Intent Backlog)"]
     EX1["Discovery no BIB\n(reduz incerteza estratégica)"]
     PART["OBC Partitioning\n(Global OBC → Local OBCs)"]
@@ -35,10 +37,13 @@ flowchart TD
     REF["Refinamento Contínuo do OBC"]
 
     OS --> I
-    I --> GBIB
+    I --> CHOICE
+    CHOICE -->|"Não / plataforma"| GBIB
+    CHOICE -->|"Sim / produto"| RTL
     GBIB --> EX1
     EX1 --> PART
     PART --> LPIB
+    RTL -->|"Owner Approval"| LPIB
     LPIB --> EX2
     EX2 --> REV
     LPIB -.-> AS
@@ -46,7 +51,8 @@ flowchart TD
     AS -.-> RP
     RP -.-> REV
     REV --> OBC
-    OBC --> IP
+    OBC --> IB["Iteration Backlog\n(view: Committed)"]
+    IB --> IP
     IP --> D
     D --> OP
     OP --> REF
@@ -94,13 +100,15 @@ flowchart TD
 - Hipóteses e perguntas em aberto listadas
 - Sugestão de modo de execução (Upstream ou Downstream)
 
-**Quando avançar:** Assim que a Intent estiver registrada e houver decisão de continuar (não descartar).
+**Quando avançar:** Assim que a Intent estiver registrada e sua abrangência permitir escolher um dos caminhos: Global, quando o produto responsável ainda não está definido; ou Local, quando o destino já é conhecido.
 
 → [Template de Intent](../templates/business-intents/intent.md)
 
 ---
 
 ### 3. Global OBC Draft (BIB)
+
+Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, a Intent segue por Repository Tracking List → Premortem + Análise de Risco Preliminar → Owner Approval e cria o Local OBC Draft diretamente no PIB. Os dois caminhos convergem no Product Intent Backlog.
 
 **Objetivo:** Criar o contrato de negócio estratégico que representa a intenção antes da decomposição por produto.
 
@@ -128,7 +136,7 @@ flowchart TD
 - Global OBC refinado (estado: Refining)
 - Compreensão dos produtos envolvidos e dos bounded contexts
 
-**Upstream vs Downstream:** Discovery pode ocorrer em modo Upstream (alta incerteza, código descartável) ou Downstream (clareza suficiente, gates obrigatórios). O modo nunca muda o estágio — um item em Discovery pode iniciar Upstream e transicionar para Downstream sem mudar de fase.
+**Upstream vs Downstream:** No BIB, o Portfolio decide o modo da exploração global. Depois da convergência no PIB, o Product Owner decide o modo local. O modo nunca muda o estágio: um item em Discovery pode mudar de modo sem mudar de fase.
 
 **Quando avançar:** Quando a hipótese central tiver sido respondida e a incerteza remanescente for aceitável para o particionamento.
 
@@ -275,7 +283,7 @@ Um item pode transicionar entre modos ao longo do mesmo estágio. O modo nunca d
 |---|---|---|
 | **Exploration** | Etapa do fluxo | O que acontece entre Intent e OBC Committed: redução de incerteza |
 | **Discovery** | Jornada | O nome da jornada do Framework que implementa Exploration |
-| **Upstream** | Execution Mode | O modo de execução (baixo compromisso) usado durante Discovery |
+| **Upstream** | Execution Mode | O modo permissivo e sem compromisso que pode modular qualquer jornada |
 
 Ao descrever o fluxo macro, use **Exploration**. Ao referenciar a jornada específica, use **Discovery**. Ao referenciar o modo de execução, use **Upstream**.
 

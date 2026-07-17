@@ -3,7 +3,7 @@
 The official ProdOps Framework flow describes the path every change takes from its origin to continuous operation.
 
 ```
-Origin Stream → Intent → Global OBC Draft (BIB) → Discovery → OBC Partitioning → Local OBC Draft (PIB) → Exploration + Assessment → Assessment Review → Committed Local OBC + BDD committed → Iteration Plan → Delivery → Operation → Continuous OBC Refinement
+Origin Stream → Intent → [Global Flow or Local Flow] → Local OBC Draft (PIB) → Exploration + Assessment → Assessment Review → Committed Local OBC + BDD committed → Iteration Backlog → Iteration Plan → Delivery → Operation → Continuous OBC Refinement
 ```
 
 This document is the canonical reference for understanding **what happens at each step**, **what is produced**, and **when to advance**.
@@ -20,6 +20,8 @@ This document is the canonical reference for understanding **what happens at eac
 flowchart TD
     OS["Origin Stream\n(Business | Enterprise | Team | Technology)"]
     I["Intent"]
+    CHOICE{"Known scope?"}
+    RTL["Repository Tracking List\nPremortem + preliminary risk"]
     GBIB["Global OBC Draft\n(Business Intent Backlog)"]
     EX1["Discovery in BIB\n(reduces strategic uncertainty)"]
     PART["OBC Partitioning\n(Global OBC → Local OBCs)"]
@@ -35,10 +37,13 @@ flowchart TD
     REF["Continuous OBC Refinement"]
 
     OS --> I
-    I --> GBIB
+    I --> CHOICE
+    CHOICE -->|"No / platform"| GBIB
+    CHOICE -->|"Yes / product"| RTL
     GBIB --> EX1
     EX1 --> PART
     PART --> LPIB
+    RTL -->|"Owner Approval"| LPIB
     LPIB --> EX2
     EX2 --> REV
     LPIB -.-> AS
@@ -46,7 +51,8 @@ flowchart TD
     AS -.-> RP
     RP -.-> REV
     REV --> OBC
-    OBC --> IP
+    OBC --> IB["Iteration Backlog\n(view: Committed)"]
+    IB --> IP
     IP --> D
     D --> OP
     OP --> REF
@@ -94,13 +100,15 @@ flowchart TD
 - Listed hypotheses and open questions
 - Suggested execution mode (Upstream or Downstream)
 
-**When to advance:** As soon as the Intent is registered and there is a decision to continue (not discard).
+**When to advance:** As soon as the Intent is registered and its scope allows one path to be selected: Global when the responsible product is not known, or Local when the destination is already known.
 
 → [Intent template](../templates/business-intents/intent.en.md)
 
 ---
 
 ### 3. Global OBC Draft (BIB)
+
+This step belongs only to the **Global Flow**. In the **Local Flow**, the Intent follows Repository Tracking List → Premortem + Preliminary Risk Analysis → Owner Approval and creates the Local OBC Draft directly in the PIB. Both paths converge in the Product Intent Backlog.
 
 **Objective:** Create the strategic business contract that represents the intention before product-level decomposition.
 
@@ -128,7 +136,7 @@ flowchart TD
 - Refined Global OBC (state: Refining)
 - Understanding of involved products and bounded contexts
 
-**Upstream vs Downstream:** Discovery can occur in Upstream mode (high uncertainty, disposable code) or Downstream mode (sufficient clarity, mandatory gates). The mode never changes the stage — an item in Discovery can start Upstream and transition to Downstream without changing phases.
+**Upstream vs Downstream:** In the BIB, Portfolio selects the global exploration mode. After convergence in the PIB, the Product Owner selects the local mode. Mode never changes the stage: an item in Discovery can change mode without changing phase.
 
 **When to advance:** When the central hypothesis has been answered and the remaining uncertainty is acceptable for partitioning.
 

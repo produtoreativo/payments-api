@@ -45,18 +45,18 @@ O **Global OBC** representa uma intenção de negócio completa — independente
 
 ### Local OBC
 
-O **Local OBC** representa a responsabilidade de **um único produto** dentro da implementação do Global OBC. Pertence exatamente a um Product Intent Backlog.
+O **Local OBC** representa a responsabilidade de **um único produto**. No fluxo global, especializa uma parte do Global OBC; no fluxo local, representa diretamente uma Intent aceita pelo produto. Pertence exatamente a um Product Intent Backlog.
 
 **Foco:** implementação e entrega de produto.
 
 **Pertence a:** Product Intent Backlog de um produto específico.
 
-**Nasce em:** Product Intent Backlog, após o Particionamento do OBC.
+**Nasce em:** Product Intent Backlog, por Particionamento do OBC no fluxo global ou por Owner Approval no fluxo local.
 
-**Relação com o Global OBC:** não é uma cópia — é uma **especialização/partição** dele. Deve sempre referenciar o Global OBC. Nunca duplica conteúdo estratégico.
+**Relação com a origem:** quando originado no Portfolio, não é uma cópia — é uma **especialização/partição** do Global OBC e deve referenciá-lo. Quando originado localmente, deve referenciar a Intent e o Repository Tracking Item que justificaram o Owner Approval.
 
 **Contém:**
-- Referência ao Global OBC (obrigatória)
+- Referência de origem obrigatória: Global OBC (fluxo global) ou Intent + Repository Tracking Item (fluxo local)
 - Produto / Repositório / Bounded Context
 - APIs e Eventos
 - BDD / Critérios de Aceite
@@ -73,9 +73,8 @@ O **Local OBC** representa a responsabilidade de **um único produto** dentro da
 ## Relação entre os níveis
 
 ```
-1 Global OBC
-↓
-N Local OBCs
+Fluxo global: 1 Global OBC → N Local OBCs
+Fluxo local:  1 Intent local → 1 Local OBC
 ```
 
 Nunca o inverso. Use os termos: **decomposição**, **especialização**, **partição**. NUNCA use: pai, filho, herança.
@@ -158,7 +157,7 @@ Business Intent → Global OBC → Local OBC A → Repositório A
 
 **Navegação descendente:** do Global OBC, chegar a qualquer Local OBC e ao repositório que o implementa.
 
-**Navegação ascendente:** de qualquer Local OBC, chegar ao Global OBC e à Intent de negócio original.
+**Navegação ascendente:** de qualquer Local OBC, chegar à sua origem: Global OBC e Intent global, ou Intent e Repository Tracking Item locais.
 
 O Global OBC mantém a tabela de rastreabilidade. Cada Local OBC mantém o link de volta ao Global OBC.
 

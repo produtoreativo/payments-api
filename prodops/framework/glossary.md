@@ -359,19 +359,19 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 ## Local OBC
 
-**Definição:** Nível de produto do Observable Business Contract. Representa a responsabilidade de um único produto dentro da implementação do Global OBC. Pertence a exatamente um Product Intent Backlog.
+**Definição:** Nível de produto do Observable Business Contract. Representa a responsabilidade de um único produto. Pode especializar um Global OBC ou nascer diretamente de uma Intent local. Pertence a exatamente um Product Intent Backlog.
 
 **Foco:** implementação e entrega de produto. Contém o contrato técnico e operacional do produto.
 
-**Contém:** Referência ao Global OBC (obrigatória), Produto/Repositório/Bounded Context, APIs e Eventos, BDD/Critérios de Aceite, Observabilidade, Regras de Confiabilidade, Contrato de Resposta, Dependências Técnicas, Evidências.
+**Contém:** Referência de origem obrigatória — Global OBC no fluxo global ou Intent + Repository Tracking Item no fluxo local —, Produto/Repositório/Bounded Context, APIs e Eventos, BDD/Critérios de Aceite, Observabilidade, Regras de Confiabilidade, Contrato de Resposta, Dependências Técnicas, Evidências.
 
 **Localização:** `prodops/artifacts/business/obcs/<slug>.md`
 
 **Ciclo de vida:** Draft → Refining → Committed → Implemented → Operational → Archived.
 
-**Não duplica:** conteúdo estratégico do Global OBC. Sempre referencia, nunca copia.
+**Não duplica:** quando houver Global OBC, seu conteúdo estratégico. Sempre referencia, nunca copia.
 
-**Relação com outros conceitos:** Especialização/partição do Global OBC. Nunca use os termos "filho" ou "herança".
+**Relação com outros conceitos:** Especialização/partição do Global OBC no fluxo global; contrato direto da Intent no fluxo local. Nunca use os termos "filho" ou "herança".
 
 → **Definição completa:** [`obc.md`](obc.md) | [Template](../templates/obcs/local-obc.md)
 
