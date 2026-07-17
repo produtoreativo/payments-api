@@ -1,8 +1,8 @@
 # Release Trail — Legacy (pre-2026-07-14)
 
-> This file contains all Release Trail entries produced before the adoption of the per-agent-session trail model. Entries were migrated from `prodops/artifacts/trails/release-trail.md` on 2026-07-14.
+> This file contains all Release Trail entries produced before the adoption of the per-agent-session trail model. Entries were migrated from `prodops/artifacts/governance/trails/release-trail.md` on 2026-07-14.
 >
-> **Do not add new entries here.** New deliveries must be recorded in the active session trail under `prodops/artifacts/trails/sessions/`.
+> **Do not add new entries here.** New deliveries must be recorded in the active session trail under `prodops/artifacts/governance/trails/sessions/`.
 
 ---
 
@@ -62,7 +62,7 @@ Updated the repository home in `README.md` to present payments-api as the ProdOp
 
 - Tests created or updated: none
 - Validation executed: checked referenced README paths exist
-- Validation executed: `git diff --check -- README.md prodops/artifacts/trails/release-trail.md`
+- Validation executed: `git diff --check -- README.md prodops/artifacts/governance/trails/release-trail.md`
 
 ### Artifacts Updated
 

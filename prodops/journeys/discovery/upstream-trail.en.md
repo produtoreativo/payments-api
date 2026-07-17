@@ -85,11 +85,11 @@ Reference:
 
 ### Activity
 
-Complete execution of the Upstream activity (exploratory mode) for the Business Intent "Multiple Payment Support in Checkout".
+Complete execution of the Upstream activity (exploratory mode) for the Intent "Multiple Payment Support in Checkout".
 
 ### Summary
 
-All 10 open questions from the Business Intent were answered. The current domain model (1:1:1 — 1 order : 1 invoice : 1 method) was analyzed and compared with composition alternatives. Benchmark of Stripe, Adyen, MercadoPago and Asaas confirmed that the Payments API needs to absorb the composition orchestration, as Asaas has no native support for multiple methods per order.
+All 10 open questions from the Intent were answered. The current domain model (1:1:1 — 1 order : 1 invoice : 1 method) was analyzed and compared with composition alternatives. Benchmark of Stripe, Adyen, MercadoPago and Asaas confirmed that the Payments API needs to absorb the composition orchestration, as Asaas has no native support for multiple methods per order.
 
 Option A (multiple invoices per order with a new `PaymentComposition` entity) was selected because it is additive to the current model and does not break simple payments. Event Storming of the new flow identified 7 new domain events. A candidate OBC was created. The only pending product decision is the partial failure policy (A: revert all / B: keep confirmed / C: partial window) — Policy B is recommended.
 

@@ -5,7 +5,7 @@
 | Field | Content |
 |---|---|
 | Experiment | EXP-007 |
-| Business Intent | `prodops/business-intents/split-payment.md` |
+| Business Intent | `prodops/artifacts/business/intents/split-payment.md` |
 | Owner | Product Team |
 | Start date | 2026-07-03 |
 | End date | 2026-07-03 |
@@ -175,6 +175,6 @@ OrderId → Invoice(master, COMPOSITE) → [Invoice(child-Pix), Invoice(child-Ca
 ## References
 
 - `prodops/journeys/discovery/experiments/007-split-payment-model/experiment.md`
-- `prodops/business-intents/split-payment.md`
+- `prodops/artifacts/business/intents/split-payment.md`
 - `prodops/artifacts/obcs/payment-composition-draft.md`
 - `api/src/modules/invoices/types/invoice.types.ts`

@@ -7,7 +7,7 @@
 - [x] Completed
 - [ ] Cancelled
 
-**Business Intent:** [`prodops/business-intents/split-payment.md`](../../../../business-intents/split-payment.md)
+**Business Intent:** [`prodops/artifacts/business/intents/split-payment.md`](../../../../artifacts/business/intents/split-payment.md)
 
 ---
 
@@ -315,7 +315,7 @@ Pagamentos simples continuam via `POST /v1/invoices`. Nenhum campo obrigatório 
 
 # Artifacts Updated
 
-- [x] Business Intent: `prodops/business-intents/split-payment.md` — perguntas respondidas
+- [x] Business Intent: `prodops/artifacts/business/intents/split-payment.md` — perguntas respondidas
 - [x] Tracking List: `prodops/artifacts/product/tracking-list.md` — novos itens de produto
 - [x] OBC candidato: `prodops/journeys/discovery/experiments/007-split-payment-model/obcs/payment-composition.md` — criado
 - [ ] BDD Feature — aguarda decisão sobre política de falha parcial

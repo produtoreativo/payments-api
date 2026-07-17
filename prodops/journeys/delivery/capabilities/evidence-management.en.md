@@ -23,11 +23,11 @@ Capture, preserve, and present evidence from each step of the delivery flow, ens
 
 ## Produced artifacts
 
-- Release Trail entries: `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` (active session trail)
+- Release Trail entries: `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md` (active session trail)
 - Upstream Trail entries: `prodops/journeys/discovery/experiments/<id>/upstream-trail.md`
 - PR filled with evidence (template: `prodops/journeys/delivery/capabilities/commit-workflow/templates/pull_request.md`)
 
 ## Dependencies
 
-- Release Trail: `prodops/artifacts/trails/sessions/` (active session trail)
+- Release Trail: `prodops/artifacts/governance/trails/sessions/` (active session trail)
 - Task-closing template: `prodops/journeys/delivery/capabilities/commit-workflow/templates/task-closing.md`

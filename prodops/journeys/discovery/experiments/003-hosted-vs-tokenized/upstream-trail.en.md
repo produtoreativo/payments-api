@@ -110,7 +110,7 @@ Move to Downstream.
 
 - `prodops/journeys/discovery/features/credit-card-payment.feature` (migrated: now `prodops/artifacts/bdd/credit-card-payment.feature`) → `prodops/artifacts/bdd/credit-card-payment.feature`
 - `prodops/journeys/discovery/obcs/credit-card-authorization-confirmation.md` → `prodops/artifacts/obcs/credit-card-authorization-confirmation.md` (draft marking removed)
-- `prodops/artifacts/plans/iteration-plan.md` — entry added: Create Credit Card Invoice (Hosted)
+- `prodops/artifacts/governance/plans/iteration-plan.md` — entry added: Create Credit Card Invoice (Hosted)
 - `prodops/artifacts/product/tracking-list.md` — status: Candidate → Promoted to Downstream
 
 ### Next Steps
