@@ -4,8 +4,8 @@
 >
 > Items here can enter Delivery as soon as prioritized. To enter the Iteration Plan, they need OBC committed + BDD Feature committed.
 >
-> → [Backlog hierarchy](../../framework/backlogs.en.md)
-> → [Approved delivery scope](iteration-plan.en.md) — to see what's in/out/deferred
+> → [Backlog hierarchy](../../../framework/backlogs.en.md)
+> → [Approved delivery scope](../../governance/plans/iteration-plan.en.md) — to see what's in/out/deferred
 
 ## Objective
 

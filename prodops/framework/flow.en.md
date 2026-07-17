@@ -143,7 +143,7 @@ flowchart TD
 **What happens:** Portfolio PM and Tech Leads of the products identify each product's responsibilities, the involved repositories, and the bounded contexts. The Global OBC is decomposed into specialized Local OBCs. Each Local OBC references the Global OBC and contains only the contract for that product's responsibility.
 
 **What is produced:**
-- Local OBC Draft for each product (at `prodops/artifacts/obcs/<slug>.md`)
+- Local OBC Draft for each product (at `prodops/artifacts/business/obcs/<slug>.md`)
 - Updated traceability table in the Global OBC
 - Items created in the PIBs of the involved products
 

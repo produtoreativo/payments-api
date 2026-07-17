@@ -64,12 +64,12 @@ O campo `Status` muda para `closed` quando a sessão encerra.
 
 ## Template de entrada
 
-Ver [`prodops/templates/delivery/release-entry.md`](../../templates/delivery/release-entry.md).
+Ver [`prodops/templates/delivery/release-entry.md`](../../../templates/delivery/release-entry.md).
 
 ---
 
 ## Referências
 
 → [Índice de sessões](README.md)
-→ [Canonical paths](../../framework/canonical-paths.md)
-→ [Glossário: Release Trail](../../framework/glossary.md#release-trail)
+→ [Canonical paths](../../../framework/canonical-paths.md)
+→ [Glossário: Release Trail](../../../framework/glossary.md#release-trail)

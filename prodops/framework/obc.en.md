@@ -6,7 +6,7 @@ The OBC exists at two distinct levels: **Global OBC** and **Local OBC**. They ar
 
 → [Global OBC Template](../templates/obcs/global-obc.en.md)
 → [Local OBC Template](../templates/obcs/local-obc.en.md)
-→ [Product OBCs](../artifacts/obcs/)
+→ [Product OBCs](../artifacts/business/obcs/)
 → [Framework Flow](flow.en.md)
 → [Backlog Hierarchy](backlogs.en.md)
 
@@ -66,7 +66,7 @@ The **Local OBC** represents the responsibility of **a single product** within t
 - Technical Dependencies
 - Evidence
 
-**Location:** `prodops/artifacts/obcs/<slug>.md`
+**Location:** `prodops/artifacts/business/obcs/<slug>.md`
 
 ---
 
@@ -190,8 +190,8 @@ OBCs produced within Upstream experiments remain in the experiment directory (`p
 Upon entering Downstream, the Local OBC ceases to be merely a record — it becomes the operational contract of the delivery. It is refined in the Icebox until reaching the Committed state, then controls the entire evolution of subsequent journeys.
 
 The minimum set required to start Downstream:
-- Local OBC committed in `prodops/artifacts/obcs/<slug>.md` with Committed state
-- BDD Feature committed in `prodops/artifacts/bdd/<slug>.feature`
+- Local OBC committed in `prodops/artifacts/business/obcs/<slug>.md` with Committed state
+- BDD Feature committed in `prodops/artifacts/business/bdd/<slug>.feature`
 - Reliability Plan updated in `prodops/journeys/assessment/reliability-plans/`
 
 ---
@@ -223,7 +223,7 @@ All Downstream Skills use the Local OBC as their primary source of context. Skil
 |---|---|
 | **Owner** | Product Manager + Tech Lead of the product |
 | **Where born** | Product Intent Backlog (after OBC Partitioning) |
-| **Canonical artifact** | `prodops/artifacts/obcs/<slug>.md` (when committed) |
+| **Canonical artifact** | `prodops/artifacts/business/obcs/<slug>.md` (when committed) |
 | **Who modifies** | Product Manager, Tech Lead, engineers (with change record) |
 | **Who approves** | Product Manager + Tech Lead (Assessment Review) |
 | **Consumers** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |
@@ -238,7 +238,7 @@ All Downstream Skills use the Local OBC as their primary source of context. Skil
 |---|---|
 | Exploratory OBC (in Upstream experiment) | `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md` |
 | Committed Global OBC | Platform portfolio repository (external to this repository) |
-| Committed Local OBC | `prodops/artifacts/obcs/<slug>.md` |
+| Committed Local OBC | `prodops/artifacts/business/obcs/<slug>.md` |
 
 ---
 
@@ -252,7 +252,7 @@ Do not use OBC as a substitute for an isolated technical task or bug ticket with
 
 → [Global OBC Template](../templates/obcs/global-obc.en.md)
 → [Local OBC Template](../templates/obcs/local-obc.en.md)
-→ [Product OBCs](../artifacts/obcs/)
+→ [Product OBCs](../artifacts/business/obcs/)
 → [Framework Flow](flow.en.md)
 → [Backlog Hierarchy](backlogs.en.md)
 → [Artifact Governance](artifact-governance.en.md)

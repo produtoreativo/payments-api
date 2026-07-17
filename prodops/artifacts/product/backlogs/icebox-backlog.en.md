@@ -4,7 +4,7 @@
 >
 > Items that complete the Committed state advance to the Iteration Backlog (ready to develop).
 >
-> → [Backlog hierarchy](../../framework/backlogs.en.md)
+> → [Backlog hierarchy](../../../framework/backlogs.en.md)
 
 ## 1. Icebox Governance
 
@@ -79,9 +79,9 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 
 | ID | Title | Type | Expected outcome | Status | Initial score | Source |
 | --- | --- | --- | --- | --- | --- | --- |
-| PAY-ICE-001 | Create invoice via gateway with single contract | Feature | Ecommerce issues charges without direct coupling to the Asaas provider. | Delivery | 16.4 | [create-invoice.feature](../bdd/create-invoice.feature) |
-| PAY-ICE-002 | Confirm payment via reliable webhook | Feature | Order and ecommerce receive confirmation exactly once, with auditable events. | Delivery | 20.8 | [payment-confirmation.feature](../bdd/payment-confirmation.feature) |
-| PAY-ICE-003 | Cancel pending invoice with idempotency | Feature | Open charges can be cancelled without undue payment or duplicate event. | Ready for Delivery | 13.7 | [cancel-invoice.feature](../bdd/cancel-invoice.feature) |
+| PAY-ICE-001 | Create invoice via gateway with single contract | Feature | Ecommerce issues charges without direct coupling to the Asaas provider. | Delivery | 16.4 | [create-invoice.feature](../../business/bdd/create-invoice.feature) |
+| PAY-ICE-002 | Confirm payment via reliable webhook | Feature | Order and ecommerce receive confirmation exactly once, with auditable events. | Delivery | 20.8 | [payment-confirmation.feature](../../business/bdd/payment-confirmation.feature) |
+| PAY-ICE-003 | Cancel pending invoice with idempotency | Feature | Open charges can be cancelled without undue payment or duplicate event. | Ready for Delivery | 13.7 | [cancel-invoice.feature](../../business/bdd/cancel-invoice.feature) |
 
 ## 7. Detailed items
 
@@ -99,7 +99,7 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 | Dependencies | Asaas credentials, provider registration per tenant, customer binding model, idempotency storage, response contract to ecommerce. |
 | Risks | Duplicate charge, duplicated Asaas customer, open invoice without `providerPaymentId`, sensitive payload exposure in error. |
 | Minimum telemetry | Invoice created event, provider call attempt, provider latency, provider error code, idempotency hit/miss, rejection audit log. |
-| Acceptance criteria | Scenarios in [create-invoice.feature](../bdd/create-invoice.feature) pass; retry with the same key does not call the provider; 5xx failure does not return `OPEN` invoice without `providerPaymentId`; validation error is auditable without secrets. |
+| Acceptance criteria | Scenarios in [create-invoice.feature](../../business/bdd/create-invoice.feature) pass; retry with the same key does not call the provider; 5xx failure does not return `OPEN` invoice without `providerPaymentId`; validation error is auditable without secrets. |
 | Score | Reach 4, Impact 5, Confidence 4, Effort 5, Operational Risk 2 = 16.4 |
 | Status | Delivery — OBC committed at `prodops/artifacts/business/obcs/create-invoice.md`. Entered the Iteration Plan. |
 
@@ -123,7 +123,7 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 | Dependencies | Public webhook endpoint, Asaas secret/token, raw event storage, canonical event publication, contract with ecommerce/Orders. |
 | Risks | Order released twice, payment received without order released, token leaked in logs, uncorrelated event, divergence between `CONFIRMED` and `RECEIVED`. |
 | Minimum telemetry | Webhook received, webhook rejected, event deduplication, invoice status transition, canonical event published, lag between receipt and publication. |
-| Acceptance criteria | Scenarios in [payment-confirmation.feature](../bdd/payment-confirmation.feature) pass; invalid webhook does not alter invoice; duplicate event returns technical success without republishing; `PAYMENT_RECEIVED` does not release the order a second time. |
+| Acceptance criteria | Scenarios in [payment-confirmation.feature](../../business/bdd/payment-confirmation.feature) pass; invalid webhook does not alter invoice; duplicate event returns technical success without republishing; `PAYMENT_RECEIVED` does not release the order a second time. |
 | Score | Reach 5, Impact 5, Confidence 4, Effort 5, Operational Risk 4 = 20.8 |
 | Status | Delivery — OBC committed at `prodops/artifacts/business/obcs/payment-confirmation.md`. Entered the Iteration Plan. |
 
@@ -147,7 +147,7 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 | Dependencies | Invoice state policy, Asaas endpoint `DELETE /v3/payments/{id}`, cancellation idempotency, `payment.cancelled` event, 404 policy. |
 | Risks | Charge remaining payable after local cancellation, cancellation publication without provider confirmation, undue cancellation after payment, duplicate event. |
 | Minimum telemetry | Cancel request, provider delete latency/error, status transition, idempotency hit/miss, webhook `PAYMENT_DELETED`, canonical cancellation published. |
-| Acceptance criteria | Scenarios in [cancel-invoice.feature](../bdd/cancel-invoice.feature) pass; `CONFIRMED` invoice is not cancelled; retry with the same key does not call the provider; 404 does not publish `payment.cancelled` without explicit decision. |
+| Acceptance criteria | Scenarios in [cancel-invoice.feature](../../business/bdd/cancel-invoice.feature) pass; `CONFIRMED` invoice is not cancelled; retry with the same key does not call the provider; 404 does not publish `payment.cancelled` without explicit decision. |
 | Score | Reach 3, Impact 4, Confidence 4, Effort 4, Operational Risk 2 = 13.7 |
 | Status | Ready for Delivery — OBC committed at `prodops/artifacts/business/obcs/cancel-invoice.md`. Deferred to next iteration. |
 

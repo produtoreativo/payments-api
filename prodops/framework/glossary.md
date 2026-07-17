@@ -365,7 +365,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Contém:** Referência ao Global OBC (obrigatória), Produto/Repositório/Bounded Context, APIs e Eventos, BDD/Critérios de Aceite, Observabilidade, Regras de Confiabilidade, Contrato de Resposta, Dependências Técnicas, Evidências.
 
-**Localização:** `prodops/artifacts/obcs/<slug>.md`
+**Localização:** `prodops/artifacts/business/obcs/<slug>.md`
 
 **Ciclo de vida:** Draft → Refining → Committed → Implemented → Operational → Archived.
 

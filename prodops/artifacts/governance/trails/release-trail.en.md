@@ -64,12 +64,12 @@ The `Status` field changes to `closed` when the session ends.
 
 ## Entry template
 
-See [`prodops/templates/delivery/release-entry.md`](../../templates/delivery/release-entry.en.md).
+See [`prodops/templates/delivery/release-entry.md`](../../../templates/delivery/release-entry.en.md).
 
 ---
 
 ## References
 
 → [Session index](README.en.md)
-→ [Canonical paths](../../framework/canonical-paths.en.md)
-→ [Glossary: Release Trail](../../framework/glossary.en.md#release-trail)
+→ [Canonical paths](../../../framework/canonical-paths.en.md)
+→ [Glossary: Release Trail](../../../framework/glossary.en.md#release-trail)

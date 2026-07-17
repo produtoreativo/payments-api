@@ -6,7 +6,7 @@ This directory contains committed **Local OBCs** for this product repository. It
 
 ## Rules
 
-- Every committed Local OBC must have its own file in this directory: `prodops/artifacts/obcs/<slug>.md`
+- Every committed Local OBC must have its own file in this directory: `prodops/artifacts/business/obcs/<slug>.md`
 - Exploratory OBCs (Draft/Refining) remain under `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` until formal promotion.
 - Each Local OBC must reference its corresponding Global OBC (or indicate "Local — direct flow" if none).
 - Product Decks, BDD Features, Reliability Plans, and other artifacts must reference the OBC without duplicating its definition.
@@ -17,13 +17,13 @@ This directory contains committed **Local OBCs** for this product repository. It
 |---|---|---|
 | Draft | Newly created, no refinement | Experiment dir |
 | Refining | In active Discovery/Exploration | Experiment dir |
-| Committed | Ready for Delivery, approved | `prodops/artifacts/obcs/<slug>.md` |
-| Implemented | In Delivery or recently delivered | `prodops/artifacts/obcs/<slug>.md` |
-| Operational | In production with evidence | `prodops/artifacts/obcs/<slug>.md` |
+| Committed | Ready for Delivery, approved | `prodops/artifacts/business/obcs/<slug>.md` |
+| Implemented | In Delivery or recently delivered | `prodops/artifacts/business/obcs/<slug>.md` |
+| Operational | In production with evidence | `prodops/artifacts/business/obcs/<slug>.md` |
 | Archived | Closed | Kept here for traceability |
 
 ## References
 
-→ **Full OBC definition (what it is, composition, states, lifecycle):** [`prodops/framework/obc.en.md`](../framework/obc.en.md)
-→ **Template for Local OBC:** [`prodops/templates/obcs/local-obc.en.md`](../templates/obcs/local-obc.en.md)
-→ **Template for Global OBC** *(for use in the portfolio repository):* [`prodops/templates/obcs/global-obc.en.md`](../templates/obcs/global-obc.en.md)
+→ **Full OBC definition (what it is, composition, states, lifecycle):** [`prodops/framework/obc.en.md`](../../../framework/obc.en.md)
+→ **Template for Local OBC:** [`prodops/templates/obcs/local-obc.en.md`](../../../templates/obcs/local-obc.en.md)
+→ **Template for Global OBC** *(for use in the portfolio repository):* [`prodops/templates/obcs/global-obc.en.md`](../../../templates/obcs/global-obc.en.md)

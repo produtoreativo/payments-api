@@ -20,7 +20,7 @@ Uma **Intent** representa uma intenção de gerar valor ainda não comprometida 
 | **Team** | Processo, automações, produtividade, onboarding, fluxo de trabalho |
 | **Technology** | Plataforma, segurança, infraestrutura, observabilidade, confiabilidade |
 
-→ [Definição detalhada de cada Origin Stream](../framework/origin-streams.md)
+→ [Definição detalhada de cada Origin Stream](../../../framework/origin-streams.md)
 
 ## O que acontece após o registro
 
@@ -36,7 +36,7 @@ Observable Business Contract (OBC)
 Upstream (exploração) ou Downstream (entrega comprometida)
 ```
 
-→ [Fluxo completo do Framework](../framework/flow.md)
+→ [Fluxo completo do Framework](../../../framework/flow.md)
 
 ## Como registrar uma Intent
 

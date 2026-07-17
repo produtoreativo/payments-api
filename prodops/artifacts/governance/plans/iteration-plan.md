@@ -4,8 +4,8 @@
 >
 > Este documento não é um backlog de planejamento ou priorização. Planejamento acontece no Iteration Backlog; priorização é responsabilidade do Product Owner.
 >
-> → [Hierarquia de backlogs](../../framework/backlogs.md)
-> → [Iteration Backlog](iteration-backlog.md) — itens prontos para desenvolvimento
+> → [Hierarquia de backlogs](../../../framework/backlogs.md)
+> → [Iteration Backlog](../../product/backlogs/iteration-backlog.md) — itens prontos para desenvolvimento
 
 ## Executive Summary
 

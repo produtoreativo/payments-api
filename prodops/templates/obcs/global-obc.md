@@ -86,7 +86,7 @@ Draft.
 
 | Produto | Local OBC | Estado | Última atualização |
 |---|---|---|---|
-| <nome-do-repositório> | `prodops/artifacts/obcs/<slug>.md` | Draft | <data> |
+| <nome-do-repositório> | `prodops/artifacts/business/obcs/<slug>.md` | Draft | <data> |
 
 ## Notas de Discovery
 

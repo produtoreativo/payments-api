@@ -390,7 +390,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 - Technical Dependencies
 - Evidence (after Delivery)
 
-**Location:** `prodops/artifacts/obcs/<slug>.md` (when committed)
+**Location:** `prodops/artifacts/business/obcs/<slug>.md` (when committed)
 
 **Lifecycle:** Draft → Refining (Icebox) → Committed (Iteration Backlog) → Implemented (Delivery) → Operational (Operation) → Archived
 

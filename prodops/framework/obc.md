@@ -6,7 +6,7 @@ O OBC existe em dois níveis distintos: **Global OBC** e **Local OBC**. Eles nã
 
 → [Template de Global OBC](../templates/obcs/global-obc.md)
 → [Template de Local OBC](../templates/obcs/local-obc.md)
-→ [OBCs do produto](../artifacts/obcs/)
+→ [OBCs do produto](../artifacts/business/obcs/)
 → [Fluxo do framework](flow.md)
 → [Hierarquia de backlogs](backlogs.md)
 
@@ -66,7 +66,7 @@ O **Local OBC** representa a responsabilidade de **um único produto** dentro da
 - Dependências Técnicas
 - Evidências
 
-**Localização:** `prodops/artifacts/obcs/<slug>.md`
+**Localização:** `prodops/artifacts/business/obcs/<slug>.md`
 
 ---
 
@@ -190,8 +190,8 @@ OBCs produzidos dentro de experimentos Upstream permanecem no diretório do expe
 Ao entrar no Downstream, o Local OBC deixa de ser apenas um registro — passa a ser o contrato operacional da entrega. É refinado no Icebox até atingir o estado Committed, então controla toda a evolução das jornadas seguintes.
 
 O conjunto mínimo exigido para iniciar o Downstream:
-- Local OBC committed em `prodops/artifacts/obcs/<slug>.md` com estado Committed
-- BDD Feature committed em `prodops/artifacts/bdd/<slug>.feature`
+- Local OBC committed em `prodops/artifacts/business/obcs/<slug>.md` com estado Committed
+- BDD Feature committed em `prodops/artifacts/business/bdd/<slug>.feature`
 - Reliability Plan atualizado em `prodops/journeys/assessment/reliability-plans/`
 
 ---
@@ -223,7 +223,7 @@ Todas as Skills do Downstream utilizam o Local OBC como principal fonte de conte
 |---|---|
 | **Owner** | Product Manager + Tech Lead do produto |
 | **Onde nasce** | Product Intent Backlog (após Particionamento do OBC) |
-| **Artefato canônico** | `prodops/artifacts/obcs/<slug>.md` (quando committed) |
+| **Artefato canônico** | `prodops/artifacts/business/obcs/<slug>.md` (quando committed) |
 | **Quem modifica** | Product Manager, Tech Lead, engenheiros (com registro de mudanças) |
 | **Quem aprova** | Product Manager + Tech Lead (Assessment Review) |
 | **Consumidores** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |
@@ -238,7 +238,7 @@ Todas as Skills do Downstream utilizam o Local OBC como principal fonte de conte
 |---|---|
 | OBC exploratório (em experimento Upstream) | `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md` |
 | Global OBC committed | Repositório de portfólio da plataforma (externo a este repositório) |
-| Local OBC committed | `prodops/artifacts/obcs/<slug>.md` |
+| Local OBC committed | `prodops/artifacts/business/obcs/<slug>.md` |
 
 ---
 
@@ -252,7 +252,7 @@ Não usar OBC como substituto de tarefa técnica isolada ou ticket de bug sem In
 
 → [Template de Global OBC](../templates/obcs/global-obc.md)
 → [Template de Local OBC](../templates/obcs/local-obc.md)
-→ [OBCs do produto](../artifacts/obcs/)
+→ [OBCs do produto](../artifacts/business/obcs/)
 → [Fluxo do framework](flow.md)
 → [Hierarquia de backlogs](backlogs.md)
 → [Governança de artefatos](artifact-governance.md)
