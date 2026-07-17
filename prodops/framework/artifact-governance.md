@@ -217,8 +217,8 @@ Operation
 | **Quem modifica** | Equipe de Delivery |
 | **Quem aprova** | Product Owner + Tech Lead (para entrada de itens) |
 | **Consumidores** | Delivery (CI Sync, CI Async), Release Trail |
-| **OBC** | Implemented (durante Delivery) |
-| **Critério de entrada** | OBC committed + BDD Feature committed + *(Reliability Plan — recomendado, obrigatório quando houver risco operacional relevante)* |
+| **OBC** | In Delivery (durante Delivery) |
+| **Critério de entrada** | OBC committed + BDD Feature committed + Reliability Plan quando os gatilhos canônicos de risco forem aplicáveis |
 | **Critério de saída** | Delivery concluído + evidências registradas |
 | **Jornadas** | Delivery, Diligence |
 
@@ -232,7 +232,7 @@ Operation
 | **Quem modifica** | Product Manager, Tech Lead, engenheiros (com registro de mudanças) |
 | **Quem aprova** | Product Manager + Tech Lead (Assessment Review) |
 | **Consumidores** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |
-| **Ciclo de vida** | Draft → Refining → Committed → Implemented → Operational → Archived |
+| **Ciclo de vida** | Draft → Refining → Committed → In Delivery → Operational → Archived |
 | **Jornadas** | Discovery, Delivery, Operation, Assessment, Diligence |
 
 ### Reliability Plan

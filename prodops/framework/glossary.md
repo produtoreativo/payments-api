@@ -329,7 +329,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Definição:** O contrato vivo que representa uma intenção de negócio durante todo o seu ciclo de vida. Existe em dois níveis: **Global OBC** (contrato de negócio estratégico, pertence ao BIB/Portfolio) e **Local OBC** (contrato de produto, pertence ao PIB/Product Owner). Ver entradas separadas abaixo.
 
-**Estados (maturidade do contrato):** Draft → Refining → Committed → Implemented → Operational → Archived.
+**Estados (maturidade do contrato):** Draft → Refining → Committed → In Delivery → Operational → Archived.
 
 **Criação:** O Global OBC nasce ao entrar no Business Intent Backlog. O Local OBC nasce após o Particionamento do OBC (fluxo global) ou ao entrar no Product Intent Backlog (fluxo local).
 
@@ -367,7 +367,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Localização:** `prodops/artifacts/business/obcs/<slug>.md`
 
-**Ciclo de vida:** Draft → Refining → Committed → Implemented → Operational → Archived.
+**Ciclo de vida:** Draft → Refining → Committed → In Delivery → Operational → Archived.
 
 **Não duplica:** quando houver Global OBC, seu conteúdo estratégico. Sempre referencia, nunca copia.
 
@@ -477,7 +477,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Definição:** Produto da jornada transversal de Assessment que define riscos, SLOs e ações de mitigação para um item comprometido. Fica em `prodops/journeys/assessment/reliability-plans/`.
 
-**Obrigatoriedade:** Recomendado, não obrigatório. Fortemente recomendado para itens com risco operacional relevante (complexidade técnica alta, impacto financeiro, novos domínios ou integrações externas). Quando existe, deve ser revisado antes da decisão de readiness do Iteration Plan.
+**Obrigatoriedade:** Condicional e verificável. É gate de Delivery quando houver movimentação financeira, integração externa, mudança de SLO, risco alto/crítico ou alteração de persistência ou segurança. Fora desses gatilhos é opcional.
 
 **No fluxo local (pré-PIB):** O Premortem é o artefato adequado para análise de risco antes do Owner Approval. O Reliability Plan formal é produzido durante o Icebox, após o compromisso do Product Owner.
 
@@ -513,7 +513,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Não contém:** OBC. Compromisso. Identificador permanente.
 
-**Relação com outros conceitos:** Primeiro nível do fluxo local. Itens avançam via Premortem + Análise de Risco Preliminar + Owner Approval para o Product Intent Backlog. (O Reliability Plan formal é produzido depois, durante o Icebox — é recomendado, não obrigatório para entrar no PIB.) Ver [`backlogs.md`](backlogs.md).
+**Relação com outros conceitos:** Primeiro nível do fluxo local. Itens avançam via Premortem + Análise de Risco Preliminar + Owner Approval para o Product Intent Backlog. O Reliability Plan formal, quando acionado pelos gatilhos de risco, é produzido depois, durante o Icebox. Ver [`backlogs.md`](backlogs.md).
 
 ---
 
@@ -525,7 +525,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Dois caminhos de entrada:** (1) Local OBC via OBC Partitioning, direcionado pelo Portfolio após Discovery no BIB; (2) Repository Tracking Item via Premortem + Análise de Risco Preliminar com Owner Approval (Local OBC Draft nasce aqui).
 
-**Após a entrada, a origem deixa de importar.** Todos os itens seguem a mesma jornada: Icebox (Refining) → Iteration Backlog (Committed) → Iteration Plan (Implemented) → Operation (Operational).
+**Após a entrada, a origem deixa de importar.** Todos os itens seguem a mesma jornada: Icebox (Refining) → Iteration Backlog (Committed) → Iteration Plan (In Delivery) → Operation (Operational).
 
 **Relação com outros conceitos:** Ponto de convergência dos fluxos global e local. Ver [`backlogs.md`](backlogs.md).
 

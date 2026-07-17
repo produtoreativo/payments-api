@@ -108,7 +108,7 @@ States represent **contract maturity**, not software state.
 | **Draft** | BIB / PIB — entry | Created; may be incomplete; records initial intent and hypotheses |
 | **Refining** | PIB — Icebox view | Under active refinement; Discovery/Upstream may be occurring |
 | **Committed** | PIB — Iteration Backlog view | Minimum information validated; ready for Delivery |
-| **Implemented** | Iteration Plan → Delivery | In execution; implementation in progress |
+| **In Delivery** | Iteration Plan → Delivery | In execution; implementation in progress |
 | **Operational** | Operation | In production; updated with operational evidence |
 | **Archived** | — | Intent closed; history preserved |
 
@@ -137,7 +137,7 @@ States represent **contract maturity**, not software state.
 | PIB — Icebox view | Refining | Discovery refines the Local OBC; criteria emerge |
 | Assessment Review | Committed candidate | OBC reviewed by PM + Tech Lead; required sections validated |
 | PIB — Iteration Backlog view | Committed | Minimum criteria validated; Downstream can begin |
-| Iteration Plan / Delivery | Implemented | Guides implementation; BDD Feature operationalizes it |
+| Iteration Plan / Delivery | In Delivery | Guides implementation; BDD Feature operationalizes it |
 | Operation | Operational | In production; complemented with metrics, SLOs, incidents |
 | — | Archived | Intent closed |
 
@@ -188,10 +188,11 @@ OBCs produced within Upstream experiments remain in the experiment directory (`p
 
 Upon entering Downstream, the Local OBC ceases to be merely a record — it becomes the operational contract of the delivery. It is refined in the Icebox until reaching the Committed state, then controls the entire evolution of subsequent journeys.
 
-The minimum set required to start Downstream:
+Commitment may be declared before readiness. The minimum set required to reach **Downstream Ready** and start a Delivery phase is:
 - Local OBC committed in `prodops/artifacts/business/obcs/<slug>.md` with Committed state
 - BDD Feature committed in `prodops/artifacts/business/bdd/<slug>.feature`
-- Reliability Plan updated in `prodops/journeys/assessment/reliability-plans/`
+- Documented risks and an `In` Iteration Plan entry
+- Updated Reliability Plan when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change
 
 ---
 
@@ -226,7 +227,7 @@ All Downstream Skills use the Local OBC as their primary source of context. Skil
 | **Who modifies** | Product Manager, Tech Lead, engineers (with change record) |
 | **Who approves** | Product Manager + Tech Lead (Assessment Review) |
 | **Consumers** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |
-| **Lifecycle** | Draft → Refining → Committed → Implemented → Operational → Archived |
+| **Lifecycle** | Draft → Refining → Committed → In Delivery → Operational → Archived |
 | **Journeys** | Discovery, Delivery, Operation, Assessment, Diligence |
 
 ---

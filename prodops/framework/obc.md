@@ -108,7 +108,7 @@ Os estados representam **maturidade do contrato**, não estado do software.
 | **Draft** | BIB / PIB — entrada | Criado; pode estar incompleto; registra intenção inicial e hipóteses |
 | **Refining** | PIB — view Icebox | Em refinamento ativo; Discovery/Upstream podem estar ocorrendo |
 | **Committed** | PIB — view Iteration Backlog | Informações mínimas validadas; pronto para Delivery |
-| **Implemented** | Iteration Plan → Delivery | Em execução; implementação em andamento |
+| **In Delivery** | Iteration Plan → Delivery | Em execução; implementação em andamento |
 | **Operational** | Operation | Em produção; atualizado com evidências operacionais |
 | **Archived** | — | Intenção encerrada; histórico preservado |
 
@@ -137,7 +137,7 @@ Os estados representam **maturidade do contrato**, não estado do software.
 | PIB — view Icebox | Refining | Discovery refina o Local OBC; critérios emergem |
 | Assessment Review | Candidato a Committed | OBC revisado por PM + Tech Lead; seções obrigatórias validadas |
 | PIB — view Iteration Backlog | Committed | Critérios mínimos validados; Downstream pode iniciar |
-| Iteration Plan / Delivery | Implemented | Guia a implementação; BDD Feature o operacionaliza |
+| Iteration Plan / Delivery | In Delivery | Guia a implementação; BDD Feature o operacionaliza |
 | Operation | Operational | Em produção; complementado com métricas, SLOs, incidentes |
 | — | Archived | Intenção encerrada |
 
@@ -188,10 +188,11 @@ OBCs produzidos dentro de experimentos Upstream permanecem no diretório do expe
 
 Ao entrar no Downstream, o Local OBC deixa de ser apenas um registro — passa a ser o contrato operacional da entrega. É refinado no Icebox até atingir o estado Committed, então controla toda a evolução das jornadas seguintes.
 
-O conjunto mínimo exigido para iniciar o Downstream:
+O compromisso pode ser declarado antes da prontidão. O conjunto mínimo exigido para atingir **Downstream Ready** e iniciar uma fase de Delivery é:
 - Local OBC committed em `prodops/artifacts/business/obcs/<slug>.md` com estado Committed
 - BDD Feature committed em `prodops/artifacts/business/bdd/<slug>.feature`
-- Reliability Plan atualizado em `prodops/journeys/assessment/reliability-plans/`
+- Riscos documentados e item `Entrou` no Iteration Plan
+- Reliability Plan atualizado quando houver movimentação financeira, integração externa, mudança de SLO, risco alto/crítico ou alteração de persistência ou segurança
 
 ---
 
@@ -226,7 +227,7 @@ Todas as Skills do Downstream utilizam o Local OBC como principal fonte de conte
 | **Quem modifica** | Product Manager, Tech Lead, engenheiros (com registro de mudanças) |
 | **Quem aprova** | Product Manager + Tech Lead (Assessment Review) |
 | **Consumidores** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |
-| **Ciclo de vida** | Draft → Refining → Committed → Implemented → Operational → Archived |
+| **Ciclo de vida** | Draft → Refining → Committed → In Delivery → Operational → Archived |
 | **Jornadas** | Discovery, Delivery, Operation, Assessment, Diligence |
 
 ---

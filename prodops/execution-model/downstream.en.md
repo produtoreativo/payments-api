@@ -39,14 +39,20 @@ During Discovery (in the Icebox), it will be refined until reaching the Committe
 
 ## Mandatory preconditions
 
-Downstream may start to guide a committed item toward readiness. Before executing any Delivery phase, all requirements below must be satisfied:
+Downstream has three explicit moments:
+
+1. **Downstream Declared** — commitment exists; the mode guides the item toward readiness.
+2. **Downstream Ready** — every applicable gate is satisfied.
+3. **Delivery Started** — Bootstrap has started for a Ready item.
+
+Before executing any Delivery phase, all requirements below must be satisfied:
 
 1. OBC in `prodops/artifacts/business/obcs/`
 2. BDD Feature in `prodops/artifacts/business/bdd/`
 3. Risks documented in `prodops/journeys/assessment/risks.md`
 4. Iteration Plan entry with status `In` in `prodops/artifacts/governance/plans/iteration-plan.md`
 
-**Reliability Plan (recommended):** Not a mandatory gate, but strongly recommended for items with relevant operational risks. When it exists, it must be reviewed before the readiness decision — produced by the Assessment journey at `prodops/journeys/assessment/reliability-plans/`.
+5. Reliability Plan when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change
 
 When a mandatory requirement is missing, Downstream stops before Delivery, identifies the owner, and guides the next action.
 

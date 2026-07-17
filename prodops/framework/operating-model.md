@@ -93,7 +93,7 @@ Artifacts
 
 **Exploration** — reduz incerteza e refina o OBC draft por meio da jornada Discovery. Discovery existe em ambos os modos; o rigor e o compromisso variam conforme Upstream ou Downstream. Ver [`flow.md`](flow.md).
 
-**OBC (Observable Business Contract)** — nasce como Draft quando a Intent entra no Business Intent Backlog (fluxo global) ou no Product Intent Backlog (fluxo local). É refinado pela Discovery no Icebox até atingir o estado **Committed** (gate de entrada no Iteration Backlog). Fica **Implemented** durante a Delivery e **Operational** na Operation. *Anteriormente definido incorretamente como Outcome-Based Criterion.*
+**OBC (Observable Business Contract)** — nasce como Draft quando a Intent entra no Business Intent Backlog (fluxo global) ou no Product Intent Backlog (fluxo local). É refinado pela Discovery no Icebox até atingir o estado **Committed** (gate de entrada no Iteration Backlog). Fica **In Delivery** durante a Delivery e **Operational** na Operation. *Anteriormente definido incorretamente como Outcome-Based Criterion.*
 
 **Continuous Assessment** — avalia continuamente riscos, oportunidades e decide o próximo passo.
 

@@ -53,7 +53,7 @@ Product Intent Backlog     ← product source of truth (Local OBC born here)
 [continues in the common flow — Icebox/Iteration Backlog/Release as views]
 ```
 
-> **Note on Reliability Plan in the local flow:** The pre-PIB step requires a **Premortem** and a preliminary risk analysis — not the formal Reliability Plan artifact at `reliability-plans/`. The formal Reliability Plan is produced by the Assessment journey during the Icebox, after the Product Owner's commitment. The Premortem is sufficient for the PIB entry decision. The formal Reliability Plan is **recommended** before Delivery, not mandatory.
+> **Note on Reliability Plan in the local flow:** The pre-PIB step requires a Premortem and preliminary risk analysis. The formal Reliability Plan is produced by Assessment during the Icebox and becomes a Delivery gate when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change.
 
 After entering the **Product Intent Backlog**, the item's origin no longer matters. All items follow exactly the same journey — regardless of whether they came from the Portfolio or the local flow.
 
@@ -208,11 +208,11 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 - The Product Owner formalizes acceptance.
 - If it didn't exist yet (local path), a **Local OBC Draft** is created.
 - The item begins its traceable lifecycle in the product.
-- The item receives the initial state **Draft** — represented in the Icebox view as Refining.
+- The item receives the initial state **Draft**. When active Discovery starts, it transitions to **Refining** and is represented in the Icebox view.
 
-**After entry, the origin no longer matters.** The item evolves in state within the PIB: Refining (Icebox) → Committed (Iteration Backlog) → Implemented (Iteration Plan) → Operational.
+**After entry, the origin no longer matters.** The item evolves in state within the PIB: Draft → Refining (Icebox) → Committed (Iteration Backlog) → In Delivery (Iteration Plan) → Operational.
 
-> **Upstream promotion:** An item promoted from Upstream already has a Local OBC, BDD Feature, and documented risks — it already satisfies the Committed state criteria. It enters the Iteration Plan directly without going through the Icebox view.
+> **Upstream promotion:** An item promoted from Upstream that satisfies the Committed criteria skips Icebox refinement and appears in the Iteration Backlog view. The Product Owner must still select it explicitly for the Iteration Plan.
 
 **Commitment:** The Product Owner has committed to investigating and delivering this item.
 
@@ -255,7 +255,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 **Criteria to enter the Iteration Plan (begin execution):**
 - Local OBC committed in `prodops/artifacts/business/obcs/`
 - BDD Feature committed in `prodops/artifacts/business/bdd/`
-- *(Recommended)* Reliability Plan entry in `prodops/journeys/assessment/reliability-plans/` — not a mandatory gate, but strongly recommended for items with relevant operational risk
+- Reliability Plan entry when the risk triggers defined above apply
 
 **Canonical artifact:** `prodops/artifacts/product/backlogs/iteration-backlog.md`
 

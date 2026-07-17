@@ -28,7 +28,7 @@ flowchart TD
     LPIB["Local OBC Draft\n(Product Intent Backlog)"]
     EX2["Exploration in Icebox\n(Journey: Discovery; rigor by mode)"]
     AS["Assessment\n(transversal)"]
-    RP["Reliability Plan\n(recommended)"]
+    RP["Reliability Plan\n(risk-triggered)"]
     REV["Assessment Review\n(PM + Tech Lead)"]
     OBC["Committed Local OBC + BDD\ncommitted"]
     IP["Iteration Plan\n(status: In)"]
@@ -231,13 +231,13 @@ This step belongs only to the **Global Flow**. In the **Local Flow**, the Intent
 
 **Objective:** Implement the capability with traceability, verifiable acceptance criteria, and evidence recorded at each step.
 
-**What happens:** Downstream work follows the mandatory sequence `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`, divided into CI Sync (local work) and CI Async (platform and pipelines). The Local OBC transitions to the Implemented state.
+**What happens:** Downstream work follows the mandatory sequence `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`, divided into CI Sync (local work) and CI Async (platform and pipelines). The Local OBC transitions to the In Delivery state.
 
 **What is produced:**
 - Delivered and promoted software
 - Updated Release Trail
 - Recorded evidence
-- Local OBC in Implemented state
+- Local OBC in In Delivery state
 
 **When to advance:** Promote completed, Release Trail updated, OBC validated in production.
 

@@ -333,7 +333,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 - **Global OBC** — strategic, belongs to BIB/Portfolio, covers the entire business intent.
 - **Local OBC** — product-specific, belongs to one PIB, specializes/partitions the Global OBC.
 
-**States (contract maturity):** Draft → Refining → Committed → Implemented → Operational → Archived.
+**States (contract maturity):** Draft → Refining → Committed → In Delivery → Operational → Archived.
 
 **Creation:** Born when an Intent is accepted. In the global flow, a **Global OBC Draft** is born upon entry into the Business Intent Backlog. In the local flow, a **Local OBC Draft** is born upon entry into the Product Intent Backlog (either via OBC Partitioning or direct local approval).
 
@@ -392,7 +392,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **Location:** `prodops/artifacts/business/obcs/<slug>.md` (when committed)
 
-**Lifecycle:** Draft → Refining (Icebox) → Committed (Iteration Backlog) → Implemented (Delivery) → Operational (Operation) → Archived
+**Lifecycle:** Draft → Refining (Icebox) → Committed (Iteration Backlog) → In Delivery → Operational (Operation) → Archived
 
 **Owner:** Product Manager + Tech Lead of the product
 
@@ -509,7 +509,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 **Definition:** Product of the transversal Assessment journey that defines risks, SLOs, and mitigation actions for a committed item. Lives in `prodops/journeys/assessment/reliability-plans/`.
 
-**Requirement level:** Recommended, not mandatory. Strongly recommended for items with relevant operational risk (high technical complexity, financial impact, new domains, or external integrations). When it exists, it must be reviewed before the Iteration Plan readiness decision.
+**Requirement level:** Conditional and verifiable. It is a Delivery gate when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change. Outside those triggers it is optional.
 
 **In the local flow (pre-PIB):** The Premortem is the appropriate artifact for risk analysis before Owner Approval. The formal Reliability Plan is produced during the Icebox, after the Product Owner's commitment.
 
@@ -547,7 +547,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 **Does not contain:** OBC. Commitment. Permanent identifier.
 
-**Relationship with other concepts:** First level of the local flow. Items advance via Premortem + Preliminary Risk Analysis + Owner Approval to the Product Intent Backlog. (The formal Reliability Plan is produced later, during the Icebox — it is recommended, not mandatory for PIB entry.) See [`backlogs.en.md`](backlogs.en.md).
+**Relationship with other concepts:** First level of the local flow. Items advance via Premortem + Preliminary Risk Analysis + Owner Approval to the Product Intent Backlog. When risk triggers apply, the formal Reliability Plan is produced later during the Icebox. See [`backlogs.en.md`](backlogs.en.md).
 
 ---
 
@@ -644,7 +644,7 @@ See [`prodops/journeys/discovery/README.en.md`](../journeys/discovery/README.en.
 
 ## Downstream
 
-**Definition:** **Execution mode** — the default, with delivery commitment. Objective: deliver with confidence using validated knowledge. Every item requires OBC + BDD Feature + risks documented + entry in the Iteration Plan. The Reliability Plan is recommended but not mandatory. Downstream requires the full flow: `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`.
+**Definition:** **Execution mode** — the default, with delivery commitment. Objective: deliver with confidence using validated knowledge. Every item requires OBC + BDD Feature + risks documented + entry in the Iteration Plan. A Reliability Plan is required when the canonical risk triggers apply. Downstream requires the full flow: `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`.
 
 **Not a phase** — it is an execution mode. Can start at any stage of the lifecycle.
 
