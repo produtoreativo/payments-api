@@ -31,6 +31,19 @@ manifest e nos artefatos do card — **não pré-leia a documentação do framew
 - Toda entrega Downstream relevante gera append no release trail
   (`prodops/artifacts/governance/trails/release-trail.md`).
 
+## Arquitetura
+
+Diagrama canônico: `prodops/artifacts/product/architecture/overview.md`
+
+**Atualizar antes de fechar o task quando houver:** novo módulo NestJS, nova
+rota ou grupo de rotas, nova dependência externa, novo DynamoDB table ou índice,
+novo tópico de evento ou fila SQS, mudança de autenticação em rota.
+
+**Não** exige atualização: novos campos em DTOs, bugfixes internos, novos
+cenários BDD sem nova infra, refatorações sem mudança de contrato.
+
+Adicionar linha na tabela "Histórico de mudanças estruturais" do `overview.md`.
+
 ## Doutrina do framework (humanos; agentes somente sob demanda explícita)
 
 Princípios, glossário, fluxo oficial, Origin Streams e modelo operacional:

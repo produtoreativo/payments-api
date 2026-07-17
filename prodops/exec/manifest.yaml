@@ -44,6 +44,8 @@ paths:
   reliability_plans: prodops/journeys/assessment/reliability-plans/
   event_storming: prodops/journeys/assessment/event-storming/plan.json
   architecture: prodops/artifacts/product/architecture/overview.md
+    # guardrail: atualizar antes de fechar task quando houver novo módulo NestJS,
+    # nova rota, dependência externa, tabela DynamoDB, tópico de evento ou fila SQS.
   experiments: prodops/journeys/discovery/experiments/
   templates: prodops/templates/
   cards: prodops/exec/cards/ # optional — gerado pelo readiness do /downstream por card

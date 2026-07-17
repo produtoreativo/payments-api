@@ -1,7 +1,7 @@
 # Architecture Overview — Payments API
 
 > Atualizar sempre que houver mudança estrutural: novo módulo, rota, dependência
-> externa, tabela de banco ou tópico de evento. Ver regra em `AGENTS.md`.
+> externa, tabela de banco ou tópico de evento. Ver regra em [`AGENTS.md`](../../../AGENTS.md#arquitetura).
 >
 > Última atualização: 2026-07-12
 
