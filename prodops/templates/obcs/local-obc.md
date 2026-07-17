@@ -8,7 +8,7 @@
 ## Status
 
 <!-- Declare o estado atual do contrato.
-     Estados possíveis: Draft | Refining | Committed | Implemented | Operational | Archived
+     Estados possíveis: Draft | Refining | Committed | In Delivery | Operational | Archived
      Localização por estado:
        Draft/Refining: prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md
        Committed+:     prodops/artifacts/business/obcs/<slug>.md -->

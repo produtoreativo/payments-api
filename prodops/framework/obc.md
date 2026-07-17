@@ -149,17 +149,23 @@ O OBC registra o **histórico vivo do trabalho**: por quais estados passou, quan
 
 A rastreabilidade deve funcionar em **ambas as direções**.
 
+**Fluxo global** (quando a Intent vem do Portfolio):
 ```
-Business Intent → Global OBC → Local OBC A → Repositório A
-                             → Local OBC B → Repositório B
-                             → Local OBC C → Repositório C
+Intent → Global OBC → Local OBC A → Repositório A
+                    → Local OBC B → Repositório B
+                    → Local OBC C → Repositório C
+```
+
+**Fluxo local** (quando a Intent vem do produto):
+```
+Intent + Repository Tracking Item → Local OBC → Repositório
 ```
 
 **Navegação descendente:** do Global OBC, chegar a qualquer Local OBC e ao repositório que o implementa.
 
-**Navegação ascendente:** de qualquer Local OBC, chegar à sua origem: Global OBC e Intent global, ou Intent e Repository Tracking Item locais.
+**Navegação ascendente:** de qualquer Local OBC, chegar à sua origem: Global OBC e Intent global (fluxo global), ou Intent e Repository Tracking Item (fluxo local).
 
-O Global OBC mantém a tabela de rastreabilidade. Cada Local OBC mantém o link de volta ao Global OBC.
+No fluxo global, o Global OBC mantém a tabela de rastreabilidade e cada Local OBC referencia o Global OBC de origem. No fluxo local, o Local OBC referencia diretamente a Intent e o Repository Tracking Item que justificaram o Owner Approval.
 
 ---
 

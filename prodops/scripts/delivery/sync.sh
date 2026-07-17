@@ -347,11 +347,11 @@ step_align() {
     for module in ${changed_modules}; do
       # Look for a matching BDD feature
       local matches
-      matches=$(find prodops/artifacts/bdd -name "*.feature" 2>/dev/null | xargs grep -l "${module}" 2>/dev/null || true)
+      matches=$(find prodops/artifacts/business/bdd -name "*.feature" 2>/dev/null | xargs grep -l "${module}" 2>/dev/null || true)
 
       # Also check by filename pattern
       local by_name
-      by_name=$(find prodops/artifacts/bdd -name "*${module}*" 2>/dev/null || true)
+      by_name=$(find prodops/artifacts/business/bdd -name "*${module}*" 2>/dev/null || true)
       matches="${matches}${by_name}"
 
       if [[ -z "${matches}" ]]; then
@@ -458,7 +458,7 @@ step_align() {
   local changed_obcs=""
   for module in ${changed_modules:-}; do
     local obc_file
-    obc_file=$(find prodops/artifacts/obcs -name "*${module}*" 2>/dev/null | head -1 || true)
+    obc_file=$(find prodops/artifacts/business/obcs -name "*${module}*" 2>/dev/null | head -1 || true)
     if [[ -n "${obc_file}" ]]; then
       local obc_updated
       obc_updated=$(git diff "${BASE_BRANCH}...HEAD" --name-only -- "${obc_file}" || true)

@@ -8,7 +8,7 @@
 ## Status
 
 <!-- Declare the current state of the contract.
-     Possible states: Draft | Refining | Committed | Implemented | Operational | Archived
+     Possible states: Draft | Refining | Committed | In Delivery | Operational | Archived
      Location by state:
        Draft/Refining: prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md
        Committed+:     prodops/artifacts/business/obcs/<slug>.md -->

@@ -149,17 +149,23 @@ The OBC records the **living history of the work**: which states it passed throu
 
 Traceability must work in **both directions**.
 
+**Global flow** (when the Intent comes from the Portfolio):
 ```
-Business Intent → Global OBC → Local OBC A → Repository A
-                             → Local OBC B → Repository B
-                             → Local OBC C → Repository C
+Intent → Global OBC → Local OBC A → Repository A
+                    → Local OBC B → Repository B
+                    → Local OBC C → Repository C
+```
+
+**Local flow** (when the Intent comes from the product):
+```
+Intent + Repository Tracking Item → Local OBC → Repository
 ```
 
 **Downward navigation:** from the Global OBC, reach any Local OBC and the repository that implements it.
 
-**Upward navigation:** from any Local OBC, reach the Global OBC and the original business Intent.
+**Upward navigation:** from any Local OBC, reach its origin: the Global OBC and original Intent (global flow), or the Intent and Repository Tracking Item (local flow).
 
-The Global OBC maintains the traceability table. Each Local OBC maintains the link back to the Global OBC.
+In the global flow, the Global OBC maintains the traceability table and each Local OBC references its originating Global OBC. In the local flow, the Local OBC references directly the Intent and the Repository Tracking Item that justified Owner Approval.
 
 ---
 

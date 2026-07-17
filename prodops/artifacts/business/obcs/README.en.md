@@ -18,7 +18,7 @@ This directory contains committed **Local OBCs** for this product repository. It
 | Draft | Newly created, no refinement | Experiment dir |
 | Refining | In active Discovery/Exploration | Experiment dir |
 | Committed | Ready for Delivery, approved | `prodops/artifacts/business/obcs/<slug>.md` |
-| Implemented | In Delivery or recently delivered | `prodops/artifacts/business/obcs/<slug>.md` |
+| In Delivery | In execution in the Iteration Plan | `prodops/artifacts/business/obcs/<slug>.md` |
 | Operational | In production with evidence | `prodops/artifacts/business/obcs/<slug>.md` |
 | Archived | Closed | Kept here for traceability |
 
