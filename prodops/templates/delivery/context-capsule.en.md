@@ -53,7 +53,8 @@ Endpoint(s) and request/response essentials:
 
 ## Commands
 
-Gate names from `prodops/exec/manifest.yaml` (`gates`): lint | unit | acceptance | smoke
+Populate with every applicable gate read from `prodops/exec/manifest.yaml`
+(`gates`). Do not copy a fixed list into this template.
 
 ## Git flow
 

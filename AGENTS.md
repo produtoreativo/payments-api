@@ -12,9 +12,9 @@ manifest e nos artefatos do card — **não pré-leia a documentação do framew
 3. **Paths canônicos, quality gates e vocabulário:** `prodops/exec/manifest.yaml`
    — fonte única, legível por máquina. Consistência: `./prodops/scripts/validate-manifest.sh`.
 4. **Contexto da tarefa:** a context capsule do card —
-   `prodops/exec/cards/<card>/context.md`, gerada pelo `/bootstrap`. Leia-a
-   antes de alterar código de produção — e somente ela. Se não existir, rode
-   `/bootstrap` primeiro.
+   `prodops/exec/cards/<card>/context.md`, gerada pelo gate de readiness do
+   `/downstream`. Leia-a antes de alterar código de produção — e somente ela.
+   Se não existir, execute o readiness do `/downstream` antes do `/bootstrap`.
 
 ## Regras invioláveis
 
@@ -28,7 +28,7 @@ manifest e nos artefatos do card — **não pré-leia a documentação do framew
   registrar em Decision Trail (`prodops/templates/assessment/decision-trail.md`).
 - Commits seguem Conventional Commits (tipos e limite de summary: no manifest).
 - Toda entrega Downstream relevante gera append no release trail
-  (`prodops/artifacts/trails/release-trail.md`).
+  (`prodops/artifacts/governance/trails/release-trail.md`).
 
 ## Doutrina do framework (humanos; agentes somente sob demanda explícita)
 

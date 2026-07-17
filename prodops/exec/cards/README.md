@@ -1,8 +1,8 @@
 # Cards — Context Capsules
 
 Cada diretório aqui corresponde a **um card** e contém sua **context capsule**
-(`<card-slug>/context.md`): o resumo comprimido (~1k tokens) que o `/bootstrap`
-gera no gate de readiness a partir do OBC, da BDD Feature, dos riscos e do Reliability Plan. As
+(`<card-slug>/context.md`): o resumo comprimido (~1k tokens) que o gate de
+readiness do `/downstream` gera a partir do OBC, da BDD Feature, dos riscos e do Reliability Plan. As
 fases seguintes (Hack, Sync, Finish) leem a capsule em vez de percorrer a
 árvore de artefatos — a "taxa de leitura" é paga uma única vez, no readiness do Downstream.
 

@@ -46,7 +46,7 @@ paths:
   architecture: prodops/artifacts/product/architecture/overview.md
   experiments: prodops/journeys/discovery/experiments/
   templates: prodops/templates/
-  cards: prodops/exec/cards/ # optional — gerado pelo /bootstrap por card
+  cards: prodops/exec/cards/ # optional — gerado pelo readiness do /downstream por card
 
 # Quality gates verificáveis (comando + critério objetivo)
 gates:
