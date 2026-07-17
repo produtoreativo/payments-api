@@ -26,9 +26,9 @@ check_path() {
 
 check_path "prodops/framework/canonical-paths.md"
 check_path "prodops/artifacts/product"
-check_path "prodops/artifacts/bdd"
-check_path "prodops/artifacts/obcs"
-check_path "prodops/artifacts/plans"
+check_path "prodops/artifacts/business/bdd"
+check_path "prodops/artifacts/business/obcs"
+check_path "prodops/artifacts/governance/plans"
 check_path "prodops/artifacts/governance/trails/release-trail.md"
 check_path "prodops/journeys/discovery/experiments"
 check_path "prodops/journeys/assessment/reliability-plans"
@@ -64,7 +64,7 @@ legacy_targets=(
   prodops/journeys
   prodops/skills
   prodops/templates
-  prodops/business-intents
+  prodops/artifacts/business/intents
 )
 
 # Repo-wide coverage: agent/tool instruction dirs and docs.
@@ -90,6 +90,8 @@ if have_rg; then
       -g '!prodops/journeys/discovery/experiments/**/upstream-trail*.md' \
       -g '!prodops/journeys/discovery/experiments/**/experiment*.md' \
       -g '!prodops/documentation-review*.md' \
+      -g '!.claude/worktrees/**' \
+      -g '!.codex/worktrees/**' \
       || true
   )"
 else
@@ -129,6 +131,8 @@ if have_rg; then
       -g '!.git/**' \
       -g '!node_modules/**' \
       -g '!api/node_modules/**' \
+      -g '!.claude/worktrees/**' \
+      -g '!.codex/worktrees/**' \
       -g '!prodops/framework/canonical-paths*.md' \
       -g '!prodops/documentation-review*.md' \
       -g '!PROJECT-REVIEW.md' \
@@ -195,7 +199,12 @@ while IFS= read -r md_file; do
       fi
     done
   done < "${md_file}"
-done < <(find . -type f -name '*.md' -not -path './.git/*' -not -path '*/node_modules/*' | LC_ALL=C sort)
+done < <(find . -type f -name '*.md' \
+  -not -path './.git/*' \
+  -not -path '*/node_modules/*' \
+  -not -path './.claude/worktrees/*' \
+  -not -path './.codex/worktrees/*' \
+  | LC_ALL=C sort)
 
 if [[ "${broken_links}" -eq 0 ]]; then
   pass "all relative markdown links resolve"

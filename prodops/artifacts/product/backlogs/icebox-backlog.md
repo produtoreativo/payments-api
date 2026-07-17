@@ -15,7 +15,7 @@
 | Dono de produto | `[Product Manager Payments]` |
 | Dono técnico | `[Tech Lead Payments]` |
 | Canal | `[Slack/Teams: #payments-prodops]` |
-| Fonte principal | Features em `prodops/artifacts/bdd` |
+| Fonte principal | Features em `prodops/artifacts/business/bdd/` |
 | Última atualização | `2026-06-30` |
 
 ## 2. Como usar este backlog

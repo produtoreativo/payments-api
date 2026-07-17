@@ -225,8 +225,8 @@ As métricas DORA estendidas complementam o Reliability Plan com uma visão de m
 | Rate of Return | ✅ Coberta | Eventos de idempotência e estorno mapeados |
 | Availability | ✅ Coberta | SLIs 99.9%/100% dos OBCs são métricas de Availability |
 
-→ Ver mapeamento completo em [`../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
-→ Ver definições e pesos em [`../../framework/dora-metrics.md`](../../framework/dora-metrics.md)
+→ Ver mapeamento completo em [`../../discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../../discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ Ver definições e pesos em [`../../../framework/dora-metrics.md`](../../../framework/dora-metrics.md)
 
 ---
 

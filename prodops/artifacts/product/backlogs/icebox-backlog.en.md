@@ -15,7 +15,7 @@
 | Product owner | `[Product Manager Payments]` |
 | Technical owner | `[Tech Lead Payments]` |
 | Channel | `[Slack/Teams: #payments-prodops]` |
-| Main source | Features in `prodops/artifacts/bdd` |
+| Main source | Features in `prodops/artifacts/business/bdd/` |
 | Last updated | `2026-06-30` |
 
 ## 2. How to use this backlog
