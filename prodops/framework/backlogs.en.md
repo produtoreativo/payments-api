@@ -255,7 +255,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 **Criteria to enter the Iteration Plan (begin execution):**
 - Local OBC committed in `prodops/artifacts/business/obcs/`
 - BDD Feature committed in `prodops/artifacts/business/bdd/`
-- Reliability Plan entry when the risk triggers defined above apply
+- Reliability Plan entry when applicable: money movement, external integration, SLO change, high/critical risk, persistence or security change
 
 **Canonical artifact:** `prodops/artifacts/product/backlogs/iteration-backlog.md`
 

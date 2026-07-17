@@ -255,7 +255,7 @@ Um item pode estar no BIB, associado a um Roadmap e a uma Platform Release, ao m
 **Critérios para entrar no Iteration Plan (iniciar execução):**
 - Local OBC committed em `prodops/artifacts/business/obcs/`
 - BDD Feature committed em `prodops/artifacts/business/bdd/`
-- Entrada no Reliability Plan quando os gatilhos de risco definidos acima forem aplicáveis
+- Entrada no Reliability Plan quando aplicável: movimentação financeira, integração externa, mudança de SLO, risco alto/crítico, alteração de persistência ou segurança
 
 **Artefato canônico:** `prodops/artifacts/product/backlogs/iteration-backlog.md`
 
