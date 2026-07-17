@@ -278,4 +278,4 @@ Rules
 Your sole responsibility is to define the most appropriate business scope to maximize the chances of success for the next Release.
 
 General instructions
-create the file prodops/artifacts/plans/iteration-plan.md with the requested content.
+create the file prodops/artifacts/governance/plans/iteration-plan.md with the requested content.

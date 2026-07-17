@@ -1,17 +1,14 @@
 # Artifacts
 
-Artifacts produced by the ProdOps Framework.
+Living artifacts of the product — source of truth for what the product delivers, how it is organized, and how delivery is controlled.
 
-## Organization
+Organized into three semantic categories:
 
-| Area | Content |
+| Category | Content |
 |---|---|
-| [product/](product/) | Product Deck, Service Decks, Repository Tracking List, Icebox |
-| [obcs/](obcs/) | Observable Business Contracts — committed OBCs |
-| [bdd/](bdd/) | Committed BDD Features (Gherkin) |
-| [plans/](plans/) | Iteration Plans, Reliability Iteration Backlogs |
-| [trails/](trails/) | Release Trail, evidence trails |
-| [evidence/](evidence/) | Delivery and validation evidence |
+| [business/](business/) | What the product commits to deliver — intents, observable contracts (OBCs), and behavior specifications (BDD Features) |
+| [product/](product/) | What the product is — operational context, work organization (backlogs), and architectural decisions |
+| [governance/](governance/) | How delivery is controlled — iteration plans, historical trails, and delivery evidence |
 
 ## Model → Template → Instance
 

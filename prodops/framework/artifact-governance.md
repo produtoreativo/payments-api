@@ -154,7 +154,7 @@ Operation
 |---|---|
 | **Owner** | Product Owner do repositório |
 | **Onde nasce** | Product Repository — qualquer sinal local não compreendido |
-| **Artefato canônico** | `prodops/artifacts/product/tracking-list.md` |
+| **Artefato canônico** | `prodops/artifacts/product/backlogs/tracking-list.md` |
 | **Quem modifica** | Qualquer membro do time |
 | **Quem aprova** | Product Owner |
 | **Consumidores** | Product Intent Backlog (via Premortem + Reliability Plan + Owner Approval), Assessment |
@@ -183,7 +183,7 @@ Operation
 |---|---|
 | **Owner** | Product Owner |
 | **Onde nasce** | Product Repository — item aceito no Product Intent Backlog |
-| **Artefato canônico** | `prodops/artifacts/product/icebox-backlog.md` |
+| **Artefato canônico** | `prodops/artifacts/product/backlogs/icebox-backlog.md` |
 | **Quem modifica** | Product Team (Product Manager, Tech Lead, engenheiros) |
 | **Quem aprova** | Product Owner + Tech Lead (para saída do Icebox) |
 | **Consumidores** | Iteration Backlog |
@@ -198,7 +198,7 @@ Operation
 |---|---|
 | **Owner** | Product Owner |
 | **Onde nasce** | Product Repository — item com OBC Committed saindo do Icebox |
-| **Artefato canônico** | `prodops/artifacts/plans/iteration-backlog.md` |
+| **Artefato canônico** | `prodops/artifacts/product/backlogs/iteration-backlog.md` |
 | **Quem modifica** | Product Owner, Diligence |
 | **Quem aprova** | Product Owner (priorização) |
 | **Consumidores** | Iteration Plan |
@@ -213,7 +213,7 @@ Operation
 |---|---|
 | **Owner** | Tech Lead / Product Owner |
 | **Onde nasce** | Product Repository — execução da iteração em andamento |
-| **Artefato canônico** | `prodops/artifacts/plans/iteration-plan.md` |
+| **Artefato canônico** | `prodops/artifacts/governance/plans/iteration-plan.md` |
 | **Quem modifica** | Equipe de Delivery |
 | **Quem aprova** | Product Owner + Tech Lead (para entrada de itens) |
 | **Consumidores** | Delivery (CI Sync, CI Async), Release Trail |
@@ -228,7 +228,7 @@ Operation
 |---|---|
 | **Owner** | Product Manager + Tech Lead do item |
 | **Onde nasce** | Business Intent Backlog (fluxo global) ou Product Intent Backlog (fluxo local) |
-| **Artefato canônico** | `prodops/artifacts/obcs/<slug>.md` (quando committed) |
+| **Artefato canônico** | `prodops/artifacts/business/obcs/<slug>.md` (quando committed) |
 | **Quem modifica** | Product Manager, Tech Lead, engenheiros (com registro de mudanças) |
 | **Quem aprova** | Product Manager + Tech Lead (Assessment Review) |
 | **Consumidores** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |

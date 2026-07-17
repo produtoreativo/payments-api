@@ -132,7 +132,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Relação com outros conceitos:** A Intent tem um Origin Stream (Business | Enterprise | Team | Technology). A Intent é transformada em OBC pela Exploration. Ver [`flow.md`](flow.md), [`origin-streams.md`](origin-streams.md) e [`backlogs.md`](backlogs.md).
 
-**Anteriormente chamado de:** Business Intent. O nome foi simplificado para Intent para eliminar a ambiguidade de que apenas necessidades de "Business" são capturáveis. O diretório `prodops/business-intents/` é preservado por retrocompatibilidade.
+**Anteriormente chamado de:** Business Intent. O nome foi simplificado para Intent para eliminar a ambiguidade de que apenas necessidades de "Business" são capturáveis. O diretório `prodops/artifacts/business/intents/` é preservado por retrocompatibilidade.
 
 ---
 
@@ -469,7 +469,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## BDD Feature
 
-**Definição:** Especificação Gherkin que descreve o comportamento esperado de uma Product Capability. Fica em `prodops/artifacts/bdd/` (comprometida) ou `prodops/journeys/discovery/experiments/<NNN-slug>/features/` (exploratória — dentro do diretório do experimento). Usada como insumo de TDD no Downstream.
+**Definição:** Especificação Gherkin que descreve o comportamento esperado de uma Product Capability. Fica em `prodops/artifacts/business/bdd/` (comprometida) ou `prodops/journeys/discovery/experiments/<NNN-slug>/features/` (exploratória — dentro do diretório do experimento). Usada como insumo de TDD no Downstream.
 
 ---
 
@@ -507,7 +507,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Repository Tracking List
 
-**Definição:** Backlog de produto que captura qualquer sinal local ainda não compreendido o suficiente para ser tratado como um compromisso formal. Artefato: `prodops/artifacts/product/tracking-list.md`.
+**Definição:** Backlog de produto que captura qualquer sinal local ainda não compreendido o suficiente para ser tratado como um compromisso formal. Artefato: `prodops/artifacts/product/backlogs/tracking-list.md`.
 
 **Pergunta:** O que merece atenção neste produto?
 
@@ -533,7 +533,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Icebox
 
-**Definição:** View sobre o Product Intent Backlog que representa itens em refinamento — Local OBC em estado **Refining**, Discovery em andamento, decisões em aberto. O Discovery funcional, técnico e operacional necessário ocorre neste estado. Artefato: `prodops/artifacts/product/icebox-backlog.md`.
+**Definição:** View sobre o Product Intent Backlog que representa itens em refinamento — Local OBC em estado **Refining**, Discovery em andamento, decisões em aberto. O Discovery funcional, técnico e operacional necessário ocorre neste estado. Artefato: `prodops/artifacts/product/backlogs/icebox-backlog.md`.
 
 **Pergunta:** Quais itens do PIB ainda estão sendo refinados para Delivery?
 
@@ -545,7 +545,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Iteration Backlog
 
-**Definição:** View sobre o Product Intent Backlog que representa itens com Local OBC no estado **Committed**, prontos para Delivery imediata. Não é um backlog de refinamento — refinamento acontece no estado Icebox. A única decisão restante é a prioridade do Product Owner. Artefato: `prodops/artifacts/plans/iteration-backlog.md`.
+**Definição:** View sobre o Product Intent Backlog que representa itens com Local OBC no estado **Committed**, prontos para Delivery imediata. Não é um backlog de refinamento — refinamento acontece no estado Icebox. A única decisão restante é a prioridade do Product Owner. Artefato: `prodops/artifacts/product/backlogs/iteration-backlog.md`.
 
 **Pergunta:** Quais itens do PIB estão prontos para ser desenvolvidos?
 
@@ -569,7 +569,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Iteration Plan
 
-**Definição:** Registro da execução de Delivery de uma iteração. Não é um backlog de planejamento — representa exclusivamente a execução em andamento. Contém itens do Iteration Backlog, estratégia de execução, jornadas CI Sync e CI Async, evidências e critérios de saída. Artefato: `prodops/artifacts/plans/iteration-plan.md`.
+**Definição:** Registro da execução de Delivery de uma iteração. Não é um backlog de planejamento — representa exclusivamente a execução em andamento. Contém itens do Iteration Backlog, estratégia de execução, jornadas CI Sync e CI Async, evidências e critérios de saída. Artefato: `prodops/artifacts/governance/plans/iteration-plan.md`.
 
 **Pergunta:** O que está sendo executado nesta iteração?
 
@@ -693,7 +693,7 @@ Ver [`prodops/execution-model/downstream.md`](../execution-model/downstream.md).
 
 ## Release Trail
 
-**Definição:** O log append-only de evidências do Downstream. Cada sessão de agente produz seu próprio arquivo em `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`. Ver modelo em [`artifacts/trails/release-trail.md`](../artifacts/trails/release-trail.md).
+**Definição:** O log append-only de evidências do Downstream. Cada sessão de agente produz seu próprio arquivo em `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`. Ver modelo em [`artifacts/governance/trails/release-trail.md`](../artifacts/governance/trails/release-trail.md).
 
 ---
 

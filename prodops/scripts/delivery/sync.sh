@@ -335,7 +335,7 @@ step_align() {
 
   # ── 1. BDD Features ─────────────────────────────────────────────────────────
   section "1/4  BDD Features"
-  note "Rule: behavior change → prodops/artifacts/bdd/<capability>.feature must reflect it"
+  note "Rule: behavior change → prodops/artifacts/business/bdd/<capability>.feature must reflect it"
 
   local changed_modules
   changed_modules=$(echo "${diff_files}" | grep '^api/src/modules/' | sed 's|api/src/modules/\([^/]*\)/.*|\1|' | sort -u || true)
@@ -355,13 +355,13 @@ step_align() {
       matches="${matches}${by_name}"
 
       if [[ -z "${matches}" ]]; then
-        warn "Module '${module}' changed — no BDD Feature references it in prodops/artifacts/bdd/"
+        warn "Module '${module}' changed — no BDD Feature references it in prodops/artifacts/business/bdd/"
         note "  If this module's behavior changed, add or update the feature file."
         bdd_needs_review=true
       else
         # Check if the feature file was also updated in this branch
         local feature_updated
-        feature_updated=$(git diff "${BASE_BRANCH}...HEAD" --name-only -- "prodops/artifacts/bdd/" | grep -v '^$' || true)
+        feature_updated=$(git diff "${BASE_BRANCH}...HEAD" --name-only -- "prodops/artifacts/business/bdd/" | grep -v '^$' || true)
         if [[ -n "${feature_updated}" ]]; then
           pass "Module '${module}' — BDD Feature updated in this branch"
         else
@@ -415,7 +415,7 @@ step_align() {
   for module in ${all_modules}; do
     if ! git show "${BASE_BRANCH}:api/src/modules/${module}/" > /dev/null 2>&1; then
       warn "New module detected: '${module}'"
-      note "  Add to Mermaid diagram in prodops/journeys/assessment/architecture/overview.md"
+      note "  Add to Mermaid diagram in prodops/artifacts/product/architecture/overview.md"
       arch_needs_review=true
     fi
   done
@@ -426,7 +426,7 @@ step_align() {
   if [[ -n "${infra_changed}" ]]; then
     warn "Infrastructure files changed:"
     echo "${infra_changed}" | while IFS= read -r f; do note "  ${f}"; done
-    note "  Review prodops/journeys/assessment/architecture/overview.md for needed updates."
+    note "  Review prodops/artifacts/product/architecture/overview.md for needed updates."
     arch_needs_review=true
   fi
 
@@ -443,7 +443,7 @@ step_align() {
   else
     # Check if architecture was updated
     local arch_updated
-    arch_updated=$(git diff "${BASE_BRANCH}...HEAD" --name-only -- "prodops/journeys/assessment/architecture/" || true)
+    arch_updated=$(git diff "${BASE_BRANCH}...HEAD" --name-only -- "prodops/artifacts/product/architecture/" || true)
     if [[ -n "${arch_updated}" ]]; then
       pass "architecture/overview.md was updated in this branch"
     else
@@ -477,10 +477,10 @@ step_align() {
   section "  Release Trail"
 
   local trail_updated
-  trail_updated=$(git diff "${BASE_BRANCH}...HEAD" --name-only -- "prodops/artifacts/trails/release-trail.md" || true)
+  trail_updated=$(git diff "${BASE_BRANCH}...HEAD" --name-only -- "prodops/artifacts/governance/trails/release-trail.md" || true)
   if [[ -z "${trail_updated}" ]]; then
     warn "Release Trail not updated in this branch"
-    note "  Append an entry to prodops/artifacts/trails/release-trail.md"
+    note "  Append an entry to prodops/artifacts/governance/trails/release-trail.md"
     note "  Template: prodops/templates/delivery/release-entry.md"
   else
     pass "Release Trail updated"

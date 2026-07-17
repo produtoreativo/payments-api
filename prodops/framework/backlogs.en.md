@@ -185,7 +185,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 
 **When to advance:** Via Premortem + Preliminary Risk Analysis + Owner Approval → Product Intent Backlog.
 
-**Canonical artifact:** `prodops/artifacts/product/tracking-list.md`
+**Canonical artifact:** `prodops/artifacts/product/backlogs/tracking-list.md`
 
 ---
 
@@ -233,7 +233,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 
 **State transition:** The item leaves the Icebox view when the Local OBC reaches the Committed state — it is then represented in the Iteration Backlog view.
 
-**Canonical artifact:** `prodops/artifacts/product/icebox-backlog.md`
+**Canonical artifact:** `prodops/artifacts/product/backlogs/icebox-backlog.md`
 
 ---
 
@@ -253,11 +253,11 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 - Risks identified in `prodops/journeys/assessment/risks.md`
 
 **Criteria to enter the Iteration Plan (begin execution):**
-- Local OBC committed in `prodops/artifacts/obcs/`
-- BDD Feature committed in `prodops/artifacts/bdd/`
-- *(Recommended)* Reliability Plan entry — not a mandatory gate, but strongly recommended for items with relevant operational risk
+- Local OBC committed in `prodops/artifacts/business/obcs/`
+- BDD Feature committed in `prodops/artifacts/business/bdd/`
+- *(Recommended)* Reliability Plan entry in `prodops/journeys/assessment/reliability-plans/` — not a mandatory gate, but strongly recommended for items with relevant operational risk
 
-**Canonical artifact:** `prodops/artifacts/plans/iteration-backlog.md`
+**Canonical artifact:** `prodops/artifacts/product/backlogs/iteration-backlog.md`
 
 ---
 
@@ -292,7 +292,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 
 **Does not contain:** Prioritization. Refinement. Icebox items. Items without Committed Local OBC.
 
-**Canonical artifact:** `prodops/artifacts/plans/iteration-plan.md`
+**Canonical artifact:** `prodops/artifacts/governance/plans/iteration-plan.md`
 
 ---
 
@@ -353,10 +353,10 @@ Diligence is the journey responsible for keeping backlogs synchronized at all le
 
 ## References
 
-- `prodops/artifacts/product/tracking-list.md` — Repository Tracking List
-- `prodops/artifacts/product/icebox-backlog.md` — Icebox
-- `prodops/artifacts/obcs/` — Committed OBCs
-- `prodops/artifacts/plans/iteration-backlog.md` — Iteration Backlog
-- `prodops/artifacts/plans/iteration-plan.md` — Iteration Plan
+- `prodops/artifacts/product/backlogs/tracking-list.md` — Repository Tracking List
+- `prodops/artifacts/product/backlogs/icebox-backlog.md` — Icebox
+- `prodops/artifacts/business/obcs/` — Committed OBCs
+- `prodops/artifacts/product/backlogs/iteration-backlog.md` — Iteration Backlog
+- `prodops/artifacts/governance/plans/iteration-plan.md` — Iteration Plan
 - `prodops/framework/glossary.en.md` — canonical definitions
 - `prodops/journeys/diligence/README.en.md` — Diligence Journey

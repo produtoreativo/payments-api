@@ -30,9 +30,9 @@ Assessment can occur in both Upstream and Downstream.
 | Opportunities | [opportunities.md](opportunities.md) |
 | Reliability Plans | [reliability-plans/](reliability-plans/) |
 | Event Storming | [event-storming/](event-storming/) |
-| Architecture | [architecture/](architecture/) |
-| OBCs (reference) | [../../artifacts/obcs/](../../artifacts/obcs/) |
-| Iteration Plans (reference) | [../../artifacts/plans/](../../artifacts/plans/) |
+| Architecture | [../../artifacts/product/architecture/](../../artifacts/product/architecture/) |
+| OBCs (reference) | [../../artifacts/business/obcs/](../../artifacts/business/obcs/) |
+| Iteration Plans (reference) | [../../artifacts/governance/plans/](../../artifacts/governance/plans/) |
 
 ## Relationship With Other Journeys
 

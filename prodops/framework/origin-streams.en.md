@@ -191,4 +191,4 @@ The Technology Intent evolves to an OBC with measurable technical criteria — S
 → [Glossary: canonical definitions](glossary.en.md)
 → [Operating model: Origin layer at the top of the hierarchy](operating-model.en.md)
 → [Intent templates](../templates/business-intents/intent.en.md)
-→ [Active Intents](../business-intents/README.en.md)
+→ [Active Intents](../artifacts/business/intents/README.en.md)

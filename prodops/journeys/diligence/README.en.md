@@ -18,7 +18,7 @@ Close the gap between decisions produced by Assessment and work ready for Delive
 
 Without Diligence, the work system fragments:
 
-- A committed OBC exists in `prodops/artifacts/obcs/`, but the corresponding GitHub Issue was never created.
+- A committed OBC exists in `prodops/artifacts/business/obcs/`, but the corresponding GitHub Issue was never created.
 - An item was prioritized for the next Release, but the Repository Tracking List was not updated.
 - A risk identified in the Premortem appears in the plans, but was not reflected in the Icebox or the Iteration.
 - The OBC state evolved, but external tools (Jira, GitHub Projects) still show the old state.
@@ -59,7 +59,7 @@ The OBC is born when Intent enters the Business Intent Backlog (global flow) or 
 
 ### 3. Single state, multiple representations
 
-A committed OBC has a single canonical state — recorded in `prodops/artifacts/obcs/`. GitHub Issues, Jira Cards, Azure DevOps Work Items are operational representations of that state in different tools. Diligence ensures those representations stay synchronized with the source of truth.
+A committed OBC has a single canonical state — recorded in `prodops/artifacts/business/obcs/`. GitHub Issues, Jira Cards, Azure DevOps Work Items are operational representations of that state in different tools. Diligence ensures those representations stay synchronized with the source of truth.
 
 ### 4. Continuity, not ceremony
 

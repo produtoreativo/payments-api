@@ -13,7 +13,7 @@ Identificar ou criar um contrato verificável (OpenAPI, AsyncAPI, BDD Feature, s
 Logs, erros, métricas e rastreabilidade fazem parte da implementação, não são complementos adicionados depois. Uma feature não está pronta se seu comportamento não puder ser observado em produção.
 
 ## 5. Evidence-based decisions
-Toda decisão de entrega — promover, reverter, aceitar risco — deve ser respaldada por evidência registrada. Ver [release-trail](../artifacts/trails/release-trail.md) e [operation/](../journeys/operation/).
+Toda decisão de entrega — promover, reverter, aceitar risco — deve ser respaldada por evidência registrada. Ver [release-trail](../artifacts/governance/trails/release-trail.md) e [operation/](../journeys/operation/).
 
 ## 6. Reliability is a first-class concern
 Objetivos de confiabilidade são definidos antes da implementação, acompanhados via OBCs e SLOs, e validados antes da promoção. Ver [reliability-plans](../journeys/assessment/reliability-plans/).

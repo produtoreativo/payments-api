@@ -154,7 +154,7 @@ Operation
 |---|---|
 | **Owner** | Product Owner |
 | **Where born** | Product Repository — any local signal not yet understood |
-| **Canonical artifact** | `prodops/artifacts/product/tracking-list.md` |
+| **Canonical artifact** | `prodops/artifacts/product/backlogs/tracking-list.md` |
 | **Who modifies** | Any team member |
 | **Who approves** | Product Owner |
 | **Consumers** | Product Intent Backlog (via Premortem + Reliability Plan + Owner Approval), Assessment |
@@ -183,7 +183,7 @@ Operation
 |---|---|
 | **Owner** | Product Owner |
 | **Where born** | Product Repository — item accepted in Product Intent Backlog |
-| **Canonical artifact** | `prodops/artifacts/product/icebox-backlog.md` |
+| **Canonical artifact** | `prodops/artifacts/product/backlogs/icebox-backlog.md` |
 | **Who modifies** | Product Team (Product Manager, Tech Lead, engineers) |
 | **Who approves** | Product Owner + Tech Lead (for exit from Icebox) |
 | **Consumers** | Iteration Backlog |
@@ -198,7 +198,7 @@ Operation
 |---|---|
 | **Owner** | Product Owner |
 | **Where born** | Product Repository — item with OBC Committed exiting the Icebox |
-| **Canonical artifact** | `prodops/artifacts/plans/iteration-backlog.md` |
+| **Canonical artifact** | `prodops/artifacts/product/backlogs/iteration-backlog.md` |
 | **Who modifies** | Product Owner, Diligence |
 | **Who approves** | Product Owner (prioritization) |
 | **Consumers** | Iteration Plan |
@@ -213,7 +213,7 @@ Operation
 |---|---|
 | **Owner** | Tech Lead / Product Owner |
 | **Where born** | Product Repository — ongoing iteration execution |
-| **Canonical artifact** | `prodops/artifacts/plans/iteration-plan.md` |
+| **Canonical artifact** | `prodops/artifacts/governance/plans/iteration-plan.md` |
 | **Who modifies** | Delivery team |
 | **Who approves** | Product Owner + Tech Lead (for item entry) |
 | **Consumers** | Delivery (CI Sync, CI Async), Release Trail |
@@ -228,7 +228,7 @@ Operation
 |---|---|
 | **Owner** | Product Manager + Tech Lead of the item |
 | **Where born** | Business Intent Backlog (global flow) or Product Intent Backlog (local flow) |
-| **Canonical artifact** | `prodops/artifacts/obcs/<slug>.md` (when committed) |
+| **Canonical artifact** | `prodops/artifacts/business/obcs/<slug>.md` (when committed) |
 | **Who modifies** | Product Manager, Tech Lead, engineers (with change record) |
 | **Who approves** | Product Manager + Tech Lead (Assessment Review) |
 | **Consumers** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |

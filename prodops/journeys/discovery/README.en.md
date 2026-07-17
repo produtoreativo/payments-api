@@ -299,8 +299,8 @@ The promotion decision belongs to the Product Manager + Tech Lead responsible fo
 Before promoting, confirm that:
 
 1. The experiment's Decision Package has a clear recommendation (`Promote` or `Promote with restriction`).
-2. The expected behavior is described in a BDD Feature in `prodops/journeys/discovery/experiments/<NNN-slug>/features/` ready to be moved to `prodops/artifacts/bdd/`.
-3. The OBC draft in `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` has measurable criteria and can be moved to `prodops/artifacts/obcs/`.
+2. The expected behavior is described in a BDD Feature in `prodops/journeys/discovery/experiments/<NNN-slug>/features/` ready to be moved to `prodops/artifacts/business/bdd/`.
+3. The OBC draft in `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` has measurable criteria and can be moved to `prodops/artifacts/business/obcs/`.
 4. The Reliability Plan has been updated with the risks and mitigation actions identified in the experiment.
 5. The remaining uncertainty is acceptable to enter Downstream with a delivery commitment.
 
@@ -309,21 +309,21 @@ Before promoting, confirm that:
 ```
 1. Move BDD Feature:
    prodops/journeys/discovery/experiments/<NNN-slug>/features/<slug>.feature
-   → prodops/artifacts/bdd/<slug>.feature
+   → prodops/artifacts/business/bdd/<slug>.feature
 
 2. Move OBC:
    prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md
-   → prodops/artifacts/obcs/<slug>.md
+   → prodops/artifacts/business/obcs/<slug>.md
    (remove draft marking)
 
 3. Create or update entry in Iteration Plan:
-   prodops/artifacts/plans/iteration-plan.md
+   prodops/artifacts/governance/plans/iteration-plan.md
    (add with decision `Entered` in the "Recommended Iteration Plan" table —
    not only in "Identified Iteration Backlog", as this section does not satisfy
    the formal Downstream precondition)
 
 4. Update Repository Tracking List if the item was there:
-   prodops/artifacts/product/tracking-list.md
+   prodops/artifacts/product/backlogs/tracking-list.md
    (change status to "Promoted to Downstream")
 
 5. Record the promotion in the experiment's upstream trail:
@@ -338,7 +338,7 @@ Before promoting, confirm that:
 
 - Moving code to production without moving ProdOps artifacts.
 - Creating a committed OBC without a corresponding BDD Feature.
-- Starting Downstream implementation before the OBC is in `prodops/artifacts/obcs/`.
+- Starting Downstream implementation before the OBC is in `prodops/artifacts/business/obcs/`.
 - Promoting with a `Do not promote` or `Requires another experiment` recommendation in the Decision Package.
 
 ---

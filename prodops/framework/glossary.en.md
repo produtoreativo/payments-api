@@ -132,7 +132,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **Relationship with other concepts:** The Intent has an Origin Stream (Business | Enterprise | Team | Technology). The Intent is transformed into an OBC by Exploration. See [`flow.md`](flow.en.md), [`origin-streams.md`](origin-streams.en.md) and [`backlogs.md`](backlogs.en.md).
 
-**Formerly called:** Business Intent. The name was simplified to Intent to eliminate the ambiguity that only "Business" needs are capturable. The directory `prodops/business-intents/` is preserved for backward compatibility.
+**Formerly called:** Business Intent. The name was simplified to Intent to eliminate the ambiguity that only "Business" needs are capturable. The directory `prodops/artifacts/business/intents/` is preserved for backward compatibility.
 
 ---
 
@@ -501,7 +501,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## BDD Feature
 
-**Definition:** Gherkin specification that describes the expected behavior of a Product Capability. Lives in `prodops/artifacts/bdd/` (committed) or `prodops/journeys/discovery/experiments/<NNN-slug>/features/` (exploratory — inside the experiment directory). Used as TDD input in Downstream.
+**Definition:** Gherkin specification that describes the expected behavior of a Product Capability. Lives in `prodops/artifacts/business/bdd/` (committed) or `prodops/journeys/discovery/experiments/<NNN-slug>/features/` (exploratory — inside the experiment directory). Used as TDD input in Downstream.
 
 ---
 
@@ -541,7 +541,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## Repository Tracking List
 
-**Definition:** Product-level backlog that captures any local signal not yet understood enough to be treated as a formal commitment. Artifact: `prodops/artifacts/product/tracking-list.md`.
+**Definition:** Product-level backlog that captures any local signal not yet understood enough to be treated as a formal commitment. Artifact: `prodops/artifacts/product/backlogs/tracking-list.md`.
 
 **Question:** What deserves attention in this product?
 
@@ -572,7 +572,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## Icebox
 
-**Definition:** A **view of the PIB** representing items still being prepared for Delivery. The functional, technical, and operational Discovery needed occurs here. Goal: produce a Committed Local OBC ready for Delivery. Artifact: `prodops/artifacts/product/icebox-backlog.md`.
+**Definition:** A **view of the PIB** representing items still being prepared for Delivery. The functional, technical, and operational Discovery needed occurs here. Goal: produce a Committed Local OBC ready for Delivery. Artifact: `prodops/artifacts/product/backlogs/icebox-backlog.md`.
 
 **OBC state in this view:** Refining (items in active Discovery/Exploration)
 
@@ -584,7 +584,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## Iteration Backlog
 
-**Definition:** A **view of the PIB** representing items with a Committed Local OBC, ready for immediate Delivery. Not a refinement backlog — refinement happens in the Icebox. The only remaining decision is the Product Owner's priority. Artifact: `prodops/artifacts/plans/iteration-backlog.md`.
+**Definition:** A **view of the PIB** representing items with a Committed Local OBC, ready for immediate Delivery. Not a refinement backlog — refinement happens in the Icebox. The only remaining decision is the Product Owner's priority. Artifact: `prodops/artifacts/product/backlogs/iteration-backlog.md`.
 
 **OBC state in this view:** Committed (ready for Delivery — criteria validated and approved)
 
@@ -606,7 +606,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## Iteration Plan
 
-**Definition:** Record of Delivery execution for an iteration. Not a planning backlog — it represents exclusively the execution in progress. Contains items from the Iteration Backlog, execution strategy, CI Sync and CI Async journeys, evidence, and exit criteria. Artifact: `prodops/artifacts/plans/iteration-plan.md`.
+**Definition:** Record of Delivery execution for an iteration. Not a planning backlog — it represents exclusively the execution in progress. Contains items from the Iteration Backlog, execution strategy, CI Sync and CI Async journeys, evidence, and exit criteria. Artifact: `prodops/artifacts/governance/plans/iteration-plan.md`.
 
 **Question:** What is being executed in this iteration?
 
@@ -732,7 +732,7 @@ See [`prodops/execution-model/downstream.en.md`](../execution-model/downstream.e
 
 ## Release Trail
 
-**Definition:** The append-only log of Downstream evidence. Each agent session produces its own file at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`. See model at [`artifacts/trails/release-trail.en.md`](../artifacts/trails/release-trail.en.md).
+**Definition:** The append-only log of Downstream evidence. Each agent session produces its own file at `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`. See model at [`artifacts/governance/trails/release-trail.en.md`](../artifacts/governance/trails/release-trail.en.md).
 
 ---
 

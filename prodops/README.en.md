@@ -52,7 +52,7 @@ Execution Mode → Journey → Phase → Practice → Delivery Capability → Ar
 | Area | Description |
 |---|---|
 | [framework/](framework/) | Principles, glossary, flow, Origin Streams, operating model |
-| [business-intents/](business-intents/) | Registered Intents (Framework entry point) |
+| [artifacts/business/intents/](artifacts/business/intents/) | Registered Intents (Business Intents) |
 | [execution-model/](execution-model/) | Upstream and Downstream as execution modes |
 | [journeys/](journeys/) | The 5 journeys: Discovery, Delivery, Operation, Assessment, Diligence |
 | [artifacts/](artifacts/) | Produced artifacts: OBCs, BDD Features, plans, trails, evidence |

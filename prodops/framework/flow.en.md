@@ -89,7 +89,7 @@ flowchart TD
 **What happens:** The raw need is registered as an Intent. The Intent documents: the value intended to be generated, the context that motivated the need, the initial hypotheses, and the open questions. No solution is defined at this point.
 
 **What is produced:**
-- Intent document in `prodops/business-intents/<slug>.md`
+- Intent document in `prodops/artifacts/business/intents/<slug>.md`
 - Declared Origin Stream
 - Listed hypotheses and open questions
 - Suggested execution mode (Upstream or Downstream)
@@ -177,13 +177,13 @@ flowchart TD
 **What happens:** The Local OBC Draft is refined through Exploration (Discovery in the Icebox) and Assessment. In the Assessment Review, PM and Tech Lead review the full set; when approved, the Local OBC reaches the Committed state and the BDD Feature is promoted to the committed directories. Without this set, there is no Downstream execution.
 
 **What is produced:**
-- Local OBC committed in `prodops/artifacts/obcs/<slug>.md`
-- BDD Feature committed in `prodops/artifacts/bdd/<slug>.feature`
+- Local OBC committed in `prodops/artifacts/business/obcs/<slug>.md`
+- BDD Feature committed in `prodops/artifacts/business/bdd/<slug>.feature`
 
 **When to advance:** Local OBC committed, BDD Feature committed, both reviewed and approved.
 
 → [Full OBC definition](obc.en.md)
-→ [OBC artifacts](../artifacts/obcs/)
+→ [OBC artifacts](../artifacts/business/obcs/)
 
 ---
 
@@ -210,12 +210,12 @@ flowchart TD
 **What happens:** The approved set — Committed Local OBC, BDD Feature, risks, and Reliability Plan — enters the Iteration Plan with status `In`. This represents the formal delivery commitment; it is not, in isolation, proof of readiness.
 
 **What is produced:**
-- Entry in the Iteration Plan in `prodops/artifacts/plans/iteration-plan.md` with status `In`
+- Entry in the Iteration Plan in `prodops/artifacts/governance/plans/iteration-plan.md` with status `In`
 - Repository Tracking List update if the item was there
 
 **When to advance:** All Downstream readiness gates are satisfied.
 
-→ [Iteration Plan](../artifacts/plans/iteration-plan.en.md)
+→ [Iteration Plan](../artifacts/governance/plans/iteration-plan.en.md)
 
 ---
 

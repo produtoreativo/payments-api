@@ -17,18 +17,18 @@ locations and registering the capability in the Iteration Plan.
    recommendation `Promover` or `Promover com restrição`.
 2. Move the BDD Feature:
    - From: `prodops/journeys/discovery/experiments/<NNN-slug>/features/<slug>.feature`
-   - To: `prodops/artifacts/bdd/<slug>.feature`
+   - To: `prodops/artifacts/business/bdd/<slug>.feature`
 3. Move the OBC:
    - From: `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md`
-   - To: `prodops/artifacts/obcs/<slug>.md`
+   - To: `prodops/artifacts/business/obcs/<slug>.md`
    - Remove any "Upstream draft only" marking from the file.
 4. Add an entry to the Iteration Plan at
-   `prodops/artifacts/plans/iteration-plan.md` with decision status `Entrou`
+   `prodops/artifacts/governance/plans/iteration-plan.md` with decision status `Entrou`
    in the main plan table — not merely in "Iteration Backlog identificado".
    This satisfies the Downstream pre-condition that requires status `Entrou`
    before Bootstrap can begin.
 5. If the capability had a Repository Tracking List entry, update its status to
-   "Promovido para Downstream" in `prodops/artifacts/product/tracking-list.md`.
+   "Promovido para Downstream" in `prodops/artifacts/product/backlogs/tracking-list.md`.
 6. Append a promotion entry to the experiment's trail:
    `prodops/journeys/discovery/experiments/<NNN-slug>/upstream-trail.md`
    — include date, decision, participants, and next steps.
@@ -38,8 +38,8 @@ locations and registering the capability in the Iteration Plan.
 
 ## Post-conditions
 
-- BDD Feature is in `prodops/artifacts/bdd/`.
-- OBC is in `prodops/artifacts/obcs/` with no draft marking.
+- BDD Feature is in `prodops/artifacts/business/bdd/`.
+- OBC is in `prodops/artifacts/business/obcs/` with no draft marking.
 - Iteration Plan has the capability entry.
 - Both trails are updated.
 

@@ -41,10 +41,10 @@ During Discovery (in the Icebox), it will be refined until reaching the Committe
 
 Downstream may start to guide a committed item toward readiness. Before executing any Delivery phase, all requirements below must be satisfied:
 
-1. OBC in `prodops/artifacts/obcs/`
-2. BDD Feature in `prodops/artifacts/bdd/`
+1. OBC in `prodops/artifacts/business/obcs/`
+2. BDD Feature in `prodops/artifacts/business/bdd/`
 3. Risks documented in `prodops/journeys/assessment/risks.md`
-4. Iteration Plan entry with status `In` in `prodops/artifacts/plans/iteration-plan.md`
+4. Iteration Plan entry with status `In` in `prodops/artifacts/governance/plans/iteration-plan.md`
 
 **Reliability Plan (recommended):** Not a mandatory gate, but strongly recommended for items with relevant operational risks. When it exists, it must be reviewed before the readiness decision — produced by the Assessment journey at `prodops/journeys/assessment/reliability-plans/`.
 
@@ -77,7 +77,7 @@ CI Async: Ship → Validate → Promote            (platform, pipelines, environ
 
 ## Evidence
 
-Record significant delivery evidence in the active session trail at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`.
+Record significant delivery evidence in the active session trail at `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`.
 
 ## Downstream must preserve
 

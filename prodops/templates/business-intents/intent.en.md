@@ -1,6 +1,6 @@
 # Intent — [Title]
 
-Canonical location: `prodops/business-intents/<slug>.md`
+Canonical location: `prodops/artifacts/business/intents/<slug>.md`
 
 > An Intent records an intention to generate value, without commitment to implementation. It is the entry point of the Framework before deciding whether the work goes through Upstream (exploration) or Downstream (governed delivery). *Previously called Business Intent.*
 
@@ -75,7 +75,7 @@ Justification:
 ## Next step
 
 - If Upstream: create experiment in `prodops/journeys/discovery/experiments/`
-- If Downstream: create OBC in `prodops/artifacts/obcs/` and BDD Feature in `prodops/artifacts/bdd/`
+- If Downstream: create OBC in `prodops/artifacts/business/obcs/` and BDD Feature in `prodops/artifacts/business/bdd/`
 
 ---
 

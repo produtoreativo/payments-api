@@ -191,4 +191,4 @@ A Intent Technology evolui para um OBC com critérios técnicos mensuráveis —
 → [Glossário: definições canônicas](glossary.md)
 → [Modelo operacional: camada Origin no topo da hierarquia](operating-model.md)
 → [Templates de Intent](../templates/business-intents/intent.md)
-→ [Intents ativas](../business-intents/README.md)
+→ [Intents ativas](../artifacts/business/intents/README.md)

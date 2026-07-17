@@ -1,17 +1,14 @@
 # Artifacts
 
-Artefatos produzidos pelo Framework ProdOps.
+Artefatos vivos do produto — fonte de verdade para o que o produto entrega, como está organizado e como a entrega é controlada.
 
-## Organização
+Organizado em três categorias semânticas:
 
-| Área | Conteúdo |
+| Categoria | Conteúdo |
 |---|---|
-| [product/](product/) | Product Deck, Service Decks, Repository Tracking List, Icebox |
-| [obcs/](obcs/) | Observable Business Contracts — OBCs committed |
-| [bdd/](bdd/) | BDD Features comprometidas (Gherkin) |
-| [plans/](plans/) | Iteration Plans, Reliability Iteration Backlogs |
-| [trails/](trails/) | Release Trail, trilhas de evidência |
-| [evidence/](evidence/) | Evidências de entrega e validação |
+| [business/](business/) | O que o produto se compromete a entregar — intenções, contratos observáveis (OBCs) e especificações de comportamento (BDD Features) |
+| [product/](product/) | O que o produto é — contexto operacional, organização do trabalho (backlogs) e decisões arquiteturais |
+| [governance/](governance/) | Como a entrega é controlada — planos de iteração, trilhas históricas e evidências de entrega |
 
 ## Modelo → Template → Instância
 

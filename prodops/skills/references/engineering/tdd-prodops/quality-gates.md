@@ -9,7 +9,7 @@ These must be satisfied before any implementation is considered done for release
 - Relevant ProdOps context read before implementation (Feature file, OBC, upstream experiment)
 - All behavior changes are covered by tests; BDD Feature file updated when applicable
 - Reliability Plan risks impacted by the change reviewed in `prodops/journeys/assessment/risks.md`
-- Build, test, and validation evidence recorded in the active session trail (`prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`)
+- Build, test, and validation evidence recorded in the active session trail (`prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`)
 - Operational follow-ups (alerts, runbooks, rollback notes) recorded explicitly — not left implicit
 
 ---

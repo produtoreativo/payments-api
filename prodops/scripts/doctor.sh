@@ -29,7 +29,7 @@ check_path "prodops/artifacts/product"
 check_path "prodops/artifacts/bdd"
 check_path "prodops/artifacts/obcs"
 check_path "prodops/artifacts/plans"
-check_path "prodops/artifacts/trails/release-trail.md"
+check_path "prodops/artifacts/governance/trails/release-trail.md"
 check_path "prodops/journeys/discovery/experiments"
 check_path "prodops/journeys/assessment/reliability-plans"
 check_path "prodops/journeys/assessment/risks.md"
@@ -40,7 +40,7 @@ check_path "prodops/journeys/delivery/phases/finish/quality-gates.md"
 
 # Verify key committed OBC artifacts exist for items with Entrou status
 for obc in api-token-validation create-invoice-boleto webhook-configuration credit-card-authorization-confirmation; do
-  check_path "prodops/artifacts/obcs/${obc}.md"
+  check_path "prodops/artifacts/business/obcs/${obc}.md"
 done
 
 while IFS= read -r experiment_dir; do

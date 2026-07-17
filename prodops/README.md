@@ -54,7 +54,7 @@ Execution Mode → Journey → Phase → Practice → Delivery Capability → Ar
 | Área | Descrição |
 |---|---|
 | [framework/](framework/) | Princípios, glossário, fluxo, Origin Streams, modelo operacional |
-| [business-intents/](business-intents/) | Intents registradas (ponto de entrada do Framework) |
+| [artifacts/business/intents/](artifacts/business/intents/) | Intents registradas (Business Intents) |
 | [execution-model/](execution-model/) | Upstream e Downstream como modos de execução |
 | [journeys/](journeys/) | As 5 jornadas: Discovery, Delivery, Operation, Assessment, Diligence |
 | [artifacts/](artifacts/) | Artefatos produzidos: OBCs, BDD Features, planos, trilhas, evidências |

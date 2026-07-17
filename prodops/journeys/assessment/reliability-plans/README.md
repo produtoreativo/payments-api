@@ -1,7 +1,7 @@
 # Reliability Plan - Payments Release
 
 > Documento gerado a partir de `prodops/journeys/assessment/reliability-plans/setup/reliability-plan.prompt.md`.
-> Entrada principal: `prodops/artifacts/plans/iteration-plan.md`.
+> Entrada principal: `prodops/artifacts/governance/plans/iteration-plan.md`.
 
 ## Executive Summary
 
@@ -17,13 +17,13 @@ Os maiores riscos de confiabilidade para esse escopo aprovado estão na diferen�
 
 | Funcionalidade | Decisão no Iteration Plan | Evidência |
 | --- | --- | --- |
-| Habilitar novo gateway para o Checkout na jornada priorizada | Entrou | `prodops/artifacts/plans/iteration-plan.md`, linha da tabela "Iteration Plan recomendado". |
-| Criar invoice via Pix | Entrou | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/bdd/create-invoice.feature`; `InvoiceController.createInvoice`; `InvoiceService.createInvoice`. |
-| Confirmação de pagamento | Entrou | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/bdd/payment-confirmation.feature`; `AsaasWebhookController`; `InvoiceService.processProviderWebhook`. |
-| Criar invoice via Boleto | Entrou (revisado 2026-07-06) | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/create-invoice-boleto.md`; `prodops/artifacts/bdd/create-invoice-boleto.feature`. **Análise de risco pendente neste Reliability Plan.** |
-| Validação de acesso por token de API | Entrou | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/api-token-validation.md`; `prodops/artifacts/bdd/api-token-validation.feature`. **Análise de risco pendente neste Reliability Plan.** |
-| Configuração de webhook por token de API | Entrou | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/webhook-configuration.md`; `prodops/artifacts/bdd/webhook-configuration.feature`. **Análise de risco pendente neste Reliability Plan.** |
-| Criar invoice via Cartão de Crédito (Hosted) | Entrou (aprovado 2026-07-07) | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/credit-card-authorization-confirmation.md`; `prodops/artifacts/bdd/credit-card-payment.feature`. **Análise de risco pendente neste Reliability Plan.** |
+| Habilitar novo gateway para o Checkout na jornada priorizada | Entrou | `prodops/artifacts/governance/plans/iteration-plan.md`, linha da tabela "Iteration Plan recomendado". |
+| Criar invoice via Pix | Entrou | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/bdd/create-invoice.feature`; `InvoiceController.createInvoice`; `InvoiceService.createInvoice`. |
+| Confirmação de pagamento | Entrou | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/bdd/payment-confirmation.feature`; `AsaasWebhookController`; `InvoiceService.processProviderWebhook`. |
+| Criar invoice via Boleto | Entrou (revisado 2026-07-06) | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/obcs/create-invoice-boleto.md`; `prodops/artifacts/business/bdd/create-invoice-boleto.feature`. **Análise de risco pendente neste Reliability Plan.** |
+| Validação de acesso por token de API | Entrou | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/obcs/api-token-validation.md`; `prodops/artifacts/business/bdd/api-token-validation.feature`. **Análise de risco pendente neste Reliability Plan.** |
+| Configuração de webhook por token de API | Entrou | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/obcs/webhook-configuration.md`; `prodops/artifacts/business/bdd/webhook-configuration.feature`. **Análise de risco pendente neste Reliability Plan.** |
+| Criar invoice via Cartão de Crédito (Hosted) | Entrou (aprovado 2026-07-07) | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/obcs/credit-card-authorization-confirmation.md`; `prodops/artifacts/business/bdd/credit-card-payment.feature`. **Análise de risco pendente neste Reliability Plan.** |
 
 Itens explicitamente ignorados por não terem decisão exatamente `Entrou`: `Notificação de status de pagamento` (`Entrou como MVP`), `Cancelar invoice pendente` (`Adiada`), `Integração corporativa de incidentes/ITSM` (`Saiu`) e `Gateway fallback/Itaú` (`Saiu`).
 
@@ -241,12 +241,12 @@ As métricas DORA estendidas complementam o Reliability Plan com uma visão de m
 
 ## Fontes consultadas
 
-- `prodops/artifacts/plans/iteration-plan.md`
+- `prodops/artifacts/governance/plans/iteration-plan.md`
 - `prodops/journeys/assessment/reliability-plans/premortem.md`
 - `prodops/journeys/assessment/risks.md`
-- `prodops/artifacts/product/service-decks/compra-com-pix.md`
-- `prodops/artifacts/bdd/create-invoice.feature`
-- `prodops/artifacts/bdd/payment-confirmation.feature`
+- `prodops/artifacts/product/context/service-decks/compra-com-pix.md`
+- `prodops/artifacts/business/bdd/create-invoice.feature`
+- `prodops/artifacts/business/bdd/payment-confirmation.feature`
 - `api/src/modules/invoices/controllers/invoice.controller.ts`
 - `api/src/modules/invoices/controllers/asaas-webhook.controller.ts`
 - `api/src/modules/invoices/services/invoice.service.ts`

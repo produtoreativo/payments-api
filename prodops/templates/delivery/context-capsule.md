@@ -14,7 +14,7 @@ Date: <YYYY-MM-DD>
 
 ## OBC
 
-Path: `prodops/artifacts/obcs/<capability>.md`
+Path: `prodops/artifacts/business/obcs/<capability>.md`
 
 Success criteria (verbatim — the 3–6 measurable lines from the OBC):
 
@@ -24,7 +24,7 @@ Success criteria (verbatim — the 3–6 measurable lines from the OBC):
 
 ## BDD
 
-Path: `prodops/artifacts/bdd/<capability>.feature`
+Path: `prodops/artifacts/business/bdd/<capability>.feature`
 
 Scenarios (numbered, one line each):
 

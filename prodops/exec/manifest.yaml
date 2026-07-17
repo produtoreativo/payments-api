@@ -34,16 +34,16 @@ skills:
 
 # Localizações canônicas dos artefatos (fonte: framework/canonical-paths.md)
 paths:
-  obcs: prodops/artifacts/obcs/
-  bdd: prodops/artifacts/bdd/
-  intents: prodops/business-intents/
+  obcs: prodops/artifacts/business/obcs/
+  bdd: prodops/artifacts/business/bdd/
+  intents: prodops/artifacts/business/intents/
   product: prodops/artifacts/product/
-  iteration_plan: prodops/artifacts/plans/iteration-plan.md
-  release_trail: prodops/artifacts/trails/release-trail.md
+  iteration_plan: prodops/artifacts/governance/plans/iteration-plan.md
+  release_trail: prodops/artifacts/governance/trails/release-trail.md
   risks: prodops/journeys/assessment/risks.md
   reliability_plans: prodops/journeys/assessment/reliability-plans/
   event_storming: prodops/journeys/assessment/event-storming/plan.json
-  architecture: prodops/journeys/assessment/architecture/overview.md
+  architecture: prodops/artifacts/product/architecture/overview.md
   experiments: prodops/journeys/discovery/experiments/
   templates: prodops/templates/
   cards: prodops/exec/cards/ # optional — gerado pelo /bootstrap por card
