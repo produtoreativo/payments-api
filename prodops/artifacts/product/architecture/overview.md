@@ -3,7 +3,7 @@
 > Atualizar sempre que houver mudança estrutural: novo módulo, rota, dependência
 > externa, tabela de banco ou tópico de evento. Ver regra em [`AGENTS.md`](../../../AGENTS.md#arquitetura).
 >
-> Última atualização: 2026-07-12
+> Última atualização: 2026-07-17
 
 ## Fronteira de responsabilidade
 
@@ -36,17 +36,18 @@ graph TB
         Consumer["Consumidor\nWebhook Callback"]
     end
 
-    subgraph API["Payments API — NestJS / Lambda"]
+    subgraph ApiLambda["API Lambda — NestJS / Lambda (HTTP)"]
         subgraph Auth["Autenticação"]
             Guard["ApiTokenGuard\nheader: X-Api-Token"]
         end
 
         subgraph Controllers["Controllers"]
             InvCtrl["InvoiceController\nPOST   /invoices\nGET    /invoices/:invoiceId\nDELETE /invoices/:invoiceId"]
-            WkCtrl["WebhookConfigController\nPOST   /webhooks\nGET    /webhooks\nDELETE /webhooks/:id"]
+            WkCtrl["WebhookConfigController\nPOST   /webhooks\nGET    /webhooks\nDELETE /webhooks/:webhookId"]
             AsaasWkCtrl["AsaasWebhookController\nPOST /webhook/payments\nGET  /webhook/payments/queue"]
-            SandboxCtrl["AsaasSandboxController\nPOST /sandbox/asaas/payments/:id/confirm"]
+            SandboxCtrl["AsaasSandboxController\nPOST /sandbox/asaas/payments/:providerPaymentId/confirm"]
             AdminCtrl["AdminTokenController\nPOST   /admin/tokens\nGET    /admin/tokens/:tenantId\nDELETE /admin/tokens/:tenantId/:tokenId"]
+            HealthCtrl["HealthController\nGET /health\n(sem guard)"]
         end
 
         subgraph Services["Services"]
@@ -58,9 +59,13 @@ graph TB
         end
     end
 
+    subgraph WorkerLambda["Worker Lambda — SQS Trigger"]
+        WebhookWorker["WebhookWorker\nSQSHandler\n→ InvoiceService.processProviderWebhook"]
+    end
+
     subgraph Storage["Armazenamento — DynamoDB"]
-        DynPay[("PaymentsTable\nCustomersTable\nTenantsTable\nProvidersTable")]
-        DynWk[("WebhooksTable\nGSI: TenantWebhooksIndex")]
+        DynPay[("PaymentsTable\n· GSI1: ProviderPaymentIndex\n  (PROVIDER# / PAYMENT#)\n· GSI2: StatusOrderIndex\n  (STATUS# / ORDER#)\nTransactionsTable\nCustomersTable\nTenantsTable\nProvidersTable")]
+        DynWk[("WebhooksTable\nGSI1: TenantWebhooksIndex")]
         SQS[("SQS\nWebhookQueue\nDeadLetterQueue")]
     end
 
@@ -97,8 +102,13 @@ graph TB
     %% Outbound delivery
     WkDelivery -->|"HTTPS POST\nX-Payments-Signature\nX-Payments-Delivery-Id"| Consumer
 
+    %% Worker Lambda
+    SQS -->|"SQS trigger"| WebhookWorker
+    WebhookWorker --> DynPay
+
     %% Observability
     ObsListener --> DD
+    WkDelivery -->|"emit payments.observability"| EventBus
 ```
 
 ## Mudanças estruturais que exigem atualização deste diagrama
@@ -123,3 +133,4 @@ de contrato.
 | 2026-07-03 | Criação inicial do diagrama. Módulos: `InvoicesModule`, `AuthModule`, `WebhooksModule`, `ObservabilityModule`. Tabelas: `PaymentsTable`, `CustomersTable`, `TenantsTable`, `ProvidersTable`, `WebhooksTable`. |
 | 2026-07-11 | Adicionados `AdminTokenController` (`POST /admin/tokens`, `GET /admin/tokens/:tenantId`, `DELETE /admin/tokens/:tenantId/:tokenId`, autenticação via header `X-Admin-Secret`, tokens persistidos em `TenantsTable`) e a rota `GET /invoices/:invoiceId` no `InvoiceController`. |
 | 2026-07-12 | Consolidada a fronteira Payments SOR ↔ PSP que antes estava duplicada em `docs/`; nenhum contrato de runtime foi alterado. |
+| 2026-07-17 | Retroativo: adicionados `HealthController` (`GET /health`, sem guard), `WebhookWorker` (Lambda SQS trigger separado), `TransactionsTable`, GSI1 (ProviderPaymentIndex) e GSI2 (StatusOrderIndex) em PaymentsTable. Corrigidos nomes de parâmetros de rota (`:webhookId`, `:providerPaymentId`). Adicionada aresta `WkDelivery → emit payments.observability`. |
