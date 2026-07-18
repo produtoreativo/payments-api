@@ -1,8 +1,8 @@
 # Origin Streams
 
-Um **Origin Stream** identifica a origem de uma Intent no Framework ProdOps.
+Um **Origin Stream** identifica a origem de um **Business Signal** no Framework ProdOps.
 
-Toda mudança começa com uma Intent. A Intent tem sempre exatamente um Origin Stream — a classificação de onde a necessidade nasceu e quem a detém. O Origin Stream não determina como o trabalho será executado (isso é função do Execution Mode), mas informa o contexto, a linguagem e os critérios de sucesso que a Intent carrega.
+Toda mudança começa com um Business Signal. O Business Signal tem sempre exatamente um Origin Stream — a classificação de onde a necessidade nasceu e quem a detém. O Origin Stream não determina como o trabalho será executado (isso é função do Execution Mode), mas informa o contexto, a linguagem e os critérios de sucesso que o Business Signal carrega. Quando investigado e reconhecido como estratégico, o Business Signal gera uma ou mais Business Intents.
 
 → [Fluxo completo do Framework](flow.md)
 → [Modelo operacional](operating-model.md)
@@ -19,12 +19,13 @@ flowchart TD
     TM[Team]
     TY[Technology]
 
-    B --> I[Intent]
-    EN --> I
-    TM --> I
-    TY --> I
+    B --> BS[Business Signal]
+    EN --> BS
+    TM --> BS
+    TY --> BS
 
-    I --> EX[Exploration]
+    BS --> BI[Business Intent]
+    BI --> EX[Exploration]
     EX --> OBC[Observable Business Contract]
     OBC --> IP[Iteration Plan]
     IP --> RP[Reliability Plan]
@@ -35,7 +36,8 @@ flowchart TD
     style EN fill:#fff3cd,stroke:#ffc107
     style TM fill:#d1ecf1,stroke:#17a2b8
     style TY fill:#f8d7da,stroke:#dc3545
-    style I fill:#e2e3e5,stroke:#6c757d
+    style BS fill:#e2e3e5,stroke:#6c757d
+    style BI fill:#cce5ff,stroke:#004085
 ```
 
 ---
@@ -65,12 +67,12 @@ flowchart TD
 - Adotar Conventional Commits no repositório → Team
 
 **Artefatos gerados:**
-- Intent com `origin_stream: Business`
+- Business Signal com `origin_stream: Business`
 - Hipóteses de negócio a validar
 - Perguntas abertas sobre o valor a gerar
 
 **Como evolui para OBC:**
-A Intent Business entra em Exploration com perguntas sobre o valor de negócio, a experiência do usuário e a viabilidade técnica. O OBC resultante define critérios observáveis de sucesso do produto — normalmente expressos como comportamento verificável via BDD Feature.
+O Business Signal Business gera uma Business Intent quando investigado e reconhecido como estratégico. A Business Intent entra em Exploration com perguntas sobre o valor de negócio, a experiência do usuário e a viabilidade técnica. O OBC resultante define critérios observáveis de sucesso do produto — normalmente expressos como comportamento verificável via BDD Feature.
 
 ---
 
@@ -97,12 +99,12 @@ A Intent Business entra em Exploration com perguntas sobre o valor de negócio, 
 - Migrar para Kubernetes para melhorar escalabilidade → Technology
 
 **Artefatos gerados:**
-- Intent com `origin_stream: Enterprise`
+- Business Signal com `origin_stream: Enterprise`
 - Referência ao requisito externo (lei, política, contrato)
 - Critérios de conformidade a satisfazer
 
 **Como evolui para OBC:**
-A Intent Enterprise frequentemente tem critérios mais objetivos (a lei diz X, o contrato exige Y). O OBC define o comportamento observável que demonstra conformidade — auditável, rastreável, verificável.
+O Business Signal Enterprise gera uma Business Intent quando investigado. A Business Intent frequentemente tem critérios mais objetivos (a lei diz X, o contrato exige Y). O OBC define o comportamento observável que demonstra conformidade — auditável, rastreável, verificável.
 
 ---
 
@@ -129,12 +131,12 @@ A Intent Enterprise frequentemente tem critérios mais objetivos (a lei diz X, o
 - Migrar infraestrutura para reduzir latência do produto → Technology
 
 **Artefatos gerados:**
-- Intent com `origin_stream: Team`
+- Business Signal com `origin_stream: Team`
 - Descrição do problema de processo atual
 - Critérios de melhoria observáveis
 
 **Como evolui para OBC:**
-A Intent Team evolui para um OBC que descreve o comportamento esperado do novo processo ou ferramenta — verificável na prática do time (ex.: hook executa em menos de 2s, template gera artefato válido, skill conclui sem erro).
+O Business Signal Team gera uma Business Intent quando investigado. A Business Intent evolui para um OBC que descreve o comportamento esperado do novo processo ou ferramenta — verificável na prática do time (ex.: hook executa em menos de 2s, template gera artefato válido, skill conclui sem erro).
 
 ---
 
@@ -161,18 +163,18 @@ A Intent Team evolui para um OBC que descreve o comportamento esperado do novo p
 - Implementar novo método de pagamento para aumentar conversão → Business
 
 **Artefatos gerados:**
-- Intent com `origin_stream: Technology`
+- Business Signal com `origin_stream: Technology`
 - Diagnóstico técnico da situação atual
 - Critérios observáveis de melhoria (latência, disponibilidade, cobertura de segurança)
 
 **Como evolui para OBC:**
-A Intent Technology evolui para um OBC com critérios técnicos mensuráveis — SLOs, métricas de segurança, benchmarks de performance, redução de error rate.
+O Business Signal Technology gera uma Business Intent quando investigado e reconhecido como estratégico. A Business Intent evolui para um OBC com critérios técnicos mensuráveis — SLOs, métricas de segurança, benchmarks de performance, redução de error rate.
 
 ---
 
 ## Regras de classificação
 
-**Uma Intent tem exatamente um Origin Stream.** Se parecer que pertence a dois, escolha o que descreve o **beneficiário primário da mudança**:
+**Um Business Signal tem exatamente um Origin Stream.** Se parecer que pertence a dois, escolha o que descreve o **beneficiário primário da mudança**:
 
 | Quem se beneficia primariamente | Origin Stream |
 |---|---|
@@ -181,7 +183,7 @@ A Intent Technology evolui para um OBC com critérios técnicos mensuráveis —
 | Time de engenharia / Processo | Team |
 | Sistema / Plataforma / Infraestrutura | Technology |
 
-**Intents híbridas reais existem.** Quando uma mudança serve a dois propósitos (ex.: migrar para Kubernetes reduz custo E melhora escalabilidade do produto), registre pelo objetivo primário. Se ambos forem igualmente importantes, prefira o que tem maior impacto de negócio.
+**Business Signals híbridos reais existem.** Quando uma mudança serve a dois propósitos (ex.: migrar para Kubernetes reduz custo E melhora escalabilidade do produto), registre pelo objetivo primário. Se ambos forem igualmente importantes, prefira o que tem maior impacto de negócio.
 
 ---
 

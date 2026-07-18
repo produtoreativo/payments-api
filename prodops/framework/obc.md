@@ -22,7 +22,7 @@ O **Global OBC** representa uma intenção de negócio completa — independente
 
 **Pertence a:** plataforma (BIB). Nunca a um produto.
 
-**Nasce em:** Business Intent Backlog, quando uma Intent é aceita.
+**Nasce em:** Business Intent Backlog, quando uma Business Intent é aceita.
 
 **Vive durante:** todo o ciclo de vida da intenção — não desaparece após a decomposição. Continua evoluindo durante Discovery, Delivery e Operation.
 
@@ -45,18 +45,18 @@ O **Global OBC** representa uma intenção de negócio completa — independente
 
 ### Local OBC
 
-O **Local OBC** representa a responsabilidade de **um único produto**. No fluxo global, especializa uma parte do Global OBC; no fluxo local, representa diretamente uma Intent aceita pelo produto. Pertence exatamente a um Product Intent Backlog.
+O **Local OBC** representa a responsabilidade de **um único produto**. No fluxo global, especializa uma parte do Global OBC; no fluxo local, representa diretamente uma Business Intent aceita pelo produto. Pertence exatamente a um Product Backlog.
 
 **Foco:** implementação e entrega de produto.
 
-**Pertence a:** Product Intent Backlog de um produto específico.
+**Pertence a:** Product Backlog de um produto específico.
 
-**Nasce em:** Product Intent Backlog, por Particionamento do OBC no fluxo global ou por Owner Approval no fluxo local.
+**Nasce em:** Product Backlog, por Particionamento do OBC no fluxo global ou por Owner Approval no fluxo local.
 
-**Relação com a origem:** quando originado no Portfolio, não é uma cópia — é uma **especialização/partição** do Global OBC e deve referenciá-lo. Quando originado localmente, deve referenciar a Intent e o Repository Tracking Item que justificaram o Owner Approval.
+**Relação com a origem:** quando originado no Portfolio, não é uma cópia — é uma **especialização/partição** do Global OBC e deve referenciá-lo. Quando originado localmente, deve referenciar a Business Intent e o Product Tracking Item que justificaram o Owner Approval.
 
 **Contém:**
-- Referência de origem obrigatória: Global OBC (fluxo global) ou Intent + Repository Tracking Item (fluxo local)
+- Referência de origem obrigatória: Global OBC (fluxo global) ou Business Intent + Product Tracking Item (fluxo local)
 - Produto / Repositório / Bounded Context
 - APIs e Eventos
 - BDD / Critérios de Aceite
@@ -120,8 +120,8 @@ Os estados representam **maturidade do contrato**, não estado do software.
 
 | Onde o item está | Estado do Global OBC | O que acontece |
 |---|---|---|
-| Global Tracking List | Não existe | Sinal ainda não é uma Intent reconhecida |
-| Business Intent Backlog | Draft | Global OBC criado; captura Intent e hipóteses iniciais |
+| Portfolio Tracking List | Não existe | Business Signal ainda não gerou uma Business Intent reconhecida |
+| Business Intent Backlog | Draft | Global OBC criado; captura Business Intent e hipóteses iniciais |
 | BIB — view Roadmap | Draft | Item posicionado em horizonte estratégico |
 | BIB — view Platform Release | Draft | Item agrupado em versão de plataforma |
 | Discovery (BIB) | Refining | Exploração refina o Global OBC; hipóteses testadas |
@@ -134,9 +134,9 @@ Os estados representam **maturidade do contrato**, não estado do software.
 | Onde o item está | Estado do Local OBC | O que acontece |
 |---|---|---|
 | Particionamento do OBC | Draft | Local OBC criado com referência ao Global OBC |
-| PIB — view Icebox | Refining | Discovery refina o Local OBC; critérios emergem |
+| Product Backlog — view Icebox | Refining | Discovery refina o Local OBC; critérios emergem |
 | Assessment Review | Candidato a Committed | OBC revisado por PM + Tech Lead; seções obrigatórias validadas |
-| PIB — view Iteration Backlog | Committed | Critérios mínimos validados; Downstream pode iniciar |
+| Product Backlog — view Iteration Backlog | Committed | Critérios mínimos validados; Downstream pode iniciar |
 | Iteration Plan / Delivery | In Delivery | Guia a implementação; BDD Feature o operacionaliza |
 | Operation | Operational | Em produção; complementado com métricas, SLOs, incidentes |
 | — | Archived | Intenção encerrada |
@@ -149,23 +149,23 @@ O OBC registra o **histórico vivo do trabalho**: por quais estados passou, quan
 
 A rastreabilidade deve funcionar em **ambas as direções**.
 
-**Fluxo global** (quando a Intent vem do Portfolio):
+**Fluxo global** (quando a Business Intent vem do Portfolio):
 ```
-Intent → Global OBC → Local OBC A → Repositório A
-                    → Local OBC B → Repositório B
-                    → Local OBC C → Repositório C
+Business Signal → Business Intent → Global OBC → Local OBC A → Repositório A
+                                               → Local OBC B → Repositório B
+                                               → Local OBC C → Repositório C
 ```
 
-**Fluxo local** (quando a Intent vem do produto):
+**Fluxo local** (quando a Business Intent vem do produto):
 ```
-Intent + Repository Tracking Item → Local OBC → Repositório
+Business Signal → Business Intent + Product Tracking Item → Local OBC → Repositório
 ```
 
 **Navegação descendente:** do Global OBC, chegar a qualquer Local OBC e ao repositório que o implementa.
 
-**Navegação ascendente:** de qualquer Local OBC, chegar à sua origem: Global OBC e Intent global (fluxo global), ou Intent e Repository Tracking Item (fluxo local).
+**Navegação ascendente:** de qualquer Local OBC, chegar à sua origem: Global OBC e Business Intent global (fluxo global), ou Business Intent e Product Tracking Item (fluxo local).
 
-No fluxo global, o Global OBC mantém a tabela de rastreabilidade e cada Local OBC referencia o Global OBC de origem. No fluxo local, o Local OBC referencia diretamente a Intent e o Repository Tracking Item que justificaram o Owner Approval.
+No fluxo global, o Global OBC mantém a tabela de rastreabilidade e cada Local OBC referencia o Global OBC de origem. No fluxo local, o Local OBC referencia diretamente a Business Intent e o Product Tracking Item que justificaram o Owner Approval.
 
 ---
 
@@ -228,7 +228,7 @@ Todas as Skills do Downstream utilizam o Local OBC como principal fonte de conte
 | Campo | Valor |
 |---|---|
 | **Owner** | Product Manager + Tech Lead do produto |
-| **Onde nasce** | Product Intent Backlog (após Particionamento do OBC) |
+| **Onde nasce** | Product Backlog (após Particionamento do OBC) |
 | **Artefato canônico** | `prodops/artifacts/business/obcs/<slug>.md` (quando committed) |
 | **Quem modifica** | Product Manager, Tech Lead, engenheiros (com registro de mudanças) |
 | **Quem aprova** | Product Manager + Tech Lead (Assessment Review) |
@@ -250,7 +250,7 @@ Todas as Skills do Downstream utilizam o Local OBC como principal fonte de conte
 
 ## Quando não usar
 
-Não usar OBC como substituto de tarefa técnica isolada ou ticket de bug sem Intent correspondente. GitHub Issues, Jira Cards e Azure DevOps Work Items são **representações operacionais** de um OBC já existente — não são o ponto de entrada do trabalho.
+Não usar OBC como substituto de tarefa técnica isolada ou ticket de bug sem Business Intent correspondente. GitHub Issues são **representações operacionais** de uma entidade já definida no Framework (Business Signal, Business Intent ou OBC) — não são o ponto de entrada do trabalho. Jira, Azure DevOps e Linear são ferramentas de sync opcionais sobre o GitHub, nunca o ponto de entrada canônico.
 
 ---
 

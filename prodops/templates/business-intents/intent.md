@@ -1,8 +1,8 @@
-# Intent — [Título]
+# Business Intent — [Título]
 
 Localização canônica: `prodops/artifacts/business/intents/<slug>.md`
 
-> Uma Intent registra uma intenção de gerar valor, sem compromisso de implementação. É o ponto de entrada do Framework antes de decidir se o trabalho segue por Upstream (exploração) ou Downstream (entrega governada). *Anteriormente chamado de Business Intent.*
+> Uma **Business Intent** registra uma decisão estratégica de perseguir valor — nascida de um ou mais Business Signals. Não é um compromisso de implementação. É o ponto de entrada formal do Framework antes de decidir se o trabalho segue por Upstream (exploração) ou Downstream (entrega governada). Entidades nunca mudam de identidade: um Business Signal **gera** uma Business Intent; uma Business Intent **gera** OBCs.
 
 ---
 
@@ -16,7 +16,7 @@ Localização canônica: `prodops/artifacts/business/intents/<slug>.md`
 | Solicitante | |
 | Dono de produto | |
 
-> **Origin Stream:** Classifique a origem desta Intent. Escolha exatamente um:
+> **Origin Stream:** Classifique a origem do Business Signal que gerou esta Business Intent. Escolha exatamente um:
 > - **Business** — mercado, cliente, produto (conversão, adoção, receita, retenção)
 > - **Enterprise** — compliance, regulação, auditoria, parceiros, governança
 > - **Team** — processo, produtividade, onboarding, automações, fluxo de trabalho

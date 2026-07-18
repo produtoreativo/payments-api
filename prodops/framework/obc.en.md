@@ -22,7 +22,7 @@ The **Global OBC** represents a complete business intention — independent of p
 
 **Belongs to:** platform (BIB). Never to a product.
 
-**Born at:** Business Intent Backlog, when an Intent is accepted.
+**Born at:** Business Intent Backlog, when a Business Intent is accepted.
 
 **Lives throughout:** the entire lifecycle of the intention — it does not disappear after decomposition. It continues evolving during Discovery, Delivery, and Operation.
 
@@ -45,18 +45,18 @@ The **Global OBC** represents a complete business intention — independent of p
 
 ### Local OBC
 
-The **Local OBC** represents the responsibility of **a single product**. In the global flow it specializes part of a Global OBC; in the local flow it directly represents an Intent accepted by the product. It belongs to exactly one Product Intent Backlog.
+The **Local OBC** represents the responsibility of **a single product**. In the global flow it specializes part of a Global OBC; in the local flow it directly represents a Business Intent accepted by the product. It belongs to exactly one Product Backlog.
 
 **Focus:** product implementation and delivery.
 
-**Belongs to:** Product Intent Backlog of a specific product.
+**Belongs to:** Product Backlog of a specific product.
 
-**Born at:** Product Intent Backlog, through OBC Partitioning in the global flow or Owner Approval in the local flow.
+**Born at:** Product Backlog, through OBC Partitioning in the global flow or Owner Approval in the local flow.
 
-**Relationship with its origin:** when originated by Portfolio, it is not a copy — it is a **specialization/partition** of the Global OBC and must reference it. When originated locally, it must reference the Intent and Repository Tracking Item that justified Owner Approval.
+**Relationship with its origin:** when originated by Portfolio, it is not a copy — it is a **specialization/partition** of the Global OBC and must reference it. When originated locally, it must reference the Business Intent and Product Tracking Item that justified Owner Approval.
 
 **Contains:**
-- Mandatory origin reference: Global OBC (global flow) or Intent + Repository Tracking Item (local flow)
+- Mandatory origin reference: Global OBC (global flow) or Business Intent + Product Tracking Item (local flow)
 - Product / Repository / Bounded Context
 - APIs and Events
 - BDD / Acceptance Criteria
@@ -73,8 +73,8 @@ The **Local OBC** represents the responsibility of **a single product**. In the 
 ## Relationship between levels
 
 ```
-Global flow: 1 Global OBC → N Local OBCs
-Local flow:  1 local Intent → 1 Local OBC
+Global flow: Business Signal → Business Intent → Global OBC → N Local OBCs
+Local flow:  Business Signal → Business Intent + Product Tracking Item → Local OBC
 ```
 
 Never the inverse. Use the terms: **decomposition**, **specialization**, **partition**. NEVER use: parent, child, inheritance.
@@ -93,7 +93,7 @@ Never the inverse. Use the terms: **decomposition**, **specialization**, **parti
 - Create the Local OBCs
 - Maintain traceability between them
 
-**Result:** each product receives a Local OBC in its PIB. The Global OBC receives an updated traceability table with the Local OBCs created.
+**Result:** each product receives a Local OBC in its Product Backlog. The Global OBC receives an updated traceability table with the Local OBCs created.
 
 **Who executes:** Portfolio PM + Tech Leads of the involved products.
 
@@ -105,9 +105,9 @@ States represent **contract maturity**, not software state.
 
 | State | When | Description |
 |---|---|---|
-| **Draft** | BIB / PIB — entry | Created; may be incomplete; records initial intent and hypotheses |
-| **Refining** | PIB — Icebox view | Under active refinement; Discovery/Upstream may be occurring |
-| **Committed** | PIB — Iteration Backlog view | Minimum information validated; ready for Delivery |
+| **Draft** | BIB / Product Backlog — entry | Created; may be incomplete; records initial intent and hypotheses |
+| **Refining** | Product Backlog — Icebox view | Under active refinement; Discovery/Upstream may be occurring |
+| **Committed** | Product Backlog — Iteration Backlog view | Minimum information validated; ready for Delivery |
 | **In Delivery** | Iteration Plan → Delivery | In execution; implementation in progress |
 | **Operational** | Operation | In production; updated with operational evidence |
 | **Archived** | — | Intent closed; history preserved |
@@ -120,8 +120,8 @@ States represent **contract maturity**, not software state.
 
 | Where the item is | Global OBC State | What happens |
 |---|---|---|
-| Global Tracking List | Does not exist | Signal is not yet a recognized Intent |
-| Business Intent Backlog | Draft | Global OBC created; captures Intent and initial hypotheses |
+| Portfolio Tracking List | Does not exist | Business Signal has not yet generated a recognized Business Intent |
+| Business Intent Backlog | Draft | Global OBC created; captures Business Intent and initial hypotheses |
 | BIB — Roadmap view | Draft | Item positioned in strategic horizon |
 | BIB — Platform Release view | Draft | Item grouped in platform version |
 | Discovery (BIB) | Refining | Exploration refines the Global OBC; hypotheses tested |
@@ -134,9 +134,9 @@ States represent **contract maturity**, not software state.
 | Where the item is | Local OBC State | What happens |
 |---|---|---|
 | OBC Partitioning | Draft | Local OBC created with reference to the Global OBC |
-| PIB — Icebox view | Refining | Discovery refines the Local OBC; criteria emerge |
+| Product Backlog — Icebox view | Refining | Discovery refines the Local OBC; criteria emerge |
 | Assessment Review | Committed candidate | OBC reviewed by PM + Tech Lead; required sections validated |
-| PIB — Iteration Backlog view | Committed | Minimum criteria validated; Downstream can begin |
+| Product Backlog — Iteration Backlog view | Committed | Minimum criteria validated; Downstream can begin |
 | Iteration Plan / Delivery | In Delivery | Guides implementation; BDD Feature operationalizes it |
 | Operation | Operational | In production; complemented with metrics, SLOs, incidents |
 | — | Archived | Intent closed |
@@ -149,23 +149,23 @@ The OBC records the **living history of the work**: which states it passed throu
 
 Traceability must work in **both directions**.
 
-**Global flow** (when the Intent comes from the Portfolio):
+**Global flow** (when the Business Intent comes from the Portfolio):
 ```
-Intent → Global OBC → Local OBC A → Repository A
-                    → Local OBC B → Repository B
-                    → Local OBC C → Repository C
+Business Signal → Business Intent → Global OBC → Local OBC A → Repository A
+                                              → Local OBC B → Repository B
+                                              → Local OBC C → Repository C
 ```
 
-**Local flow** (when the Intent comes from the product):
+**Local flow** (when the Business Intent comes from the product):
 ```
-Intent + Repository Tracking Item → Local OBC → Repository
+Business Signal → Business Intent + Product Tracking Item → Local OBC → Repository
 ```
 
 **Downward navigation:** from the Global OBC, reach any Local OBC and the repository that implements it.
 
-**Upward navigation:** from any Local OBC, reach its origin: the Global OBC and original Intent (global flow), or the Intent and Repository Tracking Item (local flow).
+**Upward navigation:** from any Local OBC, reach its origin: the Global OBC and original Business Intent (global flow), or the Business Intent and Product Tracking Item (local flow).
 
-In the global flow, the Global OBC maintains the traceability table and each Local OBC references its originating Global OBC. In the local flow, the Local OBC references directly the Intent and the Repository Tracking Item that justified Owner Approval.
+In the global flow, the Global OBC maintains the traceability table and each Local OBC references its originating Global OBC. In the local flow, the Local OBC references directly the Business Intent and the Product Tracking Item that justified Owner Approval.
 
 ---
 
@@ -228,7 +228,7 @@ All Downstream Skills use the Local OBC as their primary source of context. Skil
 | Field | Value |
 |---|---|
 | **Owner** | Product Manager + Tech Lead of the product |
-| **Where born** | Product Intent Backlog (after OBC Partitioning) |
+| **Where born** | Product Backlog (after OBC Partitioning) |
 | **Canonical artifact** | `prodops/artifacts/business/obcs/<slug>.md` (when committed) |
 | **Who modifies** | Product Manager, Tech Lead, engineers (with change record) |
 | **Who approves** | Product Manager + Tech Lead (Assessment Review) |
@@ -250,7 +250,7 @@ All Downstream Skills use the Local OBC as their primary source of context. Skil
 
 ## When not to use
 
-Do not use OBC as a substitute for an isolated technical task or bug ticket without a corresponding Intent. GitHub Issues, Jira Cards, and Azure DevOps Work Items are **operational representations** of an already-existing OBC — they are not the entry point for work.
+Do not use OBC as a substitute for an isolated technical task or bug ticket without a corresponding Business Intent. GitHub Issues are **operational representations** of an entity already defined in the Framework (Business Signal, Business Intent, or OBC) — they are not the entry point for work. Jira, Azure DevOps, and Linear are optional sync tools over GitHub, never the canonical entry point.
 
 ---
 
