@@ -19,7 +19,7 @@ Fechar o gap entre as decisões produzidas pelo Assessment e o trabalho pronto p
 Sem a Diligence, o sistema de trabalho se fragmenta:
 
 - Um OBC comprometido existe em `prodops/artifacts/business/obcs/`, mas a GitHub Issue correspondente nunca foi criada.
-- Um item foi priorizado para a próxima Release, mas a Repository Tracking List não foi atualizada.
+- Um item foi priorizado para a próxima Release, mas a Product Tracking List não foi atualizada.
 - Um risco identificado no Premortem aparece nos planos, mas não foi refletido no Icebox ou na Iteration.
 - O estado do OBC evoluiu, mas as ferramentas externas (Jira, GitHub Projects) ainda mostram o estado antigo.
 - Um experimento terminou com decisão tomada, mas o Roadmap não foi atualizado.
@@ -55,7 +55,7 @@ A Diligence nunca implementa software. Nunca cria Pull Requests de implementaç�
 
 ### 2. OBC como identificador permanente
 
-O OBC nasce quando a Intent entra no Business Intent Backlog (fluxo global) ou no Product Intent Backlog (fluxo local). A partir desse ponto, acompanha o trabalho por toda sua vida. A Diligence usa o OBC como âncora para todas as verificações de consistência. Cada ferramenta, cada backlog, cada artefato deve ser rastreável até um OBC.
+O OBC nasce quando a Business Intent entra no Business Intent Backlog (fluxo global) ou no Product Backlog (fluxo local). A partir desse ponto, acompanha o trabalho por toda sua vida. A Diligence usa o OBC como âncora para todas as verificações de consistência. Cada ferramenta, cada backlog, cada artefato deve ser rastreável até um OBC.
 
 ### 3. Estado único, múltiplas representações
 
@@ -67,7 +67,7 @@ A Diligence não tem início e fim por ciclo. Acompanha o produto enquanto ele e
 
 ### 5. Rastreabilidade ponta a ponta
 
-Intent → OBC → Issue → PR → Release → Operation. A Diligence garante que cada elo dessa cadeia seja rastreável. Um gap em qualquer ponto é uma inconsistência que precisa ser corrigida.
+Business Signal → Business Intent → OBC → Issue → PR → Release → Operation. A Diligence garante que cada elo dessa cadeia seja rastreável. Um gap em qualquer ponto é uma inconsistência que precisa ser corrigida.
 
 ---
 
@@ -75,7 +75,7 @@ Intent → OBC → Issue → PR → Release → Operation. A Diligence garante q
 
 ### Sincronização de backlogs
 
-Manter o estado de cada OBC sincronizado entre Repository Tracking List, Product Intent Backlog, Icebox, Iteration Backlog, Iteration Plan e as ferramentas externas correspondentes.
+Manter o estado de cada OBC sincronizado entre Product Tracking List, Product Backlog, Icebox, Iteration Backlog, Iteration Plan e as ferramentas externas correspondentes.
 
 ### Criação e atualização de representações operacionais
 
@@ -91,7 +91,7 @@ Identificar proativamente gaps entre o estado dos OBCs nos artefatos ProdOps e o
 
 ### Evolução dos artefatos de gestão
 
-Atualizar artefatos de gestão (Iteration Plan, Product Intent Backlog, entradas de Roadmap) quando decisões do Assessment ou resultados do Discovery mudam o estado do trabalho.
+Atualizar artefatos de gestão (Iteration Plan, Product Backlog, entradas de Roadmap) quando decisões do Assessment ou resultados do Discovery mudam o estado do trabalho.
 
 ---
 
@@ -123,34 +123,34 @@ A Diligence governa a hierarquia completa de backlogs do Framework ProdOps.
 **Fluxo global (Portfolio → Produto):**
 
 ```
-Global Tracking List
-      │  reconhecido como Intent
+Portfolio Tracking List
+      │  Business Signal → Business Intent
       ▼
 Business Intent Backlog   ← OBC Draft nasce aqui
       │
       ▼
-Roadmap                   ← vive fora do repositório
+Roadmap                   [VIEW sobre BIB]
       │
       ▼
-Platform Release
+Platform Release          [VIEW sobre BIB]
       │  aceito pelo Product Owner
       ▼
-Product Intent Backlog
+Product Backlog
 ```
 
 **Fluxo local (Produto):**
 
 ```
-Repository Tracking List
+Product Tracking List
       │  Premortem + Reliability Plan + Owner Approval
       ▼
-Product Intent Backlog    ← OBC Draft nasce aqui se ainda não existe
+Product Backlog           ← OBC Draft nasce aqui se ainda não existe
 ```
 
 **Convergência — fluxo de Delivery:**
 
 ```
-Product Intent Backlog
+Product Backlog
       │
       ▼
 Icebox                    ← Discovery Downstream ocorre aqui

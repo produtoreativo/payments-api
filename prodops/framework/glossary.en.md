@@ -357,7 +357,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **Two levels:**
 - **Global OBC** — strategic, belongs to BIB/Portfolio, covers the entire business intent.
-- **Local OBC** — product-specific, belongs to one PIB, specializes/partitions the Global OBC.
+- **Local OBC** — product-specific, belongs to one Product Backlog, specializes/partitions the Global OBC.
 
 **States (contract maturity):** Draft → Refining → Committed → In Delivery → Operational → Archived.
 
@@ -441,9 +441,9 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 **What is produced:**
 - Local OBC Draft for each product
 - Traceability table updated in the Global OBC (linking all derived Local OBCs)
-- Items created in the PIBs of the involved products
+- Items created in the Product Backlogs of the involved products
 
-**Relationship with other concepts:** OBC Partitioning is the transition step between the BIB and the PIBs. It does not split the intent — it specializes the responsibility per product. After Partitioning, each PIB receives its Local OBC Draft and begins refinement in the Icebox.
+**Relationship with other concepts:** OBC Partitioning is the transition step between the BIB and the Product Backlogs. It does not split the Business Intent — it specializes the responsibility per product. After Partitioning, each Product Backlog receives its Local OBC Draft and begins refinement in the Icebox.
 
 → [`obc.en.md`](obc.en.md#obc-partitioning)
 
@@ -539,7 +539,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 **Requirement level:** Conditional and verifiable. It is a Delivery gate when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change. Outside those triggers it is optional.
 
-**In the local flow (pre-PIB):** The Premortem is the appropriate artifact for risk analysis before Owner Approval. The formal Reliability Plan is produced during the Icebox, after the Product Owner's commitment.
+**In the local flow (before the Product Backlog):** The Premortem is the appropriate artifact for risk analysis before Owner Approval. The formal Reliability Plan is produced during the Icebox, after the Product Owner's commitment.
 
 ---
 

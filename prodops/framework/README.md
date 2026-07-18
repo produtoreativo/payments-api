@@ -32,7 +32,7 @@ Este diretório contém a documentação do Framework aplicada a este **Product 
 | Template | Quando usar |
 |---|---|
 | [templates/obcs/global-obc.md](../templates/obcs/global-obc.md) | Criar um Global OBC no BIB (contrato estratégico de negócio) |
-| [templates/obcs/local-obc.md](../templates/obcs/local-obc.md) | Criar um Local OBC no PIB (contrato de implementação de produto) |
+| [templates/obcs/local-obc.md](../templates/obcs/local-obc.md) | Criar um Local OBC no Product Backlog (contrato de implementação de produto) |
 
 ## Capacidade: OBC Partitioning
 

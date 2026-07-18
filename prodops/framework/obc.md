@@ -93,7 +93,7 @@ O **Particionamento do OBC** é a capability responsável por transformar um Glo
 - Criar os Local OBCs
 - Manter a rastreabilidade entre eles
 
-**Resultado:** cada produto recebe um Local OBC em seu PIB. O Global OBC recebe a tabela de rastreabilidade atualizada com os Local OBCs criados.
+**Resultado:** cada produto recebe um Local OBC em seu Product Backlog. O Global OBC recebe a tabela de rastreabilidade atualizada com os Local OBCs criados.
 
 **Quem executa:** Portfolio PM + Tech Leads dos produtos envolvidos.
 
@@ -105,9 +105,9 @@ Os estados representam **maturidade do contrato**, não estado do software.
 
 | Estado | Quando | Descrição |
 |---|---|---|
-| **Draft** | BIB / PIB — entrada | Criado; pode estar incompleto; registra intenção inicial e hipóteses |
-| **Refining** | PIB — view Icebox | Em refinamento ativo; Discovery/Upstream podem estar ocorrendo |
-| **Committed** | PIB — view Iteration Backlog | Informações mínimas validadas; pronto para Delivery |
+| **Draft** | BIB / Product Backlog — entrada | Criado; pode estar incompleto; registra intenção inicial e hipóteses |
+| **Refining** | Product Backlog — view Icebox | Em refinamento ativo; Discovery/Upstream podem estar ocorrendo |
+| **Committed** | Product Backlog — view Iteration Backlog | Informações mínimas validadas; pronto para Delivery |
 | **In Delivery** | Iteration Plan → Delivery | Em execução; implementação em andamento |
 | **Operational** | Operation | Em produção; atualizado com evidências operacionais |
 | **Archived** | — | Intenção encerrada; histórico preservado |

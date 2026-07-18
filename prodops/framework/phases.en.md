@@ -1,19 +1,19 @@
-# Intent Phases: Conception and Inception
+# Business Intent Phases: Conception and Inception
 
-The lifecycle of an Intent before Delivery is organized into two distinct phases: **Conception** and **Inception**. They differ in commitment, governance, OBC state, and what can happen to the work.
+The lifecycle of a Business Intent before Delivery is organized into two distinct phases: **Conception** and **Inception**. They differ in commitment, governance, OBC state, and what can happen to the work.
 
 ---
 
 ## Conception
 
-**Period:** from the emergence of the signal to entry into the Product Intent Backlog.
+**Period:** from the emergence of the Business Signal to entry into the Product Backlog.
 
 **Two independent flows — choose one:**
 
 | Flow | When to use | Backlogs |
 |---|---|---|
-| **Global** | Signal of uncertain scope; it is not known which product or team will resolve it. Involves business, value chain, or the entire platform. | Global Tracking List → Business Intent Backlog |
-| **Local** | Signal already directed; known destination — this product, this team. No platform triage needed. | Repository Tracking List → (direct to PIB) |
+| **Global** | Business Signal of uncertain scope; it is not known which product or team will resolve it. Involves business, value chain, or the entire platform. | Portfolio Tracking List → Business Intent Backlog |
+| **Local** | Business Signal already directed; known destination — this product, this team. No platform triage needed. | Product Tracking List → (direct to Product Backlog) |
 
 The two flows are independent. A signal does not need to go through the global flow before entering the local one. There is no duplication between the two tracking lists.
 
@@ -21,20 +21,20 @@ The two flows are independent. A signal does not need to go through the global f
 
 **Governance:** Portfolio PM (global flow) or Product Owner / local owner (local flow). The Product Owner has not yet made a formal commitment in either flow.
 
-**OBC state:** Does not exist in the Tracking Lists. In the global flow, the **Global OBC** is born as a Draft upon entry into the Business Intent Backlog. In the local flow, the **Local OBC** is born as a Draft directly upon entry into the Product Intent Backlog.
+**OBC state:** Does not exist in the Tracking Lists. In the global flow, the **Global OBC** is born as a Draft upon entry into the Business Intent Backlog. In the local flow, the **Local OBC** is born as a Draft directly upon entry into the Product Backlog.
 
-**Commitment:** None. The Intent may be discarded, reformulated, or indefinitely deferred without any formal record of learning.
+**Commitment:** None. The Business Intent may be discarded, reformulated, or indefinitely deferred without any formal record of learning.
 
-**What ends Conception:** Entry into the Product Intent Backlog after Owner Approval — regardless of which flow originated the signal.
+**What ends Conception:** Entry into the Product Backlog after Owner Approval — regardless of which flow originated the Business Signal.
 
 ---
 
 ## Inception
 
-**Period:** from entry into the Product Intent Backlog until the Local OBC reaches the Committed state (Iteration Backlog).
+**Period:** from entry into the Product Backlog until the Local OBC reaches the Committed state (Iteration Backlog).
 
 **Backlogs involved:**
-- Product Intent Backlog (source of truth) — with views: Icebox (Refining) → Iteration Backlog (Committed)
+- Product Backlog (source of truth) — with views: Icebox (Refining) → Iteration Backlog (Committed)
 
 **Central question:** Is the Product Owner committing attention and capacity to investigate this now?
 
@@ -44,15 +44,15 @@ The two flows are independent. A signal does not need to go through the global f
 
 **Commitment:** Formal. The Product Owner has committed to investigate. Any closure from this point forward requires an explicit learning record in the OBC.
 
-**Execution mode:** Upstream or Downstream — they are **modes**, not phases. The mode is defined by the Product Owner when accepting the Intent into the PIB and may change throughout Inception. Upstream is used for high uncertainty; Downstream for sufficient clarity with mandatory gates. An item may start Upstream and, after reducing uncertainty, transition to Downstream without changing phases.
+**Execution mode:** Upstream or Downstream — they are **modes**, not phases. The mode is defined by the Product Owner when accepting the Business Intent into the Product Backlog and may change throughout Inception. Upstream is used for high uncertainty; Downstream for sufficient clarity with mandatory gates. An item may start Upstream and, after reducing uncertainty, transition to Downstream without changing phases.
 
-**What ends Inception:** Assessment Review approved, Local OBC in Committed state, BDD Feature committed — item reaches the "ready" state in the PIB (Iteration Backlog view).
+**What ends Inception:** Assessment Review approved, Local OBC in Committed state, BDD Feature committed — item reaches the "ready" state in the Product Backlog (Iteration Backlog view).
 
 ---
 
 ## The boundary
 
-The boundary between Conception and Inception is entry into the **Product Intent Backlog** with **Owner Approval**.
+The boundary between Conception and Inception is entry into the **Product Backlog** with **Owner Approval**.
 
 ```
 CONCEPTION
@@ -62,7 +62,7 @@ CONCEPTION
   multiple products                  destination already known
          │                                    │
          ▼                                    ▼
-  Global Tracking List           Repository Tracking List
+  Portfolio Tracking List         Product Tracking List
   (Portfolio governs)            (Product Owner / team governs)
          │                                    │
          ▼                                    │
@@ -84,7 +84,7 @@ CONCEPTION
 
 INCEPTION
 
-  Product Intent Backlog  ← product source of truth
+  Product Backlog  ← product source of truth
   (Local OBC born as Draft if it doesn't exist yet — local flow)
     │              │
     │  [view]      ├─ Icebox [Refining]
@@ -99,13 +99,13 @@ INCEPTION
 
 | Dimension | Conception | Inception |
 |---|---|---|
-| Backlogs | Tracking Lists, Business Intent Backlog | Product Intent Backlog, Icebox, Iteration Backlog |
+| Backlogs | Tracking Lists, Business Intent Backlog | Product Backlog, Icebox (VIEW), Iteration Backlog (VIEW) |
 | Governance | Portfolio PM (global) / local owner | Product Owner + Tech Lead |
-| OBC | Does not exist → Global OBC Draft (BIB) / Local OBC Draft (PIB) | Draft → Refining → Committed |
+| OBC | Does not exist → Global OBC Draft (BIB) / Local OBC Draft (Product Backlog) | Draft → Refining → Committed |
 | Discarding | No formal record required | Requires a learning record in the OBC |
 | Execution mode | N/A | Upstream or Downstream (modes, not phases) |
 
-**In the local flow**, the signal goes directly from the Repository Tracking List to the PIB via Premortem + Preliminary Risk Analysis + Owner Approval — without going through the Portfolio, without going through the Business Intent Backlog. The Local OBC is born directly in the PIB. The formal Reliability Plan is not required at this point — it is produced during the Icebox.
+**In the local flow**, the Business Signal goes directly from the Product Tracking List to the Product Backlog via Premortem + Preliminary Risk Analysis + Owner Approval — without going through the Portfolio, without going through the Business Intent Backlog. The Local OBC is born directly in the Product Backlog. The formal Reliability Plan is not required at this point — it is produced during the Icebox.
 
 ---
 

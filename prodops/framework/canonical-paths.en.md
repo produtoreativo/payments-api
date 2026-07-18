@@ -151,7 +151,7 @@ Use this table as the primary navigation source before reading or writing any ar
 | Product Deck | `prodops/artifacts/product/context/product-deck.md` |
 | Service Decks | `prodops/artifacts/product/context/service-decks/` |
 | Icebox | `prodops/artifacts/product/backlogs/icebox-backlog.md` |
-| Repository Tracking List | `prodops/artifacts/product/backlogs/tracking-list.md` |
+| Product Tracking List | `prodops/artifacts/product/backlogs/tracking-list.md` |
 | Iteration Backlog | `prodops/artifacts/product/backlogs/iteration-backlog.md` |
 | OBCs (committed) | `prodops/artifacts/business/obcs/` |
 | BDD Features (committed) | `prodops/artifacts/business/bdd/` |
@@ -165,13 +165,13 @@ Use this table as the primary navigation source before reading or writing any ar
 
 ---
 
-## Intents
+## Business Intents
 
 | Concern | Canonical path |
 |---|---|
-| Intents overview | `prodops/artifacts/business/intents/README.md` |
-| Individual intents | `prodops/artifacts/business/intents/<slug>.md` |
-| Intent template | `prodops/templates/business-intents/intent.md` |
+| Business Intents overview | `prodops/artifacts/business/intents/README.md` |
+| Individual Business Intents | `prodops/artifacts/business/intents/<slug>.md` |
+| Business Intent template | `prodops/templates/business-intents/intent.md` |
 
 ---
 
@@ -227,7 +227,7 @@ Use this table as the primary navigation source before reading or writing any ar
 | Template | Canonical path |
 |---|---|
 | Overview | `prodops/templates/README.md` |
-| Intent | `prodops/templates/business-intents/intent.md` |
+| Business Intent | `prodops/templates/business-intents/intent.md` |
 | Experiment | `prodops/templates/discovery/experiment.md` |
 | Learning | `prodops/templates/discovery/learning.md` |
 | Discovery Trail | `prodops/templates/discovery/trail.md` |

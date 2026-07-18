@@ -275,7 +275,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Compromisso:** Formal. Qualquer encerramento exige registro de aprendizado rastreável no OBC.
 
-**Modo de execução:** Upstream ou Downstream — são **modos**, não fases. Definido pelo Product Owner ao aceitar a Intent no PIB. Pode mudar ao longo da Inception.
+**Modo de execução:** Upstream ou Downstream — são **modos**, não fases. Definido pelo Product Owner ao aceitar a Business Intent no Product Backlog. Pode mudar ao longo da Inception.
 
 **Fronteira de saída:** Assessment Review aprovada, Local OBC em estado Committed, BDD Feature committed — entrada no Iteration Backlog.
 
@@ -407,7 +407,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Quem executa:** Portfolio PM + Tech Leads dos produtos envolvidos.
 
-**Relação com outros conceitos:** Etapa entre BIB e PIB no fluxo global. Resultado: tabela de rastreabilidade no Global OBC + Local OBC Draft em cada PIB.
+**Relação com outros conceitos:** Etapa entre BIB e Product Backlogs no fluxo global. Resultado: tabela de rastreabilidade no Global OBC + Local OBC Draft em cada Product Backlog.
 
 → Ver [`backlogs.md`](backlogs.md) e [`obc.md`](obc.md)
 
@@ -501,7 +501,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Obrigatoriedade:** Condicional e verificável. É gate de Delivery quando houver movimentação financeira, integração externa, mudança de SLO, risco alto/crítico ou alteração de persistência ou segurança. Fora desses gatilhos é opcional.
 
-**No fluxo local (pré-PIB):** O Premortem é o artefato adequado para análise de risco antes do Owner Approval. O Reliability Plan formal é produzido durante o Icebox, após o compromisso do Product Owner.
+**No fluxo local (antes do Product Backlog):** O Premortem é o artefato adequado para análise de risco antes do Owner Approval. O Reliability Plan formal é produzido durante o Icebox, após o compromisso do Product Owner.
 
 ---
 
@@ -589,11 +589,11 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Definição:** View sobre o Product Backlog que representa itens agrupados por versão de release do produto. Facilita o planejamento, comunicação e acompanhamento de versões. Não confundir com Platform Release (view do BIB, responsabilidade do Portfolio).
 
-**Pergunta:** Quais itens do PIB fazem parte desta versão de release?
+**Pergunta:** Quais itens do Product Backlog fazem parte desta versão de release?
 
 **Gerenciado por:** Product Owner.
 
-**Relação com outros conceitos:** View sobre o PIB. Ver **Platform Release** e [`backlogs.md`](backlogs.md).
+**Relação com outros conceitos:** View sobre o Product Backlog. Ver **Platform Release** e [`backlogs.md`](backlogs.md).
 
 ---
 

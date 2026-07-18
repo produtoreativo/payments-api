@@ -14,7 +14,7 @@ ProdOps Framework  →  ProdOps Portfolio  →  ProdOps Workspace  →  Product 
 ## Fluxo oficial
 
 ```
-Origin Stream → Intent → Fluxo Global ou Local → Local OBC Draft no PIB → Modo (Upstream | Downstream) → Discovery + Assessment → Assessment Review → OBC Committed → Iteration Backlog → Iteration Plan → Delivery → Operation
+Origin Stream → Business Signal → Fluxo Global ou Local → Local OBC Draft no Product Backlog → Modo (Upstream | Downstream) → Discovery + Assessment → Assessment Review → OBC Committed → Iteration Backlog (VIEW) → Iteration Plan → Delivery → Operation
 ```
 
 → [Fluxo completo explicado](framework/flow.md)
@@ -25,7 +25,7 @@ Origin Stream → Intent → Fluxo Global ou Local → Local OBC Draft no PIB �
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓
-Intent → OBC Draft (Business Intent Backlog ou Product Intent Backlog)
+Business Signal → Business Intent → OBC Draft (Business Intent Backlog ou Product Backlog)
   ↓
 Modo: Upstream (exploração) ou Downstream (compromisso)
   ↔ Continuous Assessment → Reliability Plan
@@ -54,7 +54,7 @@ Execution Mode → Journey → Phase → Practice → Delivery Capability → Ar
 | Área | Descrição |
 |---|---|
 | [framework/](framework/) | Princípios, glossário, fluxo, Origin Streams, modelo operacional |
-| [artifacts/business/intents/](artifacts/business/intents/) | Intents registradas (Business Intents) |
+| [artifacts/business/intents/](artifacts/business/intents/) | Business Intents registradas |
 | [execution-model/](execution-model/) | Upstream e Downstream como modos de execução |
 | [journeys/](journeys/) | As 5 jornadas: Discovery, Delivery, Operation, Assessment, Diligence |
 | [artifacts/](artifacts/) | Artefatos produzidos: OBCs, BDD Features, planos, trilhas, evidências |

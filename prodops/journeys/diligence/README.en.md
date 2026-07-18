@@ -19,7 +19,7 @@ Close the gap between decisions produced by Assessment and work ready for Delive
 Without Diligence, the work system fragments:
 
 - A committed OBC exists in `prodops/artifacts/business/obcs/`, but the corresponding GitHub Issue was never created.
-- An item was prioritized for the next Release, but the Repository Tracking List was not updated.
+- An item was prioritized for the next Release, but the Product Tracking List was not updated.
 - A risk identified in the Premortem appears in the plans, but was not reflected in the Icebox or the Iteration.
 - The OBC state evolved, but external tools (Jira, GitHub Projects) still show the old state.
 - An experiment ended with a decision made, but the Roadmap was not updated.
@@ -55,7 +55,7 @@ Diligence never implements software. Never creates implementation Pull Requests.
 
 ### 2. OBC as permanent identifier
 
-The OBC is born when Intent enters the Business Intent Backlog (global flow) or the Product Intent Backlog (local flow). From that point, it accompanies the work throughout its entire life. Diligence uses the OBC as an anchor for all consistency checks. Every tool, every backlog, every artifact must be traceable back to an OBC.
+The OBC is born when a Business Intent enters the Business Intent Backlog (global flow) or the Product Backlog (local flow). From that point, it accompanies the work throughout its entire life. Diligence uses the OBC as an anchor for all consistency checks. Every tool, every backlog, every artifact must be traceable back to an OBC.
 
 ### 3. Single state, multiple representations
 
@@ -67,7 +67,7 @@ Diligence has no beginning and end per cycle. It accompanies the product as long
 
 ### 5. End-to-end traceability
 
-Intent → OBC → Issue → PR → Release → Operation. Diligence ensures that every link in this chain is traceable. A gap at any point is an inconsistency that needs to be corrected.
+Business Signal → Business Intent → OBC → Issue → PR → Release → Operation. Diligence ensures that every link in this chain is traceable. A gap at any point is an inconsistency that needs to be corrected.
 
 ---
 
@@ -75,7 +75,7 @@ Intent → OBC → Issue → PR → Release → Operation. Diligence ensures tha
 
 ### Backlog synchronization
 
-Keep the state of each OBC synchronized across Repository Tracking List, Product Intent Backlog, Icebox, Iteration Backlog, Iteration Plan, and the corresponding external tools.
+Keep the state of each OBC synchronized across Product Tracking List, Product Backlog, Icebox, Iteration Backlog, Iteration Plan, and the corresponding external tools.
 
 ### Creating and updating operational representations
 
@@ -91,7 +91,7 @@ Proactively identify gaps between the state of OBCs in ProdOps artifacts and the
 
 ### Management artifact evolution
 
-Update management artifacts (Iteration Plan, Product Intent Backlog, Roadmap entries) when Assessment decisions or Discovery results change the state of the work.
+Update management artifacts (Iteration Plan, Product Backlog, Roadmap entries) when Assessment decisions or Discovery results change the state of the work.
 
 ---
 
@@ -123,34 +123,34 @@ Diligence governs the complete ProdOps Framework backlog hierarchy.
 **Global flow (Portfolio → Product):**
 
 ```
-Global Tracking List
-      │  recognized as Intent
+Portfolio Tracking List
+      │  Business Signal → Business Intent
       ▼
 Business Intent Backlog   ← OBC Draft born here
       │
       ▼
-Roadmap                   ← lives outside the repository
+Roadmap                   [VIEW over BIB]
       │
       ▼
-Platform Release
+Platform Release          [VIEW over BIB]
       │  accepted by Product Owner
       ▼
-Product Intent Backlog
+Product Backlog
 ```
 
 **Local flow (Product):**
 
 ```
-Repository Tracking List
+Product Tracking List
       │  Premortem + Reliability Plan + Owner Approval
       ▼
-Product Intent Backlog    ← OBC Draft born here if not yet existing
+Product Backlog           ← OBC Draft born here if not yet existing
 ```
 
 **Convergence — Delivery flow:**
 
 ```
-Product Intent Backlog
+Product Backlog
       │
       ▼
 Icebox                    ← Downstream Discovery occurs here

@@ -14,7 +14,7 @@ ProdOps Framework  →  ProdOps Portfolio  →  ProdOps Workspace  →  Product 
 ## Official flow
 
 ```
-Origin Stream → Intent → Global or Local Flow → Local OBC Draft in PIB → Mode (Upstream | Downstream) → Discovery + Assessment → Assessment Review → committed OBC/BDD → Iteration Backlog → Iteration Plan → Delivery → Operation
+Origin Stream → Business Signal → Global or Local Flow → Local OBC Draft in Product Backlog → Mode (Upstream | Downstream) → Discovery + Assessment → Assessment Review → committed OBC/BDD → Iteration Backlog (VIEW) → Iteration Plan → Delivery → Operation
 ```
 
 → [Full flow explained](framework/flow.en.md)
@@ -25,7 +25,7 @@ Origin Stream → Intent → Global or Local Flow → Local OBC Draft in PIB →
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓
-Intent → OBC draft
+Business Signal → Business Intent → OBC draft (BIB or Product Backlog)
   ↔ Continuous Assessment → Reliability Plan
   ↓ Assessment Review
 Execution Mode → Journey → Phase → Practice → Delivery Capability → Artifacts
@@ -52,7 +52,7 @@ Execution Mode → Journey → Phase → Practice → Delivery Capability → Ar
 | Area | Description |
 |---|---|
 | [framework/](framework/) | Principles, glossary, flow, Origin Streams, operating model |
-| [artifacts/business/intents/](artifacts/business/intents/) | Registered Intents (Business Intents) |
+| [artifacts/business/intents/](artifacts/business/intents/) | Registered Business Intents |
 | [execution-model/](execution-model/) | Upstream and Downstream as execution modes |
 | [journeys/](journeys/) | The 5 journeys: Discovery, Delivery, Operation, Assessment, Diligence |
 | [artifacts/](artifacts/) | Produced artifacts: OBCs, BDD Features, plans, trails, evidence |

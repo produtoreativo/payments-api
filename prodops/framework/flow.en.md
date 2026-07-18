@@ -3,7 +3,7 @@
 The official ProdOps Framework flow describes the path every change takes from its origin to continuous operation.
 
 ```
-Origin Stream → Intent → [Global Flow or Local Flow] → Local OBC Draft (PIB) → Exploration + Assessment → Assessment Review → Committed Local OBC + BDD committed → Iteration Backlog → Iteration Plan → Delivery → Operation → Continuous OBC Refinement
+Origin Stream → Business Signal → [Global Flow or Local Flow] → Local OBC Draft (Product Backlog) → Exploration + Assessment → Assessment Review → Committed Local OBC + BDD committed → Iteration Backlog (VIEW) → Iteration Plan → Delivery → Operation → Continuous OBC Refinement
 ```
 
 This document is the canonical reference for understanding **what happens at each step**, **what is produced**, and **when to advance**.
@@ -19,13 +19,13 @@ This document is the canonical reference for understanding **what happens at eac
 ```mermaid
 flowchart TD
     OS["Origin Stream\n(Business | Enterprise | Team | Technology)"]
-    I["Intent"]
+    I["Business Signal"]
     CHOICE{"Known scope?"}
-    RTL["Repository Tracking List\nPremortem + preliminary risk"]
-    GBIB["Global OBC Draft\n(Business Intent Backlog)"]
+    RTL["Product Tracking List\nPremortem + preliminary risk"]
+    GBIB["Business Intent\n(Business Intent Backlog)"]
     EX1["Discovery in BIB\n(reduces strategic uncertainty)"]
     PART["OBC Partitioning\n(Global OBC → Local OBCs)"]
-    LPIB["Local OBC Draft\n(Product Intent Backlog)"]
+    LPIB["Local OBC Draft\n(Product Backlog)"]
     EX2["Exploration in Icebox\n(Journey: Discovery; rigor by mode)"]
     AS["Assessment\n(transversal)"]
     RP["Reliability Plan\n(risk-triggered)"]
@@ -56,7 +56,7 @@ flowchart TD
     IP --> D
     D --> OP
     OP --> REF
-    REF -.->|"new Intents"| OS
+    REF -.->|"new Business Signals"| OS
 
     EX2 -.->|"Discard (sufficient learning)"| X[Close without advancing]
     EX2 -.->|"Requires further exploration"| EX2
@@ -80,43 +80,46 @@ flowchart TD
 
 **What happens:** A contributor, stakeholder, or process identifies a need. The need is classified into one of the four Origin Streams: Business, Enterprise, Team, or Technology.
 
-**What is produced:** The raw need, not yet formalized as an Intent.
+**What is produced:** The raw need, not yet formalized as a Business Signal.
 
-**When to advance:** As soon as the origin is clear and Intent registration can begin.
+**When to advance:** As soon as the origin is clear and Business Signal registration can begin.
 
 → [Definition of each Origin Stream](origin-streams.en.md)
 
 ---
 
-### 2. Intent
+### 2. Business Signal + Business Intent
 
-**Objective:** Formalize the need as an explicit intention, without implementation commitment.
+**Objective:** Capture the need as a Business Signal and, if accepted strategically, formalize it as a Business Intent.
 
-**What happens:** The raw need is registered as an Intent. The Intent documents: the value intended to be generated, the context that motivated the need, the initial hypotheses, and the open questions. No solution is defined at this point.
+**What happens:**
+- **Business Signal:** the raw need is registered as a Business Signal. Documents: the opportunity or problem identified, its origin, initial hypotheses. No implementation commitment. No OBC.
+- **Business Intent:** the strategic decision to pursue value. Born when the Portfolio (Global Flow) or the Product Owner (Local Flow) accepts the Business Signal. The Business Intent documents the value to generate, context, open questions, and suggested execution mode.
 
 **What is produced:**
-- Intent document in `prodops/artifacts/business/intents/<slug>.md`
+- Business Signal Issue (GitHub: Portfolio GitHub Project)
+- Business Intent document in `prodops/artifacts/business/intents/<slug>.md`
 - Declared Origin Stream
 - Listed hypotheses and open questions
 - Suggested execution mode (Upstream or Downstream)
 
-**When to advance:** As soon as the Intent is registered and its scope allows one path to be selected: Global when the responsible product is not known, or Local when the destination is already known.
+**When to advance:** As soon as the Business Intent is registered and its scope allows one path to be selected: Global when the responsible product is not known, or Local when the destination is already known.
 
-→ [Intent template](../templates/business-intents/intent.en.md)
+→ [Business Intent template](../templates/business-intents/intent.en.md)
 
 ---
 
 ### 3. Global OBC Draft (BIB)
 
-This step belongs only to the **Global Flow**. In the **Local Flow**, the Intent follows Repository Tracking List → Premortem + Preliminary Risk Analysis → Owner Approval and creates the Local OBC Draft directly in the PIB. Both paths converge in the Product Intent Backlog.
+This step belongs only to the **Global Flow**. In the **Local Flow**, the Business Signal follows Product Tracking List → Premortem + Preliminary Risk Analysis → Owner Approval and creates the Local OBC Draft directly in the Product Backlog. Both paths converge in the Product Backlog.
 
-**Objective:** Create the strategic business contract that represents the intention before product-level decomposition.
+**Objective:** Create the strategic business contract that represents the Business Intent before product-level decomposition.
 
-**What happens:** The Intent enters the Business Intent Backlog. A **Global OBC Draft** is born — it captures the business goal, value, stakeholders, rules, and initial hypotheses. The Global OBC exists **before** Discovery, **before** partitioning, **before** any product commitment.
+**What happens:** The Business Intent enters the Business Intent Backlog. A **Global OBC Draft** is born — it captures the business goal, value, stakeholders, rules, and initial hypotheses. The Global OBC exists **before** Discovery, **before** partitioning, **before** any product commitment.
 
 **What is produced:**
 - Global OBC Draft in the BIB (lives in the portfolio repository when committed)
-- Permanent identifier for the Intent
+- Permanent identifier for the Business Intent
 
 **When to advance:** Global OBC Draft created and Discovery in BIB initiated.
 
@@ -128,7 +131,7 @@ This step belongs only to the **Global Flow**. In the **Local Flow**, the Intent
 
 **Objective:** An ACTIVITY — not a backlog. Reduce uncertainty about the business intention before partitioning.
 
-**What happens:** The Discovery journey explores the Intent at the platform level. Experiments, benchmarks, spikes, research, interviews, prototypes, and premortems may be conducted. All learnings return to the Global OBC.
+**What happens:** The Discovery journey explores the Business Intent at the platform level. Experiments, benchmarks, spikes, research, interviews, prototypes, and premortems may be conducted. All learnings return to the Global OBC.
 
 **What is produced:**
 - Experiments in `prodops/journeys/discovery/experiments/<NNN-slug>/`
@@ -136,7 +139,7 @@ This step belongs only to the **Global Flow**. In the **Local Flow**, the Intent
 - Refined Global OBC (state: Refining)
 - Understanding of involved products and bounded contexts
 
-**Upstream vs Downstream:** In the BIB, Portfolio selects the global exploration mode. After convergence in the PIB, the Product Owner selects the local mode. Mode never changes the stage: an item in Discovery can change mode without changing phase.
+**Upstream vs Downstream:** In the BIB, Portfolio selects the global exploration mode. After convergence in the Product Backlog, the Product Owner selects the local mode. Mode never changes the stage: an item in Discovery can change mode without changing phase.
 
 **When to advance:** When the central hypothesis has been answered and the remaining uncertainty is acceptable for partitioning.
 
@@ -153,7 +156,7 @@ This step belongs only to the **Global Flow**. In the **Local Flow**, the Intent
 **What is produced:**
 - Local OBC Draft for each product (at `prodops/artifacts/business/obcs/<slug>.md`)
 - Updated traceability table in the Global OBC
-- Items created in the PIBs of the involved products
+- Items created in the Product Backlogs of the involved products
 
 **When to advance:** Each product has received its Local OBC and has begun refinement in the Icebox.
 
@@ -219,7 +222,7 @@ This step belongs only to the **Global Flow**. In the **Local Flow**, the Intent
 
 **What is produced:**
 - Entry in the Iteration Plan in `prodops/artifacts/governance/plans/iteration-plan.md` with status `In`
-- Repository Tracking List update if the item was there
+- Product Tracking List update if the item was there
 
 **When to advance:** All Downstream readiness gates are satisfied.
 
@@ -250,7 +253,7 @@ This step belongs only to the **Global Flow**. In the **Local Flow**, the Intent
 
 **Objective:** Continuously operate and monitor the delivered software, maintaining OBC criteria and continuously refining the contract with operational evidence.
 
-**What happens:** Runbooks, SLO monitoring, alerts, incident response, postmortems, operational trail updates. Operation feeds Continuous OBC Refinement — every new operational piece of evidence updates the contract (Global and Local). Operation generates new Intents.
+**What happens:** Runbooks, SLO monitoring, alerts, incident response, postmortems, operational trail updates. Operation feeds Continuous OBC Refinement — every new operational piece of evidence updates the contract (Global and Local). Operation generates new Business Signals.
 
 **What is produced:**
 - Local OBC in Operational state (updated with evidence)
@@ -258,9 +261,9 @@ This step belongs only to the **Global Flow**. In the **Local Flow**, the Intent
 - Updated Operational Trail
 - Documented incidents
 - Postmortems when relevant
-- New Intents (via Continuous Assessment)
+- New Business Signals (via Continuous Assessment)
 
-**When to advance:** Operation is continuous — it has no defined end point. The cycle restarts with new Intents generated by operational learning.
+**When to advance:** Operation is continuous — it has no defined end point. The cycle restarts with new Business Signals generated by operational learning.
 
 → [Operation Journey](../journeys/operation/)
 
@@ -281,7 +284,7 @@ An item can transition between modes within the same stage. The mode never deter
 
 | Term | Level | Meaning |
 |---|---|---|
-| **Exploration** | Flow step | What happens between Intent and Committed OBC: uncertainty reduction |
+| **Exploration** | Flow step | What happens between Business Intent and Committed OBC: uncertainty reduction |
 | **Discovery** | Journey | The name of the Framework journey that implements Exploration |
 | **Upstream** | Execution Mode | The execution mode (low commitment) used during Discovery |
 
@@ -293,7 +296,7 @@ When describing the macro flow, use **Exploration**. When referencing the specif
 
 → [Origin Streams](origin-streams.en.md)
 → [Glossary](glossary.en.md)
-→ [Intent Phases: Conception and Inception](phases.en.md)
+→ [Business Intent Phases: Conception and Inception](phases.en.md)
 → [Operating model](operating-model.en.md)
 → [Execution Model](../execution-model/README.en.md)
 → [Journeys](../journeys/README.en.md)

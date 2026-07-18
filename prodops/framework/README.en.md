@@ -32,7 +32,7 @@ This directory contains the Framework documentation as applied to this **Product
 | Template | When to use |
 |---|---|
 | [templates/obcs/global-obc.en.md](../templates/obcs/global-obc.en.md) | Create a Global OBC in the BIB (strategic business contract) |
-| [templates/obcs/local-obc.en.md](../templates/obcs/local-obc.en.md) | Create a Local OBC in the PIB (product implementation contract) |
+| [templates/obcs/local-obc.en.md](../templates/obcs/local-obc.en.md) | Create a Local OBC in the Product Backlog (product implementation contract) |
 
 ## Capability: OBC Partitioning
 

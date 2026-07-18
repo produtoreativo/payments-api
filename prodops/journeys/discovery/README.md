@@ -28,7 +28,7 @@ Um experimento Upstream pode produzir código de qualidade de produção, mas es
 
 **Objetivo:** Preparar um item comprometido para Delivery.
 
-Um item entra no Icebox após ser aceito no Product Intent Backlog. A Discovery no Downstream ocorre dentro do Icebox. O objetivo é produzir um Local OBC no estado Committed por meio de refinamento:
+Um item entra no Icebox após ser aceito no Product Backlog. A Discovery no Downstream ocorre dentro do Icebox. O objetivo é produzir um Local OBC no estado Committed por meio de refinamento:
 
 - funcional — o que o sistema deve fazer
 - técnico — como o sistema deve fazer
@@ -76,7 +76,7 @@ Registrar apenas como:
 
 - dependência externa;
 - risco de release;
-- item da Repository Tracking List;
+- item da Product Tracking List;
 - nota do Reliability Plan;
 - evidência requerida do sistema responsável.
 
@@ -105,7 +105,7 @@ Uma atividade Upstream pode produzir:
 - atualizações de AsyncAPI;
 - atualizações de Event Storming;
 - atualizações do Reliability Plan;
-- atualizações da Repository Tracking List;
+- atualizações da Product Tracking List;
 - decisões de arquitetura.
 
 ---
@@ -245,7 +245,7 @@ O Decision Package completo (seções do `experiment.md`):
 - **Recommended Decision** — a recomendação do autor (ver opções abaixo)
 - **Updated Risks** — novos riscos ou riscos mitigados
 - **Updated Opportunities** — oportunidades identificadas
-- **Updated Tracking Items** — itens que precisam entrar nas Repository Tracking Lists ou Global Tracking Lists
+- **Updated Tracking Items** — itens que precisam entrar nas Product Tracking Lists ou Portfolio Tracking Lists
 - **Updated OBCs** — critérios de sucesso propostos
 - **Recommended Downstream Scope** — o que entra na próxima iteração, se aprovado
 
@@ -256,8 +256,8 @@ O Decision Package completo (seções do `experiment.md`):
 | **Promover** | Iniciar processo de promoção (ver seção "Processo de promoção para Downstream"). BDD Feature + OBC movidos. Capability entra no Iteration Plan. |
 | **Promover com restrição** | Subconjunto da capability é promovido. Partes restritas permanecem em Upstream para outro experimento. |
 | **Requer outro experimento** | Criar novo experimento com hipótese mais específica. Registrar a decisão no `upstream-trail.md` do experimento atual. |
-| **Aguardar decisão de negócio** | Bloquear o experimento na Repository Tracking List com o decisor e a data esperada. Não abrir novo experimento até a decisão chegar. |
-| **Aguardar dependência externa** | Registrar a dependência no Reliability Plan e na Repository Tracking List. Monitorar no Continuous Assessment. |
+| **Aguardar decisão de negócio** | Bloquear o experimento na Product Tracking List com o decisor e a data esperada. Não abrir novo experimento até a decisão chegar. |
+| **Aguardar dependência externa** | Registrar a dependência no Reliability Plan e na Product Tracking List. Monitorar no Continuous Assessment. |
 | **Descartar** | Registrar o aprendizado em `prodops/journeys/discovery/learnings.md`. Fechar o experimento com justificativa no `upstream-trail.md`. |
 
 ### Registro da decisão
@@ -322,7 +322,7 @@ Antes de promover, confirmar que:
    não apenas em "Iteration Backlog identificado", pois esta seção não satisfaz
    a pré-condição formal do Downstream)
 
-4. Atualizar Repository Tracking List se o item estava lá:
+4. Atualizar Product Tracking List se o item estava lá:
    prodops/artifacts/product/backlogs/tracking-list.md
    (mudar status para "Promovido para Downstream")
 
