@@ -17,13 +17,60 @@ Product Repository     ←  this repository (payments-api)
 | Level | Responsibility | Does not contain |
 |---|---|---|
 | **Framework** | Principles, journeys, capabilities, skills, templates, glossary | Roadmap, Backlogs, Business Intents, Releases, Features |
-| **Portfolio** | Global Tracking List, Roadmaps, Platform Releases, Milestones | Software implementation |
+| **Portfolio** | Portfolio Tracking List (Business Signals), Business Intent Backlog (Business Intents), Roadmaps (VIEW), Platform Releases (VIEW), Milestones | Software implementation |
 | **Workspace** | Integration and joint execution of Product Repositories | Roadmap, Business Intents |
 | **Product Repository** | Implement and operate a specific product | — |
 
 This repository (`payments-api`) is a **Product Repository**. It serves as the reference implementation of the ProdOps Framework. The Portfolio and Workspace levels exist in the architecture and are referenced in this documentation; they do not yet have physical repositories created.
 
 → See [glossary.en.md](glossary.en.md) for canonical definitions of each level.
+
+---
+
+## GitHub as primary operational source
+
+**GitHub is the primary operational source** of the ProdOps Framework. It is not one optional tool among equals.
+
+### GitHub Projects as management domains
+
+| Domain | GitHub Project | Contains |
+|---|---|---|
+| **Portfolio** | Portfolio GitHub Project | Business Signals, Business Intents, Roadmap (VIEW), Platform Releases (VIEW) |
+| **Product Repository** | Product Repository GitHub Project | Local OBCs (Product Backlog, Iteration Plan, Reliability) |
+
+### GitHub Project Views as projections
+
+GitHub Project Views are projections over data — not separate backlogs:
+
+**Portfolio GitHub Project Views:**
+- Business Signals — all Business Signals
+- Discovery — Business Signals under investigation
+- Business Intent Backlog — accepted Business Intents
+- Roadmap — Business Intents by horizon (now/next/later)
+- Platform Releases — Business Intents by platform version
+- Completed — delivered Business Intents
+
+**Product Repository GitHub Project Views:**
+- Product Backlog — all Local OBCs
+- Release Planning — Local OBCs by release version
+- Current Iteration — Local OBCs in the current iteration
+- Doing — Local OBCs in execution
+- Review — Local OBCs under review
+- Done — delivered Local OBCs
+- Reliability — Local OBCs with active Reliability Plan
+- Bugs — bug Local OBCs
+
+### Three GitHub Issue types
+
+| Issue Type | Represents | GitHub Project |
+|---|---|---|
+| **Business Signal Issue** | A Business Signal | Portfolio GitHub Project |
+| **Business Intent Issue** | A Business Intent | Portfolio GitHub Project |
+| **Product OBC Issue** | A Local OBC | Product Repository GitHub Project |
+
+### External tools are optional sync only
+
+Jira, Azure DevOps, and Linear may receive synchronized data from GitHub, but they are **not the source of truth** for work state. The OBC `.md` file is the source of truth for content; the GitHub Issue is the operational representation; external tools are convenience mirrors.
 
 ---
 
@@ -34,14 +81,14 @@ ProdOps organizes product and engineering work in hierarchical layers, with trac
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓
-Intent → OBC Draft (Business Intent Backlog or Product Intent Backlog)
+Business Signal → Business Intent → OBC Draft (BIB or Product Backlog)
   ↓
 Exploration (Icebox)
   ↔ Continuous Assessment → Reliability Plan → Assessment Review
   ↓
 OBC + BDD committed
   ↓
-Backlog Management (Diligence)        ← Repository Tracking List → Product Intent Backlog → Icebox → Iteration Backlog → Iteration Plan
+Backlog Management (Diligence)        ← Product Tracking List → Product Backlog → Icebox → Iteration Backlog → Iteration Plan
   ↓
 Execution Mode
 ├── Upstream
@@ -87,13 +134,15 @@ Artifacts
 
 ---
 
-**Origin Stream** — the classification of the origin of an Intent. Four possibilities: Business (market, customer, product), Enterprise (compliance, regulation, governance), Team (process, automations, productivity), Technology (platform, security, infrastructure). Every Intent has exactly one Origin Stream. See [`origin-streams.md`](origin-streams.en.md).
+**Origin Stream** — the classification of the origin of a Business Signal. Four possibilities: Business (market, customer, product), Enterprise (compliance, regulation, governance), Team (process, automations, productivity), Technology (platform, security, infrastructure). Every Business Signal has exactly one Origin Stream. See [`origin-streams.md`](origin-streams.en.md).
 
-**Intent** — Framework entry point. An intention to generate value not yet committed. The Intent registers the "why" without prescribing the "how". *Formerly called Business Intent.*
+**Business Signal** — any opportunity, hypothesis, problem, benchmark, or idea that deserves attention. Lives in the Portfolio Tracking List or Product Tracking List. Generates Business Intents when investigated and recognized as strategic.
+
+**Business Intent** — a strategic decision to pursue value. Born from a Business Signal. Lives in the Business Intent Backlog. Generates OBCs via OBC Partitioning.
 
 **Exploration** — refines the OBC draft and reduces uncertainty through the Discovery journey. Discovery exists in both modes; rigor and commitment vary between Upstream and Downstream. See [`flow.md`](flow.en.md).
 
-**OBC (Observable Business Contract)** — born as a Draft when the Intent enters the Business Intent Backlog (global flow) or the Product Intent Backlog (local flow). Refined through Discovery in the Icebox until reaching the **Committed** state (entry gate to the Iteration Backlog). Becomes **In Delivery** during Delivery and **Operational** in Operation. *Formerly incorrectly defined as Outcome-Based Criterion.*
+**OBC (Observable Business Contract)** — born as a Draft when a Business Intent enters the Business Intent Backlog (global flow) or the Product Backlog (local flow). Refined through Discovery in the Icebox until reaching the **Committed** state (entry gate to the Iteration Backlog). Becomes **In Delivery** during Delivery and **Operational** in Operation.
 
 **Continuous Assessment** — continuously evaluates risks, opportunities, and decides the next step.
 
@@ -170,9 +219,9 @@ Cross-cutting journey. Guardian of ProdOps work system consistency. Ensures that
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓ generates
-Intent
+Business Signal → Business Intent
   ↓ enters
-Business Intent Backlog (global flow) or Product Intent Backlog (local flow) → OBC Draft
+Business Intent Backlog (global flow) or Product Backlog (local flow) → OBC Draft
   ↓
 Exploration (Discovery in Icebox) ↔ Assessment
   Experiment → learning → Decision Package

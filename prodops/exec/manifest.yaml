@@ -76,6 +76,25 @@ gates:
     expect: "201"
     when: bootstrap
 
+# GitHub como fonte operacional primária (não ferramenta opcional)
+github:
+  primary_tool: true
+  # Tipos canônicos de Issue no Framework ProdOps
+  issue_types:
+    - business_signal_issue   # representa um Business Signal (Portfolio Tracking List)
+    - business_intent_issue   # representa uma Business Intent (Business Intent Backlog)
+    - product_obc_issue       # representa um Local OBC (Product Backlog)
+  # Domínios de gestão via GitHub Projects
+  projects:
+    portfolio:
+      contains: [business_signals, business_intents]
+      views: [business_signals, discovery, business_intent_backlog, roadmap, platform_releases, completed]
+    product_repository:
+      contains: [local_obcs]
+      views: [product_backlog, release_planning, current_iteration, doing, review, done, reliability, bugs]
+  # Ferramentas externas são sync opcionais — nunca fonte de verdade
+  optional_sync: [jira, azure_devops, linear]
+
 # Vocabulário canônico (enums — corrige drift entre docs, skills e instâncias)
 vocabulary:
   # fonte de verdade: hook commit-msg.sh (11 tipos)
