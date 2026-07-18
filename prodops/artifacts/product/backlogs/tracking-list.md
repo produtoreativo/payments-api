@@ -1,8 +1,8 @@
-# Repository Tracking List
+# Product Tracking List
 
-> **Propósito:** Captura qualquer sinal local do produto ainda não compreendido o suficiente para ser tratado como um compromisso formal. Itens aqui não têm OBC, não têm identificador permanente e não têm compromisso de entrega.
+> **Propósito:** Captura Business Signals do produto ainda não compreendidos o suficiente para gerar uma Business Intent formal. Itens aqui não têm OBC, não têm identificador permanente e não têm compromisso de entrega. Contém APENAS Business Signals.
 >
-> Itens promovidos seguem o fluxo local: Premortem + Reliability Plan + Owner Approval → Product Intent Backlog.
+> Itens promovidos seguem o fluxo local: Premortem + Reliability Plan + Owner Approval → Product Backlog (gerando Business Intent + Local OBC Draft).
 >
 > → [Hierarquia de backlogs](../../../framework/backlogs.md)
 > → [Icebox](icebox-backlog.md) — próximo nível; onde o OBC é refinado até o estado Committed

@@ -6,25 +6,38 @@ Work never skips levels without explicit justification recorded in the OBC.
 
 ---
 
+## Entity → backlog model
+
+| Entity | Where it lives | GitHub representation |
+|---|---|---|
+| **Business Signal** | Portfolio Tracking List (platform) or Product Tracking List (product) | Business Signal Issue |
+| **Business Intent** | Business Intent Backlog | Business Intent Issue |
+| **OBC (Local OBC)** | Product Backlog | Product OBC Issue |
+
+**Critical rule:** Entities never change identity. A Business Signal **generates** Business Intents — it does not become one. A Business Intent **generates** OBCs via OBC Partitioning — it does not become an OBC.
+
+---
+
 ## Global Flow — Platform → Product
 
 ```
-Global Tracking List       ← What deserves attention on the platform?
-          ↓
-Business Intent Backlog    ← What deserves Discovery? (Global OBC Draft born here)
+Portfolio Tracking List    ← Business Signals for the platform (What deserves attention?)
+          ↓ (Business Signal generates Business Intent)
+Business Intent Backlog    ← Business Intents (What deserves Discovery?)
+    │         │              Global OBC Draft born here
     │         │
-    │         ├─ Roadmap          [view: in which strategic horizon?]
-    │         └─ Platform Release [view: in which platform version?]
+    │         ├─ Roadmap          [VIEW over BIB: in which strategic horizon?]
+    │         └─ Platform Release [VIEW over BIB: in which platform version?]
     │
     │   (Discovery in the BIB)
           ↓
-OBC Partitioning           ← Global OBC → Local OBCs (one per product)
+OBC Partitioning           ← Business Intent → Local OBCs (one per product)
           ↓
-Product Intent Backlog     ← product source of truth (Local OBC lives here)
+Product Backlog            ← Product OBCs (source of truth)
     │         │
-    │         ├─ Icebox           [view: in refinement — Refining state]
-    │         ├─ Iteration Backlog [view: committed — Committed state]
-    │         └─ Release          [view: grouped by release version]
+    │         ├─ Icebox           [VIEW over Product Backlog: Refining state]
+    │         ├─ Iteration Backlog [VIEW over Product Backlog: Committed state]
+    │         └─ Release          [VIEW over Product Backlog: grouped by version]
     │
     │   (item with Committed Local OBC + BDD + criteria satisfied)
           ↓
@@ -35,49 +48,49 @@ Delivery
 Operation                  ← Continuous OBC Refinement
 ```
 
-> **Roadmap and Platform Release are not queues** — they are projections over BIB items.
-> **Icebox, Iteration Backlog, and Release are also not queues** — they are projections over PIB items. An item does not leave the PIB when entering one of these views; it remains in the PIB and receives a state that determines which view represents it.
+> **Roadmap and Platform Release are VIEWs over the BIB** — not separate backlogs.
+> **Icebox, Iteration Backlog, and Release are VIEWs over the Product Backlog** — not separate queues. An item does not leave the Product Backlog when entering one of these views; it remains in the Product Backlog and receives a state that determines which view represents it.
 
 ---
 
 ## Local Flow — Product
 
 ```
-Repository Tracking List   ← What deserves attention in this product?
-          ↓
+Product Tracking List      ← Business Signals for the product (What deserves attention?)
+          ↓ (Business Signal generates Business Intent + Local OBC)
 Premortem + Preliminary Risk Analysis
           ↓
 Owner Approval
           ↓
-Product Intent Backlog     ← product source of truth (Local OBC born here)
-[continues in the common flow — Icebox/Iteration Backlog/Release as views]
+Product Backlog            ← Product OBCs (Local OBC born here in local flow)
+[continues in the common flow — Icebox/Iteration Backlog/Release as VIEWs]
 ```
 
-> **Note on Reliability Plan in the local flow:** The pre-PIB step requires a Premortem and preliminary risk analysis. The formal Reliability Plan is produced by Assessment during the Icebox and becomes a Delivery gate when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change.
+> **Note on Reliability Plan in the local flow:** The pre-Product Backlog step requires a Premortem and preliminary risk analysis. The formal Reliability Plan is produced by Assessment during the Icebox and becomes a Delivery gate when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change.
 
-After entering the **Product Intent Backlog**, the item's origin no longer matters. All items follow exactly the same journey — regardless of whether they came from the Portfolio or the local flow.
+After entering the **Product Backlog**, the item's origin no longer matters. All items follow exactly the same journey — regardless of whether they came from the Portfolio or the local flow.
 
 ---
 
 ## Platform Backlogs
 
-### Global Tracking List
+### Portfolio Tracking List
 
-**Question:** What deserves attention on the platform?
+**Question:** What Business Signals deserve attention on the platform?
 
-**Purpose:** Capture signals whose scope is undefined or spans more than one product. The signal belongs to the platform — it is not yet clear which product or team will resolve it.
+**Contains:** ONLY Business Signals. Never Business Intents. Never OBCs.
+
+**Purpose:** Capture Business Signals whose scope is undefined or spans more than one product. The signal belongs to the platform — it is not yet clear which product or team will resolve it.
 
 **When to use:** The signal involves business, value chain, multiple products, or the entire platform. Problem ownership is not yet clear. Examples: market opportunities without a defined product, regulatory changes affecting multiple systems, cross-cutting platform initiatives.
 
-**When not to use:** The signal already has a clear destination — a specific product or team that clearly owns the resolution. In that case, the signal belongs in that product's Repository Tracking List.
+**When not to use:** The signal already has a clear destination — a specific product or team that clearly owns the resolution. In that case, the signal belongs in that product's Product Tracking List.
 
-**Independence:** Items in the Global Tracking List are not copied to candidate products' Repository Tracking Lists. The item stays in the Global until triaged and routed. There is no duplication between the two flows.
+**Independence:** Business Signals in the Portfolio Tracking List are not copied to candidate products' Product Tracking Lists. The item stays here until triaged and routed. There is no duplication between the two flows.
 
-**Contains:** Ideas, opportunities, problems, demands, compliance, improvements, risks — any signal of undetermined scope.
+**Does not contain:** OBC. Commitment. Permanent identifier. Business Intents.
 
-**Does not contain:** OBC. Commitment. Permanent identifier.
-
-**When to advance:** When the item has been understood enough to be recognized as an Intent and enter the Business Intent Backlog.
+**When to advance:** When the Business Signal has been understood enough to be recognized as strategic — at that point it **generates** a new Business Intent that enters the Business Intent Backlog.
 
 **Managed by:** Portfolio.
 
@@ -87,14 +100,16 @@ After entering the **Product Intent Backlog**, the item's origin no longer matte
 
 **Question:** What deserves Discovery?
 
-**Purpose:** Represent Intents accepted for Discovery at the platform level. This is where the **Global OBC** is born as a Draft. The BIB contains only Global OBCs — never Local OBCs.
+**Purpose:** Represent Business Intents accepted for Discovery at the platform level. This is where the **Global OBC** is born as a Draft. The BIB contains only Business Intents (and their associated Global OBCs) — never Local OBCs, never Business Signals.
+
+**Contains:** ONLY Business Intents.
 
 **What happens when an item enters this backlog:**
-- The Intent receives a permanent identifier.
-- A **Global OBC Draft** is created — captures the Intent and initial business hypotheses.
+- The Business Intent receives a permanent identifier.
+- A **Global OBC Draft** is created — captures the Business Intent and initial business hypotheses.
 - The lifecycle of the work begins.
 
-**Commitment:** The Intent is accepted for Discovery. No implementation commitment yet. Products, repositories, and the number of Local OBCs are still unknown at this point.
+**Commitment:** The Business Intent is accepted for Discovery. No implementation commitment yet. Products, repositories, and the number of Local OBCs are still unknown at this point.
 
 **Dimensions over the BIB:** Items in the BIB can receive strategic dimensions without leaving it:
 - **Roadmap** — positions the item in a delivery horizon (now, next, later).
@@ -102,7 +117,7 @@ After entering the **Product Intent Backlog**, the item's origin no longer matte
 
 An item can be in the BIB, associated with a Roadmap, and linked to a Platform Release simultaneously. These dimensions are projections — not queues the item passes through sequentially.
 
-**When the item leaves the BIB:** After Discovery in the BIB and OBC Partitioning, the Portfolio routes the created Local OBCs to the Product Intent Backlogs of the involved products.
+**When the item leaves the BIB:** After Discovery in the BIB and OBC Partitioning, the Portfolio routes the created Local OBCs to the Product Backlogs of the involved products.
 
 **Managed by:** Portfolio.
 
@@ -120,7 +135,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 - Create the Local OBCs with reference to the Global OBC
 - Maintain the traceability table in the Global OBC
 
-**Result:** each product receives a Local OBC in its PIB. The Global OBC records the traceability of all Local OBCs.
+**Result:** each product receives a Local OBC in its Product Backlog. The Global OBC records the traceability of all Local OBCs.
 
 **Who executes:** Portfolio PM + Tech Leads of the involved products.
 
@@ -138,7 +153,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 
 **Is not:** A task list. Items on the Roadmap still live in the BIB and can be removed, reprioritized, or redirected without a formal removal process.
 
-**Commitment:** Strategic intent, not delivery commitment. Delivery only becomes a commitment when the item enters a product's Product Intent Backlog.
+**Commitment:** Strategic intent, not delivery commitment. Delivery only becomes a commitment when the item enters a product's Product Backlog.
 
 **Managed by:** Portfolio. Lives in external strategic management tools.
 
@@ -157,7 +172,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 
 **What it represents:** A strategic grouping of BIB items by platform version. It is the Portfolio's decision of which products and versions will be coordinated in the same delivery.
 
-**Relationship with PIB:** Associating an item with a Platform Release may precede or accompany routing to a product's PIB — but does not replace it. The item only enters the product flow when the Portfolio explicitly routes it to the PIB.
+**Relationship with Product Backlog:** Associating an item with a Platform Release may precede or accompany routing to a product's Product Backlog — but does not replace it. The item only enters the product flow when the Portfolio explicitly routes it to the Product Backlog.
 
 **Responsibility:** Product Repositories do not control the Platform Release. Responsibility belongs exclusively to the Portfolio.
 
@@ -167,52 +182,52 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 
 ## Product Backlogs
 
-### Repository Tracking List
+### Product Tracking List
 
-**Question:** What deserves attention in this product?
+**Question:** What Business Signals deserve attention in this product?
 
-**Purpose:** Capture signals already directed at this specific product or team. Ownership is defined — it is known that the problem belongs here.
+**Contains:** ONLY Business Signals. Never Business Intents. Never OBCs.
+
+**Purpose:** Capture Business Signals already directed at this specific product or team. Ownership is defined — it is known that the problem belongs here.
 
 **When to use:** The signal has a clear destination: this product, this team. No platform triage needed. Examples: bug identified in this service, internal technical debt, performance improvement opportunity in this domain, signal from this product's postmortem or operation.
 
-**When not to use:** The signal is too broad, involves multiple products, or ownership is not yet clear. In that case, the signal belongs in the Global Tracking List.
+**When not to use:** The signal is too broad, involves multiple products, or ownership is not yet clear. In that case, the signal belongs in the Portfolio Tracking List.
 
-**Independence:** The Repository Tracking List is autonomous — it does not depend on the Global Tracking List and does not receive copies from it. A signal that arrives here already has a defined destination and follows directly through the local flow (Premortem + Owner Approval → PIB), without going through the Portfolio.
+**Independence:** The Product Tracking List is autonomous — it does not depend on the Portfolio Tracking List and does not receive copies from it. A Business Signal that arrives here already has a defined destination and follows directly through the local flow (Premortem + Owner Approval → Product Backlog), without going through the Portfolio.
 
-**Contains:** Bugs, technical debt, architecture, observability, performance, security, costs, internal improvements, signals from operation and postmortems.
+**Does not contain:** OBC. Commitment. Permanent identifier. Business Intents.
 
-**Does not contain:** OBC. Commitment. Permanent identifier.
-
-**When to advance:** Via Premortem + Preliminary Risk Analysis + Owner Approval → Product Intent Backlog.
+**When to advance:** Via Premortem + Preliminary Risk Analysis + Owner Approval → Product Backlog.
 
 **Canonical artifact:** `prodops/artifacts/product/backlogs/tracking-list.md`
 
 ---
 
-### Product Intent Backlog
+### Product Backlog
 
-**Nature:** Backlog — source of truth for all work accepted by the product. Items live here from acceptance through delivery. Icebox, Iteration Backlog, and Release are projections over these items, not separate destinations.
+**Nature:** Backlog — source of truth for all work accepted by the product. Items live here from acceptance through delivery. Icebox, Iteration Backlog, and Release are VIEWs over these items, not separate destinations.
 
 **Question:** What has been officially accepted by the Product Owner?
 
-**Contains exclusively:** Local OBCs. The PIB never contains Global OBCs.
+**Contains exclusively:** Local OBCs. The Product Backlog never contains Business Signals, Business Intents, or Global OBCs.
 
 **Two entry paths:**
 
 | Origin | Entry path |
 |---|---|
-| Platform | Local OBC created by OBC Partitioning, routed by Portfolio after Discovery in BIB |
-| Local | Repository Tracking Item promoted via Premortem + Preliminary Risk Analysis with Owner Approval |
+| Platform | Local OBC created by OBC Partitioning (from a Business Intent), routed by Portfolio after Discovery in BIB |
+| Local | Product Tracking Item (Business Signal) promoted via Premortem + Preliminary Risk Analysis with Owner Approval — generates Business Intent + Local OBC Draft |
 
 **What happens when an item enters:**
 - The Product Owner formalizes acceptance.
-- If it didn't exist yet (local path), a **Local OBC Draft** is created.
+- If it didn't exist yet (local path), a **Business Intent** + **Local OBC Draft** are created.
 - The item begins its traceable lifecycle in the product.
-- The item receives the initial state **Draft**. When active Discovery starts, it transitions to **Refining** and is represented in the Icebox view.
+- The item receives the initial state **Draft**. When active Discovery starts, it transitions to **Refining** and is represented in the Icebox VIEW.
 
-**After entry, the origin no longer matters.** The item evolves in state within the PIB: Draft → Refining (Icebox) → Committed (Iteration Backlog) → In Delivery (Iteration Plan) → Operational.
+**After entry, the origin no longer matters.** The item evolves in state within the Product Backlog: Draft → Refining (VIEW Icebox) → Committed (VIEW Iteration Backlog) → In Delivery (Iteration Plan) → Operational.
 
-> **Upstream promotion:** An item promoted from Upstream that satisfies the Committed criteria skips Icebox refinement and appears in the Iteration Backlog view. The Product Owner must still select it explicitly for the Iteration Plan.
+> **Upstream promotion:** An item promoted from Upstream that satisfies the Committed criteria skips Icebox refinement and appears in the Iteration Backlog VIEW. The Product Owner must still select it explicitly for the Iteration Plan.
 
 **Commitment:** The Product Owner has committed to investigating and delivering this item.
 
@@ -220,18 +235,18 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 
 ### Icebox
 
-**Nature:** View over the PIB — not a separate queue. Represents PIB items that are still in refinement: incomplete Local OBC, open decisions, Discovery in progress.
+**Nature:** VIEW over the Product Backlog — not a separate queue. Represents Product Backlog items that are still in refinement: incomplete Local OBC, open decisions, Discovery in progress.
 
-**Question:** Which PIB items are still being refined for Delivery?
+**Question:** Which Product Backlog items are still being refined for Delivery?
 
-**What it represents:** An item is in the Icebox view while its Local OBC has not yet reached Committed state. The necessary Discovery happens in this state. The Local OBC state is **Refining**.
+**What it represents:** An item is in the Icebox VIEW while its Local OBC has not yet reached Committed state. The necessary Discovery happens in this state. The Local OBC state is **Refining**.
 
 **Discovery in the Icebox state can be:**
 - **Functional** — understand what must be built
 - **Technical** — understand how to build with confidence
 - **Operational** — understand how to operate and monitor
 
-**State transition:** The item leaves the Icebox view when the Local OBC reaches the Committed state — it is then represented in the Iteration Backlog view.
+**State transition:** The item leaves the Icebox VIEW when the Local OBC reaches the Committed state — it is then represented in the Iteration Backlog VIEW.
 
 **Canonical artifact:** `prodops/artifacts/product/backlogs/icebox-backlog.md`
 
@@ -239,11 +254,11 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 
 ### Iteration Backlog
 
-**Nature:** View over the PIB — not a separate queue. Represents PIB items that are committed and ready to start Delivery: Local OBC in Committed state, Discovery complete, delivery decision made.
+**Nature:** VIEW over the Product Backlog — not a separate queue. Represents Product Backlog items that are committed and ready to start Delivery: Local OBC in Committed state, Discovery complete, delivery decision made.
 
-**Question:** Which PIB items are ready to be developed?
+**Question:** Which Product Backlog items are ready to be developed?
 
-**What it represents:** An item is in the Iteration Backlog view when it satisfies all readiness criteria. The Local OBC state is **Committed**. The only remaining decision is the Product Owner's priority for the next iteration.
+**What it represents:** An item is in the Iteration Backlog VIEW when it satisfies all readiness criteria. The Local OBC state is **Committed**. The only remaining decision is the Product Owner's priority for the next iteration.
 
 **Not refinement.** Refinement happens in the Icebox state. An item that reaches this view is ready — no more Discovery needed.
 
@@ -263,13 +278,13 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 
 ### Release
 
-**Nature:** View over the PIB — not a separate queue. Represents PIB items grouped by product release version.
+**Nature:** VIEW over the Product Backlog — not a separate queue. Represents Product Backlog items grouped by product release version.
 
-**Question:** Which PIB items are part of this release version?
+**Question:** Which Product Backlog items are part of this release version?
 
 **What it represents:** An organized view of Local OBCs grouped by the release version they contribute to. Facilitates planning, communication, and version tracking.
 
-**Do not confuse with:** Platform Release (which is a view on the BIB, under Portfolio responsibility). The PIB Release view is the Product Owner's responsibility.
+**Do not confuse with:** Platform Release (which is a VIEW on the BIB, under Portfolio responsibility). The Product Backlog Release VIEW is the Product Owner's responsibility.
 
 **Managed by:** Product Owner.
 
@@ -306,13 +321,18 @@ The Global OBC accompanies the business intention end-to-end — it survives dec
 
 ---
 
-## GitHub Issue as operational representation
+## GitHub as primary operational source
 
-A GitHub Issue is not the origin of work in the ProdOps Framework. It is an **operational representation** of a commitment already made.
+GitHub is the **primary operational source** of the ProdOps Framework — not one optional tool among equals.
 
-**When an Issue is created:** Typically when a Local OBC enters the Iteration Backlog or Iteration Plan — the work is ready for execution.
+**Three Issue types in the Framework:**
+- **Business Signal Issue** — represents a Business Signal in the Portfolio Tracking List or Product Tracking List
+- **Business Intent Issue** — represents a Business Intent in the BIB
+- **Product OBC Issue** — represents a Local OBC in the Product Backlog
 
-**The Framework is tool-independent.** GitHub Issues, Jira Cards, Azure DevOps Work Items are operational representations of the same OBC in different tools. The OBC is the source of truth; the Issue is the execution instance.
+**GitHub Projects as management domains:** The Portfolio GitHub Project manages Business Signals and Business Intents. The Product Repository GitHub Project manages Local OBCs (Product Backlog, Iteration Plan).
+
+**Jira, ADO, Linear are optional sync tools.** External tools may receive synchronized data from GitHub, but they are not the source of truth for work state. The OBC `.md` file is the source of truth for content; the GitHub Issue is the operational representation; external tools are convenience mirrors.
 
 ---
 
@@ -323,10 +343,10 @@ Diligence is the journey responsible for keeping backlogs synchronized at all le
 > **Principle:** Diligence ensures that the state of each OBC remains synchronized across all backlogs, tools, and management artifacts, without modifying product code.
 
 **What Diligence keeps synchronized:**
-- Local OBC state in each backlog (Product Intent, Icebox, Iteration Backlog, Iteration Plan)
+- Local OBC state in each backlog (Product Backlog, Icebox, Iteration Backlog, Iteration Plan)
 - Global OBC state in the BIB and its traceability
 - Operational representations in tools (GitHub Issues, Jira, Azure DevOps)
-- Traceability Intent → Global OBC → Local OBC → Issue → PR → Release → Operation
+- Traceability Business Signal → Business Intent → Global OBC → Local OBC → Issue → PR → Release → Operation
 - Consistency between ProdOps artifacts and external tools
 
 → [Diligence Journey](../journeys/diligence/README.en.md)
@@ -335,25 +355,25 @@ Diligence is the journey responsible for keeping backlogs synchronized at all le
 
 ## Responsibility per backlog
 
-| Backlog / View | Question | Managed by |
-|---|---|---|
-| Global Tracking List | What deserves attention on the platform? | Portfolio |
-| Business Intent Backlog | What deserves Discovery? (Global OBCs) | Portfolio |
-| OBC Partitioning | How to decompose the Global OBC into Local OBCs? | Portfolio PM + Tech Leads |
-| Roadmap | What is the strategic delivery sequence? | Portfolio |
-| Platform Release | What composes this platform version? | Portfolio |
-| Repository Tracking List | What deserves attention in this product? | Product Repository |
-| Product Intent Backlog | What has been officially accepted by the Product Owner? (Local OBCs) | Product Owner |
-| Icebox | What is still being prepared for Delivery? (Refining) | Product Owner + Tech Lead |
-| Iteration Backlog | What is ready to be developed? (Committed) | Product Owner |
-| Release | What composes this product version? | Product Owner |
-| Iteration Plan | What is being executed in this iteration? | Delivery Team |
+| Backlog / View | Entity | Question | Managed by |
+|---|---|---|---|
+| Portfolio Tracking List | Business Signals | What Business Signals deserve attention on the platform? | Portfolio |
+| Business Intent Backlog | Business Intents | What deserves Discovery? | Portfolio |
+| Roadmap (VIEW over BIB) | Business Intents | What is the strategic delivery sequence? | Portfolio |
+| Platform Release (VIEW over BIB) | Business Intents | What composes this platform version? | Portfolio |
+| OBC Partitioning | — | How to decompose the Global OBC into Local OBCs? | Portfolio PM + Tech Leads |
+| Product Tracking List | Business Signals | What Business Signals deserve attention in this product? | Product Repository |
+| Product Backlog | Local OBCs | What has been officially accepted by the Product Owner? | Product Owner |
+| Icebox (VIEW over Product Backlog) | Local OBCs | What is still being prepared for Delivery? (Refining) | Product Owner + Tech Lead |
+| Iteration Backlog (VIEW over Product Backlog) | Local OBCs | What is ready to be developed? (Committed) | Product Owner |
+| Release (VIEW over Product Backlog) | Local OBCs | What composes this product version? | Product Owner |
+| Iteration Plan | Local OBCs | What is being executed in this iteration? | Delivery Team |
 
 ---
 
 ## References
 
-- `prodops/artifacts/product/backlogs/tracking-list.md` — Repository Tracking List
+- `prodops/artifacts/product/backlogs/tracking-list.md` — Product Tracking List
 - `prodops/artifacts/product/backlogs/icebox-backlog.md` — Icebox
 - `prodops/artifacts/business/obcs/` — Committed OBCs
 - `prodops/artifacts/product/backlogs/iteration-backlog.md` — Iteration Backlog

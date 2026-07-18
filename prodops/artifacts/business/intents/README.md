@@ -1,15 +1,15 @@
-# Intents
+# Business Intents
 
-> **Nota de nomenclatura:** Este diretório foi originalmente chamado de `business-intents/` e o conceito era chamado de "Business Intent". A nomenclatura canônica atual é **Intent** com um **Origin Stream** declarado. O caminho canônico atual é `prodops/artifacts/business/intents/`. Ver [`framework/glossary.md`](../../../framework/glossary.md#intent).
+> **Nota de nomenclatura:** A nomenclatura canônica é **Business Intent**. O path `prodops/artifacts/business/intents/` é preservado por compatibilidade. Ver [`framework/glossary.md`](../../../framework/glossary.md#business-intent).
 
-Uma **Intent** representa uma intenção de gerar valor ainda não comprometida com implementação. É o ponto de entrada único do Framework ProdOps para qualquer mudança, independente de sua origem.
+Uma **Business Intent** representa uma decisão estratégica de perseguir valor — nascida de um ou mais Business Signals. Não é um compromisso de implementação. Entidades nunca mudam de identidade: um Business Signal **gera** uma Business Intent; uma Business Intent **gera** OBCs via OBC Partitioning.
 
-## O que é uma Intent
+## O que é uma Business Intent
 
-- Uma intenção de gerar valor ainda não comprometida
+- Uma decisão estratégica de perseguir valor, nascida de Business Signal(s)
 - Tem exatamente um Origin Stream: Business, Enterprise, Team ou Technology
-- Pode ser: novo Value Stream, oportunidade, problema de negócio, necessidade operacional, hipótese, requisito de compliance, melhoria de processo, evolução técnica
-- Ainda não existe experimento, backlog ou plano de entrega
+- Pode representar: novo Value Stream, oportunidade, problema de negócio, necessidade operacional, hipótese, requisito de compliance, melhoria de processo, evolução técnica
+- Não é um compromisso de implementação — ainda não existe OBC committed, backlog ou plano de entrega
 
 ## Os quatro Origin Streams
 
@@ -24,10 +24,12 @@ Uma **Intent** representa uma intenção de gerar valor ainda não comprometida 
 
 ## O que acontece após o registro
 
-A Intent entra em Exploration. O Continuous Assessment decide o próximo passo:
+A Business Intent entra em Exploration. O Continuous Assessment decide o próximo passo:
 
 ```
-Intent (com Origin Stream declarado)
+Business Signal (com Origin Stream declarado)
+  ↓
+Business Intent (decisão estratégica)
   ↓
 Exploration (Discovery / Upstream)
   ↓
@@ -38,14 +40,14 @@ Upstream (exploração) ou Downstream (entrega comprometida)
 
 → [Fluxo completo do Framework](../../../framework/flow.md)
 
-## Como registrar uma Intent
+## Como registrar uma Business Intent
 
 Utilize o template em [`prodops/templates/business-intents/`](../../../templates/business-intents/).
 
-## Intents ativas
+## Business Intents ativas
 
-*(registrar aqui à medida que intents forem criadas)*
+*(registrar aqui à medida que Business Intents forem criadas)*
 
-| Intent | Origin Stream | Status |
+| Business Intent | Origin Stream | Status |
 |---|---|---|
 | [Split Payment — Múltiplos Pagamentos no Checkout](./split-payment.md) | Business | Em Exploration |

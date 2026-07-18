@@ -1,15 +1,15 @@
-# Intents
+# Business Intents
 
-> **Naming note:** This directory was originally called `business-intents/` and the concept was called "Business Intent". The current canonical naming is **Intent** with a declared **Origin Stream**. The current canonical path is `prodops/artifacts/business/intents/`. See [`framework/glossary.md`](../../../framework/glossary.md#intent).
+> **Naming note:** The canonical naming is **Business Intent**. The path `prodops/artifacts/business/intents/` is preserved for backward compatibility. See [`framework/glossary.en.md`](../../../framework/glossary.en.md#business-intent).
 
-An **Intent** represents an intention to generate value not yet committed to implementation. It is the single entry point of the ProdOps Framework for any change, regardless of its origin.
+A **Business Intent** represents a strategic decision to pursue value — born from one or more Business Signals. It is not a commitment to implementation. Entities never change identity: a Business Signal **generates** a Business Intent; a Business Intent **generates** OBCs via OBC Partitioning.
 
-## What an Intent is
+## What a Business Intent is
 
-- An intention to generate value not yet committed
+- A strategic decision to pursue value, born from Business Signal(s)
 - Has exactly one Origin Stream: Business, Enterprise, Team, or Technology
-- Can be: new Value Stream, opportunity, business problem, operational need, hypothesis, compliance requirement, process improvement, technical evolution
-- No experiment, backlog, or delivery plan exists yet
+- Can represent: new Value Stream, opportunity, business problem, operational need, hypothesis, compliance requirement, process improvement, technical evolution
+- Not a commitment to implementation — no OBC committed, backlog, or delivery plan exists yet
 
 ## The four Origin Streams
 
@@ -24,10 +24,12 @@ An **Intent** represents an intention to generate value not yet committed to imp
 
 ## What happens after registration
 
-The Intent enters Exploration. Continuous Assessment decides the next step:
+The Business Intent enters Exploration. Continuous Assessment decides the next step:
 
 ```
-Intent (with declared Origin Stream)
+Business Signal (with declared Origin Stream)
+  ↓
+Business Intent (strategic decision)
   ↓
 Exploration (Discovery / Upstream)
   ↓
@@ -38,14 +40,14 @@ Upstream (exploration) or Downstream (committed delivery)
 
 → [Full Framework flow](../../../framework/flow.md)
 
-## How to register an Intent
+## How to register a Business Intent
 
 Use the template at [`prodops/templates/business-intents/`](../../../templates/business-intents/).
 
-## Active Intents
+## Active Business Intents
 
-*(register here as intents are created)*
+*(register here as Business Intents are created)*
 
-| Intent | Origin Stream | Status |
+| Business Intent | Origin Stream | Status |
 |---|---|---|
 | [Split Payment — Multiple Payments at Checkout](./split-payment.md) | Business | In Exploration |

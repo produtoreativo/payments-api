@@ -29,7 +29,7 @@ Este documento define a governança de todos os artefatos do Framework ProdOps: 
 
 ### Portfolio (ProdOps Portfolio)
 
-- Gerencia a Global Tracking List, Business Intent Backlog, Roadmap, Platform Releases e Milestones.
+- Gerencia a Portfolio Tracking List (Business Signals), Business Intent Backlog (Business Intents), Roadmap (VIEW sobre BIB), Platform Releases (VIEW sobre BIB) e Milestones.
 - Decide o que a plataforma entrega, quando e em que sequência.
 - Não implementa software diretamente.
 - Repositório: `prodops-portfolio` (ainda não criado; conceitos documentados aqui como referência).
@@ -44,7 +44,7 @@ Este documento define a governança de todos os artefatos do Framework ProdOps: 
 ### Product Repository
 
 - Implementa e opera um produto específico.
-- Governa Repository Tracking List, Product Intent Backlog, Icebox, Iteration Backlog, Iteration Plan, OBCs, Reliability Plans.
+- Governa Product Tracking List (Business Signals), Product Backlog (Local OBCs), Icebox (VIEW), Iteration Backlog (VIEW), Release (VIEW), Iteration Plan, OBCs, Reliability Plans.
 - Este repositório (`payments-api`) é um Product Repository.
 
 ---
@@ -52,33 +52,32 @@ Este documento define a governança de todos os artefatos do Framework ProdOps: 
 ## Fluxo global (Portfolio → Product)
 
 ```
-Global Tracking List
-  ↓ reconhecido como Intent
-Business Intent Backlog       ← OBC Draft nasce aqui
+Portfolio Tracking List
+  ↓ Business Signal gera Business Intent
+Business Intent Backlog       ← Global OBC Draft nasce aqui
   ↓ priorizado
-Roadmap
-  ↓ comprometido para release
-Platform Release
+  ├─ Roadmap [VIEW sobre BIB]
+  └─ Platform Release [VIEW sobre BIB]
   ↓ aceito pelo Product Owner
-Product Intent Backlog
+Product Backlog
 ```
 
 ## Fluxo local (Product)
 
 ```
-Repository Tracking List
-  ↓ Premortem + Reliability Plan + Owner Approval
-Product Intent Backlog        ← OBC Draft nasce aqui se ainda não existe
+Product Tracking List
+  ↓ Business Signal → Business Intent + Owner Approval
+Product Backlog               ← Local OBC Draft nasce aqui se ainda não existe
 ```
 
 ## Convergência — fluxo de Delivery
 
 ```
-Product Intent Backlog
-  ↓ Discovery (Icebox)
-Icebox
+Product Backlog
+  ↓ VIEW Icebox — Discovery
+Icebox [VIEW]
   ↓ OBC Committed
-Iteration Backlog
+Iteration Backlog [VIEW]
   ↓ OBC committed + BDD committed
 Iteration Plan
   ↓
@@ -91,17 +90,18 @@ Operation
 
 ## Governança dos artefatos de Plataforma
 
-### Global Tracking List
+### Portfolio Tracking List
 
 | Campo | Valor |
 |---|---|
 | **Owner** | Portfolio (Product Manager Portfolio) |
-| **Onde nasce** | Portfolio — qualquer sinal de plataforma sem compreensão suficiente |
+| **Contém** | APENAS Business Signals |
+| **Onde nasce** | Portfolio — qualquer Business Signal de plataforma sem compreensão suficiente |
 | **Repositório** | `prodops-portfolio` (externo; referenciado, não replicado) |
 | **Quem modifica** | Product Manager Portfolio, stakeholders autorizados |
 | **Quem aprova** | Product Manager Portfolio |
-| **Consumidores** | Business Intent Backlog, Assessment (Portfolio) |
-| **Ciclo de vida** | Item criado → investigado → reconhecido como Intent (avança para Business Intent Backlog) ou descartado |
+| **Consumidores** | Business Intent Backlog (quando Business Signal gera Business Intent) |
+| **Ciclo de vida** | Business Signal criado → investigado → gera Business Intent (avança para Business Intent Backlog) ou descartado |
 | **Jornadas** | Assessment (Portfolio) |
 
 ### Business Intent Backlog
@@ -109,38 +109,41 @@ Operation
 | Campo | Valor |
 |---|---|
 | **Owner** | Portfolio (Product Manager Portfolio) |
-| **Onde nasce** | Portfolio — Intent reconhecida na Global Tracking List |
+| **Contém** | APENAS Business Intents |
+| **Onde nasce** | Portfolio — Business Intent gerada de Business Signal da Portfolio Tracking List |
 | **Repositório** | `prodops-portfolio` (externo) |
 | **Quem modifica** | Product Manager Portfolio |
 | **Quem aprova** | Product Manager Portfolio |
-| **Consumidores** | Roadmap, Product Intent Backlog (via Platform Release) |
-| **OBC** | Draft criado ao entrar neste backlog |
-| **Ciclo de vida** | Intent aceita → OBC Draft criado → Discovery → Roadmap ou descartado |
+| **Consumidores** | Roadmap (VIEW), Platform Release (VIEW), Product Backlog (via OBC Partitioning) |
+| **OBC** | Global OBC Draft criado ao entrar neste backlog |
+| **Ciclo de vida** | Business Intent aceita → Global OBC Draft criado → Discovery → Roadmap/Platform Release (VIEWs) ou descartado |
 | **Jornadas** | Assessment (Portfolio), Discovery (Upstream) |
 
-### Roadmap
+### Roadmap (VIEW sobre Business Intent Backlog)
 
 | Campo | Valor |
 |---|---|
 | **Owner** | Portfolio |
-| **Onde nasce** | Portfolio — Intent priorizada para horizonte estratégico |
-| **Repositório** | Ferramenta externa (GitHub Projects, Jira, Azure DevOps) |
+| **Natureza** | VIEW sobre o Business Intent Backlog — não é um backlog separado |
+| **Onde nasce** | Portfolio — Business Intent posicionada em horizonte estratégico |
+| **Repositório** | GitHub Projects (Views do Portfolio GitHub Project) |
 | **Quem modifica** | Product Manager Portfolio |
 | **Quem aprova** | Portfolio Leadership |
-| **Consumidores** | Platform Release, Product Repositories |
-| **Ciclo de vida** | Intent priorizada → entra no Roadmap → comprometida para Platform Release |
+| **Consumidores** | Platform Release (VIEW), Product Repositories |
+| **Ciclo de vida** | Business Intent posicionada em horizonte → comprometida para Platform Release |
 | **Jornadas** | Assessment (Portfolio), Diligence |
 
-### Platform Release
+### Platform Release (VIEW sobre Business Intent Backlog)
 
 | Campo | Valor |
 |---|---|
 | **Owner** | Portfolio |
-| **Onde nasce** | Portfolio — conjunto de Intents comprometidas para entrega coordenada |
-| **Repositório** | `prodops-portfolio` (externo) |
+| **Natureza** | VIEW sobre o Business Intent Backlog — não é um backlog separado |
+| **Onde nasce** | Portfolio — conjunto de Business Intents agrupadas para entrega coordenada |
+| **Repositório** | `prodops-portfolio` (externo) / GitHub Projects (Views do Portfolio GitHub Project) |
 | **Quem modifica** | Portfolio Manager |
 | **Quem aprova** | Portfolio Leadership |
-| **Consumidores** | Product Intent Backlog (Product Repositories), Workspace |
+| **Consumidores** | Product Backlog (Product Repositories via OBC Partitioning), Workspace |
 | **Ciclo de vida** | Planejada → comprometida → distribuída para repositórios → validada no Workspace |
 | **Jornadas** | Delivery (Workspace), Assessment (Portfolio) |
 
@@ -148,33 +151,35 @@ Operation
 
 ## Governança dos artefatos de Product Repository
 
-### Repository Tracking List
+### Product Tracking List
 
 | Campo | Valor |
 |---|---|
 | **Owner** | Product Owner do repositório |
-| **Onde nasce** | Product Repository — qualquer sinal local não compreendido |
+| **Contém** | APENAS Business Signals |
+| **Onde nasce** | Product Repository — qualquer Business Signal local não compreendido |
 | **Artefato canônico** | `prodops/artifacts/product/backlogs/tracking-list.md` |
 | **Quem modifica** | Qualquer membro do time |
 | **Quem aprova** | Product Owner |
-| **Consumidores** | Product Intent Backlog (via Premortem + Reliability Plan + Owner Approval), Assessment |
-| **Critério de entrada** | Qualquer sinal de negócio, técnico ou operacional sem compromisso |
-| **Critério de saída** | Aprovado pelo Product Owner → Product Intent Backlog; ou descartado |
+| **Consumidores** | Product Backlog (quando Business Signal gera Business Intent via Premortem + Owner Approval) |
+| **Critério de entrada** | Qualquer Business Signal de negócio, técnico ou operacional sem compromisso |
+| **Critério de saída** | Aprovado pelo Product Owner → gera Business Intent + entra no Product Backlog; ou descartado |
 | **Jornadas** | Assessment, Diligence, Operation (como destino de aprendizados operacionais) |
 
-### Product Intent Backlog (anteriormente: Committed Backlog)
+### Product Backlog
 
 | Campo | Valor |
 |---|---|
 | **Owner** | Product Owner |
+| **Contém** | APENAS Local OBCs |
 | **Onde nasce** | Product Repository — ponto de convergência dos fluxos global e local |
 | **Artefato canônico** | Gerenciado pelo Diligence; instâncias rastreadas no Iteration Plan |
 | **Quem modifica** | Product Owner + Diligence |
 | **Quem aprova** | Product Owner (Owner Approval obrigatório para fluxo local) |
-| **Consumidores** | Icebox, Assessment |
-| **OBC** | Draft criado ao entrar (se ainda não existia via Business Intent Backlog) |
-| **Critério de entrada** | Fluxo global: Platform Release aceita pelo Product Owner; Fluxo local: Premortem + Reliability Plan + Owner Approval |
-| **Critério de saída** | Item aceito no Icebox para Discovery |
+| **Consumidores** | VIEW Icebox (Assessment, Discovery), VIEW Iteration Backlog (Delivery) |
+| **OBC** | Local OBC Draft criado ao entrar (se ainda não existia via OBC Partitioning) |
+| **Critério de entrada** | Fluxo global: Local OBC via OBC Partitioning aceito pelo Product Owner; Fluxo local: Business Signal → Business Intent + Premortem + Owner Approval |
+| **Critério de saída** | Item entra na VIEW Icebox para Discovery |
 | **Jornadas** | Assessment, Diligence |
 
 ### Icebox
@@ -182,13 +187,13 @@ Operation
 | Campo | Valor |
 |---|---|
 | **Owner** | Product Owner |
-| **Onde nasce** | Product Repository — item aceito no Product Intent Backlog |
+| **Onde nasce** | Product Repository — item aceito no Product Backlog (VIEW sobre Product Backlog) |
 | **Artefato canônico** | `prodops/artifacts/product/backlogs/icebox-backlog.md` |
 | **Quem modifica** | Product Team (Product Manager, Tech Lead, engenheiros) |
 | **Quem aprova** | Product Owner + Tech Lead (para saída do Icebox) |
 | **Consumidores** | Iteration Backlog |
 | **OBC** | Refining (Discovery); atinge Committed ao sair |
-| **Critério de entrada** | Item aceito no Product Intent Backlog |
+| **Critério de entrada** | Item no Product Backlog com Local OBC em estado Draft |
 | **Critério de saída** | OBC Committed → Iteration Backlog |
 | **Jornadas** | Discovery (Downstream), Assessment |
 
@@ -227,7 +232,7 @@ Operation
 | Campo | Valor |
 |---|---|
 | **Owner** | Product Manager + Tech Lead do item |
-| **Onde nasce** | Business Intent Backlog (fluxo global) ou Product Intent Backlog (fluxo local) |
+| **Onde nasce** | Business Intent Backlog (fluxo global) ou Product Backlog (fluxo local) |
 | **Artefato canônico** | `prodops/artifacts/business/obcs/<slug>.md` (quando committed) |
 | **Quem modifica** | Product Manager, Tech Lead, engenheiros (com registro de mudanças) |
 | **Quem aprova** | Product Manager + Tech Lead (Assessment Review) |
@@ -255,14 +260,14 @@ Operation
 
 | Artefato | Owner | Quem modifica | Quem aprova | Consumidores principais |
 |---|---|---|---|---|
-| Global Tracking List | Portfolio PM | Portfolio PM + stakeholders | Portfolio PM | Business Intent Backlog |
-| Business Intent Backlog | Portfolio PM | Portfolio PM | Portfolio PM | Roadmap, PIB |
-| Roadmap | Portfolio | Portfolio PM | Portfolio Leadership | Platform Release |
-| Platform Release | Portfolio | Portfolio Manager | Portfolio Leadership | PIB, Workspace |
-| Repository Tracking List | Product Owner | Qualquer membro do time | Product Owner | PIB (via aprovação) |
-| Product Intent Backlog | Product Owner | Product Owner + Diligence | Product Owner | Icebox |
-| Icebox | Product Owner | Product Team | PO + Tech Lead | Iteration Backlog |
-| Iteration Backlog | Product Owner | PO + Diligence | Product Owner | Iteration Plan |
+| Portfolio Tracking List | Portfolio PM | Portfolio PM + stakeholders | Portfolio PM | Business Intent Backlog |
+| Business Intent Backlog | Portfolio PM | Portfolio PM | Portfolio PM | Roadmap (VIEW), Platform Release (VIEW), Product Backlog |
+| Roadmap (VIEW sobre BIB) | Portfolio | Portfolio PM | Portfolio Leadership | Platform Release |
+| Platform Release (VIEW sobre BIB) | Portfolio | Portfolio Manager | Portfolio Leadership | Product Backlog, Workspace |
+| Product Tracking List | Product Owner | Qualquer membro do time | Product Owner | Product Backlog (via aprovação) |
+| Product Backlog | Product Owner | Product Owner + Diligence | Product Owner | VIEW Icebox, VIEW Iteration Backlog |
+| Icebox (VIEW) | Product Owner | Product Team | PO + Tech Lead | VIEW Iteration Backlog |
+| Iteration Backlog (VIEW) | Product Owner | PO + Diligence | Product Owner | Iteration Plan |
 | Iteration Plan | Tech Lead / PO | Equipe de Delivery | PO + Tech Lead | Delivery, Release Trail |
 | OBC | PM + Tech Lead | PM, TL, engenheiros | PM + Tech Lead (Assessment Review) | Delivery, BDD, Release Trail |
 | Reliability Plan | Tech Lead + SRE | TL, SRE, engenheiros | TL + PO | Iteration Plan, Delivery |
