@@ -48,9 +48,11 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **Purpose:** Ensure that products that depend on each other work correctly in an integrated manner. A Workspace has no Roadmap and no Business Intents — it exists exclusively for integration.
 
+**Operational characteristics:** The Workspace has no state of its own. It observes GitHub (the primary operational source) and never decides priorities — priorities are decided by the Portfolio (Business Intents) or by the Product Owner (OBCs in the Product Backlog).
+
 **Examples:** Checkout Workspace (webshop-api + payments-api + order-mgmt-api).
 
-**Does not contain:** Roadmap, Business Intents, product code.
+**Does not contain:** Roadmap, Business Intents, product code, backlog state.
 
 **Relation to other concepts:** A Workspace is coordinated by the Portfolio and integrates Product Repositories. See **Product Repository**.
 
@@ -60,11 +62,11 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **Definition:** The implementation and operation level for a specific product within the ProdOps architecture. This repository (`payments-api`) is a Product Repository.
 
-**Purpose:** Implement Product Capabilities, operate the product in production, and maintain full traceability from Intents to operation evidence.
+**Purpose:** Implement Product Capabilities, operate the product in production, and maintain full traceability from Business Intents to operation evidence.
 
 **Contains:** OBCs, BDD Features, Iteration Plans, Reliability Plans, Release Trail, product code, runbooks, postmortems.
 
-**Relation to other concepts:** A Product Repository adopts the Framework, participates in Roadmaps defined by the Portfolio, and is integrated by Workspaces. It can also evolve locally through its own Intent flow.
+**Relation to other concepts:** A Product Repository adopts the Framework, participates in Roadmaps defined by the Portfolio, and is integrated by Workspaces. It can also evolve locally through its own Business Intent flow.
 
 ---
 

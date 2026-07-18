@@ -14,21 +14,21 @@ Upstream and Downstream are **execution modes** of the ProdOps Framework — the
 
 Modes do not replace journeys. They define how journeys will be executed.
 
-## Intent decision flow
+## Business Intent decision flow
 
-Every Intent follows one of the two modes. In the BIB, Portfolio selects the global exploration mode; in the PIB, the Product Owner selects the local mode. No transition happens automatically.
+Every Business Intent follows one of the two modes. In the BIB, Portfolio selects the global exploration mode; in the Product Backlog, the Product Owner selects the local mode. No transition happens automatically.
 
 ```
-Intent
+Business Intent
   ↓
 Mode choice (Product Owner)
   ↓
 Upstream                    Downstream
 (exploration)               (commitment)
      │                           │
-  Discovery                  Product Intent Backlog
-  Experiments                    → Icebox (Discovery)
-  Learnings                      → Iteration Backlog
+  Discovery                  Product Backlog
+  Experiments                    → Icebox (VIEW — Discovery)
+  Learnings                      → Iteration Backlog (VIEW)
      │                           → Iteration Plan
   (Eventually)                   → Delivery
   Downstream                     → Operation

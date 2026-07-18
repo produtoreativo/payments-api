@@ -14,21 +14,21 @@ Upstream e Downstream são **modos de execução** do Framework ProdOps — não
 
 Os modos não substituem as jornadas. Eles definem como as jornadas serão executadas.
 
-## Fluxo de decisão da Intent
+## Fluxo de decisão da Business Intent
 
-Toda Intent segue um dos dois modos. No BIB, a decisão da exploração global é do Portfolio; no PIB, a decisão local é do Product Owner. Nenhuma transição acontece automaticamente.
+Toda Business Intent segue um dos dois modos. No BIB, a decisão da exploração global é do Portfolio; no Product Backlog, a decisão local é do Product Owner. Nenhuma transição acontece automaticamente.
 
 ```
-Intent
+Business Intent
   ↓
 Escolha do modo (Product Owner)
   ↓
 Upstream                    Downstream
 (exploração)                (compromisso)
      │                           │
-  Discovery                  Product Intent Backlog
-  Experimentos                   → Icebox (Discovery)
-  Aprendizados                   → Iteration Backlog
+  Discovery                  Product Backlog
+  Experimentos                   → Icebox (VIEW — Discovery)
+  Aprendizados                   → Iteration Backlog (VIEW)
      │                           → Iteration Plan
   (Eventualmente)                → Delivery
   Downstream                     → Operation

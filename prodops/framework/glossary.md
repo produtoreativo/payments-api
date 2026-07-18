@@ -48,9 +48,11 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Propósito:** Garantir que produtos que dependem uns dos outros funcionem corretamente de forma integrada. Um Workspace não possui Roadmap nem Business Intents — existe exclusivamente para integração.
 
+**Características operacionais:** O Workspace não possui estado próprio. Observa o GitHub (fonte operacional primária) e nunca decide prioridades — prioridades são decididas pelo Portfolio (Business Intents) ou pelo Product Owner (OBCs no Product Backlog).
+
 **Exemplos:** Checkout Workspace (webshop-api + payments-api + order-mgmt-api).
 
-**Não contém:** Roadmap, Business Intents, código de produto.
+**Não contém:** Roadmap, Business Intents, código de produto, estado de backlog.
 
 **Relação com outros conceitos:** Um Workspace é coordenado pelo Portfolio e integra Product Repositories. Ver **Product Repository**.
 
@@ -64,7 +66,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Contém:** OBCs, BDD Features, Iteration Plans, Reliability Plans, Release Trail, código do produto, runbooks, postmortems.
 
-**Relação com outros conceitos:** Um Product Repository adota o Framework, participa de Roadmaps definidos pelo Portfolio e é integrado por Workspaces. Pode também evoluir localmente por meio de seu próprio fluxo de Intents.
+**Relação com outros conceitos:** Um Product Repository adota o Framework, participa de Roadmaps definidos pelo Portfolio e é integrado por Workspaces. Pode também evoluir localmente por meio de seu próprio fluxo de Business Intents.
 
 ---
 

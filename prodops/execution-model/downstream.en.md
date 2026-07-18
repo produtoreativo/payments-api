@@ -4,7 +4,7 @@ Downstream is the **commitment mode** of the ProdOps Framework.
 
 ## Canonical definition
 
-Downstream represents a commitment mode. From the moment an Intent enters Downstream, there is a commitment to delivery, quality, and reliability. All work must mandatorily follow the ProdOps operational model.
+Downstream represents a commitment mode. From the moment a Business Intent enters Downstream, there is a commitment to delivery, quality, and reliability. All work must mandatorily follow the ProdOps operational model.
 
 ## Purpose
 

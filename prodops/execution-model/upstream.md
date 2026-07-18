@@ -29,7 +29,7 @@ Um experimento Upstream pode produzir código de qualidade de produção, mas es
 
 ## OBC no Upstream
 
-Quando uma Intent entra no Business Intent Backlog, um OBC é criado como Draft.
+Quando uma Business Intent entra no Business Intent Backlog, um OBC é criado como Draft.
 
 Durante o Upstream:
 
@@ -58,7 +58,7 @@ A jornada Discovery documenta o workflow completo de exploração, experimentos,
 
 Ao final do Upstream podem ocorrer quatro resultados:
 
-1. **Descartar** a Intent — aprendizado suficiente, mas não vale a pena avançar.
+1. **Descartar** a Business Intent — aprendizado suficiente, mas não vale a pena avançar.
 2. **Arquivar** para uso futuro — aprendizado registrado, decisão adiada.
 3. **Retornar** ao Business Intent Backlog — aguardar decisão de negócio ou dependência externa.
 4. **Promover** para Downstream — decisão explícita do Product Owner, com Decision Package completo.
