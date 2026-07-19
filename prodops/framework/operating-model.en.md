@@ -27,16 +27,16 @@ This repository (`payments-api`) is a **Product Repository**. It serves as the r
 
 ---
 
-## GitHub as primary operational source
+## GitHub in the Execution Space
 
-**GitHub is the primary operational source** of the ProdOps Framework. It is not one optional tool among equals.
+GitHub is the canonical tool for tracking the **execution of work** on ProdOps artifacts. Artifacts (OBCs, BDD, Intents, etc.) live as Markdown files in the repository — never as GitHub Issues.
 
 ### GitHub Projects as management domains
 
-| Domain | GitHub Project | Contains |
+| Domain | GitHub Project | Tracks work on |
 |---|---|---|
-| **Portfolio** | Portfolio GitHub Project | Business Signals, Business Intents, Roadmap (VIEW), Platform Releases (VIEW) |
-| **Product Repository** | Product Repository GitHub Project | Local OBCs (Product Backlog, Iteration Plan, Reliability) |
+| **Portfolio** | Portfolio GitHub Project | Work Items on Business Signals and Business Intents |
+| **Product Repository** | Product Repository GitHub Project | Work Items on Business Intents, OBCs, BDD, and Plans |
 
 ### GitHub Project Views as projections
 
@@ -60,16 +60,18 @@ GitHub Project Views are projections over data — not separate backlogs:
 - Reliability — Local OBCs with active Reliability Plan
 - Bugs — bug Local OBCs
 
-### Three GitHub Issue types
+### Work Items — operation types
 
-| Issue Type | Represents | GitHub Project |
+| Work Item Type | Artifacts typically affected | Examples of operation |
 |---|---|---|
-| **Business Signal Issue** | A Business Signal | Portfolio GitHub Project |
-| **Business Intent Issue** | A Business Intent | Portfolio GitHub Project |
+| **Business Signal Work Item** | Business Signal | Investigate, Prioritize, Transform into Intent |
+| **Business Intent Work Item** | Business Intent, OBC, BDD | Explore, Refine OBC, Review, Deliver |
+
+A Work Item must always declare: Artifact Type, Artifact ID, Operation, Journey. → [Knowledge vs Execution](knowledge-vs-execution.en.md)
 
 ### External tools are optional sync only
 
-Jira, Azure DevOps, and Linear may receive synchronized data from GitHub, but they are **not the source of truth** for work state. The OBC `.md` file is the source of truth for content; the GitHub Issue is the operational representation; external tools are convenience mirrors.
+Jira, Azure DevOps, and Linear may receive synchronized data from GitHub, but they are **not the source of truth** for work state. The OBC `.md` file is the source of truth for content and state. GitHub Issues track the work performed on the OBC — they are not representations of the OBC. Jira, Azure DevOps, and Linear are optional sync tools over GitHub, never canonical sources.
 
 ---
 

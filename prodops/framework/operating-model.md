@@ -27,16 +27,16 @@ Este repositório (`payments-api`) é um **Product Repository**. Serve como impl
 
 ---
 
-## GitHub como fonte operacional primária
+## GitHub no Execution Space
 
-O **GitHub é a fonte operacional primária** do Framework ProdOps. Não é uma ferramenta opcional entre iguais.
+O GitHub é a ferramenta canônica para rastrear a **execução do trabalho** sobre os artefatos ProdOps. Artefatos (OBCs, BDD, Intents, etc.) vivem como arquivos Markdown no repositório — nunca como GitHub Issues.
 
 ### GitHub Projects como domínios de gestão
 
-| Domínio | GitHub Project | Contém |
+| Domínio | GitHub Project | Rastreia trabalho sobre |
 |---|---|---|
-| **Portfolio** | Portfolio GitHub Project | Business Signals, Business Intents, Roadmap (VIEW), Platform Releases (VIEW) |
-| **Product Repository** | Product Repository GitHub Project | Local OBCs (Product Backlog, Iteration Plan, Reliability) |
+| **Portfolio** | Portfolio GitHub Project | Work Items sobre Business Signals e Business Intents |
+| **Product Repository** | Product Repository GitHub Project | Work Items sobre Business Intents, OBCs, BDD e Plans |
 
 ### GitHub Project Views como projeções
 
@@ -60,16 +60,18 @@ As Views de um GitHub Project são projeções sobre os dados — não backlogs 
 - Reliability — Local OBCs com Reliability Plan ativo
 - Bugs — Local OBCs de bug
 
-### Três tipos de GitHub Issue
+### Work Items — tipos de operação
 
-| Tipo de Issue | Representa | GitHub Project |
+| Tipo de Work Item | Artefatos tipicamente afetados | Exemplos de operação |
 |---|---|---|
-| **Business Signal Issue** | Um Business Signal | Portfolio GitHub Project |
-| **Business Intent Issue** | Uma Business Intent | Portfolio GitHub Project |
+| **Business Signal Work Item** | Business Signal | Investigar, Priorizar, Transformar em Intent |
+| **Business Intent Work Item** | Business Intent, OBC, BDD | Explorar, Refinar OBC, Revisar, Entregar |
+
+Um Work Item deve sempre declarar: Artifact Type, Artifact ID, Operation, Journey. → [Knowledge vs Execution](knowledge-vs-execution.md)
 
 ### Ferramentas externas são sync opcionais
 
-Jira, Azure DevOps e Linear podem receber sincronização de dados do GitHub, mas **não são a fonte de verdade** do estado do trabalho. O arquivo OBC `.md` é a fonte de verdade do conteúdo; o GitHub Issue é a representação operacional; ferramentas externas são espelhos de conveniência.
+Jira, Azure DevOps e Linear podem receber sincronização de dados do GitHub, mas **não são a fonte de verdade** do estado do trabalho. O arquivo OBC `.md` é a fonte de verdade do conteúdo e do estado. GitHub Issues rastreiam o trabalho executado sobre o OBC — não são representações do OBC. Jira, Azure DevOps e Linear são ferramentas de sync opcionais sobre o GitHub, nunca fontes canônicas.
 
 ---
 
