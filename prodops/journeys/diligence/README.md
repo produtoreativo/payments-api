@@ -18,7 +18,7 @@ Fechar o gap entre as decisões produzidas pelo Assessment e o trabalho pronto p
 
 Sem a Diligence, o sistema de trabalho se fragmenta:
 
-- Um OBC comprometido existe em `prodops/artifacts/business/obcs/`, mas a GitHub Issue correspondente nunca foi criada.
+- Um OBC comprometido existe em `prodops/artifacts/business/obcs/`, mas um Work Item de rastreamento sobre esse OBC nunca foi criado.
 - Um item foi priorizado para a próxima Release, mas a Product Tracking List não foi atualizada.
 - Um risco identificado no Premortem aparece nos planos, mas não foi refletido no Icebox ou na Iteration.
 - O estado do OBC evoluiu, mas as ferramentas externas (Jira, GitHub Projects) ainda mostram o estado antigo.
@@ -59,7 +59,7 @@ O OBC nasce quando a Business Intent entra no Business Intent Backlog (fluxo glo
 
 ### 3. Estado único, múltiplas representações
 
-Um OBC committed tem um único estado canônico — registrado em `prodops/artifacts/business/obcs/`. GitHub Issues, Jira Cards, Azure DevOps Work Items são representações operacionais desse estado em ferramentas diferentes. A Diligence garante que essas representações estejam sincronizadas com a fonte de verdade.
+Um OBC committed tem um único estado canônico — registrado em `prodops/artifacts/business/obcs/`. GitHub Issues, Jira Cards e Azure DevOps Work Items rastreiam o **trabalho executado sobre** esse OBC — não são representações do OBC ou do seu estado. O estado canônico existe apenas no arquivo Markdown. A Diligence garante que os Work Items referenciem os artefatos corretos e que os artefatos reflitam a realidade do trabalho executado.
 
 ### 4. Continuidade, não cerimônia
 
@@ -67,7 +67,10 @@ A Diligence não tem início e fim por ciclo. Acompanha o produto enquanto ele e
 
 ### 5. Rastreabilidade ponta a ponta
 
-Business Signal → Business Intent → OBC → Issue → PR → Release → Operation. A Diligence garante que cada elo dessa cadeia seja rastreável. Um gap em qualquer ponto é uma inconsistência que precisa ser corrigida.
+Knowledge: Business Signal → Business Intent → OBC
+Execution: Work Item (referencia artefato) → PR → Release → Operation
+
+Os dois espaços são independentes. Um artefato não "gera" Issues sequencialmente — Issues representam trabalho iniciado sobre ele quando necessário. A Diligence garante que cada elo de ambas as cadeias seja rastreável. Um gap em qualquer ponto é uma inconsistência que precisa ser corrigida.
 
 ---
 
@@ -77,9 +80,9 @@ Business Signal → Business Intent → OBC → Issue → PR → Release → Ope
 
 Manter o estado de cada OBC sincronizado entre Product Tracking List, Product Backlog, Icebox, Iteration Backlog, Iteration Plan e as ferramentas externas correspondentes.
 
-### Criação e atualização de representações operacionais
+### Verificação e criação de Work Items
 
-Criar ou atualizar GitHub Issues, Jira Cards e outras representações operacionais quando um OBC avança para o Iteration Backlog ou Iteration Plan.
+Verificar se existe Work Item ativo para o trabalho em curso quando um OBC avança para o Iteration Backlog ou Iteration Plan. Se houver trabalho identificado sem Work Item correspondente, criar um Work Item que referencia o OBC, a operação e a jornada.
 
 ### Verificação de pré-requisitos da Delivery
 

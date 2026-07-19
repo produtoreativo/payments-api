@@ -18,7 +18,7 @@ Close the gap between decisions produced by Assessment and work ready for Delive
 
 Without Diligence, the work system fragments:
 
-- A committed OBC exists in `prodops/artifacts/business/obcs/`, but the corresponding GitHub Issue was never created.
+- A committed OBC exists in `prodops/artifacts/business/obcs/`, but a tracking Work Item about that OBC was never created.
 - An item was prioritized for the next Release, but the Product Tracking List was not updated.
 - A risk identified in the Premortem appears in the plans, but was not reflected in the Icebox or the Iteration.
 - The OBC state evolved, but external tools (Jira, GitHub Projects) still show the old state.
@@ -59,7 +59,7 @@ The OBC is born when a Business Intent enters the Business Intent Backlog (globa
 
 ### 3. Single state, multiple representations
 
-A committed OBC has a single canonical state — recorded in `prodops/artifacts/business/obcs/`. GitHub Issues, Jira Cards, Azure DevOps Work Items are operational representations of that state in different tools. Diligence ensures those representations stay synchronized with the source of truth.
+A committed OBC has a single canonical state — recorded in `prodops/artifacts/business/obcs/`. GitHub Issues, Jira Cards, and Azure DevOps Work Items track the **work performed on** that OBC — they are not representations of the OBC or its state. The canonical state exists only in the Markdown file. Diligence ensures that Work Items reference the correct artifacts and that artifacts reflect the reality of the work performed.
 
 ### 4. Continuity, not ceremony
 
@@ -67,7 +67,10 @@ Diligence has no beginning and end per cycle. It accompanies the product as long
 
 ### 5. End-to-end traceability
 
-Business Signal → Business Intent → OBC → Issue → PR → Release → Operation. Diligence ensures that every link in this chain is traceable. A gap at any point is an inconsistency that needs to be corrected.
+Knowledge: Business Signal → Business Intent → OBC
+Execution: Work Item (references artifact) → PR → Release → Operation
+
+The two spaces are independent. An artifact does not "generate" Issues sequentially — Issues represent work initiated on it when needed. Diligence ensures that every link in both chains is traceable. A gap at any point is an inconsistency that needs to be corrected.
 
 ---
 
@@ -77,9 +80,9 @@ Business Signal → Business Intent → OBC → Issue → PR → Release → Ope
 
 Keep the state of each OBC synchronized across Product Tracking List, Product Backlog, Icebox, Iteration Backlog, Iteration Plan, and the corresponding external tools.
 
-### Creating and updating operational representations
+### Verifying and creating Work Items
 
-Create or update GitHub Issues, Jira Cards, and other operational representations when an OBC advances to the Iteration Backlog or Iteration Plan.
+Verify whether an active Work Item exists for the ongoing work when an OBC advances to the Iteration Backlog or Iteration Plan. If identified work has no corresponding Work Item, create one referencing the OBC, the operation, and the journey.
 
 ### Delivery prerequisites verification
 
