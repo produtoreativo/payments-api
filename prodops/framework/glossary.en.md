@@ -794,21 +794,31 @@ See [`prodops/execution-model/downstream.en.md`](../execution-model/downstream.e
 
 ## GitHub Issue
 
-**Definition:** Operational representation of an entity (Business Signal, Business Intent, or OBC) in the ProdOps Framework. GitHub is the **primary operational source** — the canonical tool for managing work at all levels.
+**Definition:** Work Item representing an operation being executed on one or more Knowledge Space artifacts (Business Signal, Business Intent, OBC, BDD, etc.).
 
-**Purpose:** Make Business Signals, Business Intents, and OBCs visible and manageable in GitHub Projects. GitHub Issues are not the origin of work — they represent entities already defined in the Framework.
+**Purpose:** Make the execution work performed on ProdOps artifacts visible and traceable in GitHub Projects.
 
-**When to use:** Business Signal Issue when capturing any signal. Business Intent Issue when a Business Intent is created.
+**When to use:** When recording work (exploration, refinement, delivery, review) on any Knowledge Space artifact. A Work Item must always reference the affected artifact(s) by type and ID.
 
 **When not to use:** Do not create GitHub Issues to bypass the entity model. The OBC is a Markdown document — it does not have an Issue representation.
 
 **GitHub as primary operational source:** GitHub Projects are the canonical management domains. GitHub Project Views are projections over those domains. Jira, Azure DevOps, and Linear are optional sync tools only — they never replace GitHub as the source of truth for work state.
 
-**Two Issue types in the Framework:**
-- **Business Signal Issue** — represents a Business Signal in the Portfolio GitHub Project
-- **Business Intent Issue** — represents a Business Intent in the Portfolio GitHub Project
+**Work Items reference artifacts — they are not the artifacts.**
 
-**Relationship with other concepts:** Managed by Diligence. References the corresponding entity (Business Signal, Business Intent, or OBC). See [`backlogs.md`](backlogs.en.md) and [`../journeys/diligence/README.md`](../journeys/diligence/README.en.md).
+Every Work Item must declare: Artifact Type, Artifact ID, Operation, Journey.
+
+Examples of correct Work Items:
+- Issue: "Discovery — BI-042 Split payment support" → references Business Intent BI-042
+- Issue: "Refine OBC payments-invoice-v2 — incomplete BDD section" → references Local OBC
+- Issue: "Update architecture — new webhooks module" → references Architecture overview.md
+
+A single artifact can have dozens of Work Items throughout its life.
+A single Work Item can affect multiple artifacts.
+
+**Relationship with other concepts:** Managed by Diligence. See [`backlogs.md`](backlogs.en.md) and [`../journeys/diligence/README.md`](../journeys/diligence/README.en.md).
+
+→ [Knowledge vs Execution](knowledge-vs-execution.en.md)
 
 ---
 

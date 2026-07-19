@@ -747,19 +747,31 @@ Ver [`prodops/execution-model/downstream.md`](../execution-model/downstream.md).
 
 ## GitHub Issue
 
-**Definição:** Representação operacional canônica de uma entidade do Framework ProdOps (Business Signal, Business Intent ou OBC). GitHub é a fonte primária de organização operacional do ProdOps.
+**Definição:** Work Item que representa uma operação sendo executada sobre um ou mais artefatos do Knowledge Space (Business Signal, Business Intent, OBC, BDD, etc.).
 
-**Propósito:** Tornar visível e gerenciável, no GitHub, o estado de cada entidade do sistema de trabalho. O GitHub Issue é a instância de execução; o OBC (ou Business Signal / Business Intent) é a fonte de verdade do conteúdo.
+**Propósito:** Tornar visível e rastreável o trabalho de execução realizado sobre os artefatos ProdOps em GitHub Projects.
 
-**Quando usar:** Ao registrar Business Signals (Tracking Lists) ou Business Intents (BIB) no GitHub.
+**Quando usar:** Ao registrar trabalho (exploração, refinamento, entrega, revisão) sobre qualquer artefato do Knowledge Space. Um Work Item deve sempre referenciar o(s) artefato(s) afetado(s) por tipo e ID.
 
 **Quando não usar:** Issues não substituem OBCs. O OBC é um documento Markdown — não tem representação como Issue. Não criar Issues como ponto de entrada do trabalho — o ponto de entrada é a Portfolio Tracking List ou Product Tracking List.
 
 **Ferramentas externas:** Jira, Azure DevOps, Linear e similares são sincronizações OPCIONAIS do GitHub — não são equivalentes. O GitHub é a fonte de verdade operacional.
 
-**Dois tipos de GitHub Issue:** Business Signal Issue, Business Intent Issue.
+**Work Items referenciam artefatos — não são os artefatos.**
+
+Todo Work Item deve declarar: Artifact Type, Artifact ID, Operation, Journey.
+
+Exemplos de Work Items corretos:
+- Issue: "Discovery — BI-042 Suporte a split de pagamento" → referencia Business Intent BI-042
+- Issue: "Refinar OBC payments-invoice-v2 — seção BDD incompleta" → referencia Local OBC
+- Issue: "Atualizar arquitetura — novo módulo webhooks" → referencia Architecture overview.md
+
+Um mesmo artefato pode ter dezenas de Work Items ao longo de sua vida.
+Um mesmo Work Item pode afetar múltiplos artefatos.
 
 **Relação com outros conceitos:** Gerenciada pela Diligence. Ver [`backlogs.md`](backlogs.md) e [`../journeys/diligence/README.md`](../journeys/diligence/README.md).
+
+→ [Knowledge vs Execution](knowledge-vs-execution.md)
 
 ---
 
