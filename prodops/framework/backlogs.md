@@ -322,17 +322,17 @@ O Global OBC acompanha a intenção de negócio de ponta a ponta — sobrevive �
 
 ---
 
-## GitHub como fonte operacional primária
+## GitHub no Execution Space
 
-O GitHub é a **fonte operacional primária** do Framework ProdOps — não uma ferramenta opcional entre iguais.
+O GitHub é a ferramenta canônica para rastrear a **execução do trabalho** sobre os artefatos ProdOps. Artefatos (OBCs, BDD, Intents, etc.) vivem como arquivos Markdown no repositório — nunca como GitHub Issues.
 
-**Dois tipos de Issue no Framework:**
-- **Business Signal Issue** — representa um Business Signal na Portfolio Tracking List ou Product Tracking List
-- **Business Intent Issue** — representa uma Business Intent no BIB e no Product Backlog
+**Dois tipos de Work Item no Framework:**
+- **Business Signal Work Item** — representa trabalho sobre um Business Signal na Portfolio Tracking List ou Product Tracking List
+- **Business Intent Work Item** — representa trabalho sobre uma Business Intent no BIB e no Product Backlog
 
-**GitHub Projects como domínios de gestão:** O Portfolio GitHub Project gerencia Business Signals e Business Intents. O Product Repository GitHub Project gerencia o acompanhamento operacional das Business Intents (Product Backlog, Iteration Plan). O OBC é um documento Markdown — não tem representação como Issue.
+**GitHub Projects como domínios de gestão:** O Portfolio GitHub Project **rastreia o trabalho** sobre Business Signals e Business Intents. O Product Repository GitHub Project **rastreia o trabalho** sobre Business Intents, OBCs, BDD e Plans do produto. O OBC é um documento Markdown — não tem representação como Issue.
 
-**Jira, ADO, Linear são sync opcionais.** Ferramentas externas podem receber sincronização dos dados do GitHub, mas não são a fonte de verdade do estado do trabalho. O OBC no arquivo `.md` é a fonte de verdade do conteúdo; o GitHub Issue é a representação operacional; ferramentas externas são espelhos de conveniência.
+**Jira, ADO, Linear são sync opcionais.** Ferramentas externas podem receber sincronização dos dados do GitHub, mas não são a fonte de verdade do estado do trabalho. O OBC no arquivo `.md` é a fonte de verdade do conteúdo e do estado. GitHub Issues rastreiam o trabalho executado sobre o OBC — não são representações do OBC. Ferramentas externas são espelhos de conveniência.
 
 ---
 
@@ -346,7 +346,11 @@ A Diligence é a jornada responsável por manter os backlogs sincronizados em to
 - Estado do Local OBC em cada backlog (Product Backlog, Icebox, Iteration Backlog, Iteration Plan)
 - Estado do Global OBC no BIB e sua rastreabilidade
 - Representações operacionais nas ferramentas (GitHub Issues, Jira, Azure DevOps)
-- Rastreabilidade Business Signal → Business Intent → Global OBC → Local OBC → Issue → PR → Release → Operation
+- Rastreabilidade:
+  - Knowledge: Business Signal → Business Intent → Global OBC → Local OBC
+  - Execution: Work Item (referencia artefato) → PR → Release → Operation
+
+  Os dois espaços são independentes. Um artefato não "gera" Issues sequencialmente — Issues representam trabalho iniciado sobre ele quando necessário.
 - Consistência entre artefatos ProdOps e ferramentas externas
 
 → [Jornada Diligence](../journeys/diligence/README.md)
