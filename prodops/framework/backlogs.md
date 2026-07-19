@@ -11,10 +11,11 @@ O trabalho nunca pula níveis sem justificativa explícita registrada no OBC.
 | Entidade | Onde vive | Representação no GitHub |
 |---|---|---|
 | **Business Signal** | Portfolio Tracking List (plataforma) ou Product Tracking List (produto) | Business Signal Issue |
-| **Business Intent** | Business Intent Backlog | Business Intent Issue |
-| **OBC (Local OBC)** | Product Backlog | Product OBC Issue |
+| **Business Intent** | Business Intent Backlog e Product Backlog | Business Intent Issue |
 
-**Regra crítica:** Entidades nunca mudam de identidade. Um Business Signal **gera** Business Intents — não se torna uma. Uma Business Intent **gera** OBCs via OBC Partitioning — não se torna um OBC.
+> **Nota:** A Business Intent existe tanto no Business Intent Backlog quanto no Product Backlog (após OBC Partitioning). Cada Intent possui um Local OBC como documento de contrato. O OBC é um documento Markdown — não tem representação como Issue.
+
+**Regra crítica:** Entidades nunca mudam de identidade. Um Business Signal **gera** Business Intents — não se torna uma. Uma Business Intent pode ser criada diretamente no BIB sem passar pela Tracking List. Quando originada de um Business Signal, mantém referência opcional ao Signal de origem.
 
 ---
 
@@ -22,7 +23,7 @@ O trabalho nunca pula níveis sem justificativa explícita registrada no OBC.
 
 ```
 Portfolio Tracking List    ← Business Signals da plataforma (O que merece atenção?)
-          ↓ (Business Signal gera Business Intent)
+          ↓ (Business Signal gera Business Intent (1:N))
 Business Intent Backlog    ← Business Intents (O que merece Discovery?)
     │         │              Global OBC Draft nasce aqui
     │         │
@@ -57,7 +58,7 @@ Operation                  ← Refinamento Contínuo do OBC
 
 ```
 Product Tracking List      ← Business Signals do produto (O que merece atenção?)
-          ↓ (Business Signal gera Business Intent + Local OBC)
+          ↓ (Business Signal gera Business Intent (1:N) + Local OBC)
 Premortem + Análise de Risco Preliminar
           ↓
 Owner Approval
@@ -210,7 +211,7 @@ Um item pode estar no BIB, associado a um Roadmap e a uma Platform Release, ao m
 
 **Pergunta:** O que foi oficialmente aceito pelo Product Owner?
 
-**Contém exclusivamente:** Local OBCs. O Product Backlog nunca contém Business Signals, Business Intents ou Global OBCs.
+**Contém exclusivamente:** Business Intents. Cada Intent possui um Local OBC como documento de contrato. O Product Backlog nunca contém Business Signals isolados ou Global OBCs.
 
 **Dois caminhos de entrada:**
 
@@ -325,12 +326,11 @@ O Global OBC acompanha a intenção de negócio de ponta a ponta — sobrevive �
 
 O GitHub é a **fonte operacional primária** do Framework ProdOps — não uma ferramenta opcional entre iguais.
 
-**Três tipos de Issue no Framework:**
+**Dois tipos de Issue no Framework:**
 - **Business Signal Issue** — representa um Business Signal na Portfolio Tracking List ou Product Tracking List
-- **Business Intent Issue** — representa uma Business Intent no BIB
-- **Product OBC Issue** — representa um Local OBC no Product Backlog
+- **Business Intent Issue** — representa uma Business Intent no BIB e no Product Backlog
 
-**GitHub Projects como domínios de gestão:** O Portfolio GitHub Project gerencia Business Signals e Business Intents. O Product Repository GitHub Project gerencia Local OBCs (Product Backlog, Iteration Plan).
+**GitHub Projects como domínios de gestão:** O Portfolio GitHub Project gerencia Business Signals e Business Intents. O Product Repository GitHub Project gerencia o acompanhamento operacional das Business Intents (Product Backlog, Iteration Plan). O OBC é um documento Markdown — não tem representação como Issue.
 
 **Jira, ADO, Linear são sync opcionais.** Ferramentas externas podem receber sincronização dos dados do GitHub, mas não são a fonte de verdade do estado do trabalho. O OBC no arquivo `.md` é a fonte de verdade do conteúdo; o GitHub Issue é a representação operacional; ferramentas externas são espelhos de conveniência.
 
@@ -363,11 +363,11 @@ A Diligence é a jornada responsável por manter os backlogs sincronizados em to
 | Platform Release (VIEW sobre BIB) | Business Intents | O que compõe esta versão da plataforma? | Portfolio |
 | OBC Partitioning | — | Como decompor o Global OBC em Local OBCs? | Portfolio PM + Tech Leads |
 | Product Tracking List | Business Signals | Quais Business Signals merecem atenção neste produto? | Product Repository |
-| Product Backlog | Local OBCs | O que foi oficialmente aceito pelo Product Owner? | Product Owner |
-| Icebox (VIEW sobre Product Backlog) | Local OBCs | O que ainda está sendo preparado para Delivery? (Refining) | Product Owner + Tech Lead |
-| Iteration Backlog (VIEW sobre Product Backlog) | Local OBCs | O que está pronto para ser desenvolvido? (Committed) | Product Owner |
-| Release (VIEW sobre Product Backlog) | Local OBCs | O que compõe esta versão do produto? | Product Owner |
-| Iteration Plan | Local OBCs | O que está sendo executado nesta iteração? | Time de Delivery |
+| Product Backlog | Business Intents | O que foi oficialmente aceito pelo Product Owner? | Product Owner |
+| Icebox (VIEW sobre Product Backlog) | Business Intents | O que ainda está sendo preparado para Delivery? (Refining) | Product Owner + Tech Lead |
+| Iteration Backlog (VIEW sobre Product Backlog) | Business Intents | O que está pronto para ser desenvolvido? (Committed) | Product Owner |
+| Release (VIEW sobre Product Backlog) | Business Intents | O que compõe esta versão do produto? | Product Owner |
+| Iteration Plan | Business Intents | O que está sendo executado nesta iteração? | Time de Delivery |
 
 ---
 

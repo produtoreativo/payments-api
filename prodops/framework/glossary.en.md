@@ -154,11 +154,13 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **When not to use:** Business Intent is not a technical backlog, sprint task, or isolated bug ticket. It does not represent implementation — it represents strategic decision.
 
-**Life cycle:** The Business Intent is born in the Business Intent Backlog (global flow) — at which point the Global OBC is created as a Draft. It can generate N OBCs — one per involved product. Never "becomes" an OBC — it **generates** OBCs via OBC Partitioning.
+**Life cycle:** The Business Intent is born in the Business Intent Backlog (global flow) — at which point the Global OBC is created as a Draft. Has an OBC as its contract document — the OBC represents the commitment across 4 dimensions: Business, Enterprise, Team, and Technology. OBC Partitioning creates Local OBC documents (Markdown files) per product, but the Intent remains the trackable entity.
+
+**Origin:** Can be created directly in the Business Intent Backlog without originating from a Business Signal. When generated from a Business Signal, it stores an optional back-reference to the originating Signal.
 
 **GitHub representation:** Business Intent Issue.
 
-**Relationship with other concepts:** Born from a Business Signal. Generates OBCs via OBC Partitioning. See [`flow.en.md`](flow.en.md), [`origin-streams.en.md`](origin-streams.en.md) and [`backlogs.en.md`](backlogs.en.md).
+**Relationship with other concepts:** Born from a Business Signal (or created directly in the BIB). Has an OBC as its contract document. See [`flow.en.md`](flow.en.md), [`origin-streams.en.md`](origin-streams.en.md) and [`backlogs.en.md`](backlogs.en.md).
 
 ---
 
@@ -796,16 +798,15 @@ See [`prodops/execution-model/downstream.en.md`](../execution-model/downstream.e
 
 **Purpose:** Make Business Signals, Business Intents, and OBCs visible and manageable in GitHub Projects. GitHub Issues are not the origin of work — they represent entities already defined in the Framework.
 
-**When to use:** Business Signal Issue when capturing any signal. Business Intent Issue when a Business Intent is created. Product OBC Issue when a Local OBC enters the Product Backlog.
+**When to use:** Business Signal Issue when capturing any signal. Business Intent Issue when a Business Intent is created.
 
-**When not to use:** Do not create GitHub Issues to bypass the entity model. Do not use Issues as a replacement for OBCs.
+**When not to use:** Do not create GitHub Issues to bypass the entity model. The OBC is a Markdown document — it does not have an Issue representation.
 
 **GitHub as primary operational source:** GitHub Projects are the canonical management domains. GitHub Project Views are projections over those domains. Jira, Azure DevOps, and Linear are optional sync tools only — they never replace GitHub as the source of truth for work state.
 
-**Three Issue types in the Framework:**
+**Two Issue types in the Framework:**
 - **Business Signal Issue** — represents a Business Signal in the Portfolio GitHub Project
 - **Business Intent Issue** — represents a Business Intent in the Portfolio GitHub Project
-- **Product OBC Issue** — represents a Local OBC in the Product Repository GitHub Project
 
 **Relationship with other concepts:** Managed by Diligence. References the corresponding entity (Business Signal, Business Intent, or OBC). See [`backlogs.md`](backlogs.en.md) and [`../journeys/diligence/README.md`](../journeys/diligence/README.en.md).
 
@@ -823,18 +824,8 @@ See [`prodops/execution-model/downstream.en.md`](../execution-model/downstream.e
 
 ## Business Intent Issue
 
-**Definition:** GitHub Issue representing a Business Intent — the strategic decision to pursue value.
+**Definition:** GitHub Issue representing a Business Intent — the strategic decision to pursue value. Represents the Intent in both the Business Intent Backlog and the Product Backlog (after OBC Partitioning).
 
 **Belongs to:** Portfolio GitHub Project (views: Business Intent Backlog, Roadmap, or Platform Releases).
 
-**Relationship with other concepts:** Represents a Business Intent. References the Business Signal Issue(s) that originated it. May reference Product OBC Issues created via OBC Partitioning. See **Business Intent**.
-
----
-
-## Product OBC Issue
-
-**Definition:** GitHub Issue representing a Local OBC (Observable Business Contract) in a Product Repository.
-
-**Belongs to:** Product Repository GitHub Project (views: Product Backlog, Current Iteration, etc.).
-
-**Relationship with other concepts:** Represents a Local OBC. References the Business Intent Issue it was born from. Managed by the Product Owner and Tech Lead. See **Local OBC**, **Product Backlog**.
+**Relationship with other concepts:** Represents a Business Intent. References the Business Signal Issue(s) that originated it (when applicable). The OBC is a Markdown document — it does not have an Issue representation. See **Business Intent**.

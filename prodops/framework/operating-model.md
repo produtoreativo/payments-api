@@ -66,7 +66,6 @@ As Views de um GitHub Project são projeções sobre os dados — não backlogs 
 |---|---|---|
 | **Business Signal Issue** | Um Business Signal | Portfolio GitHub Project |
 | **Business Intent Issue** | Uma Business Intent | Portfolio GitHub Project |
-| **Product OBC Issue** | Um Local OBC | Product Repository GitHub Project |
 
 ### Ferramentas externas são sync opcionais
 
@@ -81,7 +80,7 @@ O ProdOps organiza o trabalho de produto e engenharia em camadas hierárquicas, 
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓
-Business Signal → Business Intent → OBC draft no BIB ou Product Backlog
+Business Signal → Business Intent (com OBC draft como contrato) no BIB ou Product Backlog
   ↓
 Exploration (Icebox)
   ↔ Continuous Assessment → Reliability Plan → Assessment Review
