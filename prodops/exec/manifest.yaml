@@ -76,21 +76,20 @@ gates:
     expect: "201"
     when: bootstrap
 
-# GitHub como fonte operacional primária (não ferramenta opcional)
+# GitHub — Execution Space (não Knowledge Space)
+# Representa trabalho executado sobre artefatos. Artefatos vivem em prodops/ como Markdown.
+# Agentes: ler prodops/framework/knowledge-vs-execution.md para o modelo completo.
 github:
-  primary_tool: true
-  # Tipos canônicos de Issue no Framework ProdOps
-  issue_types:
-    - business_signal_issue   # representa um Business Signal (Portfolio Tracking List)
-    - business_intent_issue   # representa uma Business Intent (Business Intent Backlog)
-    # OBC é documento Markdown — não tem representação como Issue
-  # Domínios de gestão via GitHub Projects
+  execution_space: true   # representa execução, não conhecimento
+  # Work Items devem referenciar artefatos explicitamente (tipo + ID + operação)
+  work_item_fields: [artifact_type, artifact_id, operation, journey, execution_mode, owner]
+  # Domínios de gestão do trabalho via GitHub Projects
   projects:
     portfolio:
-      contains: [business_signals, business_intents]
+      tracks_work_on: [business_signals, business_intents]
       views: [business_signals, discovery, business_intent_backlog, roadmap, platform_releases, completed]
     product_repository:
-      contains: [business_intents]
+      tracks_work_on: [business_intents, local_obcs, bdd, plans]
       views: [product_backlog, release_planning, current_iteration, doing, review, done, reliability, bugs]
   # Ferramentas externas são sync opcionais — nunca fonte de verdade
   optional_sync: [jira, azure_devops, linear]
