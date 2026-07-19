@@ -99,6 +99,21 @@ O **Particionamento do OBC** é a capability responsável por transformar um Glo
 
 ---
 
+## As 4 dimensões do OBC
+
+O OBC é o contrato que satisfaz simultaneamente as 4 dimensões de origem de uma intenção de negócio:
+
+| Dimensão | Pergunta que responde | Seções do OBC |
+|---|---|---|
+| **Business** | O que o negócio precisa alcançar? | Objetivo, Valor de Negócio, KPIs, Regras de Negócio, Eventos |
+| **Enterprise** | Quais restrições e padrões organizacionais se aplicam? | Stakeholders, Value Stream, Dependências, Compliance |
+| **Team** | O que o time precisa para entregar com confiança? | BDD, Critérios de Aceite, Plano de Confiabilidade, Riscos |
+| **Technology** | Como a arquitetura e os sistemas suportam a entrega? | APIs, Eventos, Observabilidade, Contrato de Resposta, Dependências Técnicas |
+
+Essas dimensões correspondem aos 4 Origin Streams do Framework. O OBC não é uma perspectiva — é a síntese das 4.
+
+---
+
 ## Estados
 
 Os estados representam **maturidade do contrato**, não estado do software.
@@ -151,10 +166,12 @@ A rastreabilidade deve funcionar em **ambas as direções**.
 
 **Fluxo global** (quando a Business Intent vem do Portfolio):
 ```
-Business Signal → Business Intent → Global OBC → Local OBC A → Repositório A
-                                               → Local OBC B → Repositório B
-                                               → Local OBC C → Repositório C
+Business Signal (1:N) → Business Intent → Repositório A
+                                        → Repositório B  (via Local OBCs — documentos de contrato)
+                                        → Repositório C
 ```
+
+> O OBC não é uma entidade sequencial separada da Intent — é o documento de contrato da Intent, refinado progressivamente. O OBC Partitioning cria documentos Local OBC por produto envolvido.
 
 **Fluxo local** (quando a Business Intent vem do produto):
 ```
@@ -250,7 +267,7 @@ Todas as Skills do Downstream utilizam o Local OBC como principal fonte de conte
 
 ## Quando não usar
 
-Não usar OBC como substituto de tarefa técnica isolada ou ticket de bug sem Business Intent correspondente. GitHub Issues são **representações operacionais** de uma entidade já definida no Framework (Business Signal, Business Intent ou OBC) — não são o ponto de entrada do trabalho. Jira, Azure DevOps e Linear são ferramentas de sync opcionais sobre o GitHub, nunca o ponto de entrada canônico.
+Não usar OBC como substituto de tarefa técnica isolada ou ticket de bug sem Business Intent correspondente. GitHub Issues são **representações operacionais** de uma entidade já definida no Framework (Business Signal ou Business Intent) — não são o ponto de entrada do trabalho. O OBC é um documento Markdown — não tem representação como Issue. Jira, Azure DevOps e Linear são ferramentas de sync opcionais sobre o GitHub, nunca o ponto de entrada canônico.
 
 ---
 

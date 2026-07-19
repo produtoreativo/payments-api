@@ -27,13 +27,12 @@ A **Business Intent** represents a strategic decision to pursue value — born f
 The Business Intent enters Exploration. Continuous Assessment decides the next step:
 
 ```
-Business Signal (with declared Origin Stream)
-  ↓
+Business Signal (with Origin Stream declared)
+  ↓ (1:N, or created directly)
 Business Intent (strategic decision)
+  │  └─ OBC (contract document — 4 dimensions: Business, Enterprise, Team, Technology)
   ↓
 Exploration (Discovery / Upstream)
-  ↓
-Observable Business Contract (OBC)
   ↓
 Upstream (exploration) or Downstream (committed delivery)
 ```

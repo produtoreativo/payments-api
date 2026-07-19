@@ -2,7 +2,9 @@
 
 An **Origin Stream** identifies the origin of a **Business Signal** in the ProdOps Framework.
 
-Every change starts with a Business Signal. The Business Signal always has exactly one Origin Stream — the classification of where the need was born and who owns it. The Origin Stream does not determine how the work will be executed (that is the function of the Execution Mode), but it informs the context, the language, and the success criteria that the Business Signal carries. When investigated and recognized as strategic, a Business Signal generates one or more Business Intents.
+Every change starts with a Business Signal. The Business Signal always has exactly one Origin Stream — the classification of where the need was born and who owns it. The Origin Stream does not determine how the work will be executed (that is the function of the Execution Mode), but it informs the context, the language, and the success criteria that the Business Signal carries. When investigated and recognized as strategic, a Business Signal can generate one or more Business Intents (1:N relationship).
+
+A Business Intent can also be created directly in the Business Intent Backlog, without originating from a Business Signal.
 
 → [Full Framework flow](flow.en.md)
 → [Operating model](operating-model.en.md)
@@ -24,10 +26,9 @@ flowchart TD
     TM --> BS
     TY --> BS
 
-    BS --> BI[Business Intent]
-    BI --> EX[Exploration]
-    EX --> OBC[Observable Business Contract]
-    OBC --> IP[Iteration Plan]
+    BS --> BI[Business Intent\n+ OBC as contract]
+    BI --> EX[Exploration / Upstream]
+    EX --> IP[Iteration Plan]
     IP --> RP[Reliability Plan]
     RP --> D[Delivery]
     D --> OP[Operation]

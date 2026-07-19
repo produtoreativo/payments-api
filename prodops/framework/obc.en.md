@@ -99,6 +99,21 @@ Never the inverse. Use the terms: **decomposition**, **specialization**, **parti
 
 ---
 
+## The 4 OBC Dimensions
+
+The OBC is the contract that simultaneously satisfies the 4 origin dimensions of a business intent:
+
+| Dimension | Question it answers | OBC Sections |
+|---|---|---|
+| **Business** | What does the business need to achieve? | Goal, Business Value, KPIs, Business Rules, Events |
+| **Enterprise** | What organizational constraints and standards apply? | Stakeholders, Value Stream, Dependencies, Compliance |
+| **Team** | What does the team need to deliver with confidence? | BDD, Acceptance Criteria, Reliability Plan, Risks |
+| **Technology** | How do architecture and systems support delivery? | APIs, Events, Observability, Response Contract, Technical Dependencies |
+
+These dimensions correspond to the Framework's 4 Origin Streams. The OBC is not a perspective — it is the synthesis of all 4.
+
+---
+
 ## States
 
 States represent **contract maturity**, not software state.
@@ -151,10 +166,12 @@ Traceability must work in **both directions**.
 
 **Global flow** (when the Business Intent comes from the Portfolio):
 ```
-Business Signal → Business Intent → Global OBC → Local OBC A → Repository A
-                                              → Local OBC B → Repository B
-                                              → Local OBC C → Repository C
+Business Signal (1:N) → Business Intent → Repository A
+                                        → Repository B  (via Local OBCs — contract documents)
+                                        → Repository C
 ```
+
+> The OBC is not a separate sequential entity after the Intent — it is the Intent's contract document, progressively refined. OBC Partitioning creates Local OBC documents per involved product.
 
 **Local flow** (when the Business Intent comes from the product):
 ```
@@ -250,7 +267,7 @@ All Downstream Skills use the Local OBC as their primary source of context. Skil
 
 ## When not to use
 
-Do not use OBC as a substitute for an isolated technical task or bug ticket without a corresponding Business Intent. GitHub Issues are **operational representations** of an entity already defined in the Framework (Business Signal, Business Intent, or OBC) — they are not the entry point for work. Jira, Azure DevOps, and Linear are optional sync tools over GitHub, never the canonical entry point.
+Do not use OBC as a substitute for an isolated technical task or bug ticket without a corresponding Business Intent. GitHub Issues are **operational representations** of an entity already defined in the Framework (Business Signal or Business Intent) — they are not the entry point for work. The OBC is a Markdown document — it does not have an Issue representation. Jira, Azure DevOps, and Linear are optional sync tools over GitHub, never the canonical entry point.
 
 ---
 

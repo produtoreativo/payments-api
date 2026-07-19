@@ -28,12 +28,11 @@ A Business Intent entra em Exploration. O Continuous Assessment decide o próxim
 
 ```
 Business Signal (com Origin Stream declarado)
-  ↓
+  ↓ (1:N, ou criado diretamente)
 Business Intent (decisão estratégica)
+  │  └─ OBC (documento de contrato — 4 dimensões: Business, Enterprise, Team, Technology)
   ↓
 Exploration (Discovery / Upstream)
-  ↓
-Observable Business Contract (OBC)
   ↓
 Upstream (exploração) ou Downstream (entrega comprometida)
 ```
