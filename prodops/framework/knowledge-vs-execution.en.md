@@ -1,0 +1,273 @@
+# Knowledge Space vs Execution Space
+
+This document establishes the most fundamental architectural principle of the ProdOps Framework:
+
+> **A ProdOps artifact is never a GitHub Issue.**
+> GitHub represents only the execution of work.
+> ProdOps represents knowledge.
+
+All other documentation must be read and written in light of this principle.
+
+→ [Operating Model](operating-model.en.md)
+→ [Backlog Hierarchy](backlogs.en.md)
+→ [Framework Flow](flow.en.md)
+→ [Glossary](glossary.en.md)
+
+---
+
+## The two universes of the Framework
+
+ProdOps operates in two completely independent universes.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                       KNOWLEDGE SPACE                           │
+│                                                                 │
+│  Business Signal · Business Intent · OBC · BDD · Architecture  │
+│  Plans · Evidence · Trails · Experiments · Context Capsules     │
+│                                                                 │
+│  Permanent identity. Survives dozens of Releases.               │
+│  Source of truth: Markdown files in the git repository.         │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+                    generates work on it
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                       EXECUTION SPACE                           │
+│                                                                 │
+│  GitHub Issues · Pull Requests · GitHub Projects · Releases     │
+│  GitHub Actions · Pipelines · Milestones · Labels               │
+│                                                                 │
+│  Represents work performed. Ephemeral: Issues close, PRs        │
+│  merge, Releases ship. Never replaces an artifact. Never        │
+│  is the source of knowledge.                                    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+The arrow has a single valid direction. The reverse does not exist.
+
+---
+
+## Knowledge Space — Artifacts
+
+### What an artifact is
+
+A ProdOps artifact is a document with its own identity that:
+- exists as a Markdown file in the git repository;
+- accumulates knowledge over time;
+- persists through Releases, iterations, and team changes;
+- does not disappear when work on it is completed.
+
+### Canonical artifacts
+
+| Artifact | Location | What it represents |
+|---|---|---|
+| **Business Signal** | Portfolio/Product Tracking List | Market, operational, or technical observation that deserves attention |
+| **Business Intent** | Business Intent Backlog / Product Backlog | Strategic decision to investigate or deliver something |
+| **Global OBC** | Portfolio repository | Complete business contract for an intention (4 dimensions) |
+| **Local OBC** | `prodops/artifacts/business/obcs/<slug>.md` | Contract of a single product for an intention |
+| **BDD Feature** | `prodops/artifacts/business/bdd/<slug>.feature` | Executable acceptance criterion |
+| **Architecture** | `prodops/artifacts/product/architecture/overview.md` | Canonical diagram of infrastructure and applications |
+| **Plans** | `prodops/artifacts/governance/plans/` | Iteration Plan, Reliability Plan |
+| **Trails** | `prodops/artifacts/governance/trails/` | Historical Release records and decisions |
+| **Evidence** | Inside OBCs and Trails | Postmortems, metrics, experiment results |
+
+### Properties of artifacts
+
+An artifact:
+- **has permanent identity** — a `slug` or ID that persists throughout its entire lifecycle;
+- **has its own state** — Draft, Refining, Committed, In Delivery, Operational, Archived;
+- **is never replaced by tools** — GitHub Issues, Jira cards, and ADO work items are temporary reflections of work, not the artifact itself;
+- **is the source of truth** — any divergence between the Markdown file and a tool representation must be resolved in favor of the Markdown file.
+
+---
+
+## Execution Space — Work
+
+### What a Work Item is
+
+A Work Item (GitHub Issue, PR, Release) represents **work performed on artifacts**. It:
+- explicitly references the artifact(s) it affects;
+- describes the operation being executed;
+- closes or merges when the work ends;
+- does not replace the artifact — the artifact continues to exist.
+
+### Cardinality — no 1:1 relationship exists
+
+This is the most important distinction in the model:
+
+```
+One artifact can receive dozens of Work Items over its lifetime:
+
+Local OBC (payments-invoice-v2)
+  ├─ Issue: "Refine acceptance criteria — Sprint 12"            → closed
+  ├─ Issue: "Update OBC with postmortem result"                 → closed
+  ├─ PR: feat(invoice): implement payment split logic           → merged
+  ├─ PR: fix(invoice): correct tax calculation edge case        → merged
+  ├─ PR: docs(obc): add operational evidence month-3            → merged
+  └─ Release: v2.1.0                                            → shipped
+
+The OBC continues to exist with all that accumulated history.
+```
+
+```
+One Work Item can affect more than one artifact simultaneously:
+
+Issue: "Adapt payments and invoices to new regulation XYZ"
+  ├─ modifies: Local OBC payments-invoice-v2
+  ├─ modifies: Local OBC payments-settlement-v1
+  ├─ modifies: BDD feature payments-invoice.feature
+  └─ modifies: Architecture overview.md
+
+The Issue closes. The three artifacts continue to exist, updated.
+```
+
+**Consequence:** one should not create one Work Item per artifact, nor try to synchronize the state of an artifact with the state of a Work Item. They are independent universes.
+
+### Canonical Work Item schema
+
+Every Work Item must explicitly reference the artifacts it affects:
+
+| Field | Description | Example |
+|---|---|---|
+| **Artifact Type** | Type of the affected artifact | `Local OBC` |
+| **Artifact ID** | Identifier or path of the artifact | `payments-invoice-v2` |
+| **Operation** | What is being done on the artifact | `Refine`, `Create`, `Review`, `Update evidence` |
+| **Journey** | ProdOps journey in execution | `Discovery`, `Delivery`, `Operation`, `Assessment` |
+| **Execution Mode** | Execution mode | `Upstream`, `Downstream` |
+| **Owner** | Responsible party | Product Manager |
+| **Status** | Work Item state | `Open`, `In Progress`, `Done` |
+| **Release** | Target release (if applicable) | `v2.1.0` |
+
+### What GitHub Projects represent
+
+A GitHub Project represents **a work management domain** — not an artifact backlog.
+
+| GitHub Project | Work it represents |
+|---|---|
+| **Portfolio GitHub Project** | Work Items about Business Signals and Business Intents at the platform level |
+| **Product Repository GitHub Project** | Work Items about Business Intents, OBCs, BDD, Plans in the product |
+
+Views within a GitHub Project are filters over Work Items — never over artifacts.
+
+---
+
+## The correct relationship
+
+```
+Artifact
+  ↓
+  └─ generates Work Items when there is work to do on it
+        ↓
+        Work Item (Issue / PR) on GitHub
+              ↓
+              explicitly references the artifact
+              ↓
+              work is executed
+              ↓
+              Work Item closes / PR merges / Release ships
+                    ↓
+                    Artifact continues to exist, potentially updated
+```
+
+The complete lifecycle of an artifact: it exists before the first Work Item, survives all Work Items, and continues existing after the last Work Item.
+
+---
+
+## Examples
+
+### Correct ✓
+
+```
+OBC payments-invoice-v2
+  └─ Issue: "Refine OBC — BDD section incomplete"
+       → references: payments-invoice-v2
+       → operation: Refine
+       → journey: Discovery
+       → closes when BDD is complete
+       → OBC continues to exist, now in Committed state
+```
+
+```
+Business Intent BI-042 (Payment split support)
+  └─ Issue: "Discovery — understand technical complexity of split"
+       → references: BI-042
+       → operation: Explore
+       → journey: Discovery / Upstream
+       → closes when decision is recorded in the Intent
+       → Business Intent continues to exist
+```
+
+### Incorrect ✗
+
+```
+❌ OBC = GitHub Issue #234
+   (Issue represents the artifact, not work on it)
+
+❌ "Create a GitHub Issue for the Business Signal"
+   (the Signal is an artifact — the Issue represents work ON it)
+
+❌ "Business Signal Issue" as a canonical Issue type
+   (the type names the artifact, not the operation)
+
+❌ "GitHub Project contains Business Signals"
+   (the Project contains Work Items about Signals, not the Signals)
+
+❌ "GitHub Issue is the operational representation of the OBC"
+   (there is no representation of the OBC in GitHub — the OBC is the artifact itself)
+```
+
+---
+
+## Implications for agents and scripts
+
+### When creating a Work Item
+
+Always include in the Work Item:
+1. Reference to the affected artifact(s) by type and ID
+2. The operation being executed
+3. The ProdOps journey in progress
+
+Never:
+- create a Work Item without an artifact reference;
+- assume a Work Item IS the artifact;
+- synchronize artifact state via Issue state.
+
+### When reading the state of work
+
+The source of truth for **knowledge** is always the Markdown file of the artifact.
+The source of truth for **execution in progress** is the GitHub Issue/PR/Project.
+
+If there is a conflict — the Markdown file prevails.
+
+### When doing Diligence
+
+Diligence synchronizes the state of artifacts with execution tools. The goal of Diligence is to verify that:
+- artifacts (Markdown) reflect the reality of work executed;
+- Work Items explicitly reference the correct artifacts;
+- there are no "loose" Work Items without artifact references.
+
+Diligence does not create Issues "for" artifacts. It creates Issues when **identified work** needs to be performed on an artifact.
+
+---
+
+## Common errors
+
+| Error | Why it's wrong | How to correct |
+|---|---|---|
+| "The OBC is in Issue #234" | The OBC is a Markdown file. The Issue is work on the OBC. | "Issue #234 records refinement work on OBC `payments-invoice-v2`" |
+| "Close the Issue when the OBC is Committed" | OBC state is independent of Issue state | "Close the Issue when the refinement work is complete. The OBC reaches Committed when its minimum criteria are satisfied." |
+| "Create an Issue for each Business Intent" | A Business Intent can have dozens of Issues over its lifetime | "Create Issues for specific operations on the Intent: Discovery, Review, Update OBC, etc." |
+| "GitHub Project contains Business Signals" | The Project contains Work Items. Signals are artifacts in files. | "GitHub Project contains Work Items about Business Signals" |
+| "Business Intent Issue #42" | Names the Issue after the artifact, establishing 1:1 | "Issue: 'Discovery — BI-042 Payment split support'" |
+
+---
+
+## References
+
+→ [Operating Model](operating-model.en.md)
+→ [Backlog Hierarchy](backlogs.en.md)
+→ [OBC — Observable Business Contract](obc.en.md)
+→ [Artifact Governance](artifact-governance.en.md)
+→ [Glossary](glossary.en.md)
+→ [Framework Flow](flow.en.md)
