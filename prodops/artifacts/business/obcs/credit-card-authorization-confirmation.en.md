@@ -1,5 +1,9 @@
 # OBC - Credit Card Authorization And Confirmation
 
+## Status
+
+Downstream. Status `In` in `prodops/artifacts/governance/plans/iteration-plan.md` (section "Recommended Iteration Plan"). Approved 2026-07-07 — EXP-003 + EXP-001 validated the hosted slice approach. Ready for Bootstrap + Hack.
+
 ## Business Outcome
 
 Magazine Siará can accept credit card payments through Payments API with clear
