@@ -175,3 +175,10 @@ Delivery
 ## Evolução
 
 A Diligence pode evoluir para incluir verificações automatizadas, dashboards de consistência e alertas automáticos quando divergências são detectadas entre artefatos. A automação serve a jornada — não a substitui. A decisão de corrigir uma divergência sempre envolve julgamento humano sobre o impacto no produto e no trabalho em andamento.
+
+---
+
+## Referências
+
+→ [Execution Mapping](../../framework/execution-mapping/README.md)
+→ [Schema de Work Item](../../framework/execution-mapping/work-item-schema.md)

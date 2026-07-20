@@ -334,6 +334,9 @@ GitHub is the canonical tool for tracking the **execution of work** on ProdOps a
 
 **Jira, ADO, Linear are optional sync tools.** External tools may receive synchronized data from GitHub, but they are not the source of truth for work state. The OBC `.md` file is the source of truth for content and state. GitHub Issues track the work performed on the OBC — they are not representations of the OBC. External tools are convenience mirrors.
 
+→ [Work Item Schema](execution-mapping/work-item-schema.en.md)
+→ [Execution Mapping](execution-mapping/README.en.md)
+
 ---
 
 ## Diligence as guardian of the hierarchy

@@ -44,6 +44,16 @@ cenários BDD sem nova infra, refatorações sem mudança de contrato.
 
 Adicionar linha na tabela "Histórico de mudanças estruturais" do `overview.md`.
 
+## Execution Mapping
+
+Ao criar qualquer Work Item (GitHub Issue, PR, Discussion):
+1. Consultar `prodops/framework/execution-mapping/matrix.md` — verificar se a operação é permitida para o artefato.
+2. Preencher campos obrigatórios: `artifact_type`, `artifact_id`, `operation`, `journey`.
+3. Usar o padrão de título: `[Operation] — [Artifact Type] [Artifact ID]: descrição`.
+4. Nunca criar Work Item sem referência de artefato.
+
+Referência: `prodops/framework/execution-mapping/work-item-schema.md`
+
 ## Doutrina do framework (humanos; agentes somente sob demanda explícita)
 
 Princípios, glossário, fluxo oficial, Origin Streams e modelo operacional:

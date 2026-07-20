@@ -271,3 +271,4 @@ Diligence does not create Issues "for" artifacts. It creates Issues when **ident
 → [Artifact Governance](artifact-governance.en.md)
 → [Glossary](glossary.en.md)
 → [Framework Flow](flow.en.md)
+→ [Execution Mapping — operations per artifact](execution-mapping/README.en.md)

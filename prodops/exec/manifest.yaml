@@ -94,6 +94,14 @@ github:
   # Ferramentas externas são sync opcionais — nunca fonte de verdade
   optional_sync: [jira, azure_devops, linear]
 
+# Execution Mapping — contrato declarativo artefato × operação × GitHub
+execution_mapping:
+  readme: prodops/framework/execution-mapping/README.md
+  matrix: prodops/framework/execution-mapping/matrix.md
+  work_item_schema: prodops/framework/execution-mapping/work-item-schema.md
+  # Regra: ao criar Work Item, consultar a matriz para operações permitidas
+  # e o schema para campos obrigatórios (artifact_type, artifact_id, operation, journey)
+
 # Vocabulário canônico (enums — corrige drift entre docs, skills e instâncias)
 vocabulary:
   # fonte de verdade: hook commit-msg.sh (11 tipos)

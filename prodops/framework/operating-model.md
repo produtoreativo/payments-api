@@ -73,6 +73,10 @@ Um Work Item deve sempre declarar: Artifact Type, Artifact ID, Operation, Journe
 
 Jira, Azure DevOps e Linear podem receber sincronização de dados do GitHub, mas **não são a fonte de verdade** do estado do trabalho. O arquivo OBC `.md` é a fonte de verdade do conteúdo e do estado. GitHub Issues rastreiam o trabalho executado sobre o OBC — não são representações do OBC. Jira, Azure DevOps e Linear são ferramentas de sync opcionais sobre o GitHub, nunca fontes canônicas.
 
+→ [Execution Mapping — operações por artefato](execution-mapping/README.md)
+→ [Matriz de Mapeamento](execution-mapping/matrix.md)
+→ [Schema de Work Item](execution-mapping/work-item-schema.md)
+
 ---
 
 ## Modelo operacional

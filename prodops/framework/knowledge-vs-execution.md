@@ -271,3 +271,4 @@ Diligence não cria Issues "para" artefatos. Ela cria Issues quando há **trabal
 → [Governança de artefatos](artifact-governance.md)
 → [Glossário](glossary.md)
 → [Fluxo do framework](flow.md)
+→ [Execution Mapping — operações por artefato](execution-mapping/README.md)

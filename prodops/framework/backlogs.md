@@ -334,6 +334,9 @@ O GitHub é a ferramenta canônica para rastrear a **execução do trabalho** so
 
 **Jira, ADO, Linear são sync opcionais.** Ferramentas externas podem receber sincronização dos dados do GitHub, mas não são a fonte de verdade do estado do trabalho. O OBC no arquivo `.md` é a fonte de verdade do conteúdo e do estado. GitHub Issues rastreiam o trabalho executado sobre o OBC — não são representações do OBC. Ferramentas externas são espelhos de conveniência.
 
+→ [Schema de Work Item](execution-mapping/work-item-schema.md)
+→ [Execution Mapping](execution-mapping/README.md)
+
 ---
 
 ## Diligence como guardiã da hierarquia

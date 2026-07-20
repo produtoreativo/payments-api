@@ -175,3 +175,10 @@ Delivery
 ## Evolution
 
 Diligence can evolve to include automated checks, consistency dashboards, and automatic alerts when divergences are detected between artifacts. Automation serves the journey — it does not replace it. The decision to correct a divergence always involves human judgment about the impact on the product and work in progress.
+
+---
+
+## References
+
+→ [Execution Mapping](../../framework/execution-mapping/README.en.md)
+→ [Work Item Schema](../../framework/execution-mapping/work-item-schema.en.md)
