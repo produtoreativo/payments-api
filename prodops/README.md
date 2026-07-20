@@ -1,64 +1,104 @@
 [English](README.en.md) · [Por que este projeto é em português?](language.md)
 
-# payments-api — Product Repository
+# ProdOps Framework
 
-Este repositório é um **Product Repository** dentro da arquitetura ProdOps — o nível responsável por implementar e operar um produto específico. A documentação neste diretório ensina o funcionamento da arquitetura completa do ProdOps, da qual este repositório ocupa apenas o último nível.
+O **ProdOps** é um modelo operacional para times de produto que separa artefatos de conhecimento permanentes — OBC, BDD, Business Intent, Signal, Architecture, Plans, Trails, Evidence — de execução efêmera no GitHub — Issues, PRs, Releases.
+
+> **Origem:** O Framework foi criado e validado em produção no produto [`payments-api`](https://github.com/produtoreativo/payments-api). A documentação canônica vive em [`prodops-framework`](https://github.com/produtoreativo/prodops-framework). Artefatos de produto ficam no repositório do produto.
+
+---
+
+## Arquitetura
 
 ```
 ProdOps Framework  →  ProdOps Portfolio  →  ProdOps Workspace  →  Product Repository
-                                                                    (este repositório)
 ```
 
+O Framework é o nível zero — define vocabulário, princípios, fluxo e modelo operacional. Portfolios, Workspaces e Product Repositories o adotam sem modificar suas definições canônicas.
+
 → [Arquitetura completa e definições](framework/operating-model.md#arquitetura-do-prodops)
+
+---
+
+## Princípio central
+
+```
+Um artefato ProdOps NUNCA é uma GitHub Issue.
+
+Knowledge Space (permanente)     Execution Space (efêmero)
+─────────────────────────────    ──────────────────────────
+OBC, BDD, Intent, Signal,        Issues, PRs, Discussions,
+Architecture, Plans, Evidence    Releases, Milestones
+
+Markdown sempre prevalece sobre GitHub.
+```
+
+→ [Knowledge vs Execution](framework/knowledge-vs-execution.md)
+→ [Execution Mapping](framework/execution-mapping/README.md)
+
+---
 
 ## Fluxo oficial
 
 ```
-Origin Stream → Business Signal → Fluxo Global ou Local → Local OBC Draft no Product Backlog → Modo (Upstream | Downstream) → Discovery + Assessment → Assessment Review → OBC Committed → Iteration Backlog (VIEW) → Iteration Plan → Delivery → Operation
+Origin Stream → Business Signal → Fluxo Global ou Local
+  → Local OBC Draft no Product Backlog
+  → Modo: Upstream (exploração) | Downstream (compromisso)
+  → Discovery + Assessment → OBC Committed
+  → Iteration Plan → Delivery → Operation
 ```
 
 → [Fluxo completo explicado](framework/flow.md)
 → [Os quatro Origin Streams](framework/origin-streams.md)
 
-## Modelo operacional
+---
 
+## Documentação do Framework
+
+| Documento | Descrição |
+|---|---|
+| [framework/principles.md](framework/principles.md) | Princípios fundacionais |
+| [framework/glossary.md](framework/glossary.md) | Termos canônicos |
+| [framework/flow.md](framework/flow.md) | Fluxo oficial do Framework |
+| [framework/origin-streams.md](framework/origin-streams.md) | Os quatro Origin Streams |
+| [framework/operating-model.md](framework/operating-model.md) | Modelo operacional completo |
+| [framework/knowledge-vs-execution.md](framework/knowledge-vs-execution.md) | Separação Knowledge × Execution |
+| [framework/execution-mapping/README.md](framework/execution-mapping/README.md) | Execution Mapping capability |
+| [framework/backlogs.md](framework/backlogs.md) | Backlogs e tipos de Work Item |
+| [framework/artifact-governance.md](framework/artifact-governance.md) | Governança de artefatos |
+
+---
+
+## Como adotar em um produto
+
+1. Clone ou faça fork de [`prodops-framework`](https://github.com/produtoreativo/prodops-framework)
+2. Copie `framework/` para `prodops/framework/` no repositório do produto
+3. Crie os diretórios de produto: `artifacts/`, `journeys/`, `skills/`, `exec/`
+4. Configure `exec/manifest.yaml` com os dados do produto
+5. Siga o fluxo oficial a partir do primeiro Business Signal
+
+---
+
+## Como manter em sync
+
+Melhorias no framework são feitas no repositório do produto e propagadas via PR:
+
+```bash
+./scripts/sync-framework-docs.sh           # sync + abre PR
+./scripts/sync-framework-docs.sh --dry-run # preview sem push
 ```
-Origin Stream (Business | Enterprise | Team | Technology)
-  ↓
-Business Signal → Business Intent → OBC Draft (Business Intent Backlog ou Product Backlog)
-  ↓
-Modo: Upstream (exploração) ou Downstream (compromisso)
-  ↔ Continuous Assessment → Reliability Plan
-  ↓ Assessment Review → OBC Committed
-Execution Mode → Journey → Phase → Practice → Delivery Capability → Artifacts
-```
 
-→ [Modelo operacional completo](framework/operating-model.md)
+---
 
-## Ordem de leitura
+## Portal do Product Repository
 
-1. `framework/principles.md` — princípios
-2. `framework/glossary.md` — termos canônicos
-3. `framework/canonical-paths.md` — localizações canônicas
-4. `framework/flow.md` — fluxo oficial do Framework
-5. `framework/origin-streams.md` — os quatro Origin Streams
-6. `framework/operating-model.md` — modelo operacional completo
-7. `execution-model/README.md` — Upstream vs Downstream
-8. `journeys/README.md` — as 5 jornadas
-9. A jornada específica da tarefa
-10. A fase dentro da jornada
-11. As capabilities da fase
-
-## Portal
+*Esta seção é relevante quando você está lendo este README dentro de um Product Repository.*
 
 | Área | Descrição |
 |---|---|
-| [framework/](framework/) | Princípios, glossário, fluxo, Origin Streams, modelo operacional |
+| [framework/](framework/) | Framework canônico — não modificar por produto |
 | [artifacts/business/intents/](artifacts/business/intents/) | Business Intents registradas |
-| [execution-model/](execution-model/) | Upstream e Downstream como modos de execução |
 | [journeys/](journeys/) | As 5 jornadas: Discovery, Delivery, Operation, Assessment, Diligence |
 | [artifacts/](artifacts/) | Artefatos produzidos: OBCs, BDD Features, planos, trilhas, evidências |
 | [templates/](templates/) | Templates centralizados por área |
 | [skills/](skills/) | Skills executáveis por agentes |
-| [journeys/delivery/capabilities/commit-workflow/](journeys/delivery/capabilities/commit-workflow/) | Commit Workflow: hooks Git nativos, scripts, documentação |
-| [documentation-review.md](documentation-review.md) | Revisão e estado da documentação do framework |
