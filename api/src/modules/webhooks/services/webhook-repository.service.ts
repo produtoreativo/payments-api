@@ -34,11 +34,10 @@ export class WebhookRepository {
   }
 
   async findByTokenId(tokenId: string): Promise<WebhookRecord[]> {
-    const items = await this.dynamo.queryByIndex(
+    const items = await this.dynamo.queryItems(
       TABLE,
-      'primary',
-      'PK',
       `TOKEN#${tokenId}`,
+      'WEBHOOK#',
     );
     return items.filter(
       (i) => (i as unknown as WebhookRecord).active,
