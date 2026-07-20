@@ -2,7 +2,7 @@
 
 > **Propósito:** Captura Business Signals do produto ainda não compreendidos o suficiente para gerar uma Business Intent formal. Itens aqui não têm OBC, não têm identificador permanente e não têm compromisso de entrega. Contém APENAS Business Signals.
 >
-> Itens promovidos seguem o fluxo local: Premortem + Reliability Plan + Owner Approval → Product Backlog (gerando Business Intent + Local OBC Draft).
+> Itens promovidos seguem o fluxo local: Premortem + Análise de Risco Preliminar + Owner Approval → Product Backlog (gerando Business Intent + Local OBC Draft).
 >
 > → [Hierarquia de backlogs](../../../framework/backlogs.md)
 > → [Icebox](icebox-backlog.md) — próximo nível; onde o OBC é refinado até o estado Committed

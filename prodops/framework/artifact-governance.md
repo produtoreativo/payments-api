@@ -44,7 +44,7 @@ Este documento define a governança de todos os artefatos do Framework ProdOps: 
 ### Product Repository
 
 - Implementa e opera um produto específico.
-- Governa Product Tracking List (Business Signals), Product Backlog (Local OBCs), Icebox (VIEW), Iteration Backlog (VIEW), Release (VIEW), Iteration Plan, OBCs, Reliability Plans.
+- Governa Product Tracking List (Business Signals), Product Backlog (Business Intents), Icebox (VIEW), Iteration Backlog (VIEW), Release (VIEW), Iteration Plan, OBCs, Reliability Plans.
 - Este repositório (`payments-api`) é um Product Repository.
 
 ---
@@ -171,7 +171,7 @@ Operation
 | Campo | Valor |
 |---|---|
 | **Owner** | Product Owner |
-| **Contém** | APENAS Local OBCs |
+| **Contém** | APENAS Business Intents (cada Intent possui um Local OBC como documento de contrato) |
 | **Onde nasce** | Product Repository — ponto de convergência dos fluxos global e local |
 | **Artefato canônico** | Gerenciado pelo Diligence; instâncias rastreadas no Iteration Plan |
 | **Quem modifica** | Product Owner + Diligence |

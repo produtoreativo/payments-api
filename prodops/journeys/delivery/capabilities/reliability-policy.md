@@ -4,7 +4,7 @@ Confiabilidade é planejada antes da implementação e validada antes da promoç
 
 ## Reliability Plan
 
-O Reliability Plan é **recomendado** para toda capability Downstream, mas não é obrigatório. É fortemente recomendado para itens com risco operacional relevante (alta complexidade, impacto financeiro, novas integrações). Quando existe, o plano define:
+O Reliability Plan é **obrigatório** quando qualquer um dos seguintes gatilhos canônicos estiver presente: movimentação financeira, integração externa, mudança de SLO, risco alto ou crítico, ou alteração de persistência ou segurança. Fora desses gatilhos, o Reliability Plan é opcional. Quando presente, o plano define:
 - Riscos e mitigações
 - OBCs (Observable Business Contracts) com thresholds de sucesso mensuráveis
 - Sugestões de SLO para eventos no caminho crítico

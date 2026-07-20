@@ -51,14 +51,14 @@ As Views de um GitHub Project são projeções sobre os dados — não backlogs 
 - Completed — Business Intents entregues
 
 **Product Repository GitHub Project Views:**
-- Product Backlog — todos os Local OBCs
-- Release Planning — Local OBCs por versão de release
-- Current Iteration — Local OBCs da iteração atual
-- Doing — Local OBCs em execução
-- Review — Local OBCs em revisão
-- Done — Local OBCs entregues
-- Reliability — Local OBCs com Reliability Plan ativo
-- Bugs — Local OBCs de bug
+- Product Backlog — todos os Business Intents
+- Release Planning — Business Intents por versão de release
+- Current Iteration — Business Intents da iteração atual
+- Doing — Business Intents em execução
+- Review — Business Intents em revisão
+- Done — Business Intents entregues
+- Reliability — Business Intents com Reliability Plan ativo
+- Bugs — Business Intents de bug
 
 ### Work Items — tipos de operação
 
