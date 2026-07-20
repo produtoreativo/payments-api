@@ -187,6 +187,20 @@ Mapeamento completo de todos os Artefatos do Knowledge Space contra operações 
 
 ---
 
+## Context Capsule
+
+**Classificação:** Execution-generated — não é um artefato do Knowledge Space.
+
+O Context Capsule (`prodops/exec/cards/<slug>/context.md`) é gerado automaticamente pelo Downstream readiness a partir dos artefatos de conhecimento existentes (OBC, BDD, Risks, Reliability Plan). É um documento de contexto de execução — efêmero e derivado.
+
+**Não tem Work Items próprios.** Work Items que afetam o contexto de uma entrega referenciam os artefatos de origem (OBC, BDD, etc.), não o Context Capsule.
+
+**Gerado por:** skill `/downstream` durante o Readiness gate.
+**Localização:** `prodops/exec/cards/<card-slug>/context.md`
+**Sobrevive a:** apenas a entrega corrente — não é histórico de longo prazo.
+
+---
+
 ## Risk Register
 
 | Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |

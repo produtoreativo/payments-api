@@ -70,7 +70,17 @@ Um artefato ProdOps é um documento com identidade própria que:
 | **Architecture** | `prodops/artifacts/product/architecture/overview.md` | Diagrama canônico da infraestrutura e aplicações |
 | **Plans** | `prodops/artifacts/governance/plans/` | Iteration Plan, Reliability Plan |
 | **Trails** | `prodops/artifacts/governance/trails/` | Registros históricos de Release e decisões |
+| **Risk Register** | `prodops/journeys/assessment/risks.md` | Registro de riscos identificados durante Assessment |
 | **Evidence** | Dentro de OBCs e Trails | Postmortems, métricas, resultados de experimentos |
+
+### Artefatos gerados vs. artefatos de conhecimento
+
+Nem todo documento no repositório é um artefato do Knowledge Space.
+
+| Documento | Classificação | Motivo |
+|---|---|---|
+| `prodops/exec/cards/<slug>/context.md` | **Execution-generated** | Gerado pelo Downstream readiness a partir de artefatos existentes. Efêmero — não é a fonte do conhecimento. |
+| Evidence | **Componente** | Não existe de forma autônoma. Sempre pertence a um OBC, Trail ou Experiment. Nunca tem Work Item próprio — o Work Item referencia o artefato que contém a evidência. |
 
 ### Propriedades dos artefatos
 

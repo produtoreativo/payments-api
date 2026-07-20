@@ -169,3 +169,14 @@ Upstream produces learning.
 Code is a vehicle for learning.
 
 Do not continue implementation after the experiment question has been answered.
+
+## Guardrails
+
+- Do not create GitHub Issues, PRs, or Discussions without declaring artifact_type, artifact_id, operation, and journey. Follow the Work Item schema: `prodops/framework/execution-mapping/work-item-schema.md`.
+- Use the canonical Work Item title pattern: `[Operation] — [Artifact Type] [Artifact ID]: description`.
+
+## References
+
+→ [Execution Mapping](../framework/execution-mapping/README.md)
+→ [Work Item Schema](../framework/execution-mapping/work-item-schema.md)
+→ [Mapping Matrix](../framework/execution-mapping/matrix.md)
