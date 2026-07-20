@@ -3,12 +3,11 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
-import { AsaasService } from '../src/infra/asaas.service';
-import { InvoiceRepository } from '../src/modules/invoices/services/invoice-repository.service';
 import { TokenRepository } from '../src/modules/auth/token.repository';
 import {
   buildTestFixture,
   teardownFixture,
+  TestFixture,
   truncateAllTables,
 } from './support/app-fixture';
 
@@ -16,21 +15,18 @@ const ADMIN_SECRET = 'test-admin-secret';
 const TENANT_ID = 'tenant-token-tests';
 
 describe('API Token Management (acceptance)', () => {
+  let fixture: TestFixture;
   let app: INestApplication<App>;
-  let repository: InvoiceRepository;
-  let asaas: AsaasService;
   let tokenRepository: TokenRepository;
 
   beforeAll(async () => {
-    const fixture = await buildTestFixture();
+    fixture = await buildTestFixture();
     app = fixture.app;
-    repository = fixture.repository;
-    asaas = fixture.asaas;
     tokenRepository = app.get(TokenRepository);
   });
 
   afterAll(async () => {
-    if (app) await teardownFixture({ app, repository, asaas });
+    if (fixture) await teardownFixture(fixture);
   });
 
   beforeEach(async () => {

@@ -3,49 +3,31 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
-import { AsaasService } from '../src/infra/asaas.service';
 import { InvoiceRepository } from '../src/modules/invoices/services/invoice-repository.service';
 import {
   buildTestFixture,
   teardownFixture,
+  TestFixture,
   TEST_API_TOKEN,
   TENANT_ID,
   WEBHOOK_SECRET,
   truncateAllTables,
 } from './support/app-fixture';
-
-const BASE_PAYLOAD = {
-  tenantId: TENANT_ID,
-  orderId: 'MS-100045',
-  customer: {
-    id: 'customer-123',
-    name: 'Maria Silva',
-    document: '12345678909',
-    email: 'maria@example.com',
-    mobilePhone: '11987654321',
-  },
-  amount: 159.9,
-  currency: 'BRL',
-  dueDate: '2027-12-31',
-  billingType: 'PIX',
-  provider: 'ASAAS',
-  description: 'Pedido MS-100045',
-};
+import { PIX_INVOICE_PAYLOAD } from './support/payloads';
 
 describe('Cancelar Invoice', () => {
+  let fixture: TestFixture;
   let app: INestApplication<App>;
   let repository: InvoiceRepository;
-  let asaas: AsaasService;
 
   beforeAll(async () => {
-    const fixture = await buildTestFixture();
+    fixture = await buildTestFixture();
     app = fixture.app;
     repository = fixture.repository;
-    asaas = fixture.asaas;
   });
 
   afterAll(async () => {
-    if (app) await teardownFixture({ app, repository, asaas });
+    if (fixture) await teardownFixture(fixture);
   });
 
   beforeEach(async () => {
@@ -57,7 +39,7 @@ describe('Cancelar Invoice', () => {
       .post('/invoices')
       .set('X-Api-Token', TEST_API_TOKEN)
       .set('Idempotency-Key', idempotencyKey)
-      .send(BASE_PAYLOAD)
+      .send(PIX_INVOICE_PAYLOAD)
       .expect(201);
   }
 

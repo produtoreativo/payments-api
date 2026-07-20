@@ -12,24 +12,7 @@ import {
   TENANT_ID,
   truncateAllTables,
 } from './support/app-fixture';
-
-const BASE_PAYLOAD = {
-  tenantId: TENANT_ID,
-  orderId: 'MS-100045',
-  customer: {
-    id: 'customer-123',
-    name: 'Maria Silva',
-    document: '12345678909',
-    email: 'maria@example.com',
-    mobilePhone: '11987654321',
-  },
-  amount: 159.9,
-  currency: 'BRL',
-  dueDate: '2027-12-31',
-  billingType: 'PIX',
-  provider: 'ASAAS',
-  description: 'Pedido MS-100045',
-};
+import { PIX_INVOICE_PAYLOAD } from './support/payloads';
 
 describe('Criar Invoice', () => {
   let fixture: TestFixture;
@@ -73,7 +56,7 @@ describe('Criar Invoice', () => {
         .set('X-Api-Token', TEST_API_TOKEN)
         .set('Idempotency-Key', 'MS-100045:create')
         .set('X-Correlation-Id', 'corr-create-linked')
-        .send(BASE_PAYLOAD)
+        .send(PIX_INVOICE_PAYLOAD)
         .expect(201);
 
       expect(response.body).toMatchObject({
@@ -96,7 +79,7 @@ describe('Criar Invoice', () => {
         .post('/invoices')
         .set('X-Api-Token', TEST_API_TOKEN)
         .set('Idempotency-Key', 'MS-100045:credit-card-hosted')
-        .send({ ...BASE_PAYLOAD, billingType: 'CREDIT_CARD' })
+        .send({ ...PIX_INVOICE_PAYLOAD, billingType: 'CREDIT_CARD' })
         .expect(201);
 
       expect(response.body).toMatchObject({
@@ -111,7 +94,7 @@ describe('Criar Invoice', () => {
         .post('/invoices')
         .set('X-Api-Token', TEST_API_TOKEN)
         .set('Idempotency-Key', 'MS-100045:create')
-        .send(BASE_PAYLOAD)
+        .send(PIX_INVOICE_PAYLOAD)
         .expect(201);
 
       expect(response.body).toMatchObject({
@@ -133,14 +116,14 @@ describe('Criar Invoice', () => {
         .post('/invoices')
         .set('X-Api-Token', TEST_API_TOKEN)
         .set('Idempotency-Key', 'MS-100045:create')
-        .send(BASE_PAYLOAD)
+        .send(PIX_INVOICE_PAYLOAD)
         .expect(201);
 
       const second = await request(app.getHttpServer())
         .post('/invoices')
         .set('X-Api-Token', TEST_API_TOKEN)
         .set('Idempotency-Key', 'MS-100045:create')
-        .send(BASE_PAYLOAD)
+        .send(PIX_INVOICE_PAYLOAD)
         .expect(201);
 
       expect(second.body).toEqual(first.body);
@@ -154,7 +137,7 @@ describe('Criar Invoice', () => {
         .set('X-Api-Token', TEST_API_TOKEN)
         .set('Idempotency-Key', 'MS-100045:tokenized')
         .send({
-          ...BASE_PAYLOAD,
+          ...PIX_INVOICE_PAYLOAD,
           billingType: 'CREDIT_CARD',
           creditCardToken: 'tok_xyz',
           remoteIp: '127.0.0.1',
@@ -173,7 +156,7 @@ describe('Criar Invoice', () => {
         .post('/invoices')
         .set('X-Api-Token', TEST_API_TOKEN)
         .set('Idempotency-Key', 'MS-100045:create')
-        .send(BASE_PAYLOAD)
+        .send(PIX_INVOICE_PAYLOAD)
         .expect(400);
 
       expect(response.body.message).toBe('Provider ASAAS is not enabled');

@@ -3,11 +3,11 @@
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
-import { AsaasService } from '../src/infra/asaas.service';
 import { InvoiceRepository } from '../src/modules/invoices/services/invoice-repository.service';
 import {
   buildTestFixture,
   teardownFixture,
+  TestFixture,
   TEST_API_TOKEN,
   TENANT_ID,
   WEBHOOK_SECRET,
@@ -33,19 +33,18 @@ const BASE_PAYLOAD = {
 };
 
 describe('Confirmar Pagamento via Webhook', () => {
+  let fixture: TestFixture;
   let app: INestApplication<App>;
   let repository: InvoiceRepository;
-  let asaas: AsaasService;
 
   beforeAll(async () => {
-    const fixture = await buildTestFixture();
+    fixture = await buildTestFixture();
     app = fixture.app;
     repository = fixture.repository;
-    asaas = fixture.asaas;
   });
 
   afterAll(async () => {
-    if (app) await teardownFixture({ app, repository, asaas });
+    if (fixture) await teardownFixture(fixture);
   });
 
   beforeEach(async () => {
