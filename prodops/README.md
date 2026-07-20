@@ -88,6 +88,8 @@ Melhorias no framework são feitas no repositório do produto e propagadas via P
 ./scripts/sync-framework-docs.sh --dry-run # preview sem push
 ```
 
+O script sincroniza toda a documentação de framework (`framework/`, `journeys/`, `skills/`, `templates/`, `execution-model/`). Apenas `artifacts/` e `exec/` ficam no produto.
+
 ---
 
 ## Portal do Product Repository

@@ -88,6 +88,8 @@ Framework improvements are made in the product repository and propagated via PR:
 ./scripts/sync-framework-docs.sh --dry-run # preview without push
 ```
 
+The script syncs all framework documentation (`framework/`, `journeys/`, `skills/`, `templates/`, `execution-model/`). Only `artifacts/` and `exec/` stay in the product.
+
 ---
 
 ## Product Repository portal

@@ -4,18 +4,18 @@
 # Copies ProdOps framework documentation from this product repository to
 # prodops-framework (the shared canonical framework repo) and opens a PR.
 #
-# What is synced:
-#   prodops/framework/  →  framework/     (canonical framework docs)
-#   prodops/README.md   →  README.md      (framework overview)
-#   prodops/README.en.md → README.en.md
+# What is synced (full framework — everything except product artifacts):
+#   prodops/framework/       →  framework/
+#   prodops/journeys/        →  journeys/
+#   prodops/skills/          →  skills/
+#   prodops/templates/       →  templates/
+#   prodops/execution-model/ →  execution-model/
+#   prodops/README.md        →  README.md
+#   prodops/README.en.md     →  README.en.md
 #
-# What is NOT synced:
-#   prodops/artifacts/   — product-specific knowledge artifacts
-#   prodops/journeys/    — product-specific journey execution
-#   prodops/skills/      — product-specific skills
-#   prodops/exec/        — product-specific manifest and cards
-#   prodops/templates/   — product-specific templates
-#   prodops/scripts/     — product-specific scripts
+# What is NOT synced (product-specific):
+#   prodops/artifacts/   — product knowledge artifacts (OBCs, BDD Features, etc.)
+#   prodops/exec/        — product manifest and cards
 #
 # Prerequisites:
 #   - git with SSH access to git@github.com:produtoreativo/prodops-framework.git
@@ -108,7 +108,7 @@ step "Collecting source metadata"
 
 SOURCE_COMMIT=$(git -C "${REPO_ROOT}" rev-parse --short HEAD)
 SOURCE_BRANCH=$(git -C "${REPO_ROOT}" rev-parse --abbrev-ref HEAD)
-SOURCE_LOG=$(git -C "${REPO_ROOT}" log --oneline -5 -- prodops/framework/ prodops/README.md prodops/README.en.md 2>/dev/null || echo "(no recent commits in prodops/framework)")
+SOURCE_LOG=$(git -C "${REPO_ROOT}" log --oneline -5 -- prodops/framework/ prodops/journeys/ prodops/skills/ prodops/templates/ prodops/execution-model/ prodops/README.md prodops/README.en.md 2>/dev/null || echo "(no recent commits in prodops framework paths)")
 
 info "Repo:   payments-api @ ${SOURCE_BRANCH} (${SOURCE_COMMIT})"
 info "Recent framework commits:"
@@ -169,9 +169,13 @@ sync_path() {
   ok "${label}"
 }
 
-sync_path "prodops/framework"    "framework"    "framework/ directory"
-sync_path "prodops/README.md"    "README.md"    "README.md"
-sync_path "prodops/README.en.md" "README.en.md" "README.en.md"
+sync_path "prodops/framework"       "framework"       "framework/ directory"
+sync_path "prodops/journeys"        "journeys"        "journeys/ directory"
+sync_path "prodops/skills"          "skills"          "skills/ directory"
+sync_path "prodops/templates"       "templates"       "templates/ directory"
+sync_path "prodops/execution-model" "execution-model" "execution-model/ directory"
+sync_path "prodops/README.md"       "README.md"       "README.md"
+sync_path "prodops/README.en.md"    "README.en.md"    "README.en.md"
 
 # ── Check for changes ─────────────────────────────────────────────────────────
 step "Checking for changes"
@@ -212,8 +216,12 @@ Recent framework changes:
 ${SOURCE_LOG}
 
 Synced paths:
-  prodops/framework/ → framework/
-  prodops/README.md  → README.md"
+  prodops/framework/       → framework/
+  prodops/journeys/        → journeys/
+  prodops/skills/          → skills/
+  prodops/templates/       → templates/
+  prodops/execution-model/ → execution-model/
+  prodops/README.md        → README.md"
 
 git commit -m "${COMMIT_MSG}" \
   --author="sync-framework-docs <noreply@produtoreativo.com>" \
@@ -257,6 +265,10 @@ ${SOURCE_LOG}
 | Source | Target |
 |---|---|
 | \`prodops/framework/\` | \`framework/\` |
+| \`prodops/journeys/\` | \`journeys/\` |
+| \`prodops/skills/\` | \`skills/\` |
+| \`prodops/templates/\` | \`templates/\` |
+| \`prodops/execution-model/\` | \`execution-model/\` |
 | \`prodops/README.md\` | \`README.md\` |
 | \`prodops/README.en.md\` | \`README.en.md\` |
 
