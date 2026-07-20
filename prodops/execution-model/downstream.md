@@ -4,7 +4,7 @@ Downstream é o **modo de compromisso** do Framework ProdOps.
 
 ## Definição canônica
 
-Downstream representa um modo de compromisso. A partir do momento em que um Business Intent entra em Downstream, existe compromisso de entrega, qualidade e confiabilidade. Todo trabalho passa a seguir obrigatoriamente o modelo operacional do ProdOps.
+Downstream representa um modo de compromisso. A partir do momento em que uma Business Intent entra em Downstream, existe compromisso de entrega, qualidade e confiabilidade. Todo trabalho passa a seguir obrigatoriamente o modelo operacional do ProdOps.
 
 ## Propósito
 
@@ -28,7 +28,7 @@ As Skills deixam de ser opcionais. Passam a fazer parte do processo de execuçã
 
 Ao entrar no Downstream, o OBC deixa de ser apenas um registro. Ele passa a ser o contrato operacional do trabalho.
 
-Durante o Discovery (no Icebox), será refinado até atingir um OBC mínimo aceitável. Esse OBC controla a evolução das jornadas seguintes: Iteration Backlog → Iteration Plan → Delivery.
+Durante o Discovery (no Icebox), será refinado até atingir o estado Committed. Esse OBC controla a evolução das jornadas seguintes: Iteration Backlog → Iteration Plan → Delivery.
 
 ## Quando usar o modo Downstream
 
@@ -39,14 +39,20 @@ Durante o Discovery (no Icebox), será refinado até atingir um OBC mínimo acei
 
 ## Pré-condições obrigatórias
 
-O modo Downstream pode ser iniciado para guiar um item comprometido até readiness. Antes de executar qualquer fase de Delivery, todos os requisitos abaixo devem estar satisfeitos:
+O Downstream possui três momentos explícitos:
 
-1. OBC em `prodops/artifacts/obcs/`
-2. BDD Feature em `prodops/artifacts/bdd/`
+1. **Downstream Declared** — o compromisso foi assumido; o modo guia o item até readiness.
+2. **Downstream Ready** — todos os gates aplicáveis foram satisfeitos.
+3. **Delivery Started** — Bootstrap foi iniciado para um item Ready.
+
+Antes de executar qualquer fase de Delivery, todos os requisitos abaixo devem estar satisfeitos:
+
+1. OBC em `prodops/artifacts/business/obcs/`
+2. BDD Feature em `prodops/artifacts/business/bdd/`
 3. Riscos documentados em `prodops/journeys/assessment/risks.md`
-4. Entrada no Iteration Plan com status `Entrou` em `prodops/artifacts/plans/iteration-plan.md`
+4. Entrada no Iteration Plan com status `Entrou` em `prodops/artifacts/governance/plans/iteration-plan.md`
 
-**Reliability Plan (recomendado):** Não é gate obrigatório, mas é fortemente recomendado para items com riscos operacionais relevantes. Quando existe, deve ser revisado antes da decisão de readiness — produzido pela jornada Assessment em `prodops/journeys/assessment/reliability-plans/`.
+5. Reliability Plan quando houver movimentação financeira, integração externa, mudança de SLO, risco alto/crítico ou alteração de persistência ou segurança
 
 Quando faltar um requisito obrigatório, o Downstream para antes da Delivery, indica o responsável e orienta a próxima ação.
 
@@ -77,7 +83,7 @@ CI Async: Ship → Validate → Promote            (plataforma, pipelines, ambie
 
 ## Evidências
 
-Registrar evidências significativas de entrega no trail da sessão ativa em `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`.
+Registrar evidências significativas de entrega no trail da sessão ativa em `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`.
 
 ## O Downstream deve preservar
 

@@ -1,14 +1,9 @@
 # Product
 
-Estado atual do produto, artefatos de produto e features comprometidas.
+Artefatos que descrevem o produto do ponto de vista operacional — seu contexto, organização do trabalho e decisões arquiteturais relevantes para operar.
 
-| Artefato | Localização |
+| Subdiretório | Conteúdo |
 |---|---|
-| Product Deck | [product-deck.md](product-deck.md) |
-| Service Decks | [service-decks/](service-decks/) |
-| BDD Features (committed) | [../bdd/](../bdd/) |
-| Tracking List | [tracking-list.md](tracking-list.md) |
-| Icebox | [icebox-backlog.md](icebox-backlog.md) |
-
-Features comprometidas ficam em `prodops/artifacts/bdd/`.
-Features exploratórias ficam em `prodops/journeys/discovery/experiments/<NNN-slug>/features/`.
+| [context/](context/) | Product Deck e Service Decks — visão de produto e serviços individuais |
+| [backlogs/](backlogs/) | Repository Tracking List, Icebox Backlog e Iteration Backlog — organização do trabalho por horizonte |
+| [architecture/](architecture/) | Visão arquitetural operacional — o que foi decidido, o que existe, como os sistemas se integram |

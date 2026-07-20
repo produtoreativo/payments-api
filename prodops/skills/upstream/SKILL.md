@@ -124,15 +124,15 @@ Whenever new knowledge is produced, update impacted artifacts.
 
 Possible targets:
 
-- `prodops/artifacts/product/product-deck.md`
-- `prodops/artifacts/product/service-decks/`
-- `prodops/artifacts/product/tracking-list.md`
+- `prodops/artifacts/product/context/product-deck.md`
+- `prodops/artifacts/product/context/service-decks/`
+- `prodops/artifacts/product/backlogs/tracking-list.md`
 - `prodops/journeys/discovery/experiments/<NNN-slug>/features/` (BDD Features — stay here until move-to-downstream)
 - `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` (OBC drafts — stay here until move-to-downstream)
 - `prodops/journeys/assessment/event-storming/`
 - `prodops/journeys/assessment/reliability-plans/`
-- `prodops/artifacts/obcs/` (committed OBCs — only after move-to-downstream)
-- `prodops/artifacts/bdd/` (committed BDD Features — only after move-to-downstream)
+- `prodops/artifacts/business/obcs/` (committed OBCs — only after move-to-downstream)
+- `prodops/artifacts/business/bdd/` (committed BDD Features — only after move-to-downstream)
 - `prodops/journeys/discovery/learnings.md`
 - `prodops/journeys/discovery/experiments/<NNN-slug>/upstream-trail.md`
 - `prodops/journeys/discovery/upstream-trail.md` only for global milestones, promotions, migrations, or repository-wide Upstream process changes
@@ -169,3 +169,14 @@ Upstream produces learning.
 Code is a vehicle for learning.
 
 Do not continue implementation after the experiment question has been answered.
+
+## Guardrails
+
+- Do not create GitHub Issues, PRs, or Discussions without declaring artifact_type, artifact_id, operation, and journey. Follow the Work Item schema: `prodops/framework/execution-mapping/work-item-schema.md`.
+- Use the canonical Work Item title pattern: `[Operation] — [Artifact Type] [Artifact ID]: description`.
+
+## References
+
+→ [Execution Mapping](../framework/execution-mapping/README.md)
+→ [Work Item Schema](../framework/execution-mapping/work-item-schema.md)
+→ [Mapping Matrix](../framework/execution-mapping/matrix.md)

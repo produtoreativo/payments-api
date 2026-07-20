@@ -15,7 +15,7 @@ prodops/journeys/discovery/experiments/NNN-short-slug/features/   ← BDD Featur
 prodops/journeys/discovery/experiments/NNN-short-slug/obcs/       ← OBC drafts (created during the experiment)
 ```
 
-`features/` and `obcs/` are created as needed. Artifacts stay here until `move-to-downstream`, when they are moved to `prodops/artifacts/bdd/` and `prodops/artifacts/obcs/`.
+`features/` and `obcs/` are created as needed. Artifacts stay here until `move-to-downstream`, when they are moved to `prodops/artifacts/business/bdd/` and `prodops/artifacts/business/obcs/`.
 
 Do not create experiment files directly in `prodops/journeys/discovery/experiments/` — always inside a subdirectory with a slug.
 
@@ -230,14 +230,14 @@ List all artifacts updated.
 
 Examples:
 
-- Product Deck (`prodops/artifacts/product/product-deck.md`)
-- Service Deck (`prodops/artifacts/product/service-decks/`)
-- Repository Tracking List (`prodops/artifacts/product/tracking-list.md`)
-- Icebox (`prodops/artifacts/product/icebox-backlog.md`)
+- Product Deck (`prodops/artifacts/product/context/product-deck.md`)
+- Service Deck (`prodops/artifacts/product/context/service-decks/`)
+- Repository Tracking List (`prodops/artifacts/product/backlogs/tracking-list.md`)
+- Icebox (`prodops/artifacts/product/backlogs/icebox-backlog.md`)
 - Event Storming (`prodops/journeys/assessment/event-storming/`)
 - Reliability Plan (`prodops/journeys/assessment/reliability-plans/`)
-- OBC (`prodops/artifacts/obcs/`)
-- BDD Features (`prodops/artifacts/bdd/`)
+- OBC (`prodops/artifacts/business/obcs/`)
+- BDD Features (`prodops/artifacts/business/bdd/`)
 
 ---
 

@@ -28,13 +28,13 @@ Um experimento Upstream pode produzir código de qualidade de produção, mas es
 
 **Objetivo:** Preparar um item comprometido para Delivery.
 
-Um item entra no Icebox após ser aceito no Product Intent Backlog. A Discovery no Downstream ocorre dentro do Icebox. O objetivo é produzir um OBC mínimo aceitável por meio de refinamento:
+Um item entra no Icebox após ser aceito no Product Backlog. A Discovery no Downstream ocorre dentro do Icebox. O objetivo é produzir um Local OBC no estado Committed por meio de refinamento:
 
 - funcional — o que o sistema deve fazer
 - técnico — como o sistema deve fazer
 - operacional — como o sistema deve se comportar em produção
 
-Ao final da Discovery no Downstream, o item possui OBC mínimo validado e avança para o Iteration Backlog.
+Ao final da Discovery no Downstream, o item possui Local OBC no estado Committed e avança para o Iteration Backlog.
 
 ---
 
@@ -76,7 +76,7 @@ Registrar apenas como:
 
 - dependência externa;
 - risco de release;
-- item da Repository Tracking List;
+- item da Product Tracking List;
 - nota do Reliability Plan;
 - evidência requerida do sistema responsável.
 
@@ -105,7 +105,7 @@ Uma atividade Upstream pode produzir:
 - atualizações de AsyncAPI;
 - atualizações de Event Storming;
 - atualizações do Reliability Plan;
-- atualizações da Repository Tracking List;
+- atualizações da Product Tracking List;
 - decisões de arquitetura.
 
 ---
@@ -245,7 +245,7 @@ O Decision Package completo (seções do `experiment.md`):
 - **Recommended Decision** — a recomendação do autor (ver opções abaixo)
 - **Updated Risks** — novos riscos ou riscos mitigados
 - **Updated Opportunities** — oportunidades identificadas
-- **Updated Tracking Items** — itens que precisam entrar nas Repository Tracking Lists ou Global Tracking Lists
+- **Updated Tracking Items** — itens que precisam entrar nas Product Tracking Lists ou Portfolio Tracking Lists
 - **Updated OBCs** — critérios de sucesso propostos
 - **Recommended Downstream Scope** — o que entra na próxima iteração, se aprovado
 
@@ -256,8 +256,8 @@ O Decision Package completo (seções do `experiment.md`):
 | **Promover** | Iniciar processo de promoção (ver seção "Processo de promoção para Downstream"). BDD Feature + OBC movidos. Capability entra no Iteration Plan. |
 | **Promover com restrição** | Subconjunto da capability é promovido. Partes restritas permanecem em Upstream para outro experimento. |
 | **Requer outro experimento** | Criar novo experimento com hipótese mais específica. Registrar a decisão no `upstream-trail.md` do experimento atual. |
-| **Aguardar decisão de negócio** | Bloquear o experimento na Repository Tracking List com o decisor e a data esperada. Não abrir novo experimento até a decisão chegar. |
-| **Aguardar dependência externa** | Registrar a dependência no Reliability Plan e na Repository Tracking List. Monitorar no Continuous Assessment. |
+| **Aguardar decisão de negócio** | Bloquear o experimento na Product Tracking List com o decisor e a data esperada. Não abrir novo experimento até a decisão chegar. |
+| **Aguardar dependência externa** | Registrar a dependência no Reliability Plan e na Product Tracking List. Monitorar no Continuous Assessment. |
 | **Descartar** | Registrar o aprendizado em `prodops/journeys/discovery/learnings.md`. Fechar o experimento com justificativa no `upstream-trail.md`. |
 
 ### Registro da decisão
@@ -299,8 +299,8 @@ A decisão de promover é do Product Manager + Tech Lead responsáveis pela capa
 Antes de promover, confirmar que:
 
 1. O Decision Package do experimento tem recomendação clara (`Promover` ou `Promover com restrição`).
-2. O comportamento esperado está descrito em um BDD Feature em `prodops/journeys/discovery/experiments/<NNN-slug>/features/` pronto para ser movido para `prodops/artifacts/bdd/`.
-3. O OBC draft em `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` tem critérios mensuráveis e pode ser movido para `prodops/artifacts/obcs/`.
+2. O comportamento esperado está descrito em um BDD Feature em `prodops/journeys/discovery/experiments/<NNN-slug>/features/` pronto para ser movido para `prodops/artifacts/business/bdd/`.
+3. O OBC draft em `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` tem critérios mensuráveis e pode ser movido para `prodops/artifacts/business/obcs/`.
 4. O Reliability Plan foi atualizado com os riscos e mitigation actions identificados no experimento.
 5. A incerteza remanescente é aceitável para entrar em Downstream com compromisso de entrega.
 
@@ -309,21 +309,21 @@ Antes de promover, confirmar que:
 ```
 1. Mover BDD Feature:
    prodops/journeys/discovery/experiments/<NNN-slug>/features/<slug>.feature
-   → prodops/artifacts/bdd/<slug>.feature
+   → prodops/artifacts/business/bdd/<slug>.feature
 
 2. Mover OBC:
    prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md
-   → prodops/artifacts/obcs/<slug>.md
+   → prodops/artifacts/business/obcs/<slug>.md
    (remover marcação de draft)
 
 3. Criar ou atualizar entrada no Iteration Plan:
-   prodops/artifacts/plans/iteration-plan.md
+   prodops/artifacts/governance/plans/iteration-plan.md
    (adicionar com decisão `Entrou` na tabela "Iteration Plan recomendado" —
    não apenas em "Iteration Backlog identificado", pois esta seção não satisfaz
    a pré-condição formal do Downstream)
 
-4. Atualizar Repository Tracking List se o item estava lá:
-   prodops/artifacts/product/tracking-list.md
+4. Atualizar Product Tracking List se o item estava lá:
+   prodops/artifacts/product/backlogs/tracking-list.md
    (mudar status para "Promovido para Downstream")
 
 5. Registrar a promoção no upstream-trail do experimento:
@@ -338,7 +338,7 @@ Antes de promover, confirmar que:
 
 - Mover código para produção sem mover os artefatos ProdOps.
 - Criar um OBC committed sem BDD Feature correspondente.
-- Iniciar implementação Downstream antes de o OBC estar em `prodops/artifacts/obcs/`.
+- Iniciar implementação Downstream antes de o OBC estar em `prodops/artifacts/business/obcs/`.
 - Promover com recomendação `Não promover` ou `Requer outro experimento` no Decision Package.
 
 ---

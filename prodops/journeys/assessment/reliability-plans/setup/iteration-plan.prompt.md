@@ -278,4 +278,4 @@ Regras
 Sua única responsabilidade é definir o escopo de negócio mais adequado para maximizar as chances de sucesso da próxima Release.
 
 Instruções gerais
-crie o arquivo prodops/artifacts/plans/iteration-plan.md com o conteúdo solicitado.
+crie o arquivo prodops/artifacts/governance/plans/iteration-plan.md com o conteúdo solicitado.

@@ -46,7 +46,7 @@ Uma implementação está pronta quando todos os itens abaixo são verdadeiros:
 
 ## Evidência
 
-- [ ] Evidência acrescentada no trail da sessão ativa em `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` (Downstream) ou no trail do experimento (Upstream).
+- [ ] Evidência acrescentada no trail da sessão ativa em `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md` (Downstream) ou no trail do experimento (Upstream).
 - [ ] Evidência inclui: saída dos testes, saída do lint e resumo do que mudou.
 
 ## Pronto para Sync + Finish

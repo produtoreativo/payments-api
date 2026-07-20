@@ -17,13 +17,65 @@ Product Repository     ←  este repositório (payments-api)
 | Nível | Responsabilidade | Não contém |
 |---|---|---|
 | **Framework** | Princípios, jornadas, capabilities, skills, templates, glossário | Roadmap, Backlogs, Business Intents, Releases, Features |
-| **Portfolio** | Global Tracking List, Roadmaps, Platform Releases, Milestones | Implementação de software |
+| **Portfolio** | Portfolio Tracking List (Business Signals), Business Intent Backlog (Business Intents), Roadmaps (VIEW), Platform Releases (VIEW), Milestones | Implementação de software |
 | **Workspace** | Integração e execução conjunta de Product Repositories | Roadmap, Business Intents |
 | **Product Repository** | Implementar e operar um produto específico | — |
 
 Este repositório (`payments-api`) é um **Product Repository**. Serve como implementação de referência do Framework ProdOps. Os níveis Portfolio e Workspace existem na arquitetura e são referenciados nesta documentação; ainda não possuem repositórios físicos criados.
 
 → Ver [glossary.md](glossary.md) para definições canônicas de cada nível.
+
+---
+
+## GitHub no Execution Space
+
+O GitHub é a ferramenta canônica para rastrear a **execução do trabalho** sobre os artefatos ProdOps. Artefatos (OBCs, BDD, Intents, etc.) vivem como arquivos Markdown no repositório — nunca como GitHub Issues.
+
+### GitHub Projects como domínios de gestão
+
+| Domínio | GitHub Project | Rastreia trabalho sobre |
+|---|---|---|
+| **Portfolio** | Portfolio GitHub Project | Work Items sobre Business Signals e Business Intents |
+| **Product Repository** | Product Repository GitHub Project | Work Items sobre Business Intents, OBCs, BDD e Plans |
+
+### GitHub Project Views como projeções
+
+As Views de um GitHub Project são projeções sobre os dados — não backlogs separados:
+
+**Portfolio GitHub Project Views:**
+- Business Signals — todos os Business Signals
+- Discovery — Business Signals em investigação
+- Business Intent Backlog — Business Intents aceitas
+- Roadmap — Business Intents por horizonte (now/next/later)
+- Platform Releases — Business Intents por versão de plataforma
+- Completed — Business Intents entregues
+
+**Product Repository GitHub Project Views:**
+- Product Backlog — todos os Local OBCs
+- Release Planning — Local OBCs por versão de release
+- Current Iteration — Local OBCs da iteração atual
+- Doing — Local OBCs em execução
+- Review — Local OBCs em revisão
+- Done — Local OBCs entregues
+- Reliability — Local OBCs com Reliability Plan ativo
+- Bugs — Local OBCs de bug
+
+### Work Items — tipos de operação
+
+| Tipo de Work Item | Artefatos tipicamente afetados | Exemplos de operação |
+|---|---|---|
+| **Business Signal Work Item** | Business Signal | Investigar, Priorizar, Transformar em Intent |
+| **Business Intent Work Item** | Business Intent, OBC, BDD | Explorar, Refinar OBC, Revisar, Entregar |
+
+Um Work Item deve sempre declarar: Artifact Type, Artifact ID, Operation, Journey. → [Knowledge vs Execution](knowledge-vs-execution.md)
+
+### Ferramentas externas são sync opcionais
+
+Jira, Azure DevOps e Linear podem receber sincronização de dados do GitHub, mas **não são a fonte de verdade** do estado do trabalho. O arquivo OBC `.md` é a fonte de verdade do conteúdo e do estado. GitHub Issues rastreiam o trabalho executado sobre o OBC — não são representações do OBC. Jira, Azure DevOps e Linear são ferramentas de sync opcionais sobre o GitHub, nunca fontes canônicas.
+
+→ [Execution Mapping — operações por artefato](execution-mapping/README.md)
+→ [Matriz de Mapeamento](execution-mapping/matrix.md)
+→ [Schema de Work Item](execution-mapping/work-item-schema.md)
 
 ---
 
@@ -34,14 +86,14 @@ O ProdOps organiza o trabalho de produto e engenharia em camadas hierárquicas, 
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓
-Intent → OBC draft no Business Intent Backlog ou Product Intent Backlog
+Business Signal → Business Intent (com OBC draft como contrato) no BIB ou Product Backlog
   ↓
 Exploration (Icebox)
   ↔ Continuous Assessment → Reliability Plan → Assessment Review
   ↓
 OBC + BDD committed
   ↓
-Backlog Management (Diligence)        ← Repository Tracking List → Product Intent Backlog → Icebox → Iteration Backlog → Iteration Plan
+Backlog Management (Diligence)        ← Product Tracking List → Product Backlog → Icebox → Iteration Backlog → Iteration Plan
   ↓
 Execution Mode
 ├── Upstream
@@ -87,13 +139,15 @@ Artifacts
 
 ---
 
-**Origin Stream** — a classificação da origem de uma Intent. Quatro possibilidades: Business (mercado, cliente, produto), Enterprise (compliance, regulação, governança), Team (processo, automações, produtividade), Technology (plataforma, segurança, infraestrutura). Toda Intent tem exatamente um Origin Stream. Ver [`origin-streams.md`](origin-streams.md).
+**Origin Stream** — a classificação da origem de um Business Signal. Quatro possibilidades: Business (mercado, cliente, produto), Enterprise (compliance, regulação, governança), Team (processo, automações, produtividade), Technology (plataforma, segurança, infraestrutura). Todo Business Signal tem exatamente um Origin Stream. Ver [`origin-streams.md`](origin-streams.md).
 
-**Intent** — ponto de entrada do Framework. Uma intenção de gerar valor ainda não comprometida. A Intent registra o "porquê" sem prescrever o "como". *Anteriormente chamada de Business Intent.*
+**Business Signal** — qualquer oportunidade, hipótese, problema, benchmark ou ideia que merece atenção. Vive na Portfolio Tracking List ou Product Tracking List. Gera Business Intents quando investigado e reconhecido como estratégico.
+
+**Business Intent** — decisão estratégica de perseguir valor. Nasce de um Business Signal. Vive no Business Intent Backlog. Gera OBCs via OBC Partitioning.
 
 **Exploration** — reduz incerteza e refina o OBC draft por meio da jornada Discovery. Discovery existe em ambos os modos; o rigor e o compromisso variam conforme Upstream ou Downstream. Ver [`flow.md`](flow.md).
 
-**OBC (Observable Business Contract)** — nasce como Draft quando a Intent entra no Business Intent Backlog (fluxo global) ou no Product Intent Backlog (fluxo local). É refinado pela Discovery no Icebox até atingir **Minimum OBC** (gate de entrada no Iteration Backlog). Fica **Active** durante a Delivery e **Operational** na Operation. *Anteriormente definido incorretamente como Outcome-Based Criterion.*
+**OBC (Observable Business Contract)** — nasce como Draft quando a Business Intent entra no Business Intent Backlog (fluxo global) ou no Product Backlog (fluxo local). É refinado pela Discovery no Icebox até atingir o estado **Committed** (gate de entrada no Iteration Backlog). Fica **In Delivery** durante a Delivery e **Operational** na Operation.
 
 **Continuous Assessment** — avalia continuamente riscos, oportunidades e decide o próximo passo.
 
@@ -170,9 +224,9 @@ Jornada transversal. Guardiã da consistência do sistema de trabalho do ProdOps
 ```
 Origin Stream (Business | Enterprise | Team | Technology)
   ↓ gera
-Intent
+Business Signal → Business Intent
   ↓ entra em
-Business Intent Backlog (fluxo global) ou Product Intent Backlog (fluxo local) → OBC draft
+Business Intent Backlog (fluxo global) ou Product Backlog (fluxo local) → OBC draft
   ↓
 Exploration (Discovery no Icebox) ↔ Assessment
   Experimento → aprendizado → Decision Package

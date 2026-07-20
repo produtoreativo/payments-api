@@ -11,7 +11,7 @@ Use this skill to move a release to the next stage or close it.
 
 - `AGENTS.md`
 - `prodops/journeys/assessment/reliability-plans/`
-- `prodops/artifacts/trails/sessions/` (active session trail)
+- `prodops/artifacts/governance/trails/sessions/` (active session trail)
 - `prodops/journeys/delivery/phases/finish/done-criteria.md`
 - `prodops/journeys/operation/`
 

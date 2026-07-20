@@ -11,7 +11,7 @@ Construir, validar e promover a solução. A Delivery representa a execução da
 A Delivery começa somente quando um item entra no **Iteration Plan**.
 
 A entrada da Delivery **não é**:
-- Business Intent
+- Intent
 - Icebox
 - Iteration Backlog
 

@@ -1,6 +1,6 @@
 # Release Trail Entry
 
-Localização canônica: acrescentar no trail da sessão ativa em `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`
+Localização canônica: acrescentar no trail da sessão ativa em `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`
 
 ---
 
@@ -16,11 +16,11 @@ Localização canônica: acrescentar no trail da sessão ativa em `prodops/artif
 
 ### OBC relacionado
 
-<!-- prodops/artifacts/obcs/<capability>.md -->
+<!-- prodops/artifacts/business/obcs/<capability>.md -->
 
 ### BDD relacionado
 
-<!-- prodops/artifacts/bdd/<capability>.feature -->
+<!-- prodops/artifacts/business/bdd/<capability>.feature -->
 
 ### Evidências
 

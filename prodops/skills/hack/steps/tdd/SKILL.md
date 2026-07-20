@@ -11,9 +11,9 @@ Execute only the TDD cycle of the Hack flow.
 
 Read before starting:
 
-- Relevant BDD Feature in `prodops/artifacts/bdd/` (committed) or
+- Relevant BDD Feature in `prodops/artifacts/business/bdd/` (committed) or
   `prodops/journeys/discovery/experiments/<NNN-slug>/features/` (exploratory)
-- Relevant OBC in `prodops/artifacts/obcs/` or experiment directory
+- Relevant OBC in `prodops/artifacts/business/obcs/` or experiment directory
 - The module being changed and its existing tests
 - Direct imports and shared contracts required to understand the change
 
@@ -70,11 +70,11 @@ exit gates. The full checklist is in
    Use `prodops/journeys/assessment/event-storming/plan-model.json` as the format reference.
 6. **Architecture** — if the change is structural (new module, route, external
    dependency, table, or event topic), update
-   `prodops/journeys/assessment/architecture/overview.md`:
+   `prodops/artifacts/product/architecture/overview.md`:
    - edit the Mermaid diagram;
    - add a row to the History table with today's date and a one-line description.
 
-7. **Release Trail** — append evidence to the active session trail (`prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`):
+7. **Release Trail** — append evidence to the active session trail (`prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`):
 
    - red test output (or reason TDD was not applicable);
    - green test output;

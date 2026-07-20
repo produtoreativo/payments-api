@@ -11,7 +11,7 @@ Build, validate and promote the solution. Delivery represents the execution of t
 Delivery begins only when an item enters the **Iteration Plan**.
 
 The entry point of Delivery is **not**:
-- Business Intent
+- Intent
 - Icebox
 - Iteration Backlog
 

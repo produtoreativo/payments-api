@@ -73,8 +73,8 @@ Use this table as the primary navigation source before reading or writing any ar
 | Risks | `prodops/journeys/assessment/risks.md` |
 | Opportunities | `prodops/journeys/assessment/opportunities.md` |
 | Event Storming | `prodops/journeys/assessment/event-storming/` |
-| Architecture overview | `prodops/journeys/assessment/architecture/overview.md` |
-| Product architecture Decision Trail | `prodops/journeys/assessment/architecture/decision-trail.md` |
+| Architecture overview | `prodops/artifacts/product/architecture/overview.md` |
+| Product architecture Decision Trail | `prodops/artifacts/product/architecture/decision-trail.md` |
 
 ---
 
@@ -145,28 +145,33 @@ Use this table as the primary navigation source before reading or writing any ar
 | Artifact | Canonical path |
 |---|---|
 | Artifacts overview | `prodops/artifacts/README.md` |
-| Product Deck | `prodops/artifacts/product/product-deck.md` |
-| Service Decks | `prodops/artifacts/product/service-decks/` |
-| Icebox | `prodops/artifacts/product/icebox-backlog.md` |
-| Repository Tracking List | `prodops/artifacts/product/tracking-list.md` |
-| OBCs (committed) | `prodops/artifacts/obcs/` |
-| BDD Features (committed) | `prodops/artifacts/bdd/` |
-| Iteration Plan | `prodops/artifacts/plans/iteration-plan.md` |
-| Iteration Backlog | `prodops/artifacts/plans/iteration-backlog.md` |
-| Downstream Iteration Backlog | `prodops/artifacts/plans/downstream-iteration-backlog.md` |
-| Release Trail (model docs) | `prodops/artifacts/trails/release-trail.md` |
-| Release Trail (active session) | `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` |
-| Evidence (committed) | `prodops/artifacts/evidence/` |
+| Business (category) | `prodops/artifacts/business/` |
+| Product (category) | `prodops/artifacts/product/` |
+| Governance (category) | `prodops/artifacts/governance/` |
+| Product Deck | `prodops/artifacts/product/context/product-deck.md` |
+| Service Decks | `prodops/artifacts/product/context/service-decks/` |
+| Icebox | `prodops/artifacts/product/backlogs/icebox-backlog.md` |
+| Product Tracking List | `prodops/artifacts/product/backlogs/tracking-list.md` |
+| Iteration Backlog | `prodops/artifacts/product/backlogs/iteration-backlog.md` |
+| OBCs (committed) | `prodops/artifacts/business/obcs/` |
+| BDD Features (committed) | `prodops/artifacts/business/bdd/` |
+| Business Intents | `prodops/artifacts/business/intents/` |
+| Iteration Plan | `prodops/artifacts/governance/plans/iteration-plan.md` |
+| Architecture overview | `prodops/artifacts/product/architecture/overview.md` |
+| Decision Trail — architecture | `prodops/artifacts/product/architecture/decision-trail.md` |
+| Release Trail (model docs) | `prodops/artifacts/governance/trails/release-trail.md` |
+| Release Trail (active session) | `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md` |
+| Evidence (committed) | `prodops/artifacts/governance/evidence/` |
 
 ---
 
-## Intents
+## Business Intents
 
 | Concern | Canonical path |
 |---|---|
-| Intents overview | `prodops/business-intents/README.md` |
-| Individual intents | `prodops/business-intents/<slug>.md` |
-| Intent template | `prodops/templates/business-intents/intent.md` |
+| Business Intents overview | `prodops/artifacts/business/intents/README.md` |
+| Individual Business Intents | `prodops/artifacts/business/intents/<slug>.md` |
+| Business Intent template | `prodops/templates/business-intents/intent.md` |
 
 ---
 
@@ -222,7 +227,7 @@ Use this table as the primary navigation source before reading or writing any ar
 | Template | Canonical path |
 |---|---|
 | Overview | `prodops/templates/README.md` |
-| Intent | `prodops/templates/business-intents/intent.md` |
+| Business Intent | `prodops/templates/business-intents/intent.md` |
 | Experiment | `prodops/templates/discovery/experiment.md` |
 | Learning | `prodops/templates/discovery/learning.md` |
 | Discovery Trail | `prodops/templates/discovery/trail.md` |
@@ -245,10 +250,10 @@ These paths may appear in migrated historical entries. **Do not use for new arti
 |---|---|
 | `prodops/upstream/` | `prodops/journeys/discovery/` |
 | `prodops/product/` | `prodops/artifacts/product/` |
-| `prodops/assessment/` | `prodops/journeys/assessment/` or `prodops/artifacts/plans/` depending on the artifact |
+| `prodops/assessment/` | `prodops/journeys/assessment/` or `prodops/artifacts/governance/plans/` depending on the artifact |
 | `prodops/assessment/reliability-plan/` | `prodops/journeys/assessment/reliability-plans/` |
 | `prodops/assessment/reliability-plans/` | `prodops/journeys/assessment/reliability-plans/` |
-| `prodops/downstream/release-trail.md` | `prodops/artifacts/trails/release-trail.md` |
-| `prodops/current-state/` | `prodops/artifacts/` (product, bdd, obcs) |
-| `prodops/current-state/features/` | `prodops/artifacts/bdd/` |
+| `prodops/downstream/release-trail.md` | `prodops/artifacts/governance/trails/release-trail.md` |
+| `prodops/current-state/` | `prodops/artifacts/` (product/context, business/bdd, business/obcs) |
+| `prodops/current-state/features/` | `prodops/artifacts/business/bdd/` |
 | root `templates/upstream-*.md` | `prodops/templates/discovery/` |

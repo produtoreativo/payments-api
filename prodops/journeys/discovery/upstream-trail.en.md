@@ -85,11 +85,11 @@ Reference:
 
 ### Activity
 
-Complete execution of the Upstream activity (exploratory mode) for the Business Intent "Multiple Payment Support in Checkout".
+Complete execution of the Upstream activity (exploratory mode) for the Intent "Multiple Payment Support in Checkout".
 
 ### Summary
 
-All 10 open questions from the Business Intent were answered. The current domain model (1:1:1 — 1 order : 1 invoice : 1 method) was analyzed and compared with composition alternatives. Benchmark of Stripe, Adyen, MercadoPago and Asaas confirmed that the Payments API needs to absorb the composition orchestration, as Asaas has no native support for multiple methods per order.
+All 10 open questions from the Intent were answered. The current domain model (1:1:1 — 1 order : 1 invoice : 1 method) was analyzed and compared with composition alternatives. Benchmark of Stripe, Adyen, MercadoPago and Asaas confirmed that the Payments API needs to absorb the composition orchestration, as Asaas has no native support for multiple methods per order.
 
 Option A (multiple invoices per order with a new `PaymentComposition` entity) was selected because it is additive to the current model and does not break simple payments. Event Storming of the new flow identified 7 new domain events. A candidate OBC was created. The only pending product decision is the partial failure policy (A: revert all / B: keep confirmed / C: partial window) — Policy B is recommended.
 
@@ -97,7 +97,7 @@ Option A (multiple invoices per order with a new `PaymentComposition` entity) wa
 
 - `prodops/journeys/discovery/experiments/007-split-payment-model/experiment.md`
 - `prodops/journeys/discovery/experiments/007-split-payment-model/upstream-trail.md`
-- `prodops/artifacts/obcs/payment-composition-draft.md`
+- `prodops/artifacts/business/obcs/payment-composition-draft.md`
 - `prodops/journeys/discovery/upstream-trail.md`
 
 ### Decision
@@ -106,7 +106,7 @@ Ready for Assessment — awaiting product decision on partial failure policy.
 
 ### Notes
 
-Next steps after product decision: create BDD Feature `prodops/artifacts/bdd/payment-composition.feature`, update Iteration Plan, Bootstrap → Hack.
+Next steps after product decision: create BDD Feature `prodops/artifacts/business/bdd/payment-composition.feature`, update Iteration Plan, Bootstrap → Hack.
 
 ## 2026-07-03 18:04
 
@@ -141,7 +141,7 @@ EXP-004 was recovered as a reference record because the global trail, Reliabilit
 - `prodops/upstream/experiments.md`
 - `prodops/upstream/upstream-trail.md`
 - `prodops/journeys/assessment/risks.md`
-- `prodops/journeys/discovery/features/README.md` (removed: directory consolidated into `prodops/artifacts/bdd/`)
+- `prodops/journeys/discovery/features/README.md` (removed: directory consolidated into `prodops/artifacts/business/bdd/`)
 
 ### Decision
 
@@ -149,7 +149,7 @@ Ready for Assessment.
 
 ### Notes
 
-The historical reference to `prodops/journeys/discovery/features/checkout-gateway-feature-flag.feature` (removed: no successor in `prodops/artifacts/bdd/`) remains a gap: the file is referenced by trail entries but is not present in the workspace.
+The historical reference to `prodops/journeys/discovery/features/checkout-gateway-feature-flag.feature` (removed: no successor in `prodops/artifacts/business/bdd/`) remains a gap: the file is referenced by trail entries but is not present in the workspace.
 
 ## 2026-07-03 17:58
 
@@ -401,8 +401,8 @@ A new Checkout Feature Flag readiness BDD was added to represent the EXP-004 lea
 
 ### Artifacts Updated
 
-- `prodops/journeys/discovery/features/credit-card-payment.feature` (migrated: now `prodops/artifacts/bdd/credit-card-payment.feature`)
-- `prodops/journeys/discovery/features/checkout-gateway-feature-flag.feature` (removed: no successor in `prodops/artifacts/bdd/`)
+- `prodops/journeys/discovery/features/credit-card-payment.feature` (migrated: now `prodops/artifacts/business/bdd/credit-card-payment.feature`)
+- `prodops/journeys/discovery/features/checkout-gateway-feature-flag.feature` (removed: no successor in `prodops/artifacts/business/bdd/`)
 
 ### Decision
 
@@ -468,7 +468,7 @@ The Validation Workbench now lets agents and humans explore hosted card, saved-c
 - `prodops/upstream/experiments/001-credit-card-lifecycle/experiment.md`
 - `prodops/upstream/experiments.md`
 - `prodops/upstream/learnings.md`
-- `prodops/journeys/discovery/features/credit-card-payment.feature` (migrated: now `prodops/artifacts/bdd/credit-card-payment.feature`)
+- `prodops/journeys/discovery/features/credit-card-payment.feature` (migrated: now `prodops/artifacts/business/bdd/credit-card-payment.feature`)
 - `prodops/product/tracking-list.md`
 - `prodops/journeys/assessment/risks.md`
 - `prodops/upstream/obcs/credit-card-authorization-confirmation.md`

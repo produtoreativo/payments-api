@@ -11,7 +11,7 @@
 prodops/
 ├── README.md                          ← Portal principal
 ├── framework/                         ← Princípios, glossário, modelo operacional
-├── business-intents/                  ← Ponto de entrada do Framework (NOVO)
+├── artifacts/business/intents/         ← ex-business-intents/ (movido para artifacts/business/intents/)
 ├── execution-model/                   ← Upstream e Downstream como modos (NOVO)
 │   ├── README.md
 │   ├── upstream.md
@@ -53,12 +53,18 @@ prodops/
 │   └── diligence/                     ← ex-diligence/ (README reescrito)
 ├── artifacts/                         ← Artefatos produzidos (NOVO container)
 │   ├── README.md
-│   ├── product/                       ← ex-product/ (sem features)
-│   ├── bdd/                           ← ex-product/features/
-│   ├── obcs/                          ← ex-assessment/obcs/
-│   ├── plans/                         ← ex-assessment/iteration-plans/ + downstream/iteration-backlog
-│   ├── trails/                        ← ex-downstream/release-trail.md
-│   └── evidence/
+│   ├── business/                      ← intents/, obcs/, bdd/
+│   │   ├── intents/                   ← ex-business-intents/
+│   │   ├── obcs/                      ← ex-assessment/obcs/
+│   │   └── bdd/                       ← ex-product/features/
+│   ├── product/                       ← context/, backlogs/, architecture/
+│   │   ├── context/                   ← ex-product/ (product-deck, service-decks)
+│   │   ├── backlogs/                  ← tracking-list, icebox, iteration-backlog
+│   │   └── architecture/              ← ex-journeys/assessment/architecture/
+│   └── governance/                    ← plans/, trails/, evidence/
+│       ├── plans/                     ← ex-plans/ (iteration-plan)
+│       ├── trails/                    ← ex-downstream/release-trail.md
+│       └── evidence/
 ├── templates/
 │   ├── assessment/
 │   ├── delivery/
@@ -95,15 +101,15 @@ prodops/
 | `prodops/delivery/capabilities/` | `prodops/journeys/delivery/capabilities/` |
 | `prodops/operation/` | `prodops/journeys/operation/` |
 | `prodops/assessment/` | `prodops/journeys/assessment/` |
-| `prodops/assessment/obcs/` | `prodops/artifacts/obcs/` |
-| `prodops/assessment/iteration-plans/` | `prodops/artifacts/plans/` |
+| `prodops/assessment/obcs/` | `prodops/artifacts/business/obcs/` |
+| `prodops/assessment/iteration-plans/` | `prodops/artifacts/governance/plans/` |
 | `prodops/diligence/` | `prodops/journeys/diligence/` |
 | `prodops/product/` | `prodops/artifacts/product/` |
-| `prodops/product/features/` | `prodops/artifacts/bdd/` |
-| `prodops/downstream/release-trail.md` | `prodops/artifacts/trails/release-trail.md` |
+| `prodops/product/features/` | `prodops/artifacts/business/bdd/` |
+| `prodops/downstream/release-trail.md` | `prodops/artifacts/governance/trails/release-trail.md` |
 | `prodops/downstream/quality-gates.md` | `prodops/journeys/delivery/phases/finish/quality-gates.md` |
 | `prodops/downstream/done-criteria.md` | `prodops/journeys/delivery/phases/finish/done-criteria.md` |
-| `prodops/downstream/iteration-backlog.md` | `prodops/artifacts/plans/downstream-iteration-backlog.md` |
+| `prodops/downstream/iteration-backlog.md` | `prodops/artifacts/product/backlogs/iteration-backlog.md` |
 | `prodops/downstream/README.md` + `delivery-flow.md` | `prodops/execution-model/downstream.md` (novo) |
 | `prodops/engineering/testing-policy.md` | `prodops/journeys/delivery/practices/testing-policy.md` |
 | `prodops/engineering/integration-testing-policy.md` | `prodops/journeys/delivery/practices/integration-testing-policy.md` |
@@ -134,11 +140,11 @@ prodops/
 | `prodops/execution-model/README.md` | Upstream vs Downstream como modos |
 | `prodops/execution-model/upstream.md` | Detalhes do modo Upstream |
 | `prodops/execution-model/downstream.md` | Detalhes do modo Downstream |
-| `prodops/business-intents/README.md` | Ponto de entrada do Framework |
+| `prodops/artifacts/business/intents/README.md` | Ponto de entrada do Framework |
 | `prodops/artifacts/README.md` | Portal de artefatos |
-| `prodops/artifacts/bdd/README.md` | Índice de BDD Features comprometidas |
-| `prodops/artifacts/trails/README.md` | Índice de trilhas de evidência |
-| `prodops/artifacts/evidence/README.md` | Área de evidências |
+| `prodops/artifacts/business/bdd/README.md` | Índice de BDD Features comprometidas |
+| `prodops/artifacts/governance/trails/README.md` | Índice de trilhas de evidência |
+| `prodops/artifacts/governance/evidence/README.md` | Área de evidências |
 | `prodops/skills/README.md` | Índice de skills executáveis |
 | `prodops/templates/business-intents/README.md` | Template placeholder |
 | `prodops/templates/operation/README.md` | Template placeholder |
@@ -155,7 +161,7 @@ prodops/
 | `prodops/operation/` (raiz) | Movido para `prodops/journeys/operation/` |
 | `prodops/assessment/` (raiz) | Movido para `prodops/journeys/assessment/` |
 | `prodops/diligence/` (raiz) | Movido para `prodops/journeys/diligence/` |
-| `prodops/product/` | Distribuído para `prodops/artifacts/product/` e `prodops/artifacts/bdd/` |
+| `prodops/product/` | Distribuído para `prodops/artifacts/product/` e `prodops/artifacts/business/bdd/` |
 | `prodops/downstream/` | README e delivery-flow extraídos para `execution-model/downstream.md`; outros distribuídos |
 | `prodops/engineering/` | Distribuído para `practices/` e `capabilities/` |
 | `skills/` (raiz do repositório) | Movido para `prodops/skills/` |
@@ -171,8 +177,8 @@ Links internos atualizados em todos os arquivos movidos e nos seguintes arquivos
 - `prodops/README.md` — reescrito como portal
 - `prodops/framework/operating-model.md` — hierarquia atualizada para 9 camadas
 - `prodops/framework/glossary.md` — referências de caminho atualizadas
-- `prodops/artifacts/obcs/*.md` — referências de BDD Features e OBCs atualizadas
-- `prodops/artifacts/plans/iteration-plan.md` — referências de features atualizadas
+- `prodops/artifacts/business/obcs/*.md` — referências de BDD Features e OBCs atualizadas
+- `prodops/artifacts/governance/plans/iteration-plan.md` — referências de features atualizadas
 - `prodops/journeys/delivery/capabilities/commit-workflow/templates/pull_request.md` — referências atualizadas
 - Todos os arquivos dentro de `prodops/journeys/`, `prodops/skills/`, `prodops/artifacts/`
 
@@ -180,7 +186,7 @@ Links internos atualizados em todos os arquivos movidos e nos seguintes arquivos
 
 ## Pendências e Sugestões Futuras
 
-1. **`prodops/artifacts/plans/`** — considerar renomear `iteration-backlog.md` (ex-assessment) e `downstream-iteration-backlog.md` (ex-downstream) para consolidar em um único arquivo.
+1. ~~**`prodops/artifacts/plans/`** — considerar renomear `iteration-backlog.md` (ex-assessment) e `downstream-iteration-backlog.md` (ex-downstream) para consolidar em um único arquivo.~~ Concluído: plans/ foi reestruturado em `artifacts/governance/plans/` (iteration-plan) e `artifacts/product/backlogs/` (iteration-backlog). `downstream-iteration-backlog.md` foi removido (arquivo de navegação, não artefato).
 
 2. ~~**`prodops/journeys/assessment/`** — ainda não tem um README principal.~~ README já existe em `prodops/journeys/assessment/README.md`.
 

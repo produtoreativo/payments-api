@@ -34,7 +34,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **Purpose:** Decide what the platform delivers, when, and in what sequence — without directly implementing software.
 
-**Contains:** Global Tracking List, Business Intent Backlog, Roadmaps, Platform Releases, Milestones.
+**Contains:** Portfolio Tracking List (Business Signals), Business Intent Backlog (Business Intents), Roadmaps (view of BIB), Platform Releases (view of BIB), Milestones.
 
 **Does not contain:** Software implementation, product OBCs, product BDD Features.
 
@@ -48,9 +48,11 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **Purpose:** Ensure that products that depend on each other work correctly in an integrated manner. A Workspace has no Roadmap and no Business Intents — it exists exclusively for integration.
 
+**Operational characteristics:** The Workspace has no state of its own. It observes GitHub (the primary operational source) and never decides priorities — priorities are decided by the Portfolio (Business Intents) or by the Product Owner (OBCs in the Product Backlog).
+
 **Examples:** Checkout Workspace (webshop-api + payments-api + order-mgmt-api).
 
-**Does not contain:** Roadmap, Business Intents, product code.
+**Does not contain:** Roadmap, Business Intents, product code, backlog state.
 
 **Relation to other concepts:** A Workspace is coordinated by the Portfolio and integrates Product Repositories. See **Product Repository**.
 
@@ -60,11 +62,11 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **Definition:** The implementation and operation level for a specific product within the ProdOps architecture. This repository (`payments-api`) is a Product Repository.
 
-**Purpose:** Implement Product Capabilities, operate the product in production, and maintain full traceability from Intents to operation evidence.
+**Purpose:** Implement Product Capabilities, operate the product in production, and maintain full traceability from Business Intents to operation evidence.
 
 **Contains:** OBCs, BDD Features, Iteration Plans, Reliability Plans, Release Trail, product code, runbooks, postmortems.
 
-**Relation to other concepts:** A Product Repository adopts the Framework, participates in Roadmaps defined by the Portfolio, and is integrated by Workspaces. It can also evolve locally through its own Intent flow.
+**Relation to other concepts:** A Product Repository adopts the Framework, participates in Roadmaps defined by the Portfolio, and is integrated by Workspaces. It can also evolve locally through its own Business Intent flow.
 
 ---
 
@@ -78,27 +80,31 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 ## Platform Release
 
-**Definition:** A platform version coordinated by the Portfolio, which includes contributions from multiple Product Repositories and is validated at the Workspace level.
+**Definition:** A grouping view over the Business Intent Backlog — not a separate backlog. Represents which BIB items compose a coherent platform delivery (a specific combination of Product Repository versions to be released together).
+
+**Nature:** View — not a queue. Items do not "pass through" the Platform Release; they remain in the BIB and are associated with a platform version.
 
 **Purpose:** Mark a coherent delivery point for the platform as a whole — not just for a single product.
 
 **Distinction:** A Platform Release is different from a local release of a single Product Repository. The local release (managed by the repository's CI Async) contributes to a Platform Release but does not replace it.
 
-**Relation to other concepts:** Managed by the Portfolio. Composed of releases from multiple Product Repositories. See **Portfolio**, **Roadmap**.
+**Relation to other concepts:** Managed by the Portfolio. View over the Business Intent Backlog. See **Portfolio**, **Roadmap**.
 
 ---
 
 ## Roadmap
 
-**Definition:** Planning of Product Capabilities over time, managed by the Portfolio. A Roadmap defines what the platform will deliver, in what order, and in which Platform Release.
+**Definition:** A strategic view over the Business Intent Backlog — not a separate backlog. Organizes BIB items by delivery horizon (now / next / later), Milestones, and cross-product dependencies.
 
-**Purpose:** Communicate platform priorities and delivery horizon to stakeholders, teams, and partners.
+**Nature:** View — not a queue. Items do not "enter" the Roadmap; they remain in the BIB and receive a position in the strategic horizon.
+
+**Purpose:** Communicate platform priorities and delivery horizon to stakeholders, teams, and partners without creating a commitment.
 
 **Who manages it:** The Portfolio. Product Repositories participate in Roadmaps but do not define them.
 
 **Do not confuse with:** Iteration Plan (planning for one iteration within a Product Repository) or Icebox (candidates not yet prioritized).
 
-**Relation to other concepts:** The Roadmap is managed by the Portfolio and guides which Intents from which Product Repositories will be prioritized. See **Portfolio**, **Platform Release**, **Intent**.
+**Relation to other concepts:** View over the Business Intent Backlog, managed by the Portfolio. See **Portfolio**, **Platform Release**, **Business Intent Backlog**.
 
 ---
 
@@ -114,25 +120,172 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **The four Origin Streams:** Business | Enterprise | Team | Technology
 
-**Relationship with other concepts:** An Origin Stream generates an Intent. The Intent enters Exploration. See [`origin-streams.md`](origin-streams.en.md).
+**Relationship with other concepts:** An Origin Stream generates a **Business Signal**. When investigated and recognized as strategic, a Business Signal can generate one or more **Business Intents**. See [`origin-streams.md`](origin-streams.en.md).
 
 ---
 
-## Intent
+## Business Signal
 
-**Definition:** An intention to generate value not yet committed to implementation. It is the single entry point of the ProdOps Framework for any change.
+**Definition:** Represents any opportunity, hypothesis, problem, benchmark, business case, value stream, complaint, new technology, or idea that deserves attention. Not a commitment. Not a contract. No OBC.
 
-**Purpose:** Formally register a need before any execution decision. The Intent captures the "why" without prescribing the "how".
+**Purpose:** Capture any signal that deserves investigation before any strategic or investment decision. Business Signals are the raw material from which strategic work is identified.
 
-**When to use:** Whenever a new need arises — regardless of origin, size, or urgency. Every change starts with an Intent.
+**When to use:** When registering a need not yet structured enough to be treated as a formal Business Intent. Every item captured in Tracking Lists is a Business Signal.
 
-**When not to use:** Intent is not a technical backlog, sprint task, or isolated bug ticket. Those are execution instances derived from an Intent, not Intents themselves.
+**Life cycle:** Persists even after generating Business Intents — represents the discovery history. A Business Signal can generate 0, 1, or N Business Intents.
 
-**Life cycle:** The Intent is born in the Global Tracking List or Repository Tracking List as a signal not yet understood. When investigated and recognized as relevant, it enters the Business Intent Backlog (global flow) or the Product Intent Backlog (local flow) — at which point its OBC is created as a draft. From that point on, the OBC becomes the permanent identifier of the work.
+**Lives in:** Portfolio Tracking List (platform) or Product Tracking List (product).
 
-**Relationship with other concepts:** The Intent has an Origin Stream (Business | Enterprise | Team | Technology). The Intent is transformed into an OBC by Exploration. See [`flow.md`](flow.en.md), [`origin-streams.md`](origin-streams.en.md) and [`backlogs.md`](backlogs.en.md).
+**GitHub representation:** Business Signal Issue.
 
-**Formerly called:** Business Intent. The name was simplified to Intent to eliminate the ambiguity that only "Business" needs are capturable. The directory `prodops/business-intents/` is preserved for backward compatibility.
+**Critical rule:** Entities never change identity. A Business Signal never "becomes" a Business Intent — it **generates** new Business Intent entities.
+
+**Relationship with other concepts:** 1 Business Signal → 0 to N Business Intents. See [`backlogs.en.md`](backlogs.en.md).
+
+---
+
+## Business Intent
+
+**Definition:** Represents a strategic decision: there is clarity about which value will be pursued. Born from a Business Signal (or multiple). Has its own identity and lifecycle — does not replace the Business Signal.
+
+**Purpose:** Formally register an investment decision before any implementation decision. The Business Intent captures the "why" without prescribing the "how".
+
+**When to use:** When a Business Signal has been investigated and recognized as strategically relevant. Every change that enters the Business Intent Backlog is represented as a Business Intent.
+
+**When not to use:** Business Intent is not a technical backlog, sprint task, or isolated bug ticket. It does not represent implementation — it represents strategic decision.
+
+**Life cycle:** The Business Intent is born in the Business Intent Backlog (global flow) — at which point the Global OBC is created as a Draft. Has an OBC as its contract document — the OBC represents the commitment across 4 dimensions: Business, Enterprise, Team, and Technology. OBC Partitioning creates Local OBC documents (Markdown files) per product, but the Intent remains the trackable entity.
+
+**Origin:** Can be created directly in the Business Intent Backlog without originating from a Business Signal. When generated from a Business Signal, it stores an optional back-reference to the originating Signal.
+
+**GitHub representation:** Business Intent Issue.
+
+**Relationship with other concepts:** Born from a Business Signal (or created directly in the BIB). Has an OBC as its contract document. See [`flow.en.md`](flow.en.md), [`origin-streams.en.md`](origin-streams.en.md) and [`backlogs.en.md`](backlogs.en.md).
+
+---
+
+## Product Stage
+
+**Definition:** Classification of a product's maturity moment within the ProdOps lifecycle. Defines which delivery metrics carry the most weight and what the team's focus should be at that point.
+
+**The six stages in order:** PoC → MVP → IPR → MVR → MVT → MLP
+
+**Two macro-phases:**
+- **Hypothesis Validation** (PoC, MVP, IPR): prove the idea is viable before scaling
+- **Acceleration** (MVR, MVT, MLP): grow with repeatability, traction, and delight
+
+**Relationship with other concepts:** The stage influences DORA metric weights and Reliability Plan focus. See [`product-stages.en.md`](product-stages.en.md) and [`dora-metrics.en.md`](dora-metrics.en.md).
+
+---
+
+## PoC (Proof of Concept)
+
+**Definition:** First product stage. Validates whether an idea or approach is viable with a **real customer**.
+
+**Central characteristic:** The customer is always involved. No customer means it is not a PoC — it is a Spike Solution.
+
+**Relationship with other concepts:** See **Product Stage**, **Spike Solution**, and [`product-stages.en.md`](product-stages.en.md).
+
+---
+
+## DORA Metrics (Extended)
+
+**Definition:** A 7-metric delivery health model adopted by ProdOps to assess delivery maturity. Extends the 4 original metrics from the DORA Research Program with 3 product- and operation-oriented extensions.
+
+**The 7 metrics:**
+
+| Metric | Type | What it measures |
+|---|---|---|
+| **Lead Time for Change** | DORA Core | Time from commit to production |
+| **Release Frequency** | DORA Core | Deployment frequency |
+| **Change Fail Rate** | DORA Core | % of changes that cause failure |
+| **Mean Time to Recovery** | DORA Core | Mean time to recovery after failure |
+| **Reaction Time** | ProdOps Extension | Time between external signal and first processed action |
+| **Rate of Return** | ProdOps Extension | Escaped defects and rework — retries, refunds |
+| **Availability** | ProdOps Extension | Service operational uptime |
+
+**Weights by stage:** each product stage defines weights 1–8 per metric. In early stages (PoC/MVP), Lead Time and Reaction Time carry maximum weight. In advanced stages (MVT/MLP), Change Fail Rate, MTTR, and Availability dominate.
+
+**Relationship with other concepts:** See [`dora-metrics.en.md`](dora-metrics.en.md), [`product-stages.en.md`](product-stages.en.md). Maturity assessment is run on the Certificare platform.
+
+---
+
+## Maturity Level (Delivery)
+
+**Definition:** ProdOps delivery maturity scale, from 0 to 5. Used by Certificare to position the product and generate an improvement roadmap.
+
+| Level | Name | Description |
+|---|---|---|
+| 0 | Inexistent | No established practices |
+| 1 | Initial | Ad-hoc practices, no repeatability |
+| 2 | Repeatable | Basic practices without systematization |
+| 3 | Defined | Documented processes consistently followed |
+| 4 | Managed | Metrics collected and used for decisions |
+| 5 | Excellence | Continuous optimization based on data |
+
+**Top-down strategy:** starts at level 5 and drops at the first unsatisfied mandatory criterion.
+
+**Relationship with other concepts:** See [`dora-metrics.en.md`](dora-metrics.en.md).
+
+---
+
+## Spike Solution
+
+**Definition:** A time-boxed technical investigation whose only output is a decision — not a product, not deliverable code. It answers a single specific technical question that is blocking progress.
+
+**Central characteristic:** No customer is ever involved. If there is a customer, it is a PoC. Code is always disposable.
+
+**When to use:** Any product stage, any experiment phase — including inside a PoC or any Upstream journey.
+
+**Critical difference from PoC:**
+
+| | PoC | Spike Solution |
+|---|---|---|
+| Customer involved | Always | Never |
+| Objective | Validate with real feedback | Answer a technical question |
+| Code | May be demonstrable | Always disposable |
+
+**Where to record:** `prodops/journeys/discovery/spikes.md` (if isolated) or the experiment's `upstream-trail.md` (if inside an active Upstream).
+
+**Relationship with other concepts:** See **PoC**, **Product Stage**, [`product-stages.en.md`](product-stages.en.md), and [`../journeys/discovery/spikes.md`](../journeys/discovery/spikes.md).
+
+---
+
+## Conception
+
+**Definition:** Phase covering the period from the emergence of a Business Signal to entry into the Product Backlog. The Business Signal exists as a possibility — the Product Owner has not yet made a commitment.
+
+**Central question:** Is there real value here?
+
+**Backlogs:** Portfolio Tracking List / Product Tracking List → Business Intent Backlog (global flow).
+
+**OBC state:** Does not exist in the Tracking Lists. In the global flow, the **Global OBC** is born as Draft upon entry into the Business Intent Backlog — when the Business Signal generates a Business Intent. In the local flow, the **Local OBC** is born as Draft upon entry into the Product Backlog.
+
+**Commitment:** None. The Business Signal may be discarded without any formal record of learning.
+
+**Exit boundary:** Owner Approval — entry into the Product Backlog (start of Inception).
+
+**Relationship with other concepts:** See [`phases.en.md`](phases.en.md), [`backlogs.en.md`](backlogs.en.md).
+
+---
+
+## Inception
+
+**Definition:** Phase covering the period from entry into the Product Backlog until the Local OBC reaches the Committed state (Iteration Backlog). The Product Owner has made a formal commitment to investigate.
+
+**Central question:** Is the Product Owner committing attention and capacity to investigate this now?
+
+**Backlogs:** Product Backlog → Icebox → Iteration Backlog.
+
+**Local OBC state:** Draft → Refining (Icebox) → Committed (Iteration Backlog).
+
+**Commitment:** Formal. Any closure requires a traceable learning record in the OBC.
+
+**Execution mode:** Upstream or Downstream — they are **modes**, not phases. Defined by the Product Owner when accepting the Business Intent into the Product Backlog. May change during Inception.
+
+**Exit boundary:** Assessment Review approved, Local OBC in Committed state, BDD Feature committed — entry into the Iteration Backlog.
+
+**Relationship with other concepts:** See [`phases.en.md`](phases.en.md), [`backlogs.en.md`](backlogs.en.md).
 
 ---
 
@@ -202,48 +355,111 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 ## OBC (Observable Business Contract)
 
-**Definition:** The living contract representing a business intent throughout its entire lifecycle. It is the source of truth for the work — connecting business, product, architecture, engineering, operation, observability, and reliability. No other document should exercise this role.
+**Definition:** The living contract representing a business intent throughout its entire lifecycle. It is the source of truth for the work — connecting business, product, architecture, engineering, operation, observability, and reliability.
 
-**Creation:** Created automatically when a Business Intent enters the Business Intent Backlog (global flow) or the Product Intent Backlog (local flow). The OBC exists **before** Discovery, **before** Upstream, **before** Downstream.
+**Two levels:**
+- **Global OBC** — strategic, belongs to BIB/Portfolio, covers the entire business intent.
+- **Local OBC** — product-specific, belongs to one Product Backlog, specializes/partitions the Global OBC.
 
-**Purpose:** Be the shared language between product, engineering, and operation throughout the life of the intent. The OBC does not end with Delivery — it continues evolving during Operation.
+**States (contract maturity):** Draft → Refining → Committed → In Delivery → Operational → Archived.
 
-**OBC States:**
+**Creation:** Born when a Business Intent is accepted. There is no OBC for Business Signals — the OBC is only born from Business Intents. In the global flow, a **Global OBC Draft** is born upon entry into the Business Intent Backlog. In the local flow, a **Local OBC Draft** is born upon entry into the Product Backlog (either via OBC Partitioning or direct local approval).
 
-| State | When | Description |
-|---|---|---|
-| **Draft** | Business Intent Backlog / Product Intent Backlog | Created; can be incomplete; records initial intent, hypotheses, and learnings |
-| **Minimum OBC** | Iteration Backlog | Smallest set of information needed for entry into Delivery; gate between Discovery and Delivery |
-| **Active** | Iteration Plan → Delivery | In execution; accompanies implementation, evidence, validations, and decisions |
-| **Operational** | Operation | Feature in production; updated with operational information |
-| **Archived** | — | No longer part of active product evolution; history preserved |
+**Relationship with other concepts:** Anchors the BDD Feature, the Iteration Plan, the Reliability Plan, and all of Delivery. Diligence keeps the OBC state synchronized across backlogs and tools. The relationship between levels is always: 1 Global OBC → N Local OBCs.
 
-**Life cycle:**
+→ **Full definition, composition, lifecycle, and governance:** [`obc.en.md`](obc.en.md)
 
-| Backlog / Phase | State | What happens |
-|---|---|---|
-| Global Tracking List / Repository Tracking List | Does not exist | The item is not yet a recognized Intent |
-| Business Intent Backlog (global flow) | Draft | OBC created; captures the Intent and initial hypotheses |
-| Product Intent Backlog (local flow) | Draft | OBC created if not yet existing; records intent accepted by the Product Owner |
-| Icebox (Discovery) | Draft under refinement | Discovery refines the OBC until reaching Minimum OBC |
-| Iteration Backlog | Minimum OBC | Minimum validated OBC; entry gate to Delivery |
-| Iteration Plan / Delivery | Active | Guides implementation; BDD Feature operationalizes it |
-| Operation | Operational | In production; complemented with metrics, SLOs, incidents, postmortems |
-| — | Archived | Intent closed; history preserved |
+---
 
-The OBC records the **living history of the work**: which backlogs it passed through, when, decisions made, how criteria evolved.
+## Global OBC
 
-**OBC in Upstream:** During Upstream, the OBC remains in Draft, can be freely modified, can be incomplete, does not block experiments, records learnings, hypotheses, and decisions. No Skill should require a complete OBC during Upstream.
+**Definition:** Strategic-level Observable Business Contract. Represents the complete business intent — before it is decomposed by product.
 
-**OBC in Downstream:** When entering Downstream, the OBC is no longer just a record — it becomes the operational contract of the delivery. It is refined in the Icebox until reaching Minimum OBC, then controls all subsequent journey evolution.
+**Focus:** Business goal, value, stakeholders, business rules, business events, KPIs, and the platform as a whole. Does **not** contain technical implementation details.
 
-**OBC and Skills:** All Downstream Skills use the OBC as the primary context source. Skills never generate parallel information that replaces the OBC. New artifacts produced by Skills complement or reference the OBC. The OBC remains the sole source of truth for the intent.
+**Content:**
+- Business Goal
+- Business Value
+- Stakeholders
+- Business Rules
+- Business Events table
+- KPIs / Expected Outcomes
+- Value Stream
+- Products Involved
+- Local OBC Traceability table (links to all derived Local OBCs)
+- Discovery Notes
 
-**When not to use:** Do not use the OBC as a substitute for an isolated technical task or bug ticket without a corresponding Intent.
+**Location:** Platform portfolio repository (external to product repositories).
 
-**Relationship with other concepts:** The OBC is born at the Business Intent Backlog or Product Intent Backlog, refined through Discovery in the Icebox, reaches Minimum OBC upon entering the Iteration Backlog, becomes Active during Delivery and Operational in Operation. It anchors the BDD Feature, the Iteration Plan, the Reliability Plan, and all of Delivery. See [`flow.md`](flow.en.md) and [`backlogs.md`](backlogs.en.md).
+**Lifecycle:** Draft → Refining (during Discovery in BIB) → Operational (after all derived Local OBCs are in production) → Archived
 
-**Formerly incorrectly defined as:** "Outcome-Based Criterion". The canonical definition is **Observable Business Contract**.
+**Owner:** Portfolio PM
+
+**Relationship with other concepts:** A Global OBC is decomposed into Local OBCs via **OBC Partitioning**. The relationship is: 1 Global OBC → N Local OBCs. Terms allowed: decomposition, specialization, partition. Terms **not** allowed: parent, child, inheritance.
+
+→ [`obc.en.md`](obc.en.md)
+
+---
+
+## Local OBC
+
+**Definition:** Product-level Observable Business Contract. Represents the specific responsibility of one product. It may specialize a Global OBC or originate directly from a local Intent.
+
+**Focus:** Implementation contract — APIs, events, BDD, observability, reliability, response contract. **Does not duplicate** strategic content from the Global OBC.
+
+**Content:**
+- Mandatory origin reference: Global OBC in the global flow or Intent + Repository Tracking Item in the local flow
+- Product / Repo / Bounded Context
+- APIs and Events (this product's responsibility)
+- BDD / Acceptance Criteria
+- Observable Events table
+- Reliability Rules
+- Response Contract
+- Technical Dependencies
+- Evidence (after Delivery)
+
+**Location:** `prodops/artifacts/business/obcs/<slug>.md` (when committed)
+
+**Lifecycle:** Draft → Refining (Icebox) → Committed (Iteration Backlog) → In Delivery → Operational (Operation) → Archived
+
+**Owner:** Product Manager + Tech Lead of the product
+
+**Belongs to:** Exactly one Product Backlog.
+
+**Relationship with other concepts:** In the global flow, each Local OBC derives from exactly one Global OBC and never duplicates its strategic content. In the local flow, it directly represents an accepted Business Intent and references its Product Tracking List item.
+
+→ [`obc.en.md`](obc.en.md)
+
+---
+
+## OBC Partitioning
+
+**Definition:** The capability that transforms a Global OBC into Local OBCs — one for each product involved in delivering the business intent.
+
+**When it happens:** After Discovery in the Business Intent Backlog, when the Global OBC is sufficiently understood to identify the involved products and their responsibilities.
+
+**Who executes:** Portfolio PM + Tech Leads of the involved products.
+
+**What is produced:**
+- Local OBC Draft for each product
+- Traceability table updated in the Global OBC (linking all derived Local OBCs)
+- Items created in the Product Backlogs of the involved products
+
+**Relationship with other concepts:** OBC Partitioning is the transition step between the BIB and the Product Backlogs. It does not split the Business Intent — it specializes the responsibility per product. After Partitioning, each Product Backlog receives its Local OBC Draft and begins refinement in the Icebox.
+
+→ [`obc.en.md`](obc.en.md#obc-partitioning)
+
+---
+
+## Continuous OBC Refinement
+
+**Definition:** The process by which both Global OBC and Local OBCs evolve continuously throughout the product lifecycle — during Discovery, Delivery, and Operation. An OBC is never finalized; it accumulates evidence and evolves with the product.
+
+**Drivers:** New operational evidence, incidents, postmortems, market changes, new measurements, strategic decisions.
+
+**What is updated:** KPIs, observable events, response contract, reliability rules, business rules, stakeholders, discovery notes.
+
+**Relationship with other concepts:** Continuous OBC Refinement is the last step of the official flow — and generates new Intents that restart the cycle. See [`flow.en.md`](flow.en.md), step 11.
 
 ---
 
@@ -265,7 +481,7 @@ The OBC records the **living history of the work**: which backlogs it passed thr
 | **Discovery** | Journey | The name of the Framework journey that implements Exploration |
 | **Upstream / Downstream** | Execution Mode | The commitment level and rigor applied during Discovery |
 
-Exploration operates on OBC Drafts that were born at the Business Intent Backlog (global flow) or Product Intent Backlog (local flow) and are being refined in the Icebox.
+Exploration operates on OBC Drafts that were born at the Business Intent Backlog (global flow) or Product Backlog (local flow) and are being refined in the Icebox.
 
 See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journeys/discovery/README.en.md) and [`../execution-model/upstream.en.md`](../execution-model/upstream.en.md).
 
@@ -315,7 +531,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## BDD Feature
 
-**Definition:** Gherkin specification that describes the expected behavior of a Product Capability. Lives in `prodops/artifacts/bdd/` (committed) or `prodops/journeys/discovery/experiments/<NNN-slug>/features/` (exploratory — inside the experiment directory). Used as TDD input in Downstream.
+**Definition:** Gherkin specification that describes the expected behavior of a Product Capability. Lives in `prodops/artifacts/business/bdd/` (committed) or `prodops/journeys/discovery/experiments/<NNN-slug>/features/` (exploratory — inside the experiment directory). Used as TDD input in Downstream.
 
 ---
 
@@ -323,53 +539,64 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 **Definition:** Product of the transversal Assessment journey that defines risks, SLOs, and mitigation actions for a committed item. Lives in `prodops/journeys/assessment/reliability-plans/`.
 
-**Requirement level:** Recommended, not mandatory. Strongly recommended for items with relevant operational risk (high technical complexity, financial impact, new domains, or external integrations). When it exists, it must be reviewed before the Iteration Plan readiness decision.
+**Requirement level:** Conditional and verifiable. It is a Delivery gate when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change. Outside those triggers it is optional.
 
-**In the local flow (pre-PIB):** The Premortem is the appropriate artifact for risk analysis before Owner Approval. The formal Reliability Plan is produced during the Icebox, after the Product Owner's commitment.
+**In the local flow (before the Product Backlog):** The Premortem is the appropriate artifact for risk analysis before Owner Approval. The formal Reliability Plan is produced during the Icebox, after the Product Owner's commitment.
 
 ---
 
-## Global Tracking List
+## Portfolio Tracking List
 
-**Definition:** Platform-level backlog that captures any signal not yet understood enough to be treated as a formal Intent. Managed by the Portfolio.
+**Definition:** Platform-level backlog that captures Business Signals not yet understood enough to generate a formal Business Intent. Managed by the Portfolio.
 
-**Question:** What deserves attention at the platform level?
+**Contains:** ONLY Business Signals. No Business Intents. No OBCs.
+
+**Question:** What Business Signals deserve attention at the platform level?
 
 **Does not contain:** OBC. Commitment. Permanent identifier.
 
-**Relationship with other concepts:** First level of the global flow. Items advance to the Business Intent Backlog when recognized as Intents. See [`backlogs.en.md`](backlogs.en.md).
+**Relationship with other concepts:** First level of the global flow. Business Signals advance to the Business Intent Backlog when recognized as strategic — at that point, a new Business Intent entity is created. See [`backlogs.en.md`](backlogs.en.md).
 
 ---
 
 ## Business Intent Backlog
 
-**Definition:** Platform-level backlog representing Intents accepted for Discovery. The OBC is born as a Draft upon entry into this backlog. Managed by the Portfolio.
+**Definition:** Platform-level backlog representing Business Intents accepted for Discovery. The **Global OBC Draft** is born upon entry into this backlog. After Discovery, **OBC Partitioning** distributes Local OBC Drafts to Product Backlogs. Managed by the Portfolio.
 
-**Question:** What deserves Discovery?
+**Contains:** ONLY Business Intents. No Business Signals. Global OBCs are associated with Business Intents here.
 
-**Relationship with other concepts:** Second level of the global flow. The Draft OBC is born here. Items advance to the Roadmap. See [`backlogs.en.md`](backlogs.en.md).
+**Question:** What Business Intents deserve Discovery at the platform level?
+
+**Relationship with other concepts:** Second level of the global flow. The Global OBC Draft is born here. After Discovery → OBC Partitioning → Local OBC Drafts go to Product Backlogs. See [`backlogs.en.md`](backlogs.en.md).
 
 ---
 
-## Repository Tracking List
+## Product Tracking List
 
-**Definition:** Product-level backlog that captures any local signal not yet understood enough to be treated as a formal commitment. Artifact: `prodops/artifacts/product/tracking-list.md`.
+**Definition:** Product-level backlog that captures Business Signals already directed at this specific product or team. Artifact: `prodops/artifacts/product/backlogs/tracking-list.md`.
 
-**Question:** What deserves attention in this product?
+**Contains:** ONLY Business Signals. No Business Intents. No OBCs.
+
+**Question:** What Business Signals deserve attention in this product?
 
 **Does not contain:** OBC. Commitment. Permanent identifier.
 
-**Relationship with other concepts:** First level of the local flow. Items advance via Premortem + Preliminary Risk Analysis + Owner Approval to the Product Intent Backlog. (The formal Reliability Plan is produced later, during the Icebox — it is recommended, not mandatory for PIB entry.) See [`backlogs.en.md`](backlogs.en.md).
+**Relationship with other concepts:** First level of the local flow. Business Signals advance via Premortem + Preliminary Risk Analysis + Owner Approval to the Product Backlog — at which point a new Business Intent entity is created. When risk triggers apply, the formal Reliability Plan is produced later during the Icebox. See [`backlogs.en.md`](backlogs.en.md).
 
 ---
 
-## Product Intent Backlog
+## Product Backlog
 
-**Definition:** Product-level backlog representing all work formally accepted by the Product Owner. Single entry point for the product into the Delivery cycle — regardless of where the item came from (Portfolio or local flow). If the item does not yet have a Draft OBC, it is created upon entry into this backlog.
+**Definition:** Product-level backlog representing all work formally accepted by the Product Owner. Single entry point for the product into the Delivery cycle — regardless of where the item came from (Portfolio or local flow). Contains **Local OBCs only** — never Global OBCs, never Business Signals.
 
 **Question:** What has been officially accepted by the Product Owner?
 
-**Two entry paths:** (1) Business Intent from the Portfolio via Platform Release; (2) Repository Tracking Item via Premortem + Preliminary Risk Analysis with Owner Approval.
+**Two entry paths:** (1) Local OBC Draft from OBC Partitioning (global flow, born from a Business Intent); (2) Product Tracking Item via Premortem + Preliminary Risk Analysis + Owner Approval (local flow, creates Business Intent + Local OBC Draft upon entry).
+
+**Three views of the Product Backlog:**
+- **Icebox** — items in Discovery/Exploration (state: Refining)
+- **Iteration Backlog** — items ready for Delivery (state: Committed)
+- **Release** — items grouped by release version
 
 **After entry, the origin no longer matters.** All items follow the same journey: Icebox → Iteration Backlog → Iteration Plan → Delivery.
 
@@ -379,27 +606,47 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## Icebox
 
-**Definition:** Product-level backlog representing committed items still being prepared for Delivery. The functional, technical, and operational Discovery needed occurs here. Goal: produce a minimum acceptable OBC. Artifact: `prodops/artifacts/product/icebox-backlog.md`.
+**Definition:** A **view of the Product Backlog** representing items still being prepared for Delivery. The functional, technical, and operational Discovery needed occurs here. Goal: produce a Committed Local OBC ready for Delivery. Artifact: `prodops/artifacts/product/backlogs/icebox-backlog.md`.
+
+**Nature:** View — not a separate queue. Items do not leave the Product Backlog when in this view.
+
+**OBC state in this view:** Refining (items in active Discovery/Exploration)
 
 **Question:** What is still being prepared for Delivery?
 
-**Relationship with other concepts:** Receives items from the Product Intent Backlog. Items advance to the Iteration Backlog after minimum OBC is validated. See [`backlogs.en.md`](backlogs.en.md).
+**Relationship with other concepts:** View over the Product Backlog. Items advance to the Iteration Backlog when Local OBC reaches Committed state. See [`backlogs.en.md`](backlogs.en.md).
 
 ---
 
 ## Iteration Backlog
 
-**Definition:** Product-level backlog representing items with a validated minimum OBC, ready for immediate Delivery. Not a refinement backlog — refinement happens in the Icebox. The only remaining decision is the Product Owner's priority. Artifact: `prodops/artifacts/plans/iteration-backlog.md`.
+**Definition:** A **view of the Product Backlog** representing items with a Committed Local OBC, ready for immediate Delivery. Not a refinement backlog — refinement happens in the Icebox. The only remaining decision is the Product Owner's priority. Artifact: `prodops/artifacts/product/backlogs/iteration-backlog.md`.
+
+**Nature:** View — not a separate queue. Items do not leave the Product Backlog when in this view.
+
+**OBC state in this view:** Committed (ready for Delivery — criteria validated and approved)
 
 **Question:** What is ready to be developed?
 
-**Relationship with other concepts:** Receives items from the Icebox. Items advance to the Iteration Plan after OBC committed + BDD Feature committed. See [`backlogs.en.md`](backlogs.en.md).
+**Relationship with other concepts:** View over the Product Backlog. Items appear here when the Local OBC reaches Committed state. Items advance to the Iteration Plan after Local OBC committed + BDD Feature committed. See [`backlogs.en.md`](backlogs.en.md).
+
+---
+
+## Release (view of Product Backlog)
+
+**Definition:** Third view of the Product Backlog that groups items by release version (e.g., `v1.2.0`, `v2.0.0`). Allows the Product Owner to visualize which features will be part of each software release.
+
+**Nature:** View — not a separate queue. Items do not leave the Product Backlog when associated with a release version.
+
+**Purpose:** Provide a release-oriented view of committed work without creating a separate artifact. The items are the same as in the Icebox and Iteration Backlog — just grouped by release target.
+
+**Relationship with other concepts:** One of the three Product Backlog views (Icebox, Iteration Backlog, Release). See [`backlogs.en.md`](backlogs.en.md).
 
 ---
 
 ## Iteration Plan
 
-**Definition:** Record of Delivery execution for an iteration. Not a planning backlog — it represents exclusively the execution in progress. Contains items from the Iteration Backlog, execution strategy, CI Sync and CI Async journeys, evidence, and exit criteria. Artifact: `prodops/artifacts/plans/iteration-plan.md`.
+**Definition:** Record of Delivery execution for an iteration. Not a planning backlog — it represents exclusively the execution in progress. Contains items from the Iteration Backlog, execution strategy, CI Sync and CI Async journeys, evidence, and exit criteria. Artifact: `prodops/artifacts/governance/plans/iteration-plan.md`.
 
 **Question:** What is being executed in this iteration?
 
@@ -427,13 +674,21 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## Upstream
 
-**Definition:** The exploratory execution mode. Objective: transform hypotheses into validated knowledge. Code is disposable until promoted to Downstream. Upstream selects flow steps as needed — there is no mandatory sequence. A typical Upstream cycle uses Bootstrap + Hack + Sync; Ship, Validate, and Promote are used only when the experiment needs staging validation or a promotion decision. See [`prodops/journeys/discovery/README.en.md`](../journeys/discovery/README.en.md).
+**Definition:** **Execution mode** — permissive, exploratory, with no delivery commitment. Objective: transform hypotheses into validated knowledge. Code is disposable until promoted to Downstream. Upstream selects flow steps as needed — there is no mandatory sequence. A typical Upstream cycle uses Bootstrap + Hack + Sync; Ship, Validate, and Promote are used only when the experiment needs staging validation or a promotion decision.
+
+**Not a phase** — it is a mode that can start at **any stage** of the lifecycle (including during Delivery or Operation). When finished, the item returns to the original stage.
+
+See [`prodops/journeys/discovery/README.en.md`](../journeys/discovery/README.en.md).
 
 ---
 
 ## Downstream
 
-**Definition:** The governed delivery mode. Objective: deliver with confidence using validated knowledge. Every item requires OBC + BDD Feature + risks documented + entry in the Iteration Plan. The Reliability Plan is recommended but not mandatory. Downstream requires the full flow: `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`. See [`prodops/execution-model/downstream.en.md`](../execution-model/downstream.en.md).
+**Definition:** **Execution mode** — the default, with delivery commitment. Objective: deliver with confidence using validated knowledge. Every item requires OBC + BDD Feature + risks documented + entry in the Iteration Plan. A Reliability Plan is required when the canonical risk triggers apply. Downstream requires the full flow: `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`.
+
+**Not a phase** — it is an execution mode. Can start at any stage of the lifecycle.
+
+See [`prodops/execution-model/downstream.en.md`](../execution-model/downstream.en.md).
 
 ---
 
@@ -517,7 +772,7 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## Release Trail
 
-**Definition:** The append-only log of Downstream evidence. Each agent session produces its own file at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`. See model at [`artifacts/trails/release-trail.en.md`](../artifacts/trails/release-trail.en.md).
+**Definition:** The append-only log of Downstream evidence. Each agent session produces its own file at `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`. See model at [`artifacts/governance/trails/release-trail.en.md`](../artifacts/governance/trails/release-trail.en.md).
 
 ---
 
@@ -539,14 +794,48 @@ See [`flow.en.md`](flow.en.md), [`../journeys/discovery/README.en.md`](../journe
 
 ## GitHub Issue
 
-**Definition:** Operational representation of a commitment already made in the ProdOps Framework. It is not the origin of work.
+**Definition:** Work Item representing an operation being executed on one or more Knowledge Space artifacts (Business Signal, Business Intent, OBC, BDD, etc.).
 
-**Purpose:** Make an OBC that has already entered the Product Intent Backlog or Iteration Plan visible and manageable in a management tool.
+**Purpose:** Make the execution work performed on ProdOps artifacts visible and traceable in GitHub Projects.
 
-**When to use:** Normally when an OBC is committed and enters the Iteration Plan — the moment the commitment was made and the work is ready for operational execution.
+**When to use:** When recording work (exploration, refinement, delivery, review) on any Knowledge Space artifact. A Work Item must always reference the affected artifact(s) by type and ID.
 
-**When not to use:** Issues do not replace OBCs. Do not create Issues as the work entry point — the entry point is the Global Tracking List or Repository Tracking List. Do not use Issues to capture Intents that do not yet have an OBC.
+**When not to use:** Do not create GitHub Issues to bypass the entity model. The OBC is a Markdown document — it does not have an Issue representation.
 
-**Tool independence:** The Framework is tool-independent. A GitHub Issue, a Jira Card, and an Azure DevOps Work Item are operational representations of the same OBC in different tools. The OBC is the source of truth; the Issue is the execution instance.
+**GitHub as primary operational source:** GitHub Projects are the canonical management domains. GitHub Project Views are projections over those domains. Jira, Azure DevOps, and Linear are optional sync tools only — they never replace GitHub as the source of truth for work state.
 
-**Relationship with other concepts:** Managed by Diligence. References the corresponding OBC. See [`backlogs.md`](backlogs.en.md) and [`../journeys/diligence/README.md`](../journeys/diligence/README.en.md).
+**Work Items reference artifacts — they are not the artifacts.**
+
+Every Work Item must declare: Artifact Type, Artifact ID, Operation, Journey.
+
+Examples of correct Work Items:
+- Issue: "Discovery — BI-042 Split payment support" → references Business Intent BI-042
+- Issue: "Refine OBC payments-invoice-v2 — incomplete BDD section" → references Local OBC
+- Issue: "Update architecture — new webhooks module" → references Architecture overview.md
+
+A single artifact can have dozens of Work Items throughout its life.
+A single Work Item can affect multiple artifacts.
+
+**Relationship with other concepts:** Managed by Diligence. See [`backlogs.md`](backlogs.en.md) and [`../journeys/diligence/README.md`](../journeys/diligence/README.en.md).
+
+→ [Knowledge vs Execution](knowledge-vs-execution.en.md)
+
+---
+
+## Business Signal Issue
+
+**Definition:** GitHub Issue representing a Business Signal. Created when any signal is captured in the system — before any strategic decision.
+
+**Belongs to:** Portfolio GitHub Project (views: Business Signals or Discovery).
+
+**Relationship with other concepts:** Represents a Business Signal. May reference Business Intent Issues that were generated from it. See **Business Signal**.
+
+---
+
+## Business Intent Issue
+
+**Definition:** GitHub Issue representing a Business Intent — the strategic decision to pursue value. Represents the Intent in both the Business Intent Backlog and the Product Backlog (after OBC Partitioning).
+
+**Belongs to:** Portfolio GitHub Project (views: Business Intent Backlog, Roadmap, or Platform Releases).
+
+**Relationship with other concepts:** Represents a Business Intent. References the Business Signal Issue(s) that originated it (when applicable). The OBC is a Markdown document — it does not have an Issue representation. See **Business Intent**.

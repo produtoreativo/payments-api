@@ -28,13 +28,13 @@ An Upstream experiment may produce production-quality code, but that code is con
 
 **Objective:** Prepare a committed item for Delivery.
 
-An item enters the Icebox after being accepted in the Product Intent Backlog. Discovery in Downstream occurs within the Icebox. The goal is to produce a minimum acceptable OBC through refinement:
+An item enters the Icebox after being accepted in the Product Backlog. Discovery in Downstream occurs within the Icebox. The goal is to produce a Local OBC in the Committed state through refinement:
 
 - functional — what the system must do
 - technical — how the system must do it
 - operational — how the system must behave in production
 
-At the end of Discovery in Downstream, the item has a validated minimum OBC and advances to the Iteration Backlog.
+At the end of Discovery in Downstream, the item has a Local OBC in the Committed state and advances to the Iteration Backlog.
 
 ---
 
@@ -76,7 +76,7 @@ Record only as:
 
 - external dependency;
 - release risk;
-- Repository Tracking List item;
+- Product Tracking List item;
 - Reliability Plan note;
 - required evidence from the responsible system.
 
@@ -105,7 +105,7 @@ An Upstream activity may produce:
 - AsyncAPI updates;
 - Event Storming updates;
 - Reliability Plan updates;
-- Repository Tracking List updates;
+- Product Tracking List updates;
 - architecture decisions.
 
 ---
@@ -245,7 +245,7 @@ The complete Decision Package (sections of `experiment.md`):
 - **Recommended Decision** — the author's recommendation (see options below)
 - **Updated Risks** — new or mitigated risks
 - **Updated Opportunities** — identified opportunities
-- **Updated Tracking Items** — items that need to enter the Repository Tracking Lists or Global Tracking Lists
+- **Updated Tracking Items** — items that need to enter the Product Tracking Lists or Portfolio Tracking Lists
 - **Updated OBCs** — proposed success criteria
 - **Recommended Downstream Scope** — what enters the next iteration, if approved
 
@@ -256,8 +256,8 @@ The complete Decision Package (sections of `experiment.md`):
 | **Promote** | Start the promotion process (see "Promotion to Downstream Process" section). BDD Feature + OBC moved. Capability enters the Iteration Plan. |
 | **Promote with restriction** | A subset of the capability is promoted. Restricted parts remain in Upstream for another experiment. |
 | **Requires another experiment** | Create a new experiment with a more specific hypothesis. Record the decision in the current experiment's `upstream-trail.md`. |
-| **Wait for business decision** | Block the experiment in the Repository Tracking List with the decision-maker and expected date. Do not open a new experiment until the decision arrives. |
-| **Wait for external dependency** | Record the dependency in the Reliability Plan and Repository Tracking List. Monitor in Continuous Assessment. |
+| **Wait for business decision** | Block the experiment in the Product Tracking List with the decision-maker and expected date. Do not open a new experiment until the decision arrives. |
+| **Wait for external dependency** | Record the dependency in the Reliability Plan and Product Tracking List. Monitor in Continuous Assessment. |
 | **Discard** | Record the learning in `prodops/journeys/discovery/learnings.md`. Close the experiment with justification in the `upstream-trail.md`. |
 
 ### Recording the decision
@@ -299,8 +299,8 @@ The promotion decision belongs to the Product Manager + Tech Lead responsible fo
 Before promoting, confirm that:
 
 1. The experiment's Decision Package has a clear recommendation (`Promote` or `Promote with restriction`).
-2. The expected behavior is described in a BDD Feature in `prodops/journeys/discovery/experiments/<NNN-slug>/features/` ready to be moved to `prodops/artifacts/bdd/`.
-3. The OBC draft in `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` has measurable criteria and can be moved to `prodops/artifacts/obcs/`.
+2. The expected behavior is described in a BDD Feature in `prodops/journeys/discovery/experiments/<NNN-slug>/features/` ready to be moved to `prodops/artifacts/business/bdd/`.
+3. The OBC draft in `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` has measurable criteria and can be moved to `prodops/artifacts/business/obcs/`.
 4. The Reliability Plan has been updated with the risks and mitigation actions identified in the experiment.
 5. The remaining uncertainty is acceptable to enter Downstream with a delivery commitment.
 
@@ -309,21 +309,21 @@ Before promoting, confirm that:
 ```
 1. Move BDD Feature:
    prodops/journeys/discovery/experiments/<NNN-slug>/features/<slug>.feature
-   → prodops/artifacts/bdd/<slug>.feature
+   → prodops/artifacts/business/bdd/<slug>.feature
 
 2. Move OBC:
    prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md
-   → prodops/artifacts/obcs/<slug>.md
+   → prodops/artifacts/business/obcs/<slug>.md
    (remove draft marking)
 
 3. Create or update entry in Iteration Plan:
-   prodops/artifacts/plans/iteration-plan.md
+   prodops/artifacts/governance/plans/iteration-plan.md
    (add with decision `Entered` in the "Recommended Iteration Plan" table —
    not only in "Identified Iteration Backlog", as this section does not satisfy
    the formal Downstream precondition)
 
-4. Update Repository Tracking List if the item was there:
-   prodops/artifacts/product/tracking-list.md
+4. Update Product Tracking List if the item was there:
+   prodops/artifacts/product/backlogs/tracking-list.md
    (change status to "Promoted to Downstream")
 
 5. Record the promotion in the experiment's upstream trail:
@@ -338,7 +338,7 @@ Before promoting, confirm that:
 
 - Moving code to production without moving ProdOps artifacts.
 - Creating a committed OBC without a corresponding BDD Feature.
-- Starting Downstream implementation before the OBC is in `prodops/artifacts/obcs/`.
+- Starting Downstream implementation before the OBC is in `prodops/artifacts/business/obcs/`.
 - Promoting with a `Do not promote` or `Requires another experiment` recommendation in the Decision Package.
 
 ---

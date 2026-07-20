@@ -30,11 +30,11 @@
 
 ## Artefatos ProdOps atualizados
 
-- [ ] BDD Feature (`prodops/artifacts/bdd/`)
-- [ ] OBC (`prodops/artifacts/obcs/`)
+- [ ] BDD Feature (`prodops/artifacts/business/bdd/`)
+- [ ] OBC (`prodops/artifacts/business/obcs/`)
 - [ ] Architecture diagram (se mudança estrutural)
 - [ ] Event Storming (se eventos novos/alterados)
-- [ ] Release Trail (trail da sessão ativa em `prodops/artifacts/trails/sessions/`)
+- [ ] Release Trail (trail da sessão ativa em `prodops/artifacts/governance/trails/sessions/`)
 
 ## Checklist
 

@@ -1,14 +1,9 @@
 # Product
 
-Current product state, product artifacts and committed features.
+Artifacts that describe the product from an operational perspective — its context, work organization, and architectural decisions relevant for operating it.
 
-| Artifact | Location |
+| Subdirectory | Content |
 |---|---|
-| Product Deck | [product-deck.md](product-deck.md) |
-| Service Decks | [service-decks/](service-decks/) |
-| BDD Features (committed) | [../bdd/](../bdd/) |
-| Tracking List | [tracking-list.md](tracking-list.md) |
-| Icebox | [icebox-backlog.md](icebox-backlog.md) |
-
-Committed features live in `prodops/artifacts/bdd/`.
-Exploratory features live in `prodops/journeys/discovery/experiments/<NNN-slug>/features/`.
+| [context/](context/) | Product Deck and Service Decks — product vision and individual services |
+| [backlogs/](backlogs/) | Repository Tracking List, Icebox Backlog, and Iteration Backlog — work organization by horizon |
+| [architecture/](architecture/) | Operational architectural view — what was decided, what exists, how systems integrate |

@@ -9,14 +9,14 @@ Upstream e Downstream são **modos de execução** do Framework ProdOps — não
 | **Upstream** | Modo de exploração |
 | **Downstream** | Modo de compromisso |
 | **Discovery** | Jornada presente nos dois modos |
-| **Delivery** | Jornada exclusiva do Downstream |
-| **Operation** | Jornada exclusiva do Downstream |
+| **Delivery** | Jornada presente nos dois modos; somente Downstream produz entrega promovível |
+| **Operation** | Jornada presente nos dois modos; Upstream limita-se a sandbox/experimento |
 
 Os modos não substituem as jornadas. Eles definem como as jornadas serão executadas.
 
-## Fluxo de decisão do Business Intent
+## Fluxo de decisão da Business Intent
 
-Todo Business Intent criado no Business Intent Backlog deve seguir um dos dois modos. Essa decisão é do Product Owner e não acontece automaticamente.
+Toda Business Intent segue um dos dois modos. No BIB, a decisão da exploração global é do Portfolio; no Product Backlog, a decisão local é do Product Owner. Nenhuma transição acontece automaticamente.
 
 ```
 Business Intent
@@ -26,9 +26,9 @@ Escolha do modo (Product Owner)
 Upstream                    Downstream
 (exploração)                (compromisso)
      │                           │
-  Discovery                  Product Intent Backlog
-  Experimentos                   → Icebox (Discovery)
-  Aprendizados                   → Iteration Backlog
+  Discovery                  Product Backlog
+  Experimentos                   → Icebox (VIEW — Discovery)
+  Aprendizados                   → Iteration Backlog (VIEW)
      │                           → Iteration Plan
   (Eventualmente)                → Delivery
   Downstream                     → Operation
@@ -64,7 +64,7 @@ Modo com compromisso de entrega e aplicação completa dos quality gates vigente
 - Evidências registradas em cada etapa
 - Sequência completa obrigatória
 
-Downstream entrega software com o conhecimento validado pelo Upstream.
+Downstream entrega software com conhecimento validado pela Discovery, realizada diretamente em Downstream ou promovida do Upstream.
 
 → [Detalhes do modo Downstream](downstream.md)
 

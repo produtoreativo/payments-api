@@ -85,7 +85,7 @@ Reference:
 
 ### Activity
 
-Execução completa da atividade Upstream (modo exploratório) para o Business Intent "Suporte a Múltiplos Pagamentos no Checkout".
+Execução completa da atividade Upstream (modo exploratório) para o Intent "Suporte a Múltiplos Pagamentos no Checkout".
 
 ### Summary
 
@@ -97,7 +97,7 @@ A Opção A (múltiplas invoices por pedido com nova entidade `PaymentCompositio
 
 - `prodops/journeys/discovery/experiments/007-split-payment-model/experiment.md`
 - `prodops/journeys/discovery/experiments/007-split-payment-model/upstream-trail.md`
-- `prodops/artifacts/obcs/payment-composition-draft.md`
+- `prodops/artifacts/business/obcs/payment-composition-draft.md`
 - `prodops/journeys/discovery/upstream-trail.md`
 
 ### Decision
@@ -106,7 +106,7 @@ Pronto para Assessment — aguarda decisão de produto sobre política de falha 
 
 ### Notes
 
-Próximos passos após decisão de produto: criar BDD Feature `prodops/artifacts/bdd/payment-composition.feature`, atualizar Iteration Plan, Bootstrap → Hack.
+Próximos passos após decisão de produto: criar BDD Feature `prodops/artifacts/business/bdd/payment-composition.feature`, atualizar Iteration Plan, Bootstrap → Hack.
 
 ## 2026-07-03 18:04
 
@@ -141,7 +141,7 @@ O EXP-004 foi recuperado como registro de referência porque o trail global, o R
 - `prodops/upstream/experiments.md`
 - `prodops/upstream/upstream-trail.md`
 - `prodops/journeys/assessment/risks.md`
-- `prodops/journeys/discovery/features/README.md` (removido: diretório consolidado em `prodops/artifacts/bdd/`)
+- `prodops/journeys/discovery/features/README.md` (removido: diretório consolidado em `prodops/artifacts/business/bdd/`)
 
 ### Decision
 
@@ -149,7 +149,7 @@ Pronto para Assessment.
 
 ### Notes
 
-A referência histórica a `prodops/journeys/discovery/features/checkout-gateway-feature-flag.feature` (removido: sem sucessor em `prodops/artifacts/bdd/`) permanece como gap: o arquivo é referenciado por entradas do trail mas não está presente no workspace.
+A referência histórica a `prodops/journeys/discovery/features/checkout-gateway-feature-flag.feature` (removido: sem sucessor em `prodops/artifacts/business/bdd/`) permanece como gap: o arquivo é referenciado por entradas do trail mas não está presente no workspace.
 
 ## 2026-07-03 17:58
 
@@ -401,8 +401,8 @@ Uma nova BDD de prontidão da Feature Flag do Checkout foi adicionada para repre
 
 ### Artifacts Updated
 
-- `prodops/journeys/discovery/features/credit-card-payment.feature` (migrado: hoje `prodops/artifacts/bdd/credit-card-payment.feature`)
-- `prodops/journeys/discovery/features/checkout-gateway-feature-flag.feature` (removido: sem sucessor em `prodops/artifacts/bdd/`)
+- `prodops/journeys/discovery/features/credit-card-payment.feature` (migrado: hoje `prodops/artifacts/business/bdd/credit-card-payment.feature`)
+- `prodops/journeys/discovery/features/checkout-gateway-feature-flag.feature` (removido: sem sucessor em `prodops/artifacts/business/bdd/`)
 
 ### Decision
 
@@ -468,7 +468,7 @@ O Validation Workbench agora permite que agentes e humanos explorem os shapes de
 - `prodops/upstream/experiments/001-credit-card-lifecycle/experiment.md`
 - `prodops/upstream/experiments.md`
 - `prodops/upstream/learnings.md`
-- `prodops/journeys/discovery/features/credit-card-payment.feature` (migrado: hoje `prodops/artifacts/bdd/credit-card-payment.feature`)
+- `prodops/journeys/discovery/features/credit-card-payment.feature` (migrado: hoje `prodops/artifacts/business/bdd/credit-card-payment.feature`)
 - `prodops/product/tracking-list.md`
 - `prodops/journeys/assessment/risks.md`
 - `prodops/upstream/obcs/credit-card-authorization-confirmation.md`

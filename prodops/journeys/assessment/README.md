@@ -30,9 +30,9 @@ O Assessment pode ocorrer tanto no Upstream quanto no Downstream.
 | Oportunidades | [opportunities.md](opportunities.md) |
 | Reliability Plans | [reliability-plans/](reliability-plans/) |
 | Event Storming | [event-storming/](event-storming/) |
-| Arquitetura | [architecture/](architecture/) |
-| OBCs (referência) | [../../artifacts/obcs/](../../artifacts/obcs/) |
-| Iteration Plans (referência) | [../../artifacts/plans/](../../artifacts/plans/) |
+| Arquitetura | [../../artifacts/product/architecture/](../../artifacts/product/architecture/) |
+| OBCs (referência) | [../../artifacts/business/obcs/](../../artifacts/business/obcs/) |
+| Iteration Plans (referência) | [../../artifacts/governance/plans/](../../artifacts/governance/plans/) |
 
 ## Relação com outras jornadas
 

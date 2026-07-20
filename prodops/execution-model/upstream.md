@@ -16,7 +16,7 @@ No Upstream:
 
 - não existem gates obrigatórios
 - não existe obrigação de concluir artefatos
-- não existe obrigação de produzir um OBC mínimo
+- não existe obrigação de produzir um OBC Committed
 - não existe obrigação de seguir todas as Skills
 - o engenheiro decide quais Skills utilizar
 - vibecoding é permitido
@@ -29,7 +29,7 @@ Um experimento Upstream pode produzir código de qualidade de produção, mas es
 
 ## OBC no Upstream
 
-Quando um Business Intent entra no Business Intent Backlog, um OBC é criado como Draft.
+Quando uma Business Intent entra no Business Intent Backlog, um OBC é criado como Draft.
 
 Durante o Upstream:
 
@@ -58,7 +58,7 @@ A jornada Discovery documenta o workflow completo de exploração, experimentos,
 
 Ao final do Upstream podem ocorrer quatro resultados:
 
-1. **Descartar** o Business Intent — aprendizado suficiente, mas não vale a pena avançar.
+1. **Descartar** a Business Intent — aprendizado suficiente, mas não vale a pena avançar.
 2. **Arquivar** para uso futuro — aprendizado registrado, decisão adiada.
 3. **Retornar** ao Business Intent Backlog — aguardar decisão de negócio ou dependência externa.
 4. **Promover** para Downstream — decisão explícita do Product Owner, com Decision Package completo.
@@ -97,9 +97,9 @@ Objetivo: validar comportamento contra um provedor real (ex: Asaas sandbox) quan
 
 Uma capability promovida do Upstream para Downstream deve ter:
 
-1. BDD Feature movida de `prodops/journeys/discovery/experiments/<NNN-slug>/features/` para `prodops/artifacts/bdd/`
-2. OBC movido de `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` para `prodops/artifacts/obcs/`
-3. Entrada no Iteration Plan em `prodops/artifacts/plans/iteration-plan.md`
+1. BDD Feature movida de `prodops/journeys/discovery/experiments/<NNN-slug>/features/` para `prodops/artifacts/business/bdd/`
+2. OBC movido de `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` para `prodops/artifacts/business/obcs/`
+3. Entrada no Iteration Plan em `prodops/artifacts/governance/plans/iteration-plan.md`
 4. Reliability Plan atualizado em `prodops/journeys/assessment/reliability-plans/`
 
 → [Processo completo de promoção](../journeys/discovery/README.md#processo-de-promoção-para-downstream)

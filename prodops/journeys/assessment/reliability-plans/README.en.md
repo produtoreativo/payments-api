@@ -1,7 +1,7 @@
 # Reliability Plan - Payments Release
 
 > Document generated from `prodops/journeys/assessment/reliability-plans/setup/reliability-plan.prompt.md`.
-> Main input: `prodops/artifacts/plans/iteration-plan.md`.
+> Main input: `prodops/artifacts/governance/plans/iteration-plan.md`.
 
 ## Executive Summary
 
@@ -17,13 +17,13 @@ The greatest reliability risks for this approved scope are in the difference bet
 
 | Feature | Decision in Iteration Plan | Evidence |
 | --- | --- | --- |
-| Enable new gateway for Checkout on the prioritized journey | In | `prodops/artifacts/plans/iteration-plan.md`, row of the "Recommended Iteration Plan" table. |
-| Create invoice via Pix | In | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/bdd/create-invoice.feature`; `InvoiceController.createInvoice`; `InvoiceService.createInvoice`. |
-| Payment confirmation | In | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/bdd/payment-confirmation.feature`; `AsaasWebhookController`; `InvoiceService.processProviderWebhook`. |
-| Create invoice via Boleto | In (revised 2026-07-06) | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/create-invoice-boleto.md`; `prodops/artifacts/bdd/create-invoice-boleto.feature`. **Risk analysis pending in this Reliability Plan.** |
-| API token access validation | In | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/api-token-validation.md`; `prodops/artifacts/bdd/api-token-validation.feature`. **Risk analysis pending in this Reliability Plan.** |
-| Webhook configuration by API token | In | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/webhook-configuration.md`; `prodops/artifacts/bdd/webhook-configuration.feature`. **Risk analysis pending in this Reliability Plan.** |
-| Create invoice via Credit Card (Hosted) | In (approved 2026-07-07) | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/credit-card-authorization-confirmation.md`; `prodops/artifacts/bdd/credit-card-payment.feature`. **Risk analysis pending in this Reliability Plan.** |
+| Enable new gateway for Checkout on the prioritized journey | In | `prodops/artifacts/governance/plans/iteration-plan.md`, row of the "Recommended Iteration Plan" table. |
+| Create invoice via Pix | In | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/bdd/create-invoice.feature`; `InvoiceController.createInvoice`; `InvoiceService.createInvoice`. |
+| Payment confirmation | In | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/bdd/payment-confirmation.feature`; `AsaasWebhookController`; `InvoiceService.processProviderWebhook`. |
+| Create invoice via Boleto | In (revised 2026-07-06) | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/obcs/create-invoice-boleto.md`; `prodops/artifacts/business/bdd/create-invoice-boleto.feature`. **Risk analysis pending in this Reliability Plan.** |
+| API token access validation | In | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/obcs/api-token-validation.md`; `prodops/artifacts/business/bdd/api-token-validation.feature`. **Risk analysis pending in this Reliability Plan.** |
+| Webhook configuration by API token | In | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/obcs/webhook-configuration.md`; `prodops/artifacts/business/bdd/webhook-configuration.feature`. **Risk analysis pending in this Reliability Plan.** |
+| Create invoice via Credit Card (Hosted) | In (approved 2026-07-07) | `prodops/artifacts/governance/plans/iteration-plan.md`; `prodops/artifacts/business/obcs/credit-card-authorization-confirmation.md`; `prodops/artifacts/business/bdd/credit-card-payment.feature`. **Risk analysis pending in this Reliability Plan.** |
 
 Items explicitly ignored for not having a decision of exactly `In`: `Payment status notification` (`In as MVP`), `Cancel pending invoice` (`Deferred`), `Corporate incident/ITSM integration` (`Out`) and `Gateway fallback/Itaú` (`Out`).
 
@@ -204,12 +204,12 @@ These improvements are related to features that are not part of the scope of ris
 
 ## Sources Consulted
 
-- `prodops/artifacts/plans/iteration-plan.md`
+- `prodops/artifacts/governance/plans/iteration-plan.md`
 - `prodops/journeys/assessment/reliability-plans/premortem.md`
 - `prodops/journeys/assessment/risks.md`
-- `prodops/artifacts/product/service-decks/compra-com-pix.md`
-- `prodops/artifacts/bdd/create-invoice.feature`
-- `prodops/artifacts/bdd/payment-confirmation.feature`
+- `prodops/artifacts/product/context/service-decks/compra-com-pix.md`
+- `prodops/artifacts/business/bdd/create-invoice.feature`
+- `prodops/artifacts/business/bdd/payment-confirmation.feature`
 - `api/src/modules/invoices/controllers/invoice.controller.ts`
 - `api/src/modules/invoices/controllers/asaas-webhook.controller.ts`
 - `api/src/modules/invoices/services/invoice.service.ts`

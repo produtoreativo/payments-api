@@ -23,7 +23,7 @@ Define and verify reliability requirements before, during, and after implementat
 ## Produced artifacts
 
 - Risks documented in `prodops/journeys/assessment/risks.md`
-- OBC with SLIs and Reliability Rules in `prodops/artifacts/obcs/`
+- OBC with SLIs and Reliability Rules in `prodops/artifacts/business/obcs/`
 - Reliability Plan entry in `prodops/journeys/assessment/reliability-plans/`
 
 ## Canonical documentation

@@ -1,8 +1,10 @@
 # Origin Streams
 
-An **Origin Stream** identifies the origin of an Intent in the ProdOps Framework.
+An **Origin Stream** identifies the origin of a **Business Signal** in the ProdOps Framework.
 
-Every change starts with an Intent. The Intent always has exactly one Origin Stream — the classification of where the need was born and who owns it. The Origin Stream does not determine how the work will be executed (that is the function of the Execution Mode), but it informs the context, the language, and the success criteria that the Intent carries.
+Every change starts with a Business Signal. The Business Signal always has exactly one Origin Stream — the classification of where the need was born and who owns it. The Origin Stream does not determine how the work will be executed (that is the function of the Execution Mode), but it informs the context, the language, and the success criteria that the Business Signal carries. When investigated and recognized as strategic, a Business Signal can generate one or more Business Intents (1:N relationship).
+
+A Business Intent can also be created directly in the Business Intent Backlog, without originating from a Business Signal.
 
 → [Full Framework flow](flow.en.md)
 → [Operating model](operating-model.en.md)
@@ -19,14 +21,14 @@ flowchart TD
     TM[Team]
     TY[Technology]
 
-    B --> I[Intent]
-    EN --> I
-    TM --> I
-    TY --> I
+    B --> BS[Business Signal]
+    EN --> BS
+    TM --> BS
+    TY --> BS
 
-    I --> EX[Exploration]
-    EX --> OBC[Observable Business Contract]
-    OBC --> IP[Iteration Plan]
+    BS --> BI[Business Intent\n+ OBC as contract]
+    BI --> EX[Exploration / Upstream]
+    EX --> IP[Iteration Plan]
     IP --> RP[Reliability Plan]
     RP --> D[Delivery]
     D --> OP[Operation]
@@ -35,7 +37,8 @@ flowchart TD
     style EN fill:#fff3cd,stroke:#ffc107
     style TM fill:#d1ecf1,stroke:#17a2b8
     style TY fill:#f8d7da,stroke:#dc3545
-    style I fill:#e2e3e5,stroke:#6c757d
+    style BS fill:#e2e3e5,stroke:#6c757d
+    style BI fill:#cce5ff,stroke:#004085
 ```
 
 ---
@@ -65,12 +68,12 @@ flowchart TD
 - Adopt Conventional Commits in the repository → Team
 
 **Generated artifacts:**
-- Intent with `origin_stream: Business`
+- Business Signal with `origin_stream: Business`
 - Business hypotheses to validate
 - Open questions about the value to generate
 
 **How it evolves to OBC:**
-An Intent with Business Origin Stream enters Exploration with questions about business value, user experience, and technical feasibility. The resulting OBC defines observable product success criteria — typically expressed as verifiable behavior via BDD Feature.
+A Business Signal with Business Origin Stream generates a Business Intent when investigated and recognized as strategic. The Business Intent enters Exploration with questions about business value, user experience, and technical feasibility. The resulting OBC defines observable product success criteria — typically expressed as verifiable behavior via BDD Feature.
 
 ---
 
@@ -97,12 +100,12 @@ An Intent with Business Origin Stream enters Exploration with questions about bu
 - Migrate to Kubernetes to improve scalability → Technology
 
 **Generated artifacts:**
-- Intent with `origin_stream: Enterprise`
+- Business Signal with `origin_stream: Enterprise`
 - Reference to the external requirement (law, policy, contract)
 - Compliance criteria to satisfy
 
 **How it evolves to OBC:**
-Enterprise Intents often have more objective criteria (the law says X, the contract requires Y). The OBC defines the observable behavior that demonstrates compliance — auditable, traceable, verifiable.
+A Business Signal with Enterprise Origin Stream generates a Business Intent when investigated. Enterprise Business Intents often have more objective criteria (the law says X, the contract requires Y). The OBC defines the observable behavior that demonstrates compliance — auditable, traceable, verifiable.
 
 ---
 
@@ -129,12 +132,12 @@ Enterprise Intents often have more objective criteria (the law says X, the contr
 - Migrate infrastructure to reduce product latency → Technology
 
 **Generated artifacts:**
-- Intent with `origin_stream: Team`
+- Business Signal with `origin_stream: Team`
 - Description of the current process problem
 - Observable improvement criteria
 
 **How it evolves to OBC:**
-The Team Intent evolves to an OBC that describes the expected behavior of the new process or tool — verifiable in the team's practice (e.g.: hook executes in less than 2s, template generates a valid artifact, skill completes without error).
+A Business Signal with Team Origin Stream generates a Business Intent when investigated. The Business Intent evolves to an OBC that describes the expected behavior of the new process or tool — verifiable in the team's practice (e.g.: hook executes in less than 2s, template generates a valid artifact, skill completes without error).
 
 ---
 
@@ -161,18 +164,18 @@ The Team Intent evolves to an OBC that describes the expected behavior of the ne
 - Implement new payment method to increase conversion → Business
 
 **Generated artifacts:**
-- Intent with `origin_stream: Technology`
+- Business Signal with `origin_stream: Technology`
 - Technical diagnosis of the current situation
 - Observable improvement criteria (latency, availability, security coverage)
 
 **How it evolves to OBC:**
-The Technology Intent evolves to an OBC with measurable technical criteria — SLOs, security metrics, performance benchmarks, error rate reduction.
+A Business Signal with Technology Origin Stream generates a Business Intent when investigated and recognized as strategic. The Business Intent evolves to an OBC with measurable technical criteria — SLOs, security metrics, performance benchmarks, error rate reduction.
 
 ---
 
 ## Classification rules
 
-**An Intent has exactly one Origin Stream.** If it seems to belong to two, choose the one that describes the **primary beneficiary of the change**:
+**A Business Signal has exactly one Origin Stream.** If it seems to belong to two, choose the one that describes the **primary beneficiary of the change**:
 
 | Who primarily benefits | Origin Stream |
 |---|---|
@@ -181,7 +184,7 @@ The Technology Intent evolves to an OBC with measurable technical criteria — S
 | Engineering team / Process | Team |
 | System / Platform / Infrastructure | Technology |
 
-**Real hybrid Intents exist.** When a change serves two purposes (e.g.: migrating to Kubernetes reduces cost AND improves product scalability), register by the primary objective. If both are equally important, prefer the one with greater business impact.
+**Real hybrid Business Signals exist.** When a change serves two purposes (e.g.: migrating to Kubernetes reduces cost AND improves product scalability), register by the primary objective. If both are equally important, prefer the one with greater business impact.
 
 ---
 
@@ -191,4 +194,4 @@ The Technology Intent evolves to an OBC with measurable technical criteria — S
 → [Glossary: canonical definitions](glossary.en.md)
 → [Operating model: Origin layer at the top of the hierarchy](operating-model.en.md)
 → [Intent templates](../templates/business-intents/intent.en.md)
-→ [Active Intents](../business-intents/README.en.md)
+→ [Active Intents](../artifacts/business/intents/README.en.md)

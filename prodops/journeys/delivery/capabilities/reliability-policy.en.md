@@ -15,7 +15,7 @@ The Reliability Plan is located at: `prodops/journeys/assessment/reliability-pla
 
 An OBC anchors the implementation to a business outcome. It defines what "done" means in observable and measurable terms. OBCs must exist before any code is written for a Downstream item.
 
-OBC files: `prodops/artifacts/obcs/`
+OBC files: `prodops/artifacts/business/obcs/`
 
 ## Definition of Done
 
@@ -48,4 +48,4 @@ For details on how to apply during the TDD cycle: [ProdOps TDD — Reliability i
 
 ## Post-deploy validation
 
-After deploy, validate the reliability criteria defined in the OBC. Record evidence in the active session trail at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` and in `prodops/journeys/operation/operational-trail.md`.
+After deploy, validate the reliability criteria defined in the OBC. Record evidence in the active session trail at `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md` and in `prodops/journeys/operation/operational-trail.md`.
