@@ -2,7 +2,7 @@
 
 Canonical location: `prodops/artifacts/business/intents/<slug>.md`
 
-> A **Business Intent** records a strategic decision to pursue value — born from one or more Business Signals. It is not a commitment to implementation. It is the formal entry point of the Framework before deciding whether the work goes through Upstream (exploration) or Downstream (governed delivery). Entities never change identity: a Business Signal **generates** a Business Intent; a Business Intent **generates** OBCs.
+> A **Business Intent** records a strategic decision to pursue value — born from one or more Business Signals. It is not a commitment to implementation. It is the formal entry point of the Framework before deciding whether the work goes through Upstream (exploration) or Downstream (governed delivery). Entities never change identity: a Business Signal **generates** a Business Intent; a Business Intent **has** an OBC as its contract document.
 
 ---
 

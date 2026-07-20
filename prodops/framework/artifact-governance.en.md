@@ -44,7 +44,7 @@ This document defines the governance of all ProdOps Framework artifacts: where e
 ### Product Repository
 
 - Implements and operates a specific product.
-- Governs Product Tracking List (Business Signals), Product Backlog (Local OBCs), Icebox (VIEW), Iteration Backlog (VIEW), Release (VIEW), Iteration Plan, OBCs, Reliability Plans.
+- Governs Product Tracking List (Business Signals), Product Backlog (Business Intents), Icebox (VIEW), Iteration Backlog (VIEW), Release (VIEW), Iteration Plan, OBCs, Reliability Plans.
 - This repository (`payments-api`) is a Product Repository.
 
 ---
@@ -171,7 +171,7 @@ Operation
 | Field | Value |
 |---|---|
 | **Owner** | Product Owner |
-| **Contains** | ONLY Local OBCs |
+| **Contains** | ONLY Business Intents (each Intent has a Local OBC as its contract document) |
 | **Where born** | Product Repository — convergence point of global and local flows |
 | **Canonical artifact** | Managed by Diligence; instances tracked in the Iteration Plan |
 | **Who modifies** | Product Owner + Diligence |
@@ -251,7 +251,7 @@ Operation
 | **Who approves** | Tech Lead + Product Owner |
 | **Consumers** | Iteration Plan, Delivery, Operation |
 | **Entry criteria** | Premortem completed; risks identified |
-| **Exit criteria** | Approved before entry into Iteration Plan |
+| **Exit criteria** | Approved before entry into Iteration Plan — applicable only when canonical triggers are present |
 | **Journeys** | Assessment, Delivery, Operation |
 
 ---

@@ -2,7 +2,7 @@
 
 > **Purpose:** Captures Business Signals from the product not yet understood enough to generate a formal Business Intent. Items here have no OBC, no permanent identifier, and no delivery commitment. Contains ONLY Business Signals.
 >
-> Promoted items follow the local flow: Premortem + Reliability Plan + Owner Approval → Product Backlog (generating Business Intent + Local OBC Draft).
+> Promoted items follow the local flow: Premortem + Preliminary Risk Analysis + Owner Approval → Product Backlog (generating Business Intent + Local OBC Draft).
 >
 > → [Backlog hierarchy](../../../framework/backlogs.en.md)
 > → [Icebox](icebox-backlog.en.md) — next level; where the OBC is refined to the Committed state

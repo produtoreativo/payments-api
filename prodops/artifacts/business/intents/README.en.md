@@ -2,7 +2,7 @@
 
 > **Naming note:** The canonical naming is **Business Intent**. The path `prodops/artifacts/business/intents/` is preserved for backward compatibility. See [`framework/glossary.en.md`](../../../framework/glossary.en.md#business-intent).
 
-A **Business Intent** represents a strategic decision to pursue value — born from one or more Business Signals. It is not a commitment to implementation. Entities never change identity: a Business Signal **generates** a Business Intent; a Business Intent **generates** OBCs via OBC Partitioning.
+A **Business Intent** represents a strategic decision to pursue value — born from one or more Business Signals. It is not a commitment to implementation. a Business Signal can generate one or more Business Intents (or the Intent can be created directly in the BIB); a Business Intent has an OBC as its contract document — the Global OBC is co-born with the Intent; Local OBCs are created by OBC Partitioning, one per product.
 
 ## What a Business Intent is
 

@@ -145,7 +145,7 @@ Product Backlog
 
 ```
 Product Tracking List
-      │  Premortem + Reliability Plan + Owner Approval
+      │  Premortem + Análise de Risco Preliminar + Owner Approval
       ▼
 Product Backlog           ← OBC Draft nasce aqui se ainda não existe
 ```

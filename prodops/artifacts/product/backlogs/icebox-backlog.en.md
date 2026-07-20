@@ -30,7 +30,7 @@
 
 | State | Meaning | Movement criterion |
 | --- | --- | --- |
-| Icebox | Item committed by the Product Owner (from PIB), being refined through Discovery to reach the Committed state. | OBC Draft under refinement; functional, technical or operational Discovery still in progress. |
+| Icebox | Item committed by the Product Owner (from Product Backlog), being refined through Discovery to reach the Committed state. | OBC Draft under refinement; functional, technical or operational Discovery still in progress. |
 | Discovery | Item under product, business, technical, operations or data investigation. | Clear question, owner and learning deadline exist. |
 | Ready for Delivery | Item ready for sprint/kanban planning. | Acceptance criteria, dependencies, metrics and risks are clear. |
 | Delivery | Item under implementation. | Team assumed commitment and started execution. |

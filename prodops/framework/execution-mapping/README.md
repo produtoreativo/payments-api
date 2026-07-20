@@ -127,7 +127,7 @@ As operações são ações semânticas realizadas sobre artefatos. Elas se agru
 |---|---|
 | `Split` | Artefato origina N especializações (Global OBC → Local OBCs) |
 | `Merge` | Dois artefatos são consolidados em um |
-| `Promote` | Artefato avança de nível (Signal → Intent, Upstream → Downstream) |
+| `Promote` | Artefato avança de nível (Signal gera Intent, Upstream → Downstream) |
 
 ### Família: Execução
 | Operação | Descrição |

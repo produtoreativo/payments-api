@@ -127,7 +127,7 @@ Operations are semantic actions performed on artifacts. They group into families
 |---|---|
 | `Split` | Artifact originates N specializations (Global OBC → Local OBCs) |
 | `Merge` | Two artifacts are consolidated into one |
-| `Promote` | Artifact advances a level (Signal → Intent, Upstream → Downstream) |
+| `Promote` | Artifact advances a level (Signal generates Intent, Upstream → Downstream) |
 
 ### Family: Execution
 | Operation | Description |

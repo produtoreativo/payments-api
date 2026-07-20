@@ -83,7 +83,7 @@ Never the inverse. Use the terms: **decomposition**, **specialization**, **parti
 
 ## OBC Partitioning
 
-**OBC Partitioning** is the capability responsible for transforming a Global OBC into Local OBCs. It occurs between Discovery in the BIB and the creation of items in the products' PIBs.
+**OBC Partitioning** is the capability responsible for transforming a Global OBC into Local OBCs. It occurs between Discovery in the BIB and the creation of items in the products' Product Backlogs.
 
 **Partitioning responsibilities:**
 - Identify the products involved

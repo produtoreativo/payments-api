@@ -2,7 +2,7 @@
 
 Localização canônica: `prodops/artifacts/business/intents/<slug>.md`
 
-> Uma **Business Intent** registra uma decisão estratégica de perseguir valor — nascida de um ou mais Business Signals. Não é um compromisso de implementação. É o ponto de entrada formal do Framework antes de decidir se o trabalho segue por Upstream (exploração) ou Downstream (entrega governada). Entidades nunca mudam de identidade: um Business Signal **gera** uma Business Intent; uma Business Intent **gera** OBCs.
+> Uma **Business Intent** registra uma decisão estratégica de perseguir valor — nascida de um ou mais Business Signals. Não é um compromisso de implementação. É o ponto de entrada formal do Framework antes de decidir se o trabalho segue por Upstream (exploração) ou Downstream (entrega governada). Entidades nunca mudam de identidade: um Business Signal **gera** uma Business Intent; uma Business Intent **possui** um OBC como documento de contrato.
 
 ---
 

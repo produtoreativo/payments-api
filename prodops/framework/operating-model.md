@@ -51,20 +51,20 @@ As Views de um GitHub Project são projeções sobre os dados — não backlogs 
 - Completed — Business Intents entregues
 
 **Product Repository GitHub Project Views:**
-- Product Backlog — todos os Local OBCs
-- Release Planning — Local OBCs por versão de release
-- Current Iteration — Local OBCs da iteração atual
-- Doing — Local OBCs em execução
-- Review — Local OBCs em revisão
-- Done — Local OBCs entregues
-- Reliability — Local OBCs com Reliability Plan ativo
-- Bugs — Local OBCs de bug
+- Product Backlog — todos os Business Intents
+- Release Planning — Business Intents por versão de release
+- Current Iteration — Business Intents da iteração atual
+- Doing — Business Intents em execução
+- Review — Business Intents em revisão
+- Done — Business Intents entregues
+- Reliability — Business Intents com Reliability Plan ativo
+- Bugs — Business Intents de bug
 
 ### Work Items — tipos de operação
 
 | Tipo de Work Item | Artefatos tipicamente afetados | Exemplos de operação |
 |---|---|---|
-| **Business Signal Work Item** | Business Signal | Investigar, Priorizar, Transformar em Intent |
+| **Business Signal Work Item** | Business Signal | Investigar, Priorizar, Gerar Intent |
 | **Business Intent Work Item** | Business Intent, OBC, BDD | Explorar, Refinar OBC, Revisar, Entregar |
 
 Um Work Item deve sempre declarar: Artifact Type, Artifact ID, Operation, Journey. → [Knowledge vs Execution](knowledge-vs-execution.md)
@@ -143,7 +143,7 @@ Artifacts
 
 **Business Signal** — qualquer oportunidade, hipótese, problema, benchmark ou ideia que merece atenção. Vive na Portfolio Tracking List ou Product Tracking List. Gera Business Intents quando investigado e reconhecido como estratégico.
 
-**Business Intent** — decisão estratégica de perseguir valor. Nasce de um Business Signal. Vive no Business Intent Backlog. Gera OBCs via OBC Partitioning.
+**Business Intent** — decisão estratégica de perseguir valor. Pode ser criada a partir de um Business Signal ou diretamente no BIB. Vive no Business Intent Backlog e, após OBC Partitioning, também no Product Backlog. Possui um OBC como documento de contrato (Global OBC co-nasce no BIB; Local OBCs são criados por OBC Partitioning).
 
 **Exploration** — reduz incerteza e refina o OBC draft por meio da jornada Discovery. Discovery existe em ambos os modos; o rigor e o compromisso variam conforme Upstream ou Downstream. Ver [`flow.md`](flow.md).
 
