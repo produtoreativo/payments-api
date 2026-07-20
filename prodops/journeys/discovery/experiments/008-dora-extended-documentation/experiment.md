@@ -364,6 +364,28 @@ Executar as 6 camadas como um único item de documentação no próximo ciclo de
 
 ---
 
+# Output Artifacts
+
+Lista os artefatos de produto gerados ou promovidos por este experimento.
+
+## Artefatos gerados
+
+| Tipo | Artefato | Situação |
+|---|---|---|
+| OBC | N/A | Documentation-only |
+| BDD Feature | N/A | Documentation-only |
+
+**Promovido para Downstream:** N/A — experimento documentation-only.
+**Artefatos de framework gerados (10):**
+- `prodops/framework/dora-metrics.md` + `.en.md` — criados
+- `prodops/framework/glossary.md` + `.en.md` — atualizados (DORA Metrics + Maturity Level)
+- `prodops/journeys/operation/README.md` + `.en.md` — atualizados (seção DORA)
+- `prodops/journeys/assessment/reliability-plans/README.md` — atualizado (DORA como referência)
+- `prodops/artifacts/product/context/product-deck.md` — atualizado (seção Maturidade de Delivery)
+- `prodops/journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md` — criado
+
+---
+
 # Exit Criteria
 
 - [x] Hipótese original respondida — 7 camadas (0–6) implementadas

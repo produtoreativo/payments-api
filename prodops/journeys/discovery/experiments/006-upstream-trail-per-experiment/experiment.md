@@ -198,6 +198,22 @@ No product Downstream scope. This is a ProdOps operating-standard update.
 
 ---
 
+# Output Artifacts
+
+Lista os artefatos de produto gerados ou promovidos por este experimento.
+
+## Artefatos gerados
+
+| Tipo | Artefato | Situação |
+|---|---|---|
+| OBC | N/A | Experimento de processo/estrutura de documentação |
+| BDD Feature | N/A | Experimento de processo/estrutura de documentação |
+
+**Promovido para Downstream:** N/A — experimento de estrutura, sem feature de produto.
+**Artefatos de processo:** `AGENTS.md`, `prodops/skills/upstream/SKILL.md`, templates de discovery atualizados
+
+---
+
 # Exit Criteria
 
 - [x] Original hypothesis answered

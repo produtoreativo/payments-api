@@ -363,6 +363,22 @@ direct capture risks.
 
 ---
 
+# Output Artifacts
+
+Lista os artefatos de produto gerados ou promovidos por este experimento.
+
+## Artefatos gerados
+
+| Tipo | Artefato | Situação |
+|---|---|---|
+| OBC draft | `prodops/journeys/discovery/experiments/003-hosted-vs-tokenized/obcs/credit-card-authorization-confirmation.md` | Draft — mover para `prodops/artifacts/business/obcs/` ao promover |
+| BDD Feature | — | Pendente |
+
+**Promovido para Downstream:** Não — experimento em andamento.
+**Nota:** Influenciou a aprovação do hosted slice via EXP-001 (2026-07-07). Tokenized e saved-card aguardam decisões de Security e Product.
+
+---
+
 # Exit Criteria
 
 - [x] Original hypothesis answered

@@ -364,6 +364,22 @@ No Downstream scope until sandbox evidence is classified.
 
 ---
 
+# Output Artifacts
+
+Lista os artefatos de produto gerados ou promovidos por este experimento.
+
+## Artefatos gerados
+
+| Tipo | Artefato | Situação |
+|---|---|---|
+| OBC | — | In Progress |
+| BDD Feature | — | In Progress |
+
+**Promovido para Downstream:** Não — experimento em andamento.
+**Nota:** Objetivo é produzir evidência técnica de validação do sandbox Asaas, não gerar OBC/BDD próprios.
+
+---
+
 # Exit Criteria
 
 - [ ] Original hypothesis answered

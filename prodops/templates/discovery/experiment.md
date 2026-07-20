@@ -318,6 +318,25 @@ Preencha apenas se o experimento foi implantado em AWS real via `/upstream deplo
 
 ---
 
+# Output Artifacts
+
+Lista os artefatos de produto gerados ou promovidos por este experimento.
+Artefatos que ainda não foram movidos para `prodops/artifacts/` estão marcados como Draft.
+
+## Artefatos gerados
+
+| Tipo | Artefato | Situação |
+|---|---|---|
+| OBC | — | — |
+| BDD Feature | — | — |
+| Business Intent | — | — |
+
+**Promovido para Downstream:** `- [ ] Sim` / `- [ ] Não` / `- [ ] N/A`
+**Data de promoção:** —
+**Slice:** —
+
+---
+
 # Exit Criteria
 
 Confirme que:

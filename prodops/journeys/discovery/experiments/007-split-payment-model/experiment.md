@@ -412,6 +412,23 @@ O MVP deve suportar 2 métodos por pedido, priorizando Pix + Cartão. A única d
 
 ---
 
+# Output Artifacts
+
+Lista os artefatos de produto gerados ou promovidos por este experimento.
+
+## Artefatos gerados
+
+| Tipo | Artefato | Situação |
+|---|---|---|
+| OBC draft | `prodops/journeys/discovery/experiments/007-split-payment-model/obcs/payment-composition.md` | Draft — aguarda decisão de produto |
+| BDD Feature | `prodops/artifacts/business/bdd/payment-composition.feature` | A criar após política de falha parcial definida |
+| Business Intent | `prodops/artifacts/business/intents/split-payment.md` | Criada — aguarda Downstream |
+
+**Promovido para Downstream:** Não — aguarda decisão de produto sobre política de falha parcial.
+**Recomendação:** Política B — manter métodos confirmados, solicitar nova tentativa para o método falho.
+
+---
+
 # Exit Criteria
 
 - [x] Hipótese original respondida — composição via múltiplas invoices é viável

@@ -202,3 +202,21 @@ Open question:
 Move downstream after pipeline owners confirm the Datadog Extension layer ARN,
 deployment-time key injection and SAM deploy parameters for the target AWS
 account.
+
+---
+
+# Output Artifacts
+
+Lista os artefatos de produto gerados ou promovidos por este experimento.
+
+## Artefatos gerados
+
+| Tipo | Artefato | Situação |
+|---|---|---|
+| OBC | N/A | Experimento de infraestrutura/observabilidade |
+| BDD Feature | N/A | Experimento de infraestrutura/observabilidade |
+
+**Promovido para Downstream:** N/A — mudanças aplicadas diretamente no repositório.
+**Artefatos técnicos:** `api/package.json`, `api/infra/lambda.yaml`, `api/infra/dynamodb.yaml`, `README.md`
+
+---

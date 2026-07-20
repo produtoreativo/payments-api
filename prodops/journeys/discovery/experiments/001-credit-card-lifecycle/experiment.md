@@ -949,6 +949,22 @@ Upstream experiment.
 
 ---
 
+# Output Artifacts
+
+Lista os artefatos de produto gerados ou promovidos por este experimento.
+
+## Artefatos gerados
+
+| Tipo | Artefato | Situação |
+|---|---|---|
+| OBC | `prodops/artifacts/business/obcs/credit-card-authorization-confirmation.md` | ✅ Downstream |
+| BDD Feature | `prodops/artifacts/business/bdd/credit-card-payment.feature` | ✅ Downstream (hosted slice) |
+
+**Promovido para Downstream:** Sim — 2026-07-07
+**Slice:** Hosted card entry apenas. Tokenized, saved-card e new-card permanecem Upstream pendentes de decisões de Security e Product.
+
+---
+
 # Exit Criteria
 
 - [x] Original hypothesis answered

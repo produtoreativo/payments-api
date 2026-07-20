@@ -196,6 +196,22 @@ No Payments API Downstream scope until Checkout evidence is available.
 
 ---
 
+# Output Artifacts
+
+Lista os artefatos de produto gerados ou promovidos por este experimento.
+
+## Artefatos gerados
+
+| Tipo | Artefato | Situação |
+|---|---|---|
+| OBC | — | — |
+| BDD Feature | `checkout-gateway-feature-flag.feature` | Removida — sem sucessor em `prodops/artifacts/business/bdd/` |
+
+**Promovido para Downstream:** Não — capability pertence ao repositório do Checkout.
+**Nota:** Feature Flag bloqueada por bug no Checkout. Registrada como dependência externa e risco de Release no Reliability Plan.
+
+---
+
 # Exit Criteria
 
 - [x] Original hypothesis answered
