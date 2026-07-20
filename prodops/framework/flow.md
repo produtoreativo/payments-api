@@ -218,7 +218,7 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 
 **Objetivo:** Comprometer formalmente a capability na próxima iteração de entrega depois da Assessment Review.
 
-**O que acontece:** O conjunto aprovado — Local OBC Committed, BDD Feature, riscos e Reliability Plan — entra no Iteration Plan com status `Entrou`. Isso representa compromisso formal de entrega; não é, isoladamente, prova de readiness.
+**O que acontece:** O conjunto aprovado — Local OBC Committed, BDD Feature, riscos e Reliability Plan (quando houver movimentação financeira, integração externa, mudança de SLO, risco alto/crítico ou alteração de persistência ou segurança) — entra no Iteration Plan com status `Entrou`. Isso representa compromisso formal de entrega; não é, isoladamente, prova de readiness.
 
 **O que é produzido:**
 - Entrada no Iteration Plan em `prodops/artifacts/governance/plans/iteration-plan.md` com status `Entrou`

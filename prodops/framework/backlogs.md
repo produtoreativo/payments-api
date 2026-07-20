@@ -126,7 +126,7 @@ Um item pode estar no BIB, associado a um Roadmap e a uma Platform Release, ao m
 
 ### OBC Partitioning
 
-**O que é:** Capability responsável por transformar o Global OBC em Local OBCs — um por produto envolvido. Ocorre após o Discovery no BIB, antes da criação de itens nos PIBs dos produtos.
+**O que é:** Capability responsável por transformar o Global OBC em Local OBCs — um por produto envolvido. Ocorre após o Discovery no BIB, antes da criação de itens nos Product Backlogs dos produtos.
 
 **Responsabilidades:**
 - Identificar os produtos envolvidos na implementação

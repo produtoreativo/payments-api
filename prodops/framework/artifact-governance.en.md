@@ -251,7 +251,7 @@ Operation
 | **Who approves** | Tech Lead + Product Owner |
 | **Consumers** | Iteration Plan, Delivery, Operation |
 | **Entry criteria** | Premortem completed; risks identified |
-| **Exit criteria** | Approved before entry into Iteration Plan |
+| **Exit criteria** | Approved before entry into Iteration Plan — applicable only when canonical triggers are present |
 | **Journeys** | Assessment, Delivery, Operation |
 
 ---

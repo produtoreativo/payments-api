@@ -2,7 +2,7 @@
 
 > **Nota de nomenclatura:** A nomenclatura canônica é **Business Intent**. O path `prodops/artifacts/business/intents/` é preservado por compatibilidade. Ver [`framework/glossary.md`](../../../framework/glossary.md#business-intent).
 
-Uma **Business Intent** representa uma decisão estratégica de perseguir valor — nascida de um ou mais Business Signals. Não é um compromisso de implementação. Entidades nunca mudam de identidade: um Business Signal **gera** uma Business Intent; uma Business Intent **gera** OBCs via OBC Partitioning.
+Uma **Business Intent** representa uma decisão estratégica de perseguir valor — nascida de um ou mais Business Signals. Não é um compromisso de implementação. um Business Signal pode gerar uma ou mais Business Intents (ou a Intent pode ser criada diretamente no BIB); a Business Intent possui um OBC como documento de contrato — o Global OBC co-nasce com a Intent; Local OBCs são criados por OBC Partitioning, um por produto.
 
 ## O que é uma Business Intent
 

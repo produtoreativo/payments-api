@@ -24,7 +24,7 @@ O ProdOps opera em dois universos completamente independentes.
 │                       KNOWLEDGE SPACE                           │
 │                                                                 │
 │  Business Signal · Business Intent · OBC · BDD · Architecture  │
-│  Plans · Evidence · Trails · Experiments · Context Capsules     │
+│  Plans · Evidence · Trails · Experiments                        │
 │                                                                 │
 │  Identidade permanente. Sobrevive a dezenas de Releases.        │
 │  Fonte de verdade: arquivos Markdown no repositório git.        │

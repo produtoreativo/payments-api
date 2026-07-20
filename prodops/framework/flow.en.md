@@ -218,7 +218,7 @@ This step belongs only to the **Global Flow**. In the **Local Flow**, the Busine
 
 **Objective:** Formally commit the capability to the next delivery iteration after Assessment Review.
 
-**What happens:** The approved set — Committed Local OBC, BDD Feature, risks, and Reliability Plan — enters the Iteration Plan with status `In`. This represents the formal delivery commitment; it is not, in isolation, proof of readiness.
+**What happens:** The approved set — Committed Local OBC, BDD Feature, risks, and Reliability Plan (when there is financial movement, external integration, SLO change, high/critical risk, or persistence/security change) — enters the Iteration Plan with status `In`. This represents the formal delivery commitment; it is not, in isolation, proof of readiness.
 
 **What is produced:**
 - Entry in the Iteration Plan in `prodops/artifacts/governance/plans/iteration-plan.md` with status `In`

@@ -7,7 +7,7 @@ O modelo OBC evoluiu para dois níveis. Este arquivo existe apenas para referên
 | Se você está criando... | Use este template |
 |---|---|
 | Um **Global OBC** — contrato estratégico de negócio, nasce no BIB, cobre toda a intenção de negócio | [`global-obc.md`](global-obc.md) |
-| Um **Local OBC** — contrato de implementação de produto, nasce no PIB, cobre a responsabilidade de um produto | [`local-obc.md`](local-obc.md) |
+| Um **Local OBC** — contrato de implementação de produto, nasce no Product Backlog, cobre a responsabilidade de um produto | [`local-obc.md`](local-obc.md) |
 
 ## Quando usar cada um
 
@@ -18,7 +18,7 @@ O modelo OBC evoluiu para dois níveis. Este arquivo existe apenas para referên
 
 **Use `local-obc.md` quando:**
 - Um Global OBC foi decomposto via OBC Partitioning
-- A Intent entrou diretamente no PIB (fluxo local)
+- A Intent entrou diretamente no Product Backlog (fluxo local)
 - Você está documentando a responsabilidade de um produto específico
 
 → [Definição completa do OBC](../../framework/obc.md)

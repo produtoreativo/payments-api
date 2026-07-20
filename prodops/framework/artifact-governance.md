@@ -251,7 +251,7 @@ Operation
 | **Quem aprova** | Tech Lead + Product Owner |
 | **Consumidores** | Iteration Plan, Delivery, Operation |
 | **Critério de entrada** | Premortem concluído; riscos identificados |
-| **Critério de saída** | Aprovado antes da entrada no Iteration Plan |
+| **Critério de saída** | Aprovado antes da entrada no Iteration Plan — aplicável apenas quando os gatilhos canônicos estiverem presentes |
 | **Jornadas** | Assessment, Delivery, Operation |
 
 ---

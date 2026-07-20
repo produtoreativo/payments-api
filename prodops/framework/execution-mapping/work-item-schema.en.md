@@ -194,7 +194,7 @@ Implement — Local OBC payments-invoice-v2: PIX payment split
 Update — Architecture overview: new WebhookWorker module
 Split — Global OBC platform-billing-v3: decompose into 3 Local OBCs
 Validate — BDD Feature payments-invoice.feature: pre-release CI gate
-Promote — Business Signal SIG-089: transform into Business Intent
+Promote — Business Signal SIG-089: generate Business Intent
 ```
 
 This pattern:

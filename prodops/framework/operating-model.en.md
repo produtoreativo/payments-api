@@ -64,7 +64,7 @@ GitHub Project Views are projections over data — not separate backlogs:
 
 | Work Item Type | Artifacts typically affected | Examples of operation |
 |---|---|---|
-| **Business Signal Work Item** | Business Signal | Investigate, Prioritize, Transform into Intent |
+| **Business Signal Work Item** | Business Signal | Investigate, Prioritize, Generate Intent |
 | **Business Intent Work Item** | Business Intent, OBC, BDD | Explore, Refine OBC, Review, Deliver |
 
 A Work Item must always declare: Artifact Type, Artifact ID, Operation, Journey. → [Knowledge vs Execution](knowledge-vs-execution.en.md)
@@ -143,7 +143,7 @@ Artifacts
 
 **Business Signal** — any opportunity, hypothesis, problem, benchmark, or idea that deserves attention. Lives in the Portfolio Tracking List or Product Tracking List. Generates Business Intents when investigated and recognized as strategic.
 
-**Business Intent** — a strategic decision to pursue value. Born from a Business Signal. Lives in the Business Intent Backlog. Generates OBCs via OBC Partitioning.
+**Business Intent** — a strategic decision to pursue value. May be created from a Business Signal or directly in the BIB. Lives in the Business Intent Backlog and, after OBC Partitioning, also in the Product Backlog. Has an OBC as its contract document (Global OBC is co-born in the BIB; Local OBCs are created by OBC Partitioning).
 
 **Exploration** — refines the OBC draft and reduces uncertainty through the Discovery journey. Discovery exists in both modes; rigor and commitment vary between Upstream and Downstream. See [`flow.md`](flow.en.md).
 
