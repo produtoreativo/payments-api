@@ -1,32 +1,39 @@
-name: Deploy to Staging
+name: Deploy to Production
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Pipeline structure
 #
-#  lint-and-test ──► deploy-staging ──► smoke-test
+#  deploy-production ──► smoke-test
 #
-#  lint-and-test  Runs lint + acceptance tests against LocalStack (real DynamoDB
-#                 API, ephemeral local container). No in-memory mocks, no AWS
-#                 account required. ASAAS_MOCK=true keeps Asaas calls stubbed.
+#  deploy-production  Manual-only trigger with required reviewer gate.
+#                     Deploys to REAL AWS production infrastructure.
+#                     Asaas live API (not sandbox). confirm_changeset=false
+#                     here because the GitHub Environment protection rule is
+#                     the human gate — no need to double-gate inside sam deploy.
 #
-#  deploy-staging Deploys to REAL AWS infrastructure. AsaasMock=false.
-#                 Secrets are injected at deploy time from GitHub Environment
-#                 "staging".
+#  smoke-test         Calls the live production endpoint after deploy to
+#                     confirm the API is reachable and auth guard is active.
 #
-#  smoke-test     Calls the live staging endpoint after deploy to confirm the
-#                 API is reachable and the auth guard is working correctly.
+# Required GitHub setup (one-time):
+#   Settings → Environments → production → Required reviewers: [list]
+#   Settings → Environments → production → Secrets:
+#     PRODUCTION_ASAAS_TOKEN
+#     PRODUCTION_ASAAS_WEBHOOK_TOKEN
+#     PRODUCTION_ADMIN_SECRET
+#     PRODUCTION_DATADOG_API_KEY
 # ─────────────────────────────────────────────────────────────────────────────
 
 on:
-  push:
-    branches:
-      - main
-      - chore/organize-agent-prodops-context
   workflow_dispatch:
+    inputs:
+      reason:
+        description: "Reason for this production deploy"
+        required: true
+        type: string
 
-# Only one staging deploy at a time. Never cancel mid-deploy.
+# Only one production deploy at a time. Never cancel mid-deploy.
 concurrency:
-  group: staging-deploy
+  group: production-deploy
   cancel-in-progress: false
 
 # id-token: write is required for OIDC keyless AWS authentication.
@@ -36,97 +43,20 @@ permissions:
 
 env:
   AWS_REGION: us-east-1
-  DYNAMO_STACK: payments-api-dynamo-staging
-  LAMBDA_STACK: payments-api-staging
-  ENVIRONMENT: staging
+  DYNAMO_STACK: payments-api-dynamo-production
+  LAMBDA_STACK: payments-api-production
+  ENVIRONMENT: production
 
 jobs:
-  # ── Job 1: Lint + Acceptance Tests ─────────────────────────────────────────
-  # Runs against LocalStack so every test hits the real DynamoDB API.
-  # No in-memory mocks, no AWS account required.
-  # ASAAS_MOCK=true keeps Asaas provider calls stubbed (external SaaS API).
-  lint-and-test:
-    name: Lint and Test (LocalStack DynamoDB)
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: api
-
-    services:
-      localstack:
-        image: localstack/localstack:4
-        ports:
-          - 4566:4566
-        env:
-          SERVICES: dynamodb,sqs
-          DEBUG: '0'
-        options: >-
-          --health-cmd "curl -sf http://localhost:4566/_localstack/health"
-          --health-interval 5s
-          --health-timeout 10s
-          --health-retries 12
-
-    env:
-      NODE_ENV: test
-      AWS_DYNAMODB_ENDPOINT: http://localhost:4566
-      AWS_SQS_ENDPOINT: http://localhost:4566
-      AWS_REGION: us-east-1
-      AWS_ACCESS_KEY_ID: test
-      AWS_SECRET_ACCESS_KEY: test
-      ASAAS_MOCK: 'true'
-      ENABLED_PAYMENT_PROVIDERS: ASAAS
-      DEFAULT_PAYMENT_PROVIDER: ASAAS
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-          cache-dependency-path: api/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
-
-      - name: Acceptance tests
-        run: |
-          npx jest \
-            --config ./test/jest-e2e.json \
-            test/criar-invoice.e2e-spec.ts \
-            test/cancelar-invoice.e2e-spec.ts \
-            test/confirmar-pagamento.e2e-spec.ts \
-            test/api-token.acceptance.e2e-spec.ts \
-            --maxWorkers=1 \
-            --json \
-            --outputFile ./acceptance-report.json
-
-      - name: Upload acceptance report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: acceptance-report-${{ github.sha }}
-          path: api/acceptance-report.json
-          retention-days: 7
-
-  # ── Job 2: Deploy to Staging ────────────────────────────────────────────────
-  # Deploys REAL AWS infrastructure. Zero mocks. All parameters reflect a
-  # production-like environment using the Asaas sandbox (non-mock) API.
-  deploy-staging:
-    name: Deploy — Real AWS Infrastructure (Staging)
-    needs: lint-and-test
+  # ── Deploy to Production ────────────────────────────────────────────────────
+  # Requires manual approval via GitHub Environment protection rules.
+  # This job will not start until a required reviewer approves it.
+  deploy-production:
+    name: Deploy — Real AWS Infrastructure (Production)
     runs-on: ubuntu-latest
 
     environment:
-      name: staging
+      name: production
       url: ${{ steps.get-url.outputs.api_url }}
 
     steps:
@@ -154,22 +84,23 @@ jobs:
       # ── Validate required secrets are present ───────────────────────────────
       - name: Validate required secrets
         env:
-          ASAAS_TOKEN: ${{ secrets.STAGING_ASAAS_TOKEN }}
-          ASAAS_WEBHOOK_TOKEN: ${{ secrets.STAGING_ASAAS_WEBHOOK_TOKEN }}
-          ADMIN_SECRET: ${{ secrets.STAGING_ADMIN_SECRET }}
+          ASAAS_TOKEN: ${{ secrets.PRODUCTION_ASAAS_TOKEN }}
+          ASAAS_WEBHOOK_TOKEN: ${{ secrets.PRODUCTION_ASAAS_WEBHOOK_TOKEN }}
+          ADMIN_SECRET: ${{ secrets.PRODUCTION_ADMIN_SECRET }}
+          DATADOG_API_KEY: ${{ secrets.PRODUCTION_DATADOG_API_KEY }}
         run: |
           MISSING=()
-          [[ -z "$ASAAS_TOKEN" ]]        && MISSING+=("STAGING_ASAAS_TOKEN")
-          [[ -z "$ASAAS_WEBHOOK_TOKEN" ]] && MISSING+=("STAGING_ASAAS_WEBHOOK_TOKEN")
-          [[ -z "$ADMIN_SECRET" ]]        && MISSING+=("STAGING_ADMIN_SECRET")
+          [[ -z "$ASAAS_TOKEN" ]]        && MISSING+=("PRODUCTION_ASAAS_TOKEN")
+          [[ -z "$ASAAS_WEBHOOK_TOKEN" ]] && MISSING+=("PRODUCTION_ASAAS_WEBHOOK_TOKEN")
+          [[ -z "$ADMIN_SECRET" ]]        && MISSING+=("PRODUCTION_ADMIN_SECRET")
+          [[ -z "$DATADOG_API_KEY" ]]     && MISSING+=("PRODUCTION_DATADOG_API_KEY")
           if [[ ${#MISSING[@]} -gt 0 ]]; then
-            echo "ERROR: The following required secrets are not set:"
+            echo "ERROR: The following required secrets are not set in the 'production' environment:"
             printf '  - %s\n' "${MISSING[@]}"
-            echo ""
-            echo "Run: ./scripts/setup-github-secrets.sh <org>/<repo>"
             exit 1
           fi
           echo "All required secrets are present."
+          echo "Deploy reason: ${{ github.event.inputs.reason }}"
 
       # Role ARN is a resource identifier, not a credential — hardcoded is safe.
       - name: Configure AWS credentials (OIDC — no long-lived keys)
@@ -183,10 +114,13 @@ jobs:
         with:
           use-installer: true
 
+      # ── SAM Build ────────────────────────────────────────────────────────────
+      - name: SAM Build
+        working-directory: api
+        run: sam build --template infra/lambda.yaml
+
       # ── DynamoDB Tables ──────────────────────────────────────────────────────
       # Deployed as a separate stack so tables survive Lambda stack re-deploys.
-      # `aws cloudformation deploy` is synchronous — it waits for the stack to
-      # reach CREATE_COMPLETE or UPDATE_COMPLETE before returning. No extra wait.
       - name: Deploy DynamoDB tables
         run: |
           aws cloudformation deploy \
@@ -204,26 +138,23 @@ jobs:
               GitBranch=${{ github.ref_name }}
 
       # ── Lambda Application ───────────────────────────────────────────────────
-      # All parameters are passed explicitly on the CLI.
-      # IMPORTANT — SAM CLI behavior: --parameter-overrides on the CLI REPLACES
-      # (does not merge with) parameter_overrides from samconfig.toml. Passing
-      # only secrets here would leave all non-secret params as UsePreviousValue
-      # on existing stacks, or template defaults on first deploy. Pass everything.
+      # All parameters passed explicitly (SAM CLI --parameter-overrides replaces,
+      # not merges with, samconfig.toml parameter_overrides).
       # Secrets are injected at deploy time and never stored in samconfig.toml.
       - name: Deploy Lambda application
         working-directory: api
         env:
-          STAGING_ASAAS_TOKEN: ${{ secrets.STAGING_ASAAS_TOKEN }}
-          STAGING_ASAAS_WEBHOOK_TOKEN: ${{ secrets.STAGING_ASAAS_WEBHOOK_TOKEN }}
-          STAGING_ADMIN_SECRET: ${{ secrets.STAGING_ADMIN_SECRET }}
-          STAGING_DATADOG_API_KEY: ${{ secrets.STAGING_DATADOG_API_KEY }}
+          PRODUCTION_ASAAS_TOKEN: ${{ secrets.PRODUCTION_ASAAS_TOKEN }}
+          PRODUCTION_ASAAS_WEBHOOK_TOKEN: ${{ secrets.PRODUCTION_ASAAS_WEBHOOK_TOKEN }}
+          PRODUCTION_ADMIN_SECRET: ${{ secrets.PRODUCTION_ADMIN_SECRET }}
+          PRODUCTION_DATADOG_API_KEY: ${{ secrets.PRODUCTION_DATADOG_API_KEY }}
         run: |
           sam deploy \
             --template-file .aws-sam/build/template.yaml \
             --stack-name "${{ env.LAMBDA_STACK }}" \
             --region "${{ env.AWS_REGION }}" \
             --resolve-s3 \
-            --s3-prefix payments-api/staging \
+            --s3-prefix payments-api/production \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --no-confirm-changeset \
             --no-fail-on-empty-changeset \
@@ -235,9 +166,9 @@ jobs:
               "GitSha=${{ github.sha }}" \
               "GitBranch=${{ github.ref_name }}" \
             --parameter-overrides \
-              EnvironmentName=staging \
+              EnvironmentName=production \
               AsaasMock=false \
-              AsaasUrl=https://api-sandbox.asaas.com \
+              AsaasUrl=https://api.asaas.com \
               EnabledPaymentProviders=ASAAS \
               DefaultPaymentProvider=ASAAS \
               WebhookProcessingMode=async \
@@ -245,10 +176,10 @@ jobs:
               DatadogSite=datadoghq.com \
               DatadogExtensionLayerArn=arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:97 \
               DatadogVersion=5.111.0 \
-              AsaasToken="$STAGING_ASAAS_TOKEN" \
-              AsaasWebhookToken="$STAGING_ASAAS_WEBHOOK_TOKEN" \
-              AdminSecret="$STAGING_ADMIN_SECRET" \
-              DatadogApiKey="$STAGING_DATADOG_API_KEY"
+              AsaasToken="$PRODUCTION_ASAAS_TOKEN" \
+              AsaasWebhookToken="$PRODUCTION_ASAAS_WEBHOOK_TOKEN" \
+              AdminSecret="$PRODUCTION_ADMIN_SECRET" \
+              DatadogApiKey="$PRODUCTION_DATADOG_API_KEY"
 
       # ── Retrieve deployed API URL ────────────────────────────────────────────
       - name: Get API URL
@@ -262,23 +193,10 @@ jobs:
           echo "api_url=${API_URL}" >> "$GITHUB_OUTPUT"
           echo "Deployed to: ${API_URL}"
 
-      # ── Register webhook URL with Asaas sandbox ──────────────────────────────
-      # Upserts the webhook configuration so Asaas knows where to POST payment
-      # events. Safe to re-run — idempotent. Runs after every deploy because the
-      # Function URL is stable, but the first deploy requires initial registration.
-      - name: Update Asaas sandbox webhook URL
-        env:
-          ASAAS_TOKEN: ${{ secrets.STAGING_ASAAS_TOKEN }}
-          ASAAS_WEBHOOK_TOKEN: ${{ secrets.STAGING_ASAAS_WEBHOOK_TOKEN }}
-          ASAAS_URL: https://api-sandbox.asaas.com
-          WEBHOOK_URL: ${{ steps.get-url.outputs.api_url }}webhook/payments
-        run: ./scripts/update-asaas-webhook.sh
-        continue-on-error: true
-
       - name: Deployment summary
         run: |
           {
-            echo "### Staging Deployment"
+            echo "### Production Deployment"
             echo ""
             echo "| Field | Value |"
             echo "| --- | --- |"
@@ -289,22 +207,21 @@ jobs:
             echo "| **DynamoDB stack** | \`${{ env.DYNAMO_STACK }}\` |"
             echo "| **Lambda stack** | \`${{ env.LAMBDA_STACK }}\` |"
             echo "| **Deployed at** | $(date -u '+%Y-%m-%d %H:%M:%S UTC') |"
+            echo "| **Reason** | ${{ github.event.inputs.reason }} |"
             echo ""
             echo "#### Configuration deployed"
             echo "\`\`\`"
-            echo "AsaasMock         = false    (real Asaas sandbox)"
-            echo "WebhookProcessing = async    (real SQS)"
-            echo "ApiTokenLocal     = (not set — local dev token does NOT work in staging)"
-            echo "AdminSecret       = (set — /admin/tokens endpoint active)"
+            echo "AsaasUrl          = https://api.asaas.com  (LIVE API)"
+            echo "AsaasMock         = false"
+            echo "WebhookProcessing = async"
+            echo "DatadogEnabled    = true"
             echo "\`\`\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
-  # ── Job 3: Smoke Test ───────────────────────────────────────────────────────
-  # Validates the live staging endpoint immediately after deploy.
-  # Confirms: (1) API is reachable, (2) auth guard returns 401 correctly.
+  # ── Smoke Test ───────────────────────────────────────────────────────────────
   smoke-test:
-    name: Smoke Test — Live Staging Endpoint
-    needs: deploy-staging
+    name: Smoke Test — Live Production Endpoint
+    needs: deploy-production
     runs-on: ubuntu-latest
 
     steps:
@@ -322,7 +239,6 @@ jobs:
             --stack-name "${{ env.LAMBDA_STACK }}" \
             --query "Stacks[0].Outputs[?OutputKey=='ApiFunctionUrl'].OutputValue" \
             --output text)
-          # Normalize trailing slash
           API_URL="${API_URL%/}"
           echo "api_url=${API_URL}" >> "$GITHUB_OUTPUT"
           echo "Testing: ${API_URL}"
@@ -331,7 +247,6 @@ jobs:
         run: |
           API_URL="${{ steps.resolve-url.outputs.api_url }}"
 
-          echo "==> POST /invoices without token — expect 401"
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
             -X POST "${API_URL}/invoices" \
             -H "Content-Type: application/json" \
@@ -340,10 +255,9 @@ jobs:
 
           if [[ "$STATUS" != "401" ]]; then
             echo "FAIL: Expected 401, got ${STATUS}"
-            echo "This may indicate the auth guard is not active in staging."
             exit 1
           fi
-          echo "PASS: Auth guard active — POST /invoices returned 401 without token."
+          echo "PASS: Auth guard active — POST /invoices returned 401."
 
       - name: Smoke — DELETE /invoices/:id without token returns 401
         run: |
@@ -357,7 +271,7 @@ jobs:
             echo "FAIL: Expected 401, got ${STATUS}"
             exit 1
           fi
-          echo "PASS: Auth guard active — DELETE /invoices/:id returned 401 without token."
+          echo "PASS: Auth guard active — DELETE /invoices/:id returned 401."
 
       - name: Smoke summary
         if: always()

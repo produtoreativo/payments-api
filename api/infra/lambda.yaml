@@ -133,7 +133,6 @@ Globals:
         TRANSACTIONS_TABLE:  !Sub "${EnvironmentName}-TransactionsTable"
         CUSTOMERS_TABLE:     !Sub "${EnvironmentName}-CustomersTable"
         TENANTS_TABLE:       !Sub "${EnvironmentName}-TenantsTable"
-        PROVIDERS_TABLE:     !Sub "${EnvironmentName}-ProvidersTable"
         WEBHOOKS_TABLE:      !Sub "${EnvironmentName}-WebhooksTable"
 
         # Payment providers
@@ -232,7 +231,6 @@ Resources:
                   - !Sub arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvironmentName}-TransactionsTable/index/*
                   - !Sub arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvironmentName}-CustomersTable
                   - !Sub arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvironmentName}-TenantsTable
-                  - !Sub arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvironmentName}-ProvidersTable
                   - !Sub arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvironmentName}-WebhooksTable
                   - !Sub arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvironmentName}-WebhooksTable/index/*
         - PolicyName: PaymentsSqsAccess
@@ -289,7 +287,6 @@ Resources:
                   - !Sub arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvironmentName}-TransactionsTable/index/*
                   - !Sub arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvironmentName}-CustomersTable
                   - !Sub arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvironmentName}-TenantsTable
-                  - !Sub arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${EnvironmentName}-ProvidersTable
 
   # ── CloudWatch Log Groups ────────────────────────────────────────────────────
   # Explicit declarations enforce retention — without these Lambda creates log

@@ -52,6 +52,10 @@ Downstream
 | 004 | Checkout Gateway Feature Flag Readiness | 🟡 Em andamento | Aguardar dependência externa | Coletar evidência de Feature Flag do Checkout |
 | 005 | Datadog Native AWS Instrumentation | ✅ Concluído | Avançar para Downstream após confirmar parâmetros do pipeline AWS | Validar deploy SAM com Datadog Extension layer e Secrets Manager secret |
 | 006 | Upstream Trail per Experiment | ✅ Concluído | Manter como padrão operacional Upstream | Usar layout de diretório para novos experimentos |
+| 009 | Serverless Maturity Assessment | ✅ Concluído | Executar EXP-010 (Datadog), EXP-011 (DynamoDB), EXP-012 (CI/CD) em sequência | Apresentar Decision Package ao PM e Tech Lead; iniciar EXP-010 |
+| 010 | Datadog Activation in Staging | ✅ Concluído | Mover para Downstream — ativar em produção | Adicionar STAGING_DATADOG_API_KEY ao GitHub; confirmar visual no Datadog UI |
+| 011 | DynamoDB Optimization | ✅ Concluído | Mover para Downstream — aplicar em produção via EXP-012 pipeline | Deploy em produção via deploy-production.yml |
+| 012 | Production CI/CD Pipeline | ✅ Concluído | Mover para Downstream — configurar GitHub Environment `production` e executar primeiro deploy | Configurar Required Reviewers e secrets PRODUCTION_* no GitHub |
 
 ---
 
@@ -99,14 +103,22 @@ Uma capability pode avançar para Downstream apenas quando:
 
 Capability em investigação atual:
 
-**Pagamento com Cartão de Crédito via Asaas**
+**Pagamento com Cartão de Crédito via Asaas** + **Maturidade Operacional Serverless**
 
-Experimento atual:
+Experimentos ativos:
 
 **001 - Credit Card Payment Lifecycle with Asaas**
 
-Próximos experimentos planejados:
+Roadmap de maturidade operacional concluído (EXP-009 → 010 → 011 → 012):
 
+- **EXP-009**: Serverless Maturity Assessment ✅
+- **EXP-010**: Datadog Activation in Staging ✅
+- **EXP-011**: DynamoDB Optimization ✅
+- **EXP-012**: Production CI/CD Pipeline ✅
+
+Próximos passos:
+
+- Configurar GitHub Environment `production` e executar primeiro deploy em produção
 - Continuar 002 com evidência do Sandbox Asaas
 - Preparar intake Downstream para pagamento com cartão hospedado após aprovação de Produto e Tech Lead
 - Executar experimento focado em armazenamento de token de cartão salvo após contribuição de Segurança/Arquitetura

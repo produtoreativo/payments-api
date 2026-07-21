@@ -14,36 +14,19 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: !Sub "${EnvironmentName}-TransactionsTable"
-      BillingMode: PROVISIONED
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
       AttributeDefinitions:
         - AttributeName: PK
           AttributeType: S
         - AttributeName: SK
-          AttributeType: S
-        - AttributeName: GSI1PK
-          AttributeType: S
-        - AttributeName: GSI1SK
           AttributeType: S
       KeySchema:
         - AttributeName: PK
           KeyType: HASH
         - AttributeName: SK
           KeyType: RANGE
-      GlobalSecondaryIndexes:
-        - IndexName: GSI1
-          KeySchema:
-            - AttributeName: GSI1PK
-              KeyType: HASH
-            - AttributeName: GSI1SK
-              KeyType: RANGE
-          Projection:
-            ProjectionType: ALL
-          ProvisionedThroughput:
-            ReadCapacityUnits: 1
-            WriteCapacityUnits: 1
       Tags:
         - Key: Environment
           Value: !Ref EnvironmentName
@@ -56,36 +39,9 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: !Sub "${EnvironmentName}-TenantsTable"
-      BillingMode: PROVISIONED
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
-      AttributeDefinitions:
-        - AttributeName: PK
-          AttributeType: S
-        - AttributeName: SK
-          AttributeType: S
-      KeySchema:
-        - AttributeName: PK
-          KeyType: HASH
-        - AttributeName: SK
-          KeyType: RANGE
-      Tags:
-        - Key: Environment
-          Value: !Ref EnvironmentName
-        - Key: Project
-          Value: payments-api
-        - Key: ManagedBy
-          Value: cloudformation
-
-  ProvidersTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: !Sub "${EnvironmentName}-ProvidersTable"
-      BillingMode: PROVISIONED
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
       AttributeDefinitions:
         - AttributeName: PK
           AttributeType: S
@@ -108,10 +64,9 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: !Sub "${EnvironmentName}-CustomersTable"
-      BillingMode: PROVISIONED
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
       AttributeDefinitions:
         - AttributeName: PK
           AttributeType: S
@@ -134,10 +89,9 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: !Sub "${EnvironmentName}-PaymentsTable"
-      BillingMode: PROVISIONED
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
       AttributeDefinitions:
         - AttributeName: PK
           AttributeType: S
@@ -146,10 +100,6 @@ Resources:
         - AttributeName: GSI1PK
           AttributeType: S
         - AttributeName: GSI1SK
-          AttributeType: S
-        - AttributeName: GSI2PK
-          AttributeType: S
-        - AttributeName: GSI2SK
           AttributeType: S
       KeySchema:
         - AttributeName: PK
@@ -165,20 +115,6 @@ Resources:
               KeyType: RANGE
           Projection:
             ProjectionType: ALL
-          ProvisionedThroughput:
-            ReadCapacityUnits: 1
-            WriteCapacityUnits: 1
-        - IndexName: PaymentStatusIndex
-          KeySchema:
-            - AttributeName: GSI2PK
-              KeyType: HASH
-            - AttributeName: GSI2SK
-              KeyType: RANGE
-          Projection:
-            ProjectionType: ALL
-          ProvisionedThroughput:
-            ReadCapacityUnits: 1
-            WriteCapacityUnits: 1
       Tags:
         - Key: Environment
           Value: !Ref EnvironmentName
@@ -191,10 +127,9 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: !Sub "${EnvironmentName}-WebhooksTable"
-      BillingMode: PROVISIONED
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+      BillingMode: PAY_PER_REQUEST
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
       AttributeDefinitions:
         - AttributeName: PK
           AttributeType: S
@@ -218,9 +153,6 @@ Resources:
               KeyType: RANGE
           Projection:
             ProjectionType: ALL
-          ProvisionedThroughput:
-            ReadCapacityUnits: 1
-            WriteCapacityUnits: 1
       Tags:
         - Key: Environment
           Value: !Ref EnvironmentName
@@ -246,10 +178,6 @@ Outputs:
     Value: !Ref TenantsTable
     Export:
       Name: !Sub "${EnvironmentName}-TenantsTableName"
-  ProvidersTableName:
-    Value: !Ref ProvidersTable
-    Export:
-      Name: !Sub "${EnvironmentName}-ProvidersTableName"
   WebhooksTableName:
     Value: !Ref WebhooksTable
     Export:

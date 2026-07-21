@@ -2,15 +2,16 @@ version = 0.1
 
 # ── Staging ──────────────────────────────────────────────────────────────────
 # All parameters below reflect REAL infrastructure — no mocks, no LocalStack.
-# Secrets (AsaasToken, AsaasWebhookToken, AdminSecret) are injected at deploy
-# time by the CI pipeline and must never be stored in this file.
+# Secrets (AsaasToken, AsaasWebhookToken, AdminSecret, DatadogApiKey) are
+# injected at deploy time and must never be stored in this file.
 #
 # Deploy manually:
 #   sam deploy --config-env staging \
 #     --parameter-overrides \
 #       AsaasToken="..." \
 #       AsaasWebhookToken="..." \
-#       AdminSecret="..."
+#       AdminSecret="..." \
+#       DatadogApiKey="..."
 # ─────────────────────────────────────────────────────────────────────────────
 [staging.deploy.parameters]
 stack_name              = "payments-api-staging"
@@ -35,8 +36,12 @@ parameter_overrides = [
   # Webhooks — real SQS async processing
   "WebhookProcessingMode=async",
 
-  # Observability — Datadog disabled until a key is configured
-  "DatadogEnabled=false",
+  # Observability — Datadog enabled (EXP-010)
+  # DatadogApiKey must be injected at deploy time via --parameter-overrides
+  "DatadogEnabled=true",
+  "DatadogSite=datadoghq.com",
+  "DatadogExtensionLayerArn=arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:97",
+  "DatadogVersion=5.111.0",
 
   # ApiTokenLocal intentionally NOT set.
   # The local dev token must NOT be accepted in staging — if it were set here,
@@ -84,31 +89,47 @@ parameter_overrides = [
 
 # ── Production ───────────────────────────────────────────────────────────────
 # Production uses the live Asaas API (not sandbox).
-# confirm_changeset=true requires a manual approval before applying changes.
+# Secrets (AsaasToken, AsaasWebhookToken, AdminSecret, DatadogApiKey) are
+# injected at deploy time and must never be stored in this file.
 #
-# Deploy:
-#   sam deploy --config-env production \
-#     --parameter-overrides \
-#       AsaasToken="..." \
-#       AsaasWebhookToken="..." \
-#       AdminSecret="..."
+# IMPORTANT — SAM CLI parameter merging behavior:
+#   --parameter-overrides on the CLI REPLACES (does not merge) parameter_overrides
+#   from this file. Always pass ALL non-secret parameters explicitly in the CI
+#   workflow and append secrets to that same list.
+#
+# Deploy via GitHub Actions:
+#   .github/workflows/deploy-production.yml — workflow_dispatch with required reviewer gate
 # ─────────────────────────────────────────────────────────────────────────────
 [production.deploy.parameters]
 stack_name              = "payments-api-production"
 region                  = "us-east-1"
 resolve_s3              = true
 s3_prefix               = "payments-api/production"
-confirm_changeset       = true
+confirm_changeset       = false
 fail_on_empty_changeset = false
 capabilities            = "CAPABILITY_IAM CAPABILITY_NAMED_IAM"
 template_file           = "infra/lambda.yaml"
 
 parameter_overrides = [
+  # Environment
   "EnvironmentName=production",
+
+  # Asaas — LIVE API (not sandbox)
   "AsaasMock=false",
   "AsaasUrl=https://api.asaas.com",
   "EnabledPaymentProviders=ASAAS",
   "DefaultPaymentProvider=ASAAS",
+
+  # Webhooks — real SQS async processing
   "WebhookProcessingMode=async",
-  "DatadogEnabled=false",
+
+  # Observability — Datadog enabled (EXP-010 / EXP-012)
+  # DatadogApiKey must be injected at deploy time via --parameter-overrides
+  "DatadogEnabled=true",
+  "DatadogSite=datadoghq.com",
+  "DatadogExtensionLayerArn=arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:97",
+  "DatadogVersion=5.111.0",
+
+  # ApiTokenLocal intentionally NOT set — insecure local token must never be
+  # accepted in production.
 ]
