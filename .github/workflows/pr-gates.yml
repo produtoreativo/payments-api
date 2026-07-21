@@ -154,22 +154,33 @@ jobs:
       - name: Acceptance tests
         run: npm run test:acceptance
 
-      # Publishes the Cobertura report to GitHub Code Quality (public preview) as
-      # the branch baseline that later PRs are compared against. Restricted to
-      # push: when a branch with an open PR receives a commit, GitHub fires both
-      # `push` and `pull_request: synchronize` for the same HEAD — uploading on
-      # both would publish two concurrent baselines for the same commit. The
-      # acceptance job itself still runs on both events (it stays a PR gate);
-      # only the baseline upload is push-only. Informative for now — no threshold
-      # blocks the merge. Requires Code Quality enabled on the repo/org;
-      # otherwise the summary simply does not render.
+      # Publishes the Cobertura report to GitHub Code Quality (public preview).
+      # The action resolves a pull_request_number from the event, and the server
+      # only accepts an upload WITHOUT one on the default branch — a push to any
+      # other branch with no open PR is rejected with HTTP 400 ("Only default
+      # branch is allowed if no pull_request_number is provided"). So the two
+      # valid cases are:
+      #   • push to master        → publishes the default-branch BASELINE.
+      #   • pull_request (non-fork) → attaches the PR's coverage, compared
+      #     against that baseline. Fork PRs lack code-quality:write, so they are
+      #     excluded (the action would otherwise exit with a notice anyway).
+      # A push to a feature branch before its PR exists is intentionally NOT
+      # uploaded — it has no PR to attach to and is not the default branch.
+      # fail-on-error: false keeps any residual rejection advisory rather than
+      # failing the acceptance gate. Informative for now — no threshold blocks
+      # the merge. Requires Code Quality enabled on the repo/org; otherwise the
+      # summary simply does not render.
       - name: Upload coverage report
-        if: github.event_name == 'push'
+        if: >-
+          (github.event_name == 'push' && github.ref == 'refs/heads/master') ||
+          (github.event_name == 'pull_request' &&
+           github.event.pull_request.head.repo.full_name == github.repository)
         uses: actions/upload-code-coverage@v1
         with:
           file: api/coverage/cobertura-coverage.xml
           language: typescript
           label: acceptance
+          fail-on-error: false
 
   # ── Gate: build ─────────────────────────────────────────────────────────────
   # Manifest: gates.build ("cd api && npm run build", expect exit0).
