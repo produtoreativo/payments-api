@@ -95,9 +95,12 @@ already produces `api/coverage/cobertura-coverage.xml` — there is no separate
 coverage step.
 
 In CI, the `acceptance` job in `pr-gates.yml` runs on `pull_request` **and**
-`push`; the XML upload via `actions/upload-code-coverage@v1` is **push-only**
-(it establishes the branch baseline; on a PR the job runs as a gate but does not
-republish a baseline). Informative — it does not block merge.
+`push`; the XML upload via `actions/upload-code-coverage@v1` happens in **two
+cases**: a push to `master` publishes the default-branch **baseline**, and the
+`pull_request` event (non-fork) attaches the PR's coverage, compared against that
+baseline. A push to a feature branch with no PR does **not** upload — the server
+only accepts an upload without a PR on the default branch. Informative — it does
+not block merge.
 
 ## Criterion
 
