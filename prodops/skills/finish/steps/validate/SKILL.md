@@ -94,9 +94,11 @@ o formato que o GitHub Code Quality consome. Por isso rodar a aceitação já ge
 `api/coverage/cobertura-coverage.xml` — não há passo de coverage separado.
 
 No CI, o job `acceptance` do `pr-gates.yml` roda em `pull_request` **e** `push`;
-o upload do XML via `actions/upload-code-coverage@v1` é **push-only** (estabelece
-o baseline da branch; em PR o job roda como gate mas não republica baseline).
-Informativo — não bloqueia merge.
+o upload do XML via `actions/upload-code-coverage@v1` acontece em **dois casos**:
+push na `master` publica o **baseline** da default branch, e o evento
+`pull_request` (não-fork) anexa a cobertura do PR, comparada contra esse
+baseline. Push em feature branch sem PR **não** faz upload — o servidor só aceita
+upload sem PR na default branch. Informativo — não bloqueia merge.
 
 ## Critério
 
