@@ -95,7 +95,7 @@ OBC + BDD committed
   ↓
 Backlog Management (Diligence)        ← Product Tracking List → Product Backlog → Icebox → Iteration Backlog → Iteration Plan
   ↓
-Execution Mode
+Execution Model
 ├── Upstream
 └── Downstream
   ↓
@@ -106,24 +106,31 @@ Journey
 ├── Assessment
 └── Diligence
   ↓
+Cycle
+├── CI Sync         (Delivery — synchronous)
+├── CI Async        (Delivery — asynchronous)
+├── diligence-sync  (Diligence — reactive)
+├── diligence-async (Diligence — proactive)
+└── workspace-reconciliation (Diligence — on-demand)
+  ↓
 Phase
-├── Bootstrap
-├── Hack
-├── Sync
-├── Finish
-├── Ship
-├── Validate
-└── Promote
+├── Bootstrap · Hack · Sync · Finish        (CI Sync)
+├── Ship · Validate · Promote               (CI Async)
+├── Capture · Attach · Promote · Close      (diligence-sync)
+├── Scan · Flag · Repair                    (diligence-async)
+└── Inspect · Reconcile · Verify            (workspace-reconciliation)
   ↓
 Practice
 └── ProdOps TDD
   ↓
-Delivery Capability
+Capability
 ├── Commit Workflow
 ├── Contract Management
 ├── Evidence Management
 ├── Observability
-└── Reliability
+├── Reliability
+├── Backlog Synchronization
+└── … (transversal — consumed at any level)
   ↓
 Artifacts
 ├── OBCs
@@ -151,30 +158,19 @@ Artifacts
 
 **Continuous Assessment** — continuously evaluates risks, opportunities, and decides the next step.
 
-**Execution Mode** — the level of commitment and quality criteria applied:
-- **Upstream** — permissive, experimental, no delivery commitment, variable maturity
-- **Downstream** — delivery commitment with every current quality gate applied across journeys
+**Execution Model** — the pair of modes that defines how any Journey executes (Upstream = exploration; Downstream = commitment). Not a Journey. → See [ontology.en.md — Execution Model](ontology.en.md#transversal-modifier-execution-model) and [execution-model/README.en.md](../execution-model/README.en.md).
 
-**Journey** — the work path within an execution mode:
-- Discovery, Delivery, Operation — classic journeys
-- Assessment, Diligence — cross-cutting journeys
+**Journey** — work path with a single responsibility (Discovery, Delivery, Operation, Assessment, Diligence). The Execution Model defines *how* the Journey executes, not *what* it is. → See [ontology.en.md — Journey](ontology.en.md#journey).
 
-**Phase** — the sequence of stages within the Delivery journey:
-- CI Sync: Bootstrap → Hack → Sync → Finish
-- CI Async: Ship → Validate → Promote
+**Cycle** — ordered grouping of Phases within a Journey, with distinct nature (e.g., CI Sync, CI Async, diligence-sync). → See [ontology.en.md — Cycle](ontology.en.md#cycle).
 
-**Practice** — the method used during a phase:
-- ProdOps TDD (used by Hack)
+**Phase** — individual, ordered stage within a Cycle, with preconditions and verifiable output (e.g., Bootstrap, Hack, Capture, Inspect). → See [ontology.en.md — Phase](ontology.en.md#phase).
 
-**Delivery Capability** — reusable technical competencies consumed by the phases:
-- Commit Workflow
-- Contract Management
-- Evidence Management
-- Observability
-- Reliability
+**Practice** — method used during a Phase: ProdOps TDD (used by Hack).
 
-**Artifacts** — artifacts produced and consumed by the Framework:
-- OBCs, BDD Features, Plans, Trails, Evidence
+**Capability** — reusable competency consumed by Journeys, Cycles, or Phases. Does not belong exclusively to any single journey. → See [ontology.en.md — Capability](ontology.en.md#capability).
+
+**Artifacts** — artifacts produced and consumed by the Framework: OBCs, BDD Features, Plans, Trails, Evidence.
 
 ---
 

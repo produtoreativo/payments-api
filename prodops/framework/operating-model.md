@@ -96,7 +96,7 @@ OBC + BDD committed
   ↓
 Backlog Management (Diligence)        ← Product Tracking List → Product Backlog → Icebox → Iteration Backlog → Iteration Plan
   ↓
-Execution Mode
+Execution Model
 ├── Upstream
 └── Downstream
   ↓
@@ -157,38 +157,19 @@ Artifacts
 
 **Continuous Assessment** — avalia continuamente riscos, oportunidades e decide o próximo passo.
 
-**Execution Mode** — o nível de compromisso e critérios de qualidade aplicados:
-- **Upstream** — permissivo, experimental, sem compromisso de entrega e com maturidade variável
-- **Downstream** — compromisso de entrega; aplica todos os quality gates vigentes em todas as jornadas
+**Execution Model** — o par de modos que define como qualquer Journey executa (Upstream = exploração; Downstream = compromisso). Não é uma Journey. → Ver [ontology.md — Execution Model](ontology.md#execution-model) e [execution-model/README.md](../execution-model/README.md).
 
-**Journey** — o caminho de trabalho com responsabilidade única:
-- Discovery, Delivery, Operation — jornadas clássicas
-- Assessment, Diligence — jornadas transversais
-- Uma Journey contém Cycles; o Execution Mode define como a Journey executa, não o que ela é.
+**Journey** — caminho de trabalho com responsabilidade única (Discovery, Delivery, Operation, Assessment, Diligence). O Execution Model define *como* a Journey executa, não *o que* ela é. → Ver [ontology.md — Journey](ontology.md#journey-jornada).
 
-**Cycle** — agrupamento ordenado de fases dentro de uma jornada, com natureza distinta:
-- Delivery: CI Sync (síncrono) e CI Async (assíncrono)
-- Diligence: diligence-sync (reativo), diligence-async (proativo), workspace-reconciliation (por demanda)
+**Cycle** — agrupamento ordenado de Phases dentro de uma Journey, com natureza distinta (ex: CI Sync, CI Async, diligence-sync). → Ver [ontology.md — Cycle](ontology.md#cycle-ciclo).
 
-**Phase** — estágio individual e ordenado dentro de um Cycle:
-- CI Sync: Bootstrap → Hack → Sync → Finish
-- CI Async: Ship → Validate → Promote
-- diligence-sync: Capture → Attach → Promote → Close
-- diligence-async: Scan → Flag → Repair
-- workspace-reconciliation: Inspect → Reconcile → Verify
+**Phase** — estágio individual e ordenado dentro de um Cycle, com pré-condições e saída verificável (ex: Bootstrap, Hack, Capture, Inspect). → Ver [ontology.md — Phase](ontology.md#phase-fase).
 
-**Practice** — o método utilizado durante uma fase:
-- ProdOps TDD (usado pelo Hack)
+**Practice** — método utilizado durante uma Phase: ProdOps TDD (usado pelo Hack).
 
-**Delivery Capability** — competências técnicas reutilizáveis consumidas pelas fases:
-- Commit Workflow
-- Contract Management
-- Evidence Management
-- Observability
-- Reliability
+**Capability** — competência reutilizável consumida por Journeys, Cycles ou Phases. Não pertence exclusivamente a nenhuma jornada. → Ver [ontology.md — Capability](ontology.md#capability).
 
-**Artifacts** — artefatos produzidos e consumidos pelo Framework:
-- OBCs, BDD Features, Plans, Trails, Evidence
+**Artifacts** — artefatos produzidos e consumidos pelo Framework: OBCs, BDD Features, Plans, Trails, Evidence.
 
 ---
 

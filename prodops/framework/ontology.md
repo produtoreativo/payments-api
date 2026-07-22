@@ -4,96 +4,67 @@
 
 Definição canônica dos conceitos estruturais do Framework ProdOps.
 
-Este documento é a **fonte única de verdade** para a hierarquia de conceitos. Todos os outros documentos que descrevem ou citam esses conceitos devem referenciar este documento em vez de redefinir os termos.
+Este documento é a **fonte única de verdade** para a hierarquia de conceitos. Documentos que descrevem esses conceitos devem referenciar este documento em vez de redefinir os termos.
 
-→ Para o vocabulário completo, ver [glossary.md](glossary.md).
-→ Para o fluxo operacional, ver [operating-model.md](operating-model.md).
-
----
-
-## Hierarquia de conceitos
-
-O ProdOps é organizado em duas dimensões ortogonais:
-
-**Dimensão estrutural** — organiza o trabalho:
-
-```
-Framework
-  └── Journey (5 jornadas)
-        └── Cycle (agrupamentos dentro de uma jornada)
-              └── Phase (estágios individuais dentro de um ciclo)
-```
-
-**Dimensão transversal** — define como e com quê o trabalho é executado:
-
-```
-Execution Model  ←  define o nível de compromisso aplicado à Journey
-Capability       ←  mecanismo reutilizável consumido pela Phase
-Skill            ←  implementação executável de uma Phase ou Journey
-  └── Step       ←  sub-unidade de uma Skill
-```
-
-O diagrama completo de relacionamentos:
-
-```
-Framework
-├── Execution Model (Upstream | Downstream)
-│     aplica-se a ↓ qualquer Journey
-├── Journey
-│     ├── Discovery
-│     ├── Delivery
-│     │     ├── Cycle: CI Sync  →  Phase: Bootstrap → Hack → Sync → Finish
-│     │     └── Cycle: CI Async →  Phase: Ship → Validate → Promote
-│     ├── Operation
-│     ├── Assessment
-│     └── Diligence
-│           ├── Cycle: diligence-sync   →  Phase: Capture → Attach → Promote → Close
-│           ├── Cycle: diligence-async  →  Phase: Scan → Flag → Repair
-│           └── Cycle: workspace-reconciliation → Phase: Inspect → Reconcile → Verify
-│
-├── Capability (consumida pelas Phases)
-│     ├── Delivery Capabilities  (Commit Workflow, Contract Management, Evidence Management, Observability, Reliability)
-│     └── Diligence Capabilities (Backlog Synchronization, Work Item Management, Divergence Detection, Workspace Reconciliation, …)
-│
-└── Skill (implementa Phase, Cycle ou Journey)
-      └── Step (sub-unidade de uma Skill)
-```
+→ Para o vocabulário completo dos termos, ver [glossary.md](glossary.md).
+→ Para o modelo operacional e o fluxo de trabalho, ver [operating-model.md](operating-model.md).
 
 ---
 
-## Definições canônicas
+## Diagrama canônico
+
+```mermaid
+flowchart TD
+    EM["Execution Model\nUpstream | Downstream"]
+
+    subgraph FW["Framework — Eixo Estrutural"]
+        direction TB
+        J["Journey"]
+        C["Cycle"]
+        P["Phase"]
+        J --> C --> P
+    end
+
+    CAP["Capability\n― transversal ―"]
+
+    subgraph IMPL["Camada de Agentes"]
+        direction TB
+        SK["Skill"]
+        ST["Step"]
+        SK --> ST
+    end
+
+    EM -. "define como executa" .-> J
+    P -. "consome" .-> CAP
+    C -. "consome" .-> CAP
+    J -. "consome" .-> CAP
+    SK -. "implementa" .-> P
+    SK -. "implementa" .-> C
+    SK -. "implementa" .-> J
+```
+
+**Leitura do diagrama:**
+
+- O **eixo estrutural** (dentro do Framework) organiza o trabalho em três níveis: Journey → Cycle → Phase.
+- O **Execution Model** é um modificador — define como qualquer Journey executa, não o que ela é.
+- A **Capability** é transversal — pode ser consumida por uma Phase, um Cycle ou uma Journey inteira.
+- A **Camada de Agentes** (Skill → Step) é a implementação executável do eixo estrutural. Não é um conceito do Framework — é uma convenção de implementação.
+
+---
+
+## Eixo estrutural: Framework → Journey → Cycle → Phase
 
 ### Framework
 
-**O que é:** O sistema canônico de princípios, vocabulário, modelo operacional, jornadas, capabilities e skills que define como o ProdOps funciona.
+**O que é:** O sistema canônico de princípios, vocabulário, modelo operacional, jornadas, capabilities e templates que define como o ProdOps funciona. É independente de produto.
 
-**Responsabilidade:** Ser a fonte única de verdade sobre como trabalhar com ProdOps — independente de qual produto, portfolio ou workspace o está usando.
+**Responsabilidade:** Ser a fonte única de verdade sobre como trabalhar com ProdOps — independente de qual produto, portfolio ou workspace o adota.
 
-**Nível de abstração:** Meta-nível. Define a estrutura que todos os outros níveis (Portfolio, Workspace, Product Repository) adotam.
+**Nível de abstração:** Meta-nível. Define a estrutura que todos os outros níveis (Portfolio, Workspace, Product Repository) adotam e estendem.
 
-**Contém:** Princípios, glossário, fluxo oficial, Execution Model, jornadas, capabilities, skills, templates, Origin Streams.
+**Contém:** Princípios, glossário, fluxo oficial, Execution Model, as 5 jornadas, capabilities, templates, Origin Streams.
 
-**Existe em:** Repositório dedicado de referência; distribuído e adotado por Product Repositories.
-
-**Nunca representa:** Roadmap, Backlogs de produto, Business Intents, Features, Releases.
-
----
-
-### Execution Model
-
-**O que é:** Os dois modos de compromisso e critérios de qualidade que definem como qualquer jornada será executada — Upstream (exploração) e Downstream (compromisso).
-
-**Responsabilidade:** Definir o nível de rigor, os quality gates e o compromisso de entrega aplicado quando qualquer jornada é executada.
-
-**Nível de abstração:** Transversal a todas as jornadas. O modo não é a jornada — ele define como a jornada executa.
-
-**Contém:** Upstream, Downstream, regras de transição entre modos.
-
-**Existe em:** Parte do Framework; aplicado por cada jornada.
-
-**Nunca representa:** Uma jornada específica, um ciclo, uma fase.
-
-→ [execution-model/README.md](../execution-model/README.md)
+**Nunca representa:** Roadmap, Backlogs de produto, Business Intents, Features, código, Releases.
 
 ---
 
@@ -101,9 +72,7 @@ Framework
 
 **O que é:** Um caminho de trabalho com responsabilidade única, ciclo de vida próprio e critérios de entrada e saída definidos.
 
-**Responsabilidade:** Organizar o trabalho por intenção — o que está sendo feito — independente do modo de execução (o modo define apenas como a jornada executa).
-
-**Nível de abstração:** Imediatamente abaixo do Framework. O Execution Model se aplica sobre a jornada; a jornada não está dentro do Execution Mode.
+**Responsabilidade:** Organizar o trabalho por intenção — o **que** está sendo feito — independente do modo de execução (o modo define apenas o **como**).
 
 **As 5 jornadas:**
 
@@ -113,11 +82,9 @@ Framework
 | Delivery | Clássica | Construir, validar e promover a solução |
 | Operation | Clássica | Operar e evoluir o produto em produção |
 | Assessment | Transversal | Produzir análises para apoiar decisões |
-| Diligence | Transversal | Garantir aderência ao modelo operacional |
+| Diligence | Transversal | Garantir consistência do sistema de trabalho |
 
-**Contém:** Um ou mais Cycles.
-
-**Existe em:** O Framework define as 5 jornadas; Product Repositories as executam.
+**Contém:** Um ou mais Cycles (ou uma sequência fluida de phases, nas jornadas sem Cycles formais).
 
 **Nunca representa:** Um modo de execução. Upstream e Downstream não são jornadas.
 
@@ -127,15 +94,13 @@ Framework
 
 ### Cycle (Ciclo)
 
-**O que é:** Um agrupamento ordenado de fases dentro de uma jornada, com propósito, acionamento e natureza distintos.
+**O que é:** Um agrupamento ordenado de Phases dentro de uma Journey, com propósito, acionamento e natureza distintos.
 
-**Responsabilidade:** Separar conjuntos de fases que têm natureza operacional diferente dentro da mesma jornada — por exemplo, trabalho síncrono vs. assíncrono, ou reativo vs. proativo.
+**Responsabilidade:** Separar conjuntos de Phases que têm natureza operacional diferente dentro da mesma jornada — por exemplo, trabalho síncrono vs. assíncrono, ou reativo vs. proativo.
 
-**Nível de abstração:** Entre Journey e Phase — agrupa fases com propósito comum, mas não substitui a jornada.
+**Ciclos existentes:**
 
-**Os ciclos por jornada:**
-
-| Jornada | Ciclo | Natureza |
+| Journey | Cycle | Natureza |
 |---|---|---|
 | Delivery | CI Sync | Síncrono — trabalho local, conduzido pelo engenheiro |
 | Delivery | CI Async | Assíncrono — trabalho conduzido pela plataforma |
@@ -143,27 +108,21 @@ Framework
 | Diligence | diligence-async | Proativo — iniciado por varredura periódica |
 | Diligence | workspace-reconciliation | Por demanda — Inspect → Reconcile → Verify |
 
-**Nota:** Discovery, Operation e Assessment não têm ciclos formais — operam como uma sequência fluida de fases sem agrupamento explícito.
+**Nota:** Discovery, Operation e Assessment não têm Cycles formais — operam como sequências fluidas de Phases ou de atividades sem agrupamento explícito.
 
-**Contém:** Um conjunto ordenado de Phases.
-
-**Existe em:** Dentro de uma Journey.
-
-**Nunca representa:** Uma jornada, uma fase individual, uma capability.
+**Nunca representa:** A Journey que o contém, uma Phase individual, uma Capability.
 
 ---
 
 ### Phase (Fase)
 
-**O que é:** Um estágio individual e ordenado dentro de um Cycle, com entrada, saída e responsabilidade únicos.
+**O que é:** Um estágio individual e ordenado dentro de um Cycle, com pré-condições de entrada, responsabilidade única e pós-condições de saída verificáveis.
 
-**Responsabilidade:** Executar uma etapa atômica e verificável dentro de um ciclo. Cada fase tem pré-condições claras de entrada e pós-condições verificáveis de saída.
+**Responsabilidade:** Executar uma etapa atômica dentro de um Cycle. Cada Phase produz uma saída verificável que serve de entrada para a Phase seguinte.
 
-**Nível de abstração:** A menor unidade estrutural do modelo conceitual. Abaixo da Phase existem apenas Steps — unidades de implementação dentro de Skills.
+**Phases por Cycle:**
 
-**As fases por ciclo:**
-
-| Ciclo | Fases |
+| Cycle | Phases |
 |---|---|
 | CI Sync | Bootstrap → Hack → Sync → Finish |
 | CI Async | Ship → Validate → Promote |
@@ -171,57 +130,82 @@ Framework
 | diligence-async | Scan → Flag → Repair |
 | workspace-reconciliation | Inspect → Reconcile → Verify |
 
-**Contém:** Nenhum sub-conceito formal — a implementação de uma Phase é feita por uma Skill e seus Steps.
+**Nível de abstração:** A menor unidade estrutural do modelo conceitual. A implementação de uma Phase pertence à camada de agentes (Skill e Steps).
 
-**Existe em:** Dentro de um Cycle.
+**Nunca representa:** Uma Journey, um Cycle, uma Capability, um artefato de produto.
 
-**Nunca representa:** Uma jornada, um ciclo, uma capability, um artefato.
-
-> **Distinção obrigatória — Lifecycle Stage vs. Delivery Phase:**
+> **Distinção obrigatória — Lifecycle Stage vs. Phase:**
 >
-> O documento [`phases.md`](phases.md) descreve **Concepção** e **Inception** — estágios do ciclo de vida de uma Business Intent **antes** da jornada Delivery. Esses são **Lifecycle Stages** (estágios de ciclo de vida), conceitualmente distintos das **Delivery Phases** (Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote) e das **Diligence Phases** (Capture, Attach, etc.).
->
-> Quando houver ambiguidade, usar o qualificador: "Lifecycle Stage", "Delivery Phase" ou "Diligence Phase".
+> O documento [`phases.md`](phases.md) descreve **Concepção** e **Inception** — estágios do ciclo de vida de uma Business Intent *antes* da jornada Delivery. Esses são **Lifecycle Stages**, conceitualmente distintos das Phases desta ontologia (Bootstrap, Hack, Capture, Inspect, etc.). Quando houver ambiguidade, usar o qualificador explícito: "Lifecycle Stage", "Delivery Phase" ou "Diligence Phase".
 
 ---
+
+## Modificador transversal: Execution Model
+
+### Execution Model
+
+**O que é:** O par de modos de execução que define o nível de compromisso, os quality gates e os critérios de qualidade aplicados quando qualquer Journey é executada — Upstream (exploração) e Downstream (compromisso).
+
+**Responsabilidade:** Definir *como* uma Journey executa, não *o que* ela é. O mesmo trabalho pode ser executado em modo Upstream (exploratório, sem gates rígidos) ou Downstream (com todos os quality gates obrigatórios).
+
+**Importante:** Execution Model não é uma Journey. Não está entre Journey e Cycle na hierarquia — é um modificador aplicado *sobre* qualquer Journey.
+
+> **Errado:** "O item está no Upstream" como sinônimo de "está em Discovery".
+> **Correto:** "O item está em Discovery, no modo Upstream."
+
+**Contém:** Upstream (modo de exploração), Downstream (modo de compromisso), regras de transição entre modos.
+
+→ [execution-model/README.md](../execution-model/README.md)
+
+---
+
+## Dimensão transversal: Capability
 
 ### Capability
 
-**O que é:** Competência técnica reutilizável consumida por uma ou mais Phases. Não tem acionamento próprio — é invocada quando a Phase a requer.
+**O que é:** Uma competência reutilizável que pode ser consumida por Journeys, Cycles ou Phases — sem pertencer exclusivamente a nenhum deles.
 
-**Responsabilidade:** Prover um mecanismo técnico específico que múltiplas fases podem usar sem duplicar sua definição.
+**Responsabilidade:** Encapsular um mecanismo específico que múltiplos pontos do Framework podem invocar sem duplicar a sua definição. Uma Capability define *o que* é feito, não *quando* nem *por quem*.
 
-**Nível de abstração:** Transversal às fases — não está hierarquicamente abaixo delas, mas é consumida por elas.
+**Natureza transversal:** Uma Capability não está atrelada a uma Journey específica. A mesma Capability pode ser consumida por Phases de diferentes Cycles, por Cycles de diferentes Journeys, ou por uma Journey inteira. Quando novas jornadas ou ciclos são adicionados ao Framework, eles podem consumir Capabilities existentes sem alterar a definição delas.
 
-**Três famílias distintas:**
+**Duas categorias:**
 
-| Família | Escopo | Exemplos |
-|---|---|---|
-| **Delivery Capability** | Mecanismo de Framework consumido pelas fases da jornada Delivery | Commit Workflow, Contract Management, Evidence Management, Observability, Reliability |
-| **Diligence Capability** | Mecanismo consumido pelas fases da jornada Diligence | Backlog Synchronization, Work Item Management, Divergence Detection, Artifact Evolution, Workspace Reconciliation |
-| **Product Capability** | A funcionalidade do produto sendo construída — o objeto do trabalho, não o mecanismo | Split payment, Pix, webhook de confirmação |
+| Categoria | O que representa |
+|---|---|
+| **Framework Capability** | Mecanismo do processo ProdOps — reutilizável em qualquer ponto da estrutura que o necessite. Não está associada a um produto específico. |
+| **Product Capability** | Uma funcionalidade, comportamento ou característica do produto que está sendo explorada ou entregue. É o *objeto* do trabalho, não o mecanismo. |
 
-**Regra crítica:** Quando o contexto for ambíguo, usar o qualificador completo: "Delivery Capability", "Diligence Capability" ou "Product Capability". Nunca usar "Capability" sozinho quando puder haver confusão entre os três tipos.
+**Grupos de Framework Capabilities por área de origem** (não de propriedade exclusiva):
 
-**Existe em:** `journeys/delivery/capabilities/` (Delivery) e `journeys/diligence/capabilities/` (Diligence).
+- *Área Delivery:* Commit Workflow, Contract Management, Evidence Management, Observability, Reliability
+- *Área Diligence:* Backlog Synchronization, Work Item Management, Divergence Detection, Artifact Evolution, Workspace Reconciliation
 
-**Nunca representa:** Uma fase, um ciclo, uma jornada, uma skill. Product Capability não é um mecanismo do Framework — é o objeto do trabalho.
+Esses grupos são organizados por onde as Capabilities foram originalmente definidas, não por uma restrição de uso. Uma Capability de Delivery pode ser consumida por outra Journey se ela for relevante.
+
+**Regra de nomenclatura:** Quando houver ambiguidade, usar o qualificador completo: "Framework Capability", "Delivery Capability", "Diligence Capability" ou "Product Capability".
+
+**Nunca representa:** Uma Phase, um Cycle, uma Journey ou uma Skill. Product Capability não é um mecanismo do Framework — é o objeto do trabalho.
+
+→ [journeys/delivery/capabilities/](../journeys/delivery/capabilities/) · [journeys/diligence/capabilities/](../journeys/diligence/capabilities/)
 
 ---
 
+## Camada de implementação: Skill → Step
+
 ### Skill
 
-**O que é:** Comportamento executável implementado por um agente. Corresponde a uma Phase, Cycle ou Journey e descreve exatamente o que o agente deve fazer, quando entrar, o que ler e o que produzir.
+**O que é:** Uma especificação de comportamento executável destinada a agentes. Uma Skill descreve o que um agente deve fazer, quando entrar, o que ler e o que produzir — implementando uma Journey, um Cycle, uma Phase ou uma Capability.
 
-**Responsabilidade:** Ser a implementação executável de uma Phase ou de uma Journey entry point. É a ponte entre o modelo conceitual e a execução pelo agente.
+**Responsabilidade:** Ser a implementação executável do eixo estrutural para agentes. É a ponte entre o modelo conceitual do Framework e a execução real por um agente.
 
-**Nível de abstração:** Implementação — não é documentação conceitual. Uma Skill implementa uma Phase; não substitui a definição da Phase. A documentação conceitual vive em `journeys/`; a Skill executável vive em `skills/`.
+**Skill NÃO é um conceito estrutural do Framework.** O Framework define o *que* deve acontecer (Journeys, Cycles, Phases, Capabilities). A Skill define *como um agente específico executa* esse o que. A documentação conceitual vive em `journeys/`; a Skill executável vive em `skills/`.
 
-**Contém:** Steps (sub-unidades ordenadas dentro de uma Skill).
+**Independência tecnológica:** O Framework não depende de nenhuma tecnologia específica para que Skills existam. Uma Skill pode ser executada por Claude, por Codex, por Copilot, por qualquer outro sistema de agente, ou por uma ferramenta de automação futura. O formato de Skill (arquivo Markdown com campos estruturados) é uma convenção de implementação — não uma propriedade do Framework em si.
 
-**Existe em:** `prodops/skills/` — separado da documentação conceitual.
+**Contém:** Steps (sub-unidades ordenadas e autossuficientes).
 
-**Nunca representa:** Documentação conceitual, template, artifact, capability.
+**Nunca representa:** Documentação conceitual, template de produto, artefato, Capability.
 
 → [skills/README.md](../skills/README.md)
 
@@ -229,68 +213,56 @@ Framework
 
 ### Step
 
-**O que é:** Sub-unidade ordenada dentro de uma Skill, com entrada e saída próprias.
+**O que é:** Sub-unidade ordenada dentro de uma Skill, com entrada e saída próprias. Um Step pode ser invocado individualmente quando necessário.
 
-**Responsabilidade:** Implementar uma etapa específica dentro de uma Skill de forma autossuficiente e isolada. Um Step pode ser invocado individualmente quando necessário.
+**Responsabilidade:** Implementar uma etapa específica dentro de uma Skill de forma autossuficiente e isolada — com suas próprias pré-condições e pós-condições.
 
-**Nível de abstração:** Implementação — abaixo de Skill. O Step não existe no modelo conceitual acima do nível de Skill; ele pertence exclusivamente à dimensão de implementação.
+**Step é exclusivamente uma estrutura interna de Skill.** Não há relação direta entre Step e qualquer conceito do eixo estrutural (Framework, Journey, Cycle, Phase, Capability). Um Step não é uma Phase menor. Um Step não é uma Capability. Step pertence à camada de implementação — não ao modelo conceitual.
 
-**Contém:** Instruções executáveis, referências a artefatos de entrada e saída.
-
-**Existe em:** `prodops/skills/<skill>/steps/<step>/SKILL.md` ou `prodops/skills/<skill>/<cycle>/steps/<step>/SKILL.md`.
-
-**Nunca representa:** Uma Phase, uma Capability, um artefato conceitual.
+**Nunca representa:** Uma Phase, uma Capability, um artefato conceitual, um conceito do Framework.
 
 ---
 
-## Relações entre conceitos
+## Relações entre todos os conceitos
 
-| Relação | Descrição |
+| Relação | Enunciado |
 |---|---|
-| Framework contém → Journey | O Framework define as 5 jornadas; journeys não existem fora do Framework |
-| Execution Model aplica-se sobre → Journey | O modo (Upstream/Downstream) define como a Journey executa; não é a Journey |
-| Journey contém → Cycle | Uma Journey tem um ou mais Cycles com natureza distinta |
-| Cycle contém → Phase | Um Cycle é a sequência ordenada de suas Phases |
-| Phase consome → Capability | Uma Phase invoca Capabilities para executar mecanismos reutilizáveis |
-| Skill implementa → Phase | Uma Skill é a implementação executável de uma Phase (ou Cycle/Journey routing) |
-| Skill contém → Step | Um Step é uma sub-unidade da Skill, invocável individualmente |
-| Capability ≠ Skill | Capability é um mecanismo conceitual; Skill é comportamento executável de agente |
-| Cycle ≠ Journey | Um Cycle agrupa Phases; não substitui nem representa a Journey |
-| Step ≠ Phase | Step é implementação; Phase é conceito estrutural |
+| Framework **define** → Journey | O Framework especifica as 5 jornadas; Journeys não existem fora do Framework |
+| Execution Model **modifica** → Journey | O modo define *como* a Journey executa; não é a Journey nem está entre ela e seus Cycles |
+| Journey **contém** → Cycle | Uma Journey tem um ou mais Cycles (ou Phases diretas) |
+| Cycle **contém** → Phase | Um Cycle é a sequência ordenada de suas Phases |
+| Journey/Cycle/Phase **consome** → Capability | Capabilities são invocadas em qualquer nível que as necessite |
+| Skill **implementa** → Journey / Cycle / Phase | Uma Skill é a especificação executável de um nível do eixo estrutural |
+| Skill **contém** → Step | Steps são sub-unidades internas de uma Skill |
+| Capability **≠** Skill | Capability é um mecanismo conceitual do Framework; Skill é especificação executável para agentes |
+| Step **≠** Phase | Step é estrutura interna de implementação; Phase é conceito estrutural do Framework |
 
 ---
 
 ## Notas de distinção
 
-### Upstream e Downstream não são jornadas
+### Ciclos formais vs. jornadas fluidas
 
-Upstream e Downstream são **modos de execução** — definem nível de compromisso e critérios de qualidade. Qualquer jornada pode operar em qualquer modo.
+Nem toda Journey tem Cycles formais. Delivery e Diligence têm Cycles explícitos com names e responsabilidades distintas. Discovery, Operation e Assessment operam de forma mais fluida — têm atividades e práticas, mas sem agrupamento formal em Cycles nomeados.
 
-> Errado: "O item está no Upstream" como sinônimo de "está em Discovery".
-> Correto: "O item está em Discovery, no modo Upstream."
+### "Agrupamento" vs. "Cycle"
 
-### Ciclos vs. Agrupamentos
+Alguns documentos ProdOps anteriores usam o termo "agrupamento" para CI Sync e CI Async. O termo canônico é **Cycle**. Agrupamento é descrição informal; Cycle é o conceito formal desta ontologia.
 
-Na literatura de entrega de software, "CI Sync" e "CI Async" são chamados de "agrupamentos" em alguns documentos ProdOps anteriores. O termo canônico é **Cycle** (ciclo). Agrupamento é descrição informal; Cycle é o conceito formal.
+### OBC Partitioning não é uma Capability
 
-### Capability não é hierarquicamente abaixo de Phase
-
-A Capability é consumida pela Phase, mas não está "dentro" dela na hierarquia. É transversal — um mesmo mecanismo (ex: Evidence Management) é consumido por múltiplas fases em jornadas diferentes.
-
-### OBC Partitioning é um processo, não uma Capability
-
-`framework/README.md` referencia "OBC Partitioning" como "capability". Na ontologia ProdOps, OBC Partitioning é um **processo de governança** (responsabilidade do Portfolio PM + Tech Leads) executado entre Discovery no BIB e a criação de Local OBCs nos Product Backlogs. Não é uma Delivery Capability nem uma Diligence Capability. Ver [obc.md](obc.md).
+Alguns documentos referenciam "OBC Partitioning" como "capability". Na ontologia ProdOps, OBC Partitioning é um **processo de governança** (responsabilidade do Portfolio PM + Tech Leads) executado entre Discovery no BIB e a criação de Local OBCs nos Product Backlogs. Não é uma Framework Capability nem uma Product Capability. Ver [obc.md](obc.md).
 
 ---
 
 ## Fonte canônica
 
-Este documento (`ontology.md`) é a fonte canônica da hierarquia de conceitos ProdOps.
+Este documento é a fonte única de verdade da hierarquia de conceitos ProdOps.
 
-| Documento | Papel em relação à ontologia |
+| Documento | Papel em relação a esta ontologia |
 |---|---|
-| `glossary.md` | Definições lexicais completas dos termos — referencia esta ontologia para hierarquia |
-| `operating-model.md` | Modelo operacional com fluxo de trabalho — referencia esta ontologia para conceitos |
-| `execution-model/README.md` | Detalhamento de Upstream e Downstream — subconjunto desta ontologia |
-| `journeys/*/README.md` | Detalhamento de cada jornada — referencia Cycle e Phase desta ontologia |
-| `skills/README.md` | Catálogo de Skills — referencia esta ontologia para posicionamento de Skill e Step |
+| [glossary.md](glossary.md) | Definições lexicais de todos os termos — referencia esta ontologia para hierarquia |
+| [operating-model.md](operating-model.md) | Modelo operacional e fluxo — referencia esta ontologia para os conceitos estruturais |
+| [execution-model/README.md](../execution-model/README.md) | Detalha Upstream e Downstream — é uma especialização desta ontologia |
+| [journeys/README.md](../journeys/README.md) | Detalha cada Journey — referencia Cycle e Phase desta ontologia |
+| [skills/README.md](../skills/README.md) | Catálogo de Skills — referencia esta ontologia para o posicionamento de Skill e Step |

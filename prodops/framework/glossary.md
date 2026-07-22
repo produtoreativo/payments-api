@@ -624,13 +624,11 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Execution Model
 
-**Definição:** Os dois modos de compromisso e critérios de qualidade que definem como qualquer jornada será executada — Upstream (exploração) e Downstream (compromisso). Não é uma jornada, não é uma fase.
+**Definição:** O par de modos de execução que define o nível de compromisso, quality gates e critérios de qualidade aplicados quando qualquer Journey é executada — Upstream (exploração) e Downstream (compromisso). Não é uma Journey, não é uma Phase.
 
-**Propósito:** Definir o nível de rigor, os quality gates e o compromisso de entrega aplicado quando qualquer jornada é executada.
+**Regra fundamental:** O Execution Model define *como* as Journeys executam — não *o que* elas são. Qualquer Journey pode operar em qualquer modo.
 
-**Regra:** Os modos não substituem as jornadas. Eles definem **como** as jornadas executam, não **o que** elas são.
-
-**Relação com outros conceitos:** Ver entradas **Upstream** e **Downstream** abaixo; ver [`ontology.md`](ontology.md) para a hierarquia completa; ver [`../execution-model/README.md`](../execution-model/README.md) para o detalhamento dos modos.
+→ Definição completa: [`ontology.md — Execution Model`](ontology.md#modificador-transversal-execution-model) · [`execution-model/README.md`](../execution-model/README.md)
 
 ---
 
@@ -638,59 +636,43 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Definição:** Um caminho de trabalho com responsabilidade única, ciclo de vida próprio e critérios de entrada e saída definidos. As 5 jornadas são: Discovery, Delivery, Operation, Assessment e Diligence.
 
-**Propósito:** Organizar o trabalho por intenção — o que está sendo feito — independente do modo de execução.
+**Regra fundamental:** Journeys não são modos de execução. Upstream e Downstream não são jornadas — são modos do Execution Model que se aplicam sobre as jornadas.
 
-**Importante:** Journeys não são modos de execução. Upstream e Downstream não são jornadas — são modos que se aplicam sobre as jornadas.
-
-**Relação com outros conceitos:** Uma Journey contém Cycles; cada Cycle contém Phases. Ver [`ontology.md`](ontology.md) e [`../journeys/README.md`](../journeys/README.md).
+→ Definição completa: [`ontology.md — Journey`](ontology.md#journey-jornada) · [`journeys/README.md`](../journeys/README.md)
 
 ---
 
 ## Cycle (Ciclo)
 
-**Definição:** Um agrupamento ordenado de fases dentro de uma jornada, com propósito, acionamento e natureza distintos. Na jornada Delivery: CI Sync (síncrono) e CI Async (assíncrono). Na jornada Diligence: diligence-sync (reativo), diligence-async (proativo) e workspace-reconciliation (por demanda).
+**Definição:** Agrupamento ordenado de Phases dentro de uma Journey, com propósito, acionamento e natureza distintos. Delivery tem CI Sync e CI Async; Diligence tem diligence-sync, diligence-async e workspace-reconciliation. Discovery, Operation e Assessment não têm Cycles formais.
 
-**Propósito:** Separar conjuntos de fases com natureza operacional diferente dentro da mesma jornada.
-
-**Não confundir com:** Journey (o ciclo está dentro da jornada; não substitui nem representa a jornada).
-
-**Relação com outros conceitos:** Um Cycle contém Phases; está dentro de uma Journey. Ver [`ontology.md`](ontology.md).
+→ Definição completa: [`ontology.md — Cycle`](ontology.md#cycle-ciclo)
 
 ---
 
-## Phase (Fase de Delivery)
+## Phase (Fase)
 
-**Definição:** Um estágio individual e ordenado dentro de um Cycle, com entrada, saída e responsabilidade únicos. Nas fases de Delivery: Bootstrap, Hack, Sync, Finish (CI Sync) e Ship, Validate, Promote (CI Async). Nas fases de Diligence: Capture, Attach, Promote, Close, Scan, Flag, Repair, Inspect, Reconcile, Verify.
+**Definição:** Estágio individual e ordenado dentro de um Cycle, com pré-condições, responsabilidade única e saída verificável. Exemplos: Bootstrap, Hack, Ship, Capture, Inspect.
 
-**Propósito:** Executar uma etapa atômica e verificável dentro de um ciclo.
+**Distinção:** [`phases.md`](phases.md) descreve **Concepção** e **Inception** — esses são **Lifecycle Stages** (estágios do ciclo de vida de uma Business Intent antes da Delivery), diferentes das Phases desta ontologia. Quando houver ambiguidade, usar: "Lifecycle Stage", "Delivery Phase" ou "Diligence Phase".
 
-**Distinção obrigatória:** O documento [`phases.md`](phases.md) descreve **Concepção** e **Inception** — esses são **Lifecycle Stages** (estágios do ciclo de vida de uma Business Intent antes da Delivery), conceitualmente diferentes das Delivery Phases descritas nesta entrada. Quando houver ambiguidade, usar o qualificador: "Lifecycle Stage", "Delivery Phase" ou "Diligence Phase".
-
-**Relação com outros conceitos:** Uma Phase existe dentro de um Cycle; é implementada por uma Skill. Ver [`ontology.md`](ontology.md).
+→ Definição completa: [`ontology.md — Phase`](ontology.md#phase-fase)
 
 ---
 
 ## Skill
 
-**Definição:** Comportamento executável implementado por um agente. Corresponde a uma Phase, Cycle ou Journey e descreve o que o agente deve fazer, quando entrar, o que ler e o que produzir.
+**Definição:** Especificação de comportamento executável para agentes. Uma Skill implementa uma Journey, Cycle, Phase ou Capability, descrevendo o que o agente deve fazer, quando entrar, o que ler e o que produzir. Skill NÃO é um conceito estrutural do Framework — é uma implementação independente de tecnologia.
 
-**Propósito:** Ser a implementação executável de uma Phase ou de um entry point de jornada. É a ponte entre o modelo conceitual e a execução pelo agente.
-
-**Não confundir com:** Documentação conceitual, templates, Capabilities ou artefatos de produto.
-
-**Relação com outros conceitos:** Uma Skill implementa uma Phase; uma Skill contém Steps. Ver [`ontology.md`](ontology.md) e [`../skills/README.md`](../skills/README.md).
+→ Definição completa: [`ontology.md — Skill`](ontology.md#skill) · [`skills/README.md`](../skills/README.md)
 
 ---
 
 ## Step
 
-**Definição:** Sub-unidade ordenada dentro de uma Skill, com entrada e saída próprias. Pode ser invocado individualmente.
+**Definição:** Sub-unidade ordenada dentro de uma Skill, com entrada e saída próprias. Pode ser invocado individualmente. Step é estrutura interna de Skill — não tem relação direta com o eixo estrutural (Journey, Cycle, Phase, Capability).
 
-**Propósito:** Implementar uma etapa específica dentro de uma Skill de forma autossuficiente e isolada.
-
-**Não confundir com:** Uma Phase (Step é implementação; Phase é conceito estrutural).
-
-**Relação com outros conceitos:** Um Step existe dentro de uma Skill; não existe no modelo conceitual acima do nível de Skill. Ver [`ontology.md`](ontology.md).
+→ Definição completa: [`ontology.md — Step`](ontology.md#step)
 
 ---
 
