@@ -31,9 +31,9 @@ Quando invocado com argumento de step (`/diligence diligence-sync capture`), exe
 | diligence-async | `scan` | [steps/scan/SKILL.md](steps/scan/SKILL.md) |
 | diligence-async | `flag` | [steps/flag/SKILL.md](steps/flag/SKILL.md) |
 | diligence-async | `repair` | [steps/repair/SKILL.md](steps/repair/SKILL.md) |
-| workspace-reconciliation | `inspect` | [capabilities/workspace-reconciliation/steps/inspect/SKILL.md](capabilities/workspace-reconciliation/steps/inspect/SKILL.md) |
-| workspace-reconciliation | `reconcile` | [capabilities/workspace-reconciliation/steps/reconcile/SKILL.md](capabilities/workspace-reconciliation/steps/reconcile/SKILL.md) |
-| workspace-reconciliation | `verify` | [capabilities/workspace-reconciliation/steps/verify/SKILL.md](capabilities/workspace-reconciliation/steps/verify/SKILL.md) |
+| workspace-reconciliation | `inspect` | [workspace-reconciliation/steps/inspect/SKILL.md](workspace-reconciliation/steps/inspect/SKILL.md) |
+| workspace-reconciliation | `reconcile` | [workspace-reconciliation/steps/reconcile/SKILL.md](workspace-reconciliation/steps/reconcile/SKILL.md) |
+| workspace-reconciliation | `verify` | [workspace-reconciliation/steps/verify/SKILL.md](workspace-reconciliation/steps/verify/SKILL.md) |
 
 ## Inputs
 

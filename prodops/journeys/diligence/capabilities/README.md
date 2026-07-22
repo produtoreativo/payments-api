@@ -9,4 +9,4 @@ Capabilities são competências reutilizáveis consumidas pelos ciclos da Dilige
 | Readiness Verification | Verificar pré-requisitos de Downstream antes que um item entre em Delivery | Promote, Scan |
 | Divergence Detection | Identificar proativamente gaps entre artefatos canônicos e ferramentas externas | Scan, Flag |
 | Artifact Evolution | Atualizar artefatos de gestão (Iteration Plan, Roadmap, Premortem) quando decisões mudam o estado do trabalho | Capture, Repair, Close |
-| [Workspace Reconciliation](workspace-reconciliation/README.md) | Alinhar GitHub Workspace (Labels, Fields, Views, Projetos) à Canonical Specification. Detecta Workspace Drift via Inspect e corrige via Reconcile. Produz Conformance Report via Verify. | Bootstrap, Diligence Async, Diligence Sync |
+| [Workspace Reconciliation](../workspace-reconciliation.md) | Alinhar GitHub Workspace (Labels, Fields, Views, Projetos) à Canonical Specification. Detecta Workspace Drift via Inspect e corrige via Reconcile. Produz Conformance Report via Verify. | Bootstrap, Diligence Async, Diligence Sync, usuário direto |

@@ -117,6 +117,6 @@ Concluído quando **todos** os itens abaixo são verdadeiros:
 
 ## References
 
-→ [Capability README](../../../../journeys/diligence/capabilities/workspace-reconciliation/README.md)
+→ [Capability README](../../../../journeys/diligence/workspace-reconciliation.md)
 → [Canonical Specification](../../../../framework/github-workspace.md)
 → [GitHub Sync Manifest](../../../../artifacts/governance/github-sync-manifest.md)

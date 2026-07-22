@@ -15,7 +15,7 @@ Supported scopes:
 
 When scope is omitted, use `diligence-sync` temporarily and report the default explicitly.
 
-If the user passes `workspace-reconciliation` as scope: this is a capability invocation, not a cycle. Route to `prodops/skills/diligence/capabilities/workspace-reconciliation/SKILL.md` and execute the full Inspect → Reconcile → Verify sequence, identifying the caller as a direct user invocation.
+If the user passes `workspace-reconciliation` as scope: this is a direct command invocation. Route to `prodops/skills/diligence/workspace-reconciliation/SKILL.md` and execute the full Inspect → Reconcile → Verify sequence, identifying the caller as a direct user invocation.
 
 Use the Agent tool to delegate to the diligence-agent:
 

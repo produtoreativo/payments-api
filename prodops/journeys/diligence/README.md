@@ -212,7 +212,7 @@ Competências reutilizáveis invocadas pelos ciclos e pelo Bootstrap — não s�
 
 | Capability | Propósito | Invocada por |
 |---|---|---|
-| [Workspace Reconciliation](capabilities/workspace-reconciliation/README.md) | Alinhar GitHub Workspace (Labels, Fields, Views, Projetos) à Canonical Specification. Detecta e corrige Workspace Drift via Inspect → Reconcile → Verify. | Bootstrap, Diligence Async, Diligence Sync |
+| [Workspace Reconciliation](workspace-reconciliation.md) | Alinhar GitHub Workspace (Labels, Fields, Views, Projetos) à Canonical Specification. Detecta e corrige Workspace Drift via Inspect → Reconcile → Verify. | Bootstrap, Diligence Async, Diligence Sync |
 
 ---
 

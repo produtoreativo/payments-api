@@ -43,7 +43,7 @@ Stop before Repair when a divergence requires a product decision. Escalate with 
 - `diligence-sync`: Capture → Attach → Promote → Close for the given OBC.
 - `diligence-async`: Scan → Flag → Repair across all active OBCs.
 - `full`: diligence-sync for the given OBC + diligence-async for broader drift detection.
-- `workspace-reconciliation`: capability invocation — read `prodops/skills/diligence/capabilities/workspace-reconciliation/SKILL.md` and execute Inspect → Reconcile → Verify. Return Conformance Report. This is a capability, not a third cycle.
+- `workspace-reconciliation`: capability invocation — read `prodops/skills/diligence/workspace-reconciliation/SKILL.md` and execute Inspect → Reconcile → Verify. Return Conformance Report. This is a first-class command, also invocable by cycles.
 
 Always report exactly which scope and steps executed.
 

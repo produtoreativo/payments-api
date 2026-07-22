@@ -135,9 +135,9 @@ O ciclo Diligence Sync pode invocar Workspace Reconciliation quando o step Attac
 
 | Step | Responsabilidade | Arquivo |
 |---|---|---|
-| **Inspect** | Lê Canonical Specification e Actual Workspace; produz Drift Report completo. Não cria nem atualiza nada. | [steps/inspect/SKILL.md](../../skills/diligence/capabilities/workspace-reconciliation/steps/inspect/SKILL.md) |
-| **Reconcile** | Executa criações e atualizações identificadas pelo Inspect. Para gaps não automatizáveis, abre Issue de rastreamento. Nunca remove sem confirmação. | [steps/reconcile/SKILL.md](../../skills/diligence/capabilities/workspace-reconciliation/steps/reconcile/SKILL.md) |
-| **Verify** | Confirma programaticamente o estado de todas as categorias após o Reconcile. Produz Conformance Report e atualiza o sync manifest. | [steps/verify/SKILL.md](../../skills/diligence/capabilities/workspace-reconciliation/steps/verify/SKILL.md) |
+| **Inspect** | Lê Canonical Specification e Actual Workspace; produz Drift Report completo. Não cria nem atualiza nada. | [steps/inspect/SKILL.md](../../skills/diligence/workspace-reconciliation/steps/inspect/SKILL.md) |
+| **Reconcile** | Executa criações e atualizações identificadas pelo Inspect. Para gaps não automatizáveis, abre Issue de rastreamento. Nunca remove sem confirmação. | [steps/reconcile/SKILL.md](../../skills/diligence/workspace-reconciliation/steps/reconcile/SKILL.md) |
+| **Verify** | Confirma programaticamente o estado de todas as categorias após o Reconcile. Produz Conformance Report e atualiza o sync manifest. | [steps/verify/SKILL.md](../../skills/diligence/workspace-reconciliation/steps/verify/SKILL.md) |
 
 ---
 
@@ -158,4 +158,4 @@ O ciclo Diligence Sync pode invocar Workspace Reconciliation quando o step Attac
 → [GitHub Sync Manifest](../../../../artifacts/governance/github-sync-manifest.md)
 → [Diligence journey README](../../README.md)
 → [Capabilities README](../README.md)
-→ [Orchestrator SKILL.md](../../../../skills/diligence/capabilities/workspace-reconciliation/SKILL.md)
+→ [Orchestrator SKILL.md](../../skills/diligence/workspace-reconciliation/SKILL.md)
