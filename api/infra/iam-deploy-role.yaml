@@ -1,0 +1,249 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  IAM OIDC provider and GitHub Actions deploy role for staging and production.
+  Grants the CI pipeline least-privilege access to deploy CloudFormation stacks,
+  Lambda functions, DynamoDB tables, SQS queues, IAM Lambda roles, and CloudWatch
+  Log Groups for the payments-api project.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Bootstrap (one-time, by AWS admin):
+#
+#   # First deploy — creates OIDC provider + role
+#   aws cloudformation deploy \
+#     --template-file api/infra/iam-deploy-role.yaml \
+#     --stack-name payments-api-iam-deploy-role \
+#     --capabilities CAPABILITY_NAMED_IAM \
+#     --parameter-overrides \
+#       GitHubOrg=produtoreativo \
+#       GitHubRepo=payments-api \
+#       CreateOidcProvider=true
+#
+#   # Subsequent updates (OIDC provider already exists — default)
+#   aws cloudformation deploy \
+#     --template-file api/infra/iam-deploy-role.yaml \
+#     --stack-name payments-api-iam-deploy-role \
+#     --capabilities CAPABILITY_NAMED_IAM \
+#     --parameter-overrides \
+#       GitHubOrg=produtoreativo \
+#       GitHubRepo=payments-api
+#
+# The created role ARN is:
+#   arn:aws:iam::<AccountId>:role/payments-api-github-deploy
+#
+# Reference this ARN in:
+#   .github/workflows/staging-deploy.yml    → role-to-assume
+#   .github/workflows/deploy-production.yml → role-to-assume
+# ─────────────────────────────────────────────────────────────────────────────
+
+Parameters:
+  GitHubOrg:
+    Type: String
+    Description: GitHub organisation or user that owns the repository (e.g. produtoreativo)
+
+  GitHubRepo:
+    Type: String
+    Description: Repository name without org prefix (e.g. payments-api)
+
+  AccountId:
+    Type: String
+    Default: '985057277127'
+    Description: AWS account ID — used in resource ARN conditions
+
+  CreateOidcProvider:
+    Type: String
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+    Description: >
+      Set to 'true' on first bootstrap if the GitHub Actions OIDC provider
+      does not yet exist in this account. Set to 'false' (default) on updates
+      — CloudFormation cannot update an existing provider it did not create.
+
+Conditions:
+  ShouldCreateOidcProvider: !Equals [!Ref CreateOidcProvider, 'true']
+
+Resources:
+
+  # ── GitHub Actions OIDC Provider ────────────────────────────────────────────
+  # One per AWS account. Only created when CreateOidcProvider=true.
+  # Skip on updates — CloudFormation errors if you try to create a provider
+  # that already exists.
+  GitHubOidcProvider:
+    Type: AWS::IAM::OIDCProvider
+    Condition: ShouldCreateOidcProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      ThumbprintList:
+        - 6938fd4d98bab03faadb97b34396831e3780aea1
+        - 1c58a3a8518e8759bf075b76b750d4f2df264fcd
+      Tags:
+        - Key: Project
+          Value: payments-api
+        - Key: ManagedBy
+          Value: cloudformation
+
+  # ── Deploy Role ─────────────────────────────────────────────────────────────
+  # Used by staging-deploy.yml and deploy-production.yml.
+  # Scoped to payments-api-* resources — cannot touch unrelated stacks or tables.
+  DeployRole:
+    Type: AWS::IAM::Role
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      RoleName: payments-api-github-deploy
+      Description: GitHub Actions OIDC role for staging and production deploys
+      MaxSessionDuration: 3600
+
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub 'arn:aws:iam::${AccountId}:oidc-provider/token.actions.githubusercontent.com'
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com'
+              StringLike:
+                # Allows any branch, tag, or environment in this repo.
+                # Tighten to 'repo:Org/Repo:environment:production' if needed.
+                'token.actions.githubusercontent.com:sub': !Sub 'repo:${GitHubOrg}/${GitHubRepo}:*'
+
+      Tags:
+        - Key: Project
+          Value: payments-api
+        - Key: ManagedBy
+          Value: cloudformation
+
+      Policies:
+        - PolicyName: payments-api-github-deploy-policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+
+              # ── CloudFormation — payments-api stacks only ───────────────────
+              - Sid: CloudFormationDeploy
+                Effect: Allow
+                Action:
+                  - cloudformation:CreateStack
+                  - cloudformation:UpdateStack
+                  - cloudformation:DeleteStack
+                  - cloudformation:DescribeStacks
+                  - cloudformation:DescribeStackEvents
+                  - cloudformation:DescribeChangeSet
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:ExecuteChangeSet
+                  - cloudformation:DeleteChangeSet
+                  - cloudformation:GetTemplateSummary
+                  - cloudformation:ListStackResources
+                  - cloudformation:ListStacks
+                  - cloudformation:ValidateTemplate
+                Resource:
+                  - !Sub 'arn:aws:cloudformation:us-east-1:${AccountId}:stack/payments-api-*'
+                  - !Sub 'arn:aws:cloudformation:us-east-1:${AccountId}:stack/aws-sam-cli-managed-*'
+
+              # ── CloudFormation — SAM transform (AWS-managed resource) ───────
+              - Sid: CloudFormationTransform
+                Effect: Allow
+                Action: cloudformation:CreateChangeSet
+                Resource: 'arn:aws:cloudformation:us-east-1:aws:transform/Serverless-2016-10-31'
+
+              # ── S3 — SAM artifact bucket ────────────────────────────────────
+              - Sid: S3SamArtifacts
+                Effect: Allow
+                Action: s3:*
+                Resource:
+                  - !Sub 'arn:aws:s3:::aws-sam-cli-managed-*'
+                  - !Sub 'arn:aws:s3:::aws-sam-cli-managed-*/*'
+
+              # ── Lambda — payments functions in this account ─────────────────
+              - Sid: LambdaAll
+                Effect: Allow
+                Action: 'lambda:*'
+                Resource:
+                  - !Sub 'arn:aws:lambda:us-east-1:${AccountId}:function:*-payments-*'
+                  - !Sub 'arn:aws:lambda:us-east-1:${AccountId}:event-source-mapping:*'
+
+              # ── Lambda — read Datadog Extension layer (cross-account) ───────
+              # Datadog publishes its Extension layer from account 464622532012.
+              # Lambda requires GetLayerVersion to attach a layer during function
+              # creation, even when the layer is publicly accessible.
+              - Sid: LambdaGetExternalLayer
+                Effect: Allow
+                Action: 'lambda:GetLayerVersion'
+                Resource: 'arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:*'
+
+              # ── IAM — Lambda execution roles only ──────────────────────────
+              - Sid: IamRolesForLambda
+                Effect: Allow
+                Action:
+                  - iam:CreateRole
+                  - iam:UpdateRole
+                  - iam:DeleteRole
+                  - iam:GetRole
+                  - iam:AttachRolePolicy
+                  - iam:DetachRolePolicy
+                  - iam:PutRolePolicy
+                  - iam:DeleteRolePolicy
+                  - iam:GetRolePolicy
+                  - iam:PassRole
+                  - iam:TagRole
+                  - iam:ListRolePolicies
+                  - iam:ListAttachedRolePolicies
+                Resource: !Sub 'arn:aws:iam::${AccountId}:role/*-payments-*'
+
+              # ── SQS — payments queues only ──────────────────────────────────
+              - Sid: SqsDeploy
+                Effect: Allow
+                Action:
+                  - sqs:CreateQueue
+                  - sqs:DeleteQueue
+                  - sqs:SetQueueAttributes
+                  - sqs:GetQueueAttributes
+                  - sqs:GetQueueUrl
+                  - sqs:ListQueues
+                  - sqs:TagQueue
+                  - sqs:ListQueueTags
+                Resource: !Sub 'arn:aws:sqs:us-east-1:${AccountId}:*-payments-*'
+
+              # ── DynamoDB — payments tables only ─────────────────────────────
+              # UpdateContinuousBackups is required to enable PITR during table
+              # creation and updates via CloudFormation.
+              - Sid: DynamoDbDeploy
+                Effect: Allow
+                Action:
+                  - dynamodb:CreateTable
+                  - dynamodb:UpdateTable
+                  - dynamodb:DeleteTable
+                  - dynamodb:DescribeTable
+                  - dynamodb:DescribeContinuousBackups
+                  - dynamodb:UpdateContinuousBackups
+                  - dynamodb:DescribeTimeToLive
+                  - dynamodb:ListTagsOfResource
+                  - dynamodb:TagResource
+                  - dynamodb:UntagResource
+                  - dynamodb:ListTables
+                Resource: !Sub 'arn:aws:dynamodb:us-east-1:${AccountId}:table/*'
+
+              # ── CloudWatch Logs — Lambda log groups only ────────────────────
+              - Sid: LogGroupsDeploy
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:DeleteLogGroup
+                  - logs:DescribeLogGroups
+                  - logs:PutRetentionPolicy
+                  - logs:DeleteRetentionPolicy
+                  - logs:ListTagsLogGroup
+                  - logs:TagLogGroup
+                  - logs:ListTagsForResource
+                  - logs:TagResource
+                Resource: !Sub 'arn:aws:logs:us-east-1:${AccountId}:log-group:/aws/lambda/*-payments-*'
+
+Outputs:
+  DeployRoleArn:
+    Description: ARN of the GitHub Actions deploy role for staging and production
+    Value: !GetAtt DeployRole.Arn
+    Export:
+      Name: payments-api-github-deploy-role-arn
