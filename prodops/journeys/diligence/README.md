@@ -178,6 +178,40 @@ A Diligence pode evoluir para incluir verificações automatizadas, dashboards d
 
 ---
 
+## Ciclos
+
+A Diligence opera em dois ciclos complementares, cada um com natureza e acionamento distintos.
+
+### diligence-sync — Reativo
+
+Acionado por eventos de outras jornadas (decisão de Assessment, experimento concluído, sinal de Operation, mudança estratégica). Produz OBC atualizado, Work Item rastreável e item posicionado corretamente na hierarquia de backlogs.
+
+```
+diligence-sync: Capture → Attach → Promote → Close
+```
+
+→ [diligence-sync.md](diligence-sync.md)
+
+### diligence-async — Proativo
+
+Iniciado por varredura periódica ou suspeita de divergência. Produz relatório de consistência e restaura a integridade do sistema de trabalho sem aguardar um evento externo.
+
+```
+diligence-async: Scan → Flag → Repair
+```
+
+→ [diligence-async.md](diligence-async.md)
+
+---
+
+## Capabilities
+
+Competências reutilizáveis consumidas pelos ciclos:
+
+→ [capabilities/README.md](capabilities/README.md)
+
+---
+
 ## Referências
 
 → [Execution Mapping](../../framework/execution-mapping/README.md)
