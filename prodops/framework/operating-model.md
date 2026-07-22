@@ -24,6 +24,7 @@ Product Repository     ←  este repositório (payments-api)
 Este repositório (`payments-api`) é um **Product Repository**. Serve como implementação de referência do Framework ProdOps. Os níveis Portfolio e Workspace existem na arquitetura e são referenciados nesta documentação; ainda não possuem repositórios físicos criados.
 
 → Ver [glossary.md](glossary.md) para definições canônicas de cada nível.
+→ Ver [ontology.md](ontology.md) para a hierarquia de conceitos estruturais (Journey, Cycle, Phase, Skill, etc.).
 
 ---
 
@@ -106,14 +107,19 @@ Journey
 ├── Assessment
 └── Diligence
   ↓
+Cycle
+├── CI Sync        (Delivery — síncrono)
+├── CI Async       (Delivery — assíncrono)
+├── diligence-sync (Diligence — reativo)
+├── diligence-async(Diligence — proativo)
+└── workspace-reconciliation (Diligence — por demanda)
+  ↓
 Phase
-├── Bootstrap
-├── Hack
-├── Sync
-├── Finish
-├── Ship
-├── Validate
-└── Promote
+├── Bootstrap · Hack · Sync · Finish        (CI Sync)
+├── Ship · Validate · Promote               (CI Async)
+├── Capture · Attach · Promote · Close      (diligence-sync)
+├── Scan · Flag · Repair                    (diligence-async)
+└── Inspect · Reconcile · Verify            (workspace-reconciliation)
   ↓
 Practice
 └── ProdOps TDD
@@ -155,13 +161,21 @@ Artifacts
 - **Upstream** — permissivo, experimental, sem compromisso de entrega e com maturidade variável
 - **Downstream** — compromisso de entrega; aplica todos os quality gates vigentes em todas as jornadas
 
-**Journey** — o caminho de trabalho dentro de um modo de execução:
+**Journey** — o caminho de trabalho com responsabilidade única:
 - Discovery, Delivery, Operation — jornadas clássicas
 - Assessment, Diligence — jornadas transversais
+- Uma Journey contém Cycles; o Execution Mode define como a Journey executa, não o que ela é.
 
-**Phase** — a sequência de estágios dentro da jornada Delivery:
+**Cycle** — agrupamento ordenado de fases dentro de uma jornada, com natureza distinta:
+- Delivery: CI Sync (síncrono) e CI Async (assíncrono)
+- Diligence: diligence-sync (reativo), diligence-async (proativo), workspace-reconciliation (por demanda)
+
+**Phase** — estágio individual e ordenado dentro de um Cycle:
 - CI Sync: Bootstrap → Hack → Sync → Finish
 - CI Async: Ship → Validate → Promote
+- diligence-sync: Capture → Attach → Promote → Close
+- diligence-async: Scan → Flag → Repair
+- workspace-reconciliation: Inspect → Reconcile → Verify
 
 **Practice** — o método utilizado durante uma fase:
 - ProdOps TDD (usado pelo Hack)

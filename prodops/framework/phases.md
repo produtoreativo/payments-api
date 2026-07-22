@@ -1,6 +1,8 @@
-# Fases da Business Intent: Concepção e Inception
+# Estágios do Ciclo de Vida da Business Intent: Concepção e Inception
 
-O ciclo de vida de uma Business Intent antes da Delivery é organizado em duas fases distintas: **Concepção** e **Inception**. Elas diferem em compromisso, governança, estado do OBC e no que pode acontecer ao trabalho.
+> **Nota terminológica:** Concepção e Inception são **Lifecycle Stages** — estágios do ciclo de vida de uma Business Intent antes da jornada Delivery. São conceitualmente distintos das **Delivery Phases** (Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote) e das **Diligence Phases** (Capture, Attach, Inspect, etc.). Quando houver ambiguidade, usar o qualificador: "Lifecycle Stage" em vez de apenas "fase". Ver [ontology.md](ontology.md).
+
+O ciclo de vida de uma Business Intent antes da Delivery é organizado em dois estágios distintos: **Concepção** e **Inception**. Eles diferem em compromisso, governança, estado do OBC e no que pode acontecer ao trabalho.
 
 ---
 

@@ -1,6 +1,6 @@
 # ProdOps Framework
 
-ProdOps é um framework de engenharia orientado a produto. Organiza o trabalho em dois caminhos — Upstream (explorar e validar) e Downstream (governar e entregar) — conectados por práticas compartilhadas, contratos e evidências.
+ProdOps é um framework de engenharia orientado a produto. Organiza o trabalho em cinco jornadas (Discovery, Delivery, Operation, Assessment, Diligence) executadas em dois modos (Upstream ou Downstream), conectadas por práticas compartilhadas, contratos e evidências.
 
 Este diretório contém a documentação do Framework aplicada a este **Product Repository** (`payments-api`). O Framework canônico é um nível acima — este repositório o adota e o estende com seus próprios artefatos de produto.
 
@@ -8,8 +8,9 @@ Este diretório contém a documentação do Framework aplicada a este **Product 
 
 | Diretório | Propósito |
 |---|---|
-| `framework/` | Princípios fundamentais e vocabulário compartilhado |
-| `journeys/delivery/` | Fases de delivery e práticas de código |
+| `framework/` | Ontologia, princípios, glossário e modelo operacional |
+| `journeys/` | As cinco jornadas: Discovery, Delivery, Operation, Assessment, Diligence |
+| `execution-model/` | Definição dos modos Upstream e Downstream |
 | `skills/` | Skills executáveis para agentes |
 | `templates/` | Templates reutilizáveis para planos, trilhas e checklists |
 
@@ -17,10 +18,13 @@ Este diretório contém a documentação do Framework aplicada a este **Product 
 
 | Documento | Propósito |
 |---|---|
+| [ontology.md](ontology.md) | **Hierarquia canônica dos conceitos:** Framework, Execution Model, Journey, Cycle, Phase, Capability, Skill, Step |
 | [glossary.md](glossary.md) | Vocabulário canônico de todos os termos |
+| [principles.md](principles.md) | Os 8 princípios fundacionais |
+| [operating-model.md](operating-model.md) | Modelo operacional e arquitetura de quatro níveis |
 | [flow.md](flow.md) | Fluxo oficial do framework |
 | [backlogs.md](backlogs.md) | Hierarquia de backlogs |
-| [phases.md](phases.md) | Fases Concepção e Inception |
+| [phases.md](phases.md) | Estágios do ciclo de vida da Business Intent: Concepção e Inception |
 | [obc.md](obc.md) | Observable Business Contract — Global OBC, Local OBC, OBC Partitioning |
 | [artifact-governance.md](artifact-governance.md) | Governança de artefatos |
 | [origin-streams.md](origin-streams.md) | As quatro origens de Intents |
@@ -34,9 +38,9 @@ Este diretório contém a documentação do Framework aplicada a este **Product 
 | [templates/obcs/global-obc.md](../templates/obcs/global-obc.md) | Criar um Global OBC no BIB (contrato estratégico de negócio) |
 | [templates/obcs/local-obc.md](../templates/obcs/local-obc.md) | Criar um Local OBC no Product Backlog (contrato de implementação de produto) |
 
-## Capacidade: OBC Partitioning
+## OBC Partitioning
 
-O **OBC Partitioning** é a capability que transforma um Global OBC em Local OBCs — um por produto envolvido. Ocorre após o Discovery no BIB. Executado pelo Portfolio PM + Tech Leads.
+O **OBC Partitioning** é o processo de governança que transforma um Global OBC em Local OBCs — um por produto envolvido. Ocorre após o Discovery no BIB. Executado pelo Portfolio PM + Tech Leads.
 
 → Definição completa: [obc.md — OBC Partitioning](obc.md#particionamento-do-obc)
 

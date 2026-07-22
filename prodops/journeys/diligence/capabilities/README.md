@@ -1,6 +1,8 @@
-# Capabilities
+# Diligence Capabilities
 
 Capabilities são competências reutilizáveis consumidas pelos ciclos da Diligence. Definem **o que é feito**, não quando nem por quem.
+
+→ Ver [ontology.md](../../framework/ontology.md) para a definição canônica de Capability e suas famílias (Delivery, Diligence, Product).
 
 | Capability | Propósito | Consumida por |
 |---|---|---|
