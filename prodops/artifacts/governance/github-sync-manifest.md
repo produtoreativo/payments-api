@@ -73,6 +73,7 @@ Criado via `gh project copy 23 --source-owner produtoreativo --target-owner prod
 | ID | `PVT_kwDOAT1J1c4BeILX` |
 | URL | https://github.com/orgs/produtoreativo/projects/24 |
 | Visibilidade | PUBLIC ✅ |
+| Repo link | `produtoreativo/payments-api` ✅ — vinculado via `linkProjectV2ToRepository` em 2026-07-22 |
 
 ### Custom Fields (gerenciado #24) — verificado via API 2026-07-22
 
@@ -170,6 +171,7 @@ Nenhum Issue de infraestrutura aberto neste ciclo.
 | 2026-07-22 | diligence-agent | PARCIAL | Issues #57-62 criados. Label operation:provision criada. |
 | 2026-07-22 | christiano.m.almeida | REVISÃO | Separação gerenciado/manual estabelecida. Projeto gerenciado "ProdOps — payments-api" ainda não criado. |
 | 2026-07-22 | christiano.m.almeida | REVISÃO | Modelo de dois projetos: template canônico + gerenciado por repo. Fluxo: criar template → provisionar campos → mark-template → copy para repo. |
+| 2026-07-22 | christiano.m.almeida | CORRIGIDO | Projeto gerenciado #24 não estava vinculado ao repositório. `gh project copy` não cria o vínculo automaticamente. Vinculado via `linkProjectV2ToRepository` (GraphQL). Canonical Specification, Inspect e Reconcile atualizados. |
 | 2026-07-22 | diligence-agent | PARCIAL | workspace-reconciliation completo. Template #23 criado, campos 7/8 provisionados, mark-template executado. Gerenciado #24 criado via copy. Issues #57-62 atualizados para referenciar template. Labels CONFORME 37/37. Views 0/5 PENDENTE manual. |
 | 2026-07-22 | christiano.m.almeida + diligence-agent | CONFORME (views) | Views criadas via REST POST /projectsV2/{N}/views. 5/5 views em template #23 e gerenciado #24. Issues #58-62 fechados. Endpoint correto descoberto: projectsV2 (não projects). group_by não disponível via API. |
 | 2026-07-22 | christiano.m.almeida | CONFORME (campos) | Evidence Required criado como SINGLE_SELECT (fallback GitOps — CHECKBOX ausente do enum). Issue #57 fechado. Template #23 e gerenciado #24 agora CONFORME 8/8 campos. |

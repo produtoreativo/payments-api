@@ -174,6 +174,18 @@ gh project edit <number> --owner <org> --visibility PUBLIC   # público por defa
 **Pré-requisito:** o template deve existir e estar configurado antes da cópia.
 **Visibilidade:** PUBLIC por default. `gh project copy` herda a visibilidade do source — verificar e corrigir após cópia se necessário.
 
+**Vínculo com o repositório (obrigatório, não automático):** `gh project copy` copia campos e views mas **não** vincula o projeto ao repositório. Executar imediatamente após a cópia:
+```bash
+gh api graphql -f query='
+  mutation {
+    linkProjectV2ToRepository(input: {
+      projectId: "<project-id>"
+      repositoryId: "<repo-id>"
+    }) { repository { nameWithOwner } }
+  }'
+```
+O Inspect verifica o vínculo; o Reconcile o cria automaticamente.
+
 ### Custom Fields canônicos (obrigatórios em ambos os projetos)
 
 | Campo | Tipo | Opções / Formato |

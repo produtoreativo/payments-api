@@ -199,6 +199,44 @@ gh project edit $NUMBER --owner <owner> --visibility PUBLIC
 
 Registrar o número retornado no sync manifest.
 
+**Obrigatório após copy — vincular o projeto ao repositório:**
+
+> `gh project copy` copia campos e views, mas **não** vincula o projeto ao repositório. O vínculo deve ser criado explicitamente via GraphQL.
+
+```bash
+# Obter IDs do projeto recém-criado e do repositório
+PROJECT_ID=$(gh api graphql -f query='
+  { organization(login: "<owner>") { projectV2(number: '"$NUMBER"') { id } } }
+' --jq '.data.organization.projectV2.id')
+
+REPO_ID=$(gh api graphql -f query='
+  { repository(owner: "<owner>", name: "<repo-name>") { id } }
+' --jq '.data.repository.id')
+
+# Vincular
+gh api graphql -f query='
+  mutation {
+    linkProjectV2ToRepository(input: {
+      projectId: "'"$PROJECT_ID"'"
+      repositoryId: "'"$REPO_ID"'"
+    }) {
+      repository { nameWithOwner }
+    }
+  }'
+```
+
+Verificar vínculo após criação:
+```bash
+gh api graphql -f query='
+  { organization(login: "<owner>") {
+      projectV2(number: '"$NUMBER"') {
+        repositories(first: 5) { nodes { nameWithOwner } }
+      }
+  }}'
+```
+
+Registrar no sync manifest: `Repo link: <owner>/<repo-name> ✅`.
+
 Se `GERENCIADO PRIVADO` no Drift Report (projeto existe mas está privado):
 
 ```bash

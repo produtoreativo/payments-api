@@ -85,7 +85,7 @@ gh project list --owner <owner> --format json \
 **Se não encontrado:** registrar `PROJETO GERENCIADO AUSENTE`. O Reconcile criará via cópia do template.
 Não continuar para campos e views.
 
-**Se encontrado:** verificar visibilidade e campos canônicos:
+**Se encontrado:** verificar visibilidade, vínculo com repositório e campos canônicos:
 
 ```bash
 gh project list --owner <owner> --format json \
@@ -93,6 +93,25 @@ gh project list --owner <owner> --format json \
 ```
 
 Registrar: `GERENCIADO PRIVADO` se `public: false`.
+
+**Verificar vínculo com o repositório** — `gh project copy` não vincula automaticamente:
+
+```bash
+gh api graphql -f query='
+{
+  organization(login: "<owner>") {
+    projectV2(number: <managed-number>) {
+      repositories(first: 10) {
+        nodes { nameWithOwner }
+      }
+    }
+  }
+}'
+```
+
+Registrar: `REPO LINK AUSENTE: <owner>/<repo-name>` se o repositório não estiver na lista.
+
+> **Nota:** `gh project copy` copia campos e views, mas **não** vincula o projeto copiado ao repositório de origem. O vínculo deve ser criado explicitamente via `linkProjectV2ToRepository` (step 4a do Reconcile).
 
 ```bash
 gh project field-list <managed-number> --owner <owner> --format json \
