@@ -55,6 +55,9 @@ Este documento responde: o que provavelmente aconteceu, quais sinais teriam apar
 | PMT-PRE-006 | Times não conseguem diagnosticar falhas rapidamente. | Logs sem correlationId, dashboards incompletos ou eventos sem identificadores comuns. | MTTR alto e decisão por percepção, não por evidências. | Incidentes dependem de consulta manual em banco/provedor; Atendimento sem status confiável. | Padronizar logs e eventos com orderId, invoiceId, paymentId, providerPaymentId e correlationId. |
 | PMT-PRE-007 | Criação de invoice gera cobrança duplicada. | Retentativa do Checkout após timeout sem idempotência consistente. | Cliente pode pagar duplicado; conciliação e suporte ficam comprometidos. | Mesmo orderId com mais de uma invoice aberta no provedor. | Exigir chave de idempotência por operação e bloquear duplicidade por orderId + método + tenant. |
 | PMT-PRE-008 | A sprint entrega endpoints, mas não entrega operabilidade. | Scrum foca itens funcionais e deixa alertas, runbooks e dashboards para depois. | Go-live tecnicamente possível, mas operacionalmente frágil. | Histórias sem critério de observabilidade; ausência de runbook para incidentes conhecidos. | Incluir Definition of Done operacional para cada história da sprint. |
+| PMT-PRE-009 | Pagamento falha em produção por throttling no DynamoDB. | Tabelas ainda operando com BillingMode PROVISIONED (1 WCU padrão) — qualquer carga real excede o limite. | Criação de invoice ou confirmação de pagamento começa a retornar erro 500; clientes impactados. | `ProvisionedThroughputExceededException` em logs do Lambda; latência da API aumenta abruptamente. | Garantir que todas as tabelas de produção operem com PAY_PER_REQUEST antes do go-live — validar via `describe-table` no pipeline. |
+| PMT-PRE-010 | Dado de pagamento corrompido ou deletado incorretamente sem possibilidade de recuperação. | PITR não habilitado nas tabelas de produção — ausência de backup contínuo significa perda irreversível de dados. | Perda de dados de pagamento, inconsistência entre Payments e Ecommerce, risco regulatório. | Incidente detectado somente após operação de escrita ou delete que corrompeu dados; sem snapshot recente disponível. | Habilitar PITR em todas as tabelas críticas (`UpdateContinuousBackups`) antes de qualquer carga de produção — validar via `describe-continuous-backups`. |
+| PMT-PRE-011 | Deploy não autorizado em produção altera comportamento da API sem aprovação. | Pipeline de CI/CD sem gate de aprovação humana — qualquer push em main pode triggerar deploy em produção. | Mudança não revisada chega a produção; incidente difícil de atribuir; rollback manual necessário. | Deploy concluído sem registro de aprovação; ausência de rastro auditável no GitHub Actions. | Configurar `workflow_dispatch` exclusivo e GitHub Environment `production` com Required Reviewers — bloquear qualquer trigger automático por push. |
 
 ## 6. Perguntas que precisam de resposta antes da sprint
 
@@ -81,6 +84,9 @@ Este documento responde: o que provavelmente aconteceu, quais sinais teriam apar
 | Operação | Runbook para falha de invoice, confirmação ausente, notificação ausente e rollback da flag. | Aberto |
 | Atendimento | Consulta ou procedimento para informar status confiável ao cliente. | Aberto |
 | Segurança | Segredos e payloads sensíveis do provedor mascarados em logs e auditoria. | Aberto |
+| Persistência | DynamoDB produção com PAY_PER_REQUEST e PITR habilitado em todas as tabelas críticas. | Fechado — EXP-011 concluído |
+| Observabilidade | Datadog ativo em produção com traces e log injection (DD_TRACE_ENABLED=true, DD_LOGS_INJECTION=true). | Fechado — EXP-010 concluído |
+| CI/CD | Deploy em produção exige aprovação do Required Reviewer via GitHub Environment — sem deploy manual não rastreado. | Fechado — EXP-012 concluído |
 
 ## 8. Plano de redução de risco
 
