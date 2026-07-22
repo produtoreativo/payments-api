@@ -1,6 +1,7 @@
 ---
 name: diligence
 description: Synchronize OBC state across backlogs and tools. Runs event-driven cycle (diligence-sync) or proactive drift-scan cycle (diligence-async). Never touches product code.
+argument-hint: "[diligence-sync|diligence-async|full] [obc-id]"
 ---
 
 Parse `$ARGUMENTS` as `<scope> <obc-id>`.
@@ -10,6 +11,7 @@ Supported scopes:
 - `diligence-sync`
 - `diligence-async`
 - `full`
+- `workspace-reconciliation`
 
 When scope is omitted, use `diligence-sync` temporarily and report the default explicitly.
 

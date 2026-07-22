@@ -1,6 +1,7 @@
 ---
 name: hack
 description: Execute implementation work with TDD. Use when changing code, behavior, contracts, tests, or release artifacts as part of a ProdOps-backed task.
+argument-hint: "[start|tdd|commit]"
 ---
 
 If "$ARGUMENTS" matches a listed step (`start`, `tdd`, `commit`), spawn the corresponding worker agent:

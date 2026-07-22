@@ -1,6 +1,7 @@
 ---
 name: downstream
 description: Execute ProdOps Downstream readiness and CI Sync, CI Async, or the complete delivery flow.
+argument-hint: "[ci-sync|ci-async|full] [capability]"
 ---
 
 Parse `$ARGUMENTS` as `<scope> <capability>`.
