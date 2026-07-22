@@ -37,25 +37,40 @@ No corpo do OBC, registrar:
 - Jornada que produziu a decisão (Assessment, Discovery, Operation)
 - Referência ao artefato fonte (experiment.md, risks.md, trail)
 
-### 4. Commit do OBC
+### 4. Commit do artefato
 
+Para OBC:
 ```bash
 git add prodops/artifacts/business/obcs/<obc-id>.md
 git commit -m "docs(diligence): capture OBC state from <trigger>"
 ```
 
+Para Business Signal (tracking list):
+```bash
+git add prodops/artifacts/product/backlogs/tracking-list.md
+git commit -m "docs(diligence): capture business signal — <descrição curta>"
+```
+
+### 5. Sinalizar Attach como obrigatório para Business Signals
+
+Quando o artefato capturado for um **Business Signal** (entrada na tracking list), o step Attach é obrigatório imediatamente após Capture — não é opcional. Business Signals exigem um GitHub Issue correspondente (Business Signal Issue). O ciclo diligence-sync não está completo para um Business Signal sem o Issue criado.
+
+Registrar explicitamente antes de encerrar: "Business Signal capturado — Attach obrigatório para criar o GitHub Issue."
+
 ## Post-conditions
 
 Concluído quando **todos** os itens abaixo são verdadeiros:
 
-- OBC committed com estado canônico atualizado
+- Artefato committed com estado canônico atualizado
 - Decisão registrada com data, justificativa e referência ao artefato fonte
-- Nenhum Work Item criado (responsabilidade de Attach)
+- Se Business Signal: Attach sinalizado como próximo step obrigatório
+- Nenhum Work Item criado neste step (responsabilidade de Attach)
 
 ## Guardrails
 
 - Não criar Work Items neste step — isso é Attach.
 - Não inventar decisões que não estão documentadas no artefato fonte.
+- Não encerrar o ciclo diligence-sync após Capture quando o artefato for um Business Signal — Attach é sempre o próximo step.
 - Não alterar BDD Features ou Reliability Plan — responsabilidade de Delivery ou Assessment.
 - Se o OBC exigir uma nova decisão de produto para ser atualizado, parar e surfacing como bloqueador.
 
