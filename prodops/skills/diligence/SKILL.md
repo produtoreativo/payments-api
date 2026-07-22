@@ -98,9 +98,9 @@ Nunca executar como ciclo standalone. Sempre retornar o Conformance Report ao ca
 ### Guardrails de Workspace Reconciliation
 
 - **Workspace Reconciliation é uma capability, não um ciclo** — nunca executar standalone; sempre invocada por Bootstrap, Diligence Async ou Diligence Sync.
-- **Tentar API antes de declarar impossibilidade** — nunca assumir que uma API não existe sem executar a tentativa e capturar o erro.
+- **Automation First (Princípio 8)** — tentar API → MCP → CLI → SDK → Browser Automation antes de declarar impossibilidade. Nunca instruir o usuário a executar ações manualmente sem antes demonstrar que todas as opções de automação foram esgotadas. Ver [automation-first.md](../../framework/automation-first.md).
 - **Nenhum gap sem Issue de rastreamento** — qualquer ação que não pode ser automatizada gera um Issue com título `infra: <descrição>`, labels `operation:provision` e `journey:diligence`, e corpo com o erro de API, a ação requerida e o critério de resolução.
-- **Nunca declarar "ação manual" como texto flutuante** — a instrução para o humano vai no corpo do Issue, não como mensagem de output do agente.
+- **Nunca declarar "ação manual" como texto flutuante** — a instrução para o humano vai no corpo do Issue, não como mensagem de output do agente. O output do agente lista Automation Opportunities e Known Platform Limitations.
 - **Sync manifest como registro de verdade** — o manifest registra: CONFORME (verificado via API neste ciclo), PARCIAL (Issue #X aberto com gap documentado) ou NÃO CONFORME (problema automatizável não resolvido).
 - Scripts temporários de Reconcile criados no scratchpad devem ser documentados no Histórico do manifest com path e resultado.
 

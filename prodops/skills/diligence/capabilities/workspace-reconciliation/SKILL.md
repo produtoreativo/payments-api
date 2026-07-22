@@ -71,15 +71,30 @@ Seguir: [steps/verify/SKILL.md](steps/verify/SKILL.md)
 ║  Milestones    ✅ N/A         — nenhum OBC com release       ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  Resultado geral: CONFORME | PARCIAL | NÃO CONFORME          ║
+╠══════════════════════════════════════════════════════════════╣
+║  Automation Opportunities (se houver)                        ║
+║  - <ação> — aguardando autorização para Browser Automation   ║
+╠══════════════════════════════════════════════════════════════╣
+║  Known Platform Limitations (se houver)                      ║
+║  - group_by: GitHub API não suporta (REST 404, sem GraphQL)  ║
+╠══════════════════════════════════════════════════════════════╣
+║  Próxima Ação (se Automation Opportunities presentes)        ║
+║  Posso executar via Browser Automation. Deseja que execute?  ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
+
+Quando não há Workspace Drift: reportar "Desired state satisfied. No reconciliation actions required." — nunca "Reconcile skipped."
 
 ### 6. Retornar ao caller
 
 Entregar o Conformance Report ao caller com:
 - Resultado geral: `CONFORME`, `PARCIAL` ou `NÃO CONFORME`
 - Issues abertos para gaps não automatizáveis (com número e link)
-- Qualquer ação pendente de humano (Product Owner, operação manual)
+- Seção "Automation Opportunities" para ações realizáveis via Browser Automation aguardando autorização
+- Seção "Known Platform Limitations" para limitações demonstradas de API com rastreamento via Issue
+- Ações pendentes de Product Owner (ex: criação de Milestones) referenciadas por Issue — nunca como instrução flutuante
+
+Quando não há Workspace Drift: reportar "Desired state satisfied. No reconciliation actions required." — nunca "Reconcile skipped."
 
 ## Post-conditions
 
@@ -98,6 +113,7 @@ Concluído quando **todos** os itens abaixo são verdadeiros:
 - **Ordem obrigatória:** Inspect → (Reconcile se drift) → Verify. Nunca inverter.
 - **Identificar projetos por nome exato, nunca por número.**
 - **Sync manifest é atualizado apenas pelo Verify** — nunca pelo Inspect ou Reconcile.
+- **Automation First (Princípio 8)** — tentar API → MCP → CLI → SDK → Browser Automation antes de declarar qualquer limitação. Manual Exception somente quando tudo falhar, sempre com Issue de rastreamento aberto. Ver [automation-first.md](../../../../framework/automation-first.md).
 
 ## References
 

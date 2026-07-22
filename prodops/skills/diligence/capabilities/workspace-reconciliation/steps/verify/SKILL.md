@@ -33,7 +33,7 @@ Comparar com OBCs no Iteration Plan que têm release definida. Para cada Milesto
 gh project field-list <number> --owner <owner> --format json
 ```
 
-Verificar quais campos canônicos existem. `Evidence Required` (CHECKBOX): verificar se existe entre os campos retornados. Se ausente, manter como `PENDENTE manual`.
+Verificar quais campos canônicos existem. `Evidence Required` (CHECKBOX): verificar se existe entre os campos retornados. Se ausente, registrar como `PENDENTE — Issue #X documentado` (abrir Issue de rastreamento se ainda não existir).
 
 ### 4. Verificar Views via GraphQL
 
@@ -50,7 +50,7 @@ query {
 }'
 ```
 
-Comparar nomes retornados com a lista canônica. Para cada view canônica: `CONFORME` se existe, `PENDENTE manual` se ausente.
+Comparar nomes retornados com a lista canônica. Para cada view canônica: `CONFORME` se existe, `PENDENTE — Issue #X documentado` se ausente (abrir Issue de rastreamento se ainda não existir). Views extras (não canônicas) detectadas: registrar em "Automation Opportunities" como candidatas a remoção via Browser Automation.
 
 ### 5. Produzir Conformance Report
 
@@ -66,22 +66,34 @@ Comparar nomes retornados com a lista canônica. Para cada view canônica: `CONF
 ║                ⚠️  PENDENTE   — v1.2 ausente (Product Owner) ║
 ║                                                              ║
 ║  Custom Fields ✅ CONFORME    — 8/8 campos                   ║
-║                ⚠️  PARCIAL    — Evidence Required pendente   ║
+║                ⚠️  PARCIAL    — Evidence Required            ║
+║                               PENDENTE — Issue #X           ║
 ║                                                              ║
 ║  Views         ✅ CONFORME    — 5/5 views                    ║
-║                ⚠️  PENDENTE   — 3 views ausentes (manual)    ║
+║                ⚠️  PENDENTE   — 3 views ausentes             ║
+║                               PENDENTE — Issue #X           ║
 ║                                                              ║
 ║  Project       ✅ CONFORME    — Project #<N> acessível       ║
-║                ⚠️  AUSENTE    — ação manual obrigatória      ║
+║                ⚠️  AUSENTE    — DIVERGENTE — reconcile req.  ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  Resultado geral: CONFORME | PARCIAL | NÃO CONFORME          ║
+╠══════════════════════════════════════════════════════════════╣
+║  Automation Opportunities                                    ║
+║  - Remover "View 1" — aguardando autorização Browser Auto.   ║
+║  - Remover "test-view" — aguardando autorização Browser Auto.║
+╠══════════════════════════════════════════════════════════════╣
+║  Known Platform Limitations                                  ║
+║  - group_by: GitHub API não suporta (REST 404, sem GraphQL)  ║
+╠══════════════════════════════════════════════════════════════╣
+║  Próxima Ação                                                ║
+║  Posso executar via Browser Automation. Deseja que execute?  ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
 **Critério de resultado:**
-- `CONFORME` — todas as 4 categorias sem divergências automatizáveis pendentes
-- `PARCIAL` — divergências manuais pendentes (Views, Checkbox, Milestones) mas nada automatizável restante
-- `NÃO CONFORME` — Labels ou Fields automatizáveis ainda divergentes (Reconcile não foi executado ou falhou)
+- `CONFORME` — todas as 4 categorias sem divergências automatizáveis pendentes. Quando não há Workspace Drift: reportar "Desired state satisfied. No reconciliation actions required." — nunca "Reconcile skipped."
+- `PARCIAL` — divergências com Issue de rastreamento aberto (Views, Checkbox, Milestones) mas nada automatizável restante
+- `NÃO CONFORME` — Labels ou Fields automatizáveis ainda divergentes (Reconcile não foi executado ou falhou); ou projeto ausente (requer `gh project create` — DIVERGENTE, não "ação manual")
 
 ### 5b. Verificar Issues de infraestrutura abertos
 
@@ -114,7 +126,9 @@ Concluído quando **todos** os itens abaixo são verdadeiros:
 
 - **Verificar todas as 4 categorias** — não pular nenhuma mesmo que o manifest indique conformidade anterior.
 - Nunca marcar uma categoria como `CONFORME` no manifest sem ter verificado via API nesta execução.
-- Distinguir claramente entre `PENDENTE manual` (requer ação humana) e `NÃO CONFORME automatizável` (requer re-executar Reconcile).
+- Distinguir claramente entre `PENDENTE — Issue #X documentado` (gap com rastreamento) e `NÃO CONFORME automatizável` (requer re-executar Reconcile). Nunca usar `PENDENTE manual` como status — toda pendência deve ter um Issue de rastreamento.
+- **Automation First (Princípio 8)** — projeto ausente é sempre `DIVERGENTE — reconcile required` (automatizável via `gh project create`), nunca "ação manual obrigatória". Ver [automation-first.md](../../../../../framework/automation-first.md).
+- Sempre incluir seções "Automation Opportunities" e "Known Platform Limitations" no Conformance Report quando aplicável.
 - Atualizar o manifest é obrigatório — Verify sem atualização de manifest não está completo.
 
 ## Out of scope

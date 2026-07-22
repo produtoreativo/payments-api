@@ -178,7 +178,7 @@ curl -s -X POST "https://api.github.com/orgs/<owner>/projectsV2/$N/views" \
   -d '{"name":"Diligence","layout":"table","filter":"label:journey:diligence"}'
 ```
 
-**`group_by`:** não configurável via API (REST PATCH retorna 404, GraphQL sem mutation). Configurar manualmente na UI após criação se desejado — não impede o uso das views.
+**`group_by`:** Known Platform Limitation — GitHub API não suporta configuração de `group_by` em views (REST PATCH retorna 404, GraphQL sem mutation existente). Registrar no Conformance Report em "Known Platform Limitations". Automation Opportunity: configuração pode ser realizada via Browser Automation — registrar em "Automation Opportunities" e solicitar autorização ao usuário antes de executar. Nunca instruir o usuário a configurar manualmente. Ver Princípio 8 — [Automation First](../../../../../framework/automation-first.md).
 
 ### 4. Projeto gerenciado — criar via cópia ou provisionar campos ausentes
 
@@ -278,9 +278,9 @@ Concluído quando **todos** os itens abaixo são verdadeiros:
 - **Projetos gerenciados são PUBLIC por default** — aplicar `gh project edit --visibility PUBLIC` imediatamente após criar ou copiar. Alterar para PRIVATE somente com diretiva explícita do usuário.
 - **Nunca criar campos ou views em projetos manuais** — verificar nome antes de qualquer operação de field/view.
 - **Ordem obrigatória:** template antes do projeto gerenciado — a cópia depende do template existir.
-- **Tentar API antes de declarar impossibilidade** — sempre executar a tentativa e capturar o erro.
+- **Automation First (Princípio 8)** — tentar API → MCP → CLI → SDK → Browser Automation antes de declarar impossibilidade. Ver [automation-first.md](../../../../../framework/automation-first.md).
 - **Nenhum gap sem Issue** — divergências não automatizáveis geram Issue com responsável e critério de resolução.
-- **Nunca declarar "ação manual" como texto flutuante** — a instrução vai no corpo do Issue.
+- **Nunca declarar "ação manual" como texto flutuante** — a instrução vai no corpo do Issue; o output do Reconcile lista Automation Opportunities e Known Platform Limitations.
 - Nunca remover labels, views ou fields sem confirmação explícita.
 - Nunca criar Milestones — criar Issue para o Product Owner.
 

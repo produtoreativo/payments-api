@@ -198,7 +198,7 @@ gh project edit <number> --owner <org> --visibility PUBLIC   # público por defa
 > ```
 > Endpoint: `/orgs/{org}/projectsV2/{N}/views` (atenção: `projectsV2`, não `projects`).
 > Suporta: `name`, `layout` (table/board/roadmap), `filter`.
-> **`group_by`:** não configurável via API (GraphQL sem mutation, REST PATCH retorna 404). Configurar manualmente na UI se necessário — não bloqueia funcionalidade.
+> **`group_by`:** Known Platform Limitation — GitHub API não suporta configuração de `group_by` em views (REST PATCH retorna 404, GraphQL sem mutation existente). Automation Opportunity via Browser Automation — o agente pode configurar via Browser Automation mediante autorização do usuário. Nunca instruir o usuário a configurar manualmente. Ver Princípio 8 — [Automation First](automation-first.md).
 
 | View | Filtro | Agrupamento | Propósito |
 |---|---|---|---|
@@ -209,10 +209,9 @@ gh project edit <number> --owner <org> --visibility PUBLIC   # público por defa
 | `Diligence` | `label:journey:diligence` | Operation | Trabalho ativo da jornada Diligence |
 
 **Criar as views no template (uma vez):**
-1. Abrir `ProdOps — template` no GitHub
-2. Para cada view: clicar em `+ New view`, nomear e configurar filtro e agrupamento
-3. Executar `workspace-reconciliation verify` para confirmar via GraphQL
-4. A partir daí, todos os novos projetos herdam as views via `gh project copy`
+As views canônicas são criadas automaticamente pelo step `reconcile` da capability `workspace-reconciliation` via REST API. Executar `workspace-reconciliation reconcile` — o agente cria as views programaticamente e confirma via `workspace-reconciliation verify`. A partir daí, todos os novos projetos herdam as views via `gh project copy`.
+
+> **Nota histórica:** versões anteriores desta especificação descreviam a criação manual de views via UI do GitHub. Esse fluxo foi supersedido pela automação REST API (verificada em 2026-07-22). Ver Princípio 8 — [Automation First](automation-first.md).
 
 ---
 

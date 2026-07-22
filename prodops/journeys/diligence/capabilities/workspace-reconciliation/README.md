@@ -146,8 +146,8 @@ O ciclo Diligence Sync pode invocar Workspace Reconciliation quando o step Attac
 - **Nunca operar em projetos manuais** — qualquer projeto cujo nome não comece com `ProdOps — ` é ignorado.
 - **Identificar projetos por nome exato, nunca por número** — o número muda a cada recriação; o nome é o contrato.
 - **Nenhum gap sem Issue de rastreamento** — divergências não automatizáveis geram Issue com responsável e critério de resolução.
-- **Nunca declarar "ação manual" como texto flutuante** — a instrução para o humano vai no corpo do Issue.
-- **Tentar API antes de declarar impossibilidade** — executar a tentativa e capturar o erro antes de abrir Issue.
+- **Nunca declarar "ação manual" como texto flutuante** — a instrução para o humano vai no corpo do Issue; o output lista Automation Opportunities e Known Platform Limitations.
+- **Automation First (Princípio 8)** — tentar API → MCP → CLI → SDK → Browser Automation antes de declarar qualquer limitação. Manual Exception somente quando tudo falhar, sempre com Issue de rastreamento aberto. Ver [automation-first.md](../../../../framework/automation-first.md).
 - **Sync manifest como registro de verdade** — atualizado pelo Verify ao final de cada execução.
 
 ---
