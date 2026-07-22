@@ -14,22 +14,15 @@ Diligence é a jornada transversal que mantém o sistema de trabalho do ProdOps 
 | `/diligence diligence-sync <obc-id>` | Capture → Attach → Promote → Close para o OBC informado |
 | `/diligence diligence-async` | Scan → Flag → Repair em todos os OBCs e Issues ativos |
 | `/diligence full <obc-id>` | diligence-sync para o OBC + diligence-async |
+| `/diligence workspace-reconciliation` | Inspect → Reconcile → Verify do GitHub Workspace. Invocável pelo usuário e pelos ciclos. |
 
 Quando o escopo é omitido, usar `diligence-sync` e reportar essa escolha explicitamente.
-
-## Capabilities
-
-Capabilities são competências reutilizáveis invocadas pelos ciclos e pelo Bootstrap — nunca executadas standalone como um terceiro ciclo.
-
-| Capability | Entry point | Invocada por |
-|---|---|---|
-| `workspace-reconciliation` | [capabilities/workspace-reconciliation/SKILL.md](capabilities/workspace-reconciliation/SKILL.md) | Bootstrap, Diligence Async (quando Scan detecta drift de infra), Diligence Sync (quando Attach/Promote falha por ausência de label/campo) |
 
 ## Steps
 
 Quando invocado com argumento de step (`/diligence diligence-sync capture`), executar apenas aquele step.
 
-| Ciclo / Capability | Step | Arquivo |
+| Command | Step | Arquivo |
 |---|---|---|
 | diligence-sync | `capture` | [steps/capture/SKILL.md](steps/capture/SKILL.md) |
 | diligence-sync | `attach` | [steps/attach/SKILL.md](steps/attach/SKILL.md) |
@@ -38,9 +31,9 @@ Quando invocado com argumento de step (`/diligence diligence-sync capture`), exe
 | diligence-async | `scan` | [steps/scan/SKILL.md](steps/scan/SKILL.md) |
 | diligence-async | `flag` | [steps/flag/SKILL.md](steps/flag/SKILL.md) |
 | diligence-async | `repair` | [steps/repair/SKILL.md](steps/repair/SKILL.md) |
-| workspace-reconciliation (capability) | `inspect` | [capabilities/workspace-reconciliation/steps/inspect/SKILL.md](capabilities/workspace-reconciliation/steps/inspect/SKILL.md) |
-| workspace-reconciliation (capability) | `reconcile` | [capabilities/workspace-reconciliation/steps/reconcile/SKILL.md](capabilities/workspace-reconciliation/steps/reconcile/SKILL.md) |
-| workspace-reconciliation (capability) | `verify` | [capabilities/workspace-reconciliation/steps/verify/SKILL.md](capabilities/workspace-reconciliation/steps/verify/SKILL.md) |
+| workspace-reconciliation | `inspect` | [capabilities/workspace-reconciliation/steps/inspect/SKILL.md](capabilities/workspace-reconciliation/steps/inspect/SKILL.md) |
+| workspace-reconciliation | `reconcile` | [capabilities/workspace-reconciliation/steps/reconcile/SKILL.md](capabilities/workspace-reconciliation/steps/reconcile/SKILL.md) |
+| workspace-reconciliation | `verify` | [capabilities/workspace-reconciliation/steps/verify/SKILL.md](capabilities/workspace-reconciliation/steps/verify/SKILL.md) |
 
 ## Inputs
 
@@ -66,15 +59,15 @@ Parar em qualquer bloqueio. Registrar o artefato ausente, a jornada responsável
 2. **Flag** — classificar divergências com severidade e ação corretora.
 3. **Repair** — executar correções dos itens reparáveis; escalar itens bloqueados.
 
-## Workspace Reconciliation (capability)
+## Workspace Reconciliation
 
-Invocada pelo Bootstrap, Diligence Async (quando Scan detecta Workspace Drift) e Diligence Sync (quando Attach/Promote falha por ausência de infraestrutura).
+Compara a Canonical Specification (`prodops/framework/github-workspace.md`) com o Actual Workspace (estado real do GitHub via API) e reconcilia divergências.
 
-1. **Inspect** — ler Canonical Specification (`prodops/framework/github-workspace.md`) e Actual Workspace via GitHub API; produzir Drift Report.
-2. **Reconcile** — criar labels ausentes, corrigir divergentes, adicionar custom fields ao Project, criar views via REST. Nunca remove sem confirmação. Para gaps não automatizáveis: abrir Issue de rastreamento.
+1. **Inspect** — ler spec e estado real; produzir Drift Report.
+2. **Reconcile** — criar labels ausentes, custom fields, views, vínculo repo↔projeto. Nunca remove sem confirmação. Para gaps não automatizáveis: abrir Issue.
 3. **Verify** — confirmar conformidade pós-Reconcile, produzir Conformance Report e atualizar sync manifest.
 
-Nunca executar como ciclo standalone. Sempre retornar o Conformance Report ao caller.
+Invocável pelo usuário (`/diligence workspace-reconciliation`) e pelos ciclos (Bootstrap, Diligence Async, Diligence Sync). Sempre retorna o Conformance Report ao caller.
 
 ## Guardrails
 
@@ -97,7 +90,7 @@ Nunca executar como ciclo standalone. Sempre retornar o Conformance Report ao ca
 
 ### Guardrails de Workspace Reconciliation
 
-- **Workspace Reconciliation é uma capability, não um ciclo** — nunca executar standalone; sempre invocada por Bootstrap, Diligence Async ou Diligence Sync.
+- **Workspace Reconciliation é um command** — invocável diretamente pelo usuário com `/diligence workspace-reconciliation` ou pelos ciclos (Bootstrap, Async, Sync).
 - **Automation First (Princípio 8)** — tentar API → MCP → CLI → SDK → Browser Automation antes de declarar impossibilidade. Nunca instruir o usuário a executar ações manualmente sem antes demonstrar que todas as opções de automação foram esgotadas. Ver [automation-first.md](../../framework/automation-first.md).
 - **Nenhum gap sem Issue de rastreamento** — qualquer ação que não pode ser automatizada gera um Issue com título `infra: <descrição>`, labels `operation:provision` e `journey:diligence`, e corpo com o erro de API, a ação requerida e o critério de resolução.
 - **Nunca declarar "ação manual" como texto flutuante** — a instrução para o humano vai no corpo do Issue, não como mensagem de output do agente. O output do agente lista Automation Opportunities e Known Platform Limitations.
