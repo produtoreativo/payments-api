@@ -13,16 +13,23 @@ Diligence é a jornada transversal que mantém o sistema de trabalho do ProdOps 
 |---|---|
 | `/diligence diligence-sync <obc-id>` | Capture → Attach → Promote → Close para o OBC informado |
 | `/diligence diligence-async` | Scan → Flag → Repair em todos os OBCs e Issues ativos |
-| `/diligence diligence-infra` | Workspace → Provision → Verify na infraestrutura do GitHub |
-| `/diligence full <obc-id>` | diligence-sync para o OBC + diligence-async + diligence-infra |
+| `/diligence full <obc-id>` | diligence-sync para o OBC + diligence-async |
 
 Quando o escopo é omitido, usar `diligence-sync` e reportar essa escolha explicitamente.
+
+## Capabilities
+
+Capabilities são competências reutilizáveis invocadas pelos ciclos e pelo Bootstrap — nunca executadas standalone como um terceiro ciclo.
+
+| Capability | Entry point | Invocada por |
+|---|---|---|
+| `workspace-reconciliation` | [capabilities/workspace-reconciliation/SKILL.md](capabilities/workspace-reconciliation/SKILL.md) | Bootstrap, Diligence Async (quando Scan detecta drift de infra), Diligence Sync (quando Attach/Promote falha por ausência de label/campo) |
 
 ## Steps
 
 Quando invocado com argumento de step (`/diligence diligence-sync capture`), executar apenas aquele step.
 
-| Ciclo | Step | Arquivo |
+| Ciclo / Capability | Step | Arquivo |
 |---|---|---|
 | diligence-sync | `capture` | [steps/capture/SKILL.md](steps/capture/SKILL.md) |
 | diligence-sync | `attach` | [steps/attach/SKILL.md](steps/attach/SKILL.md) |
@@ -31,9 +38,9 @@ Quando invocado com argumento de step (`/diligence diligence-sync capture`), exe
 | diligence-async | `scan` | [steps/scan/SKILL.md](steps/scan/SKILL.md) |
 | diligence-async | `flag` | [steps/flag/SKILL.md](steps/flag/SKILL.md) |
 | diligence-async | `repair` | [steps/repair/SKILL.md](steps/repair/SKILL.md) |
-| diligence-infra | `workspace` | [steps/workspace/SKILL.md](steps/workspace/SKILL.md) |
-| diligence-infra | `provision` | [steps/provision/SKILL.md](steps/provision/SKILL.md) |
-| diligence-infra | `verify` | [steps/verify/SKILL.md](steps/verify/SKILL.md) |
+| workspace-reconciliation (capability) | `inspect` | [capabilities/workspace-reconciliation/steps/inspect/SKILL.md](capabilities/workspace-reconciliation/steps/inspect/SKILL.md) |
+| workspace-reconciliation (capability) | `reconcile` | [capabilities/workspace-reconciliation/steps/reconcile/SKILL.md](capabilities/workspace-reconciliation/steps/reconcile/SKILL.md) |
+| workspace-reconciliation (capability) | `verify` | [capabilities/workspace-reconciliation/steps/verify/SKILL.md](capabilities/workspace-reconciliation/steps/verify/SKILL.md) |
 
 ## Inputs
 
@@ -59,13 +66,15 @@ Parar em qualquer bloqueio. Registrar o artefato ausente, a jornada responsável
 2. **Flag** — classificar divergências com severidade e ação corretora.
 3. **Repair** — executar correções dos itens reparáveis; escalar itens bloqueados.
 
-## Diligence Infra flow
+## Workspace Reconciliation (capability)
 
-1. **Workspace** — ler spec canônica em `prodops/framework/github-workspace.md` e comparar com estado atual do repositório GitHub.
-2. **Provision** — criar labels ausentes, corrigir divergentes, adicionar custom fields ao Project. Nunca remove sem confirmação.
-3. **Verify** — confirmar conformidade pós-Provision e produzir relatório.
+Invocada pelo Bootstrap, Diligence Async (quando Scan detecta Workspace Drift) e Diligence Sync (quando Attach/Promote falha por ausência de infraestrutura).
 
-Parar antes de Repair quando uma divergência exige decisão de produto. Escalar com o OBC afetado, o gap e a jornada responsável.
+1. **Inspect** — ler Canonical Specification (`prodops/framework/github-workspace.md`) e Actual Workspace via GitHub API; produzir Drift Report.
+2. **Reconcile** — criar labels ausentes, corrigir divergentes, adicionar custom fields ao Project, criar views via REST. Nunca remove sem confirmação. Para gaps não automatizáveis: abrir Issue de rastreamento.
+3. **Verify** — confirmar conformidade pós-Reconcile, produzir Conformance Report e atualizar sync manifest.
+
+Nunca executar como ciclo standalone. Sempre retornar o Conformance Report ao caller.
 
 ## Guardrails
 
@@ -86,13 +95,14 @@ Parar antes de Repair quando uma divergência exige decisão de produto. Escalar
 - **Estratégia de template:** quando o projeto gerenciado estiver completamente configurado, `gh project mark-template` + `gh project copy` viabiliza bootstrap de novos repositórios sem configuração manual.
 - **Visibilidade PUBLIC por default** — todo projeto gerenciado (`ProdOps — template`, `ProdOps — <repo>`) é criado e mantido como PUBLIC. Alterar para PRIVATE somente mediante diretiva explícita. Workspace verifica e Provision corrige automaticamente.
 
-### Guardrails de infraestrutura (diligence-infra)
+### Guardrails de Workspace Reconciliation
 
+- **Workspace Reconciliation é uma capability, não um ciclo** — nunca executar standalone; sempre invocada por Bootstrap, Diligence Async ou Diligence Sync.
 - **Tentar API antes de declarar impossibilidade** — nunca assumir que uma API não existe sem executar a tentativa e capturar o erro.
 - **Nenhum gap sem Issue de rastreamento** — qualquer ação que não pode ser automatizada gera um Issue com título `infra: <descrição>`, labels `operation:provision` e `journey:diligence`, e corpo com o erro de API, a ação requerida e o critério de resolução.
 - **Nunca declarar "ação manual" como texto flutuante** — a instrução para o humano vai no corpo do Issue, não como mensagem de output do agente.
 - **Sync manifest como registro de verdade** — o manifest registra: CONFORME (verificado via API neste ciclo), PARCIAL (Issue #X aberto com gap documentado) ou NÃO CONFORME (problema automatizável não resolvido).
-- Scripts temporários de provisioning criados no scratchpad devem ser documentados no Histórico do manifest com path e resultado.
+- Scripts temporários de Reconcile criados no scratchpad devem ser documentados no Histórico do manifest com path e resultado.
 
 ## References
 

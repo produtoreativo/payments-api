@@ -1,13 +1,13 @@
 ---
-name: diligence/workspace
-description: Read the canonical GitHub workspace spec and compare with the current org state — Labels, Milestones, Template project, and Managed project (fields + views). Produces a diff. Does not create or update anything.
+name: diligence/workspace-reconciliation/inspect
+description: Read the Canonical Specification and the Actual Workspace state via GitHub API. Produce a Drift Report. Does not create or update anything.
 ---
 
-# DILIGENCE INFRA → WORKSPACE
+# WORKSPACE RECONCILIATION → INSPECT
 
-Execute only the Workspace step of the Diligence Infra flow.
+Execute only the Inspect step of the Workspace Reconciliation capability.
 
-**Responsabilidade:** comparar a especificação canônica com o estado real do GitHub. Workspace não cria nem atualiza nada — produz um diff completo para que Provision possa agir.
+**Responsabilidade:** comparar a Canonical Specification com o Actual Workspace. Inspect não cria nem atualiza nada — produz um Drift Report completo para que Reconcile possa agir.
 
 **Dois projetos gerenciados a verificar:**
 - `ProdOps — template` — template canônico da org (source para cópias)
@@ -15,7 +15,7 @@ Execute only the Workspace step of the Diligence Infra flow.
 
 ## Ação
 
-### 0. Ler o sync manifest e a spec canônica
+### 0. Ler o sync manifest e a Canonical Specification
 
 ```bash
 cat prodops/artifacts/governance/github-sync-manifest.md
@@ -56,7 +56,7 @@ gh project list --owner <owner> --format json \
   | jq '.projects[] | select(.title == "ProdOps — template") | {number, title, id}'
 ```
 
-**Se não encontrado:** registrar `TEMPLATE AUSENTE`. O Provision criará e configurará.
+**Se não encontrado:** registrar `TEMPLATE AUSENTE`. O Reconcile criará e configurará.
 
 **Se encontrado:** verificar visibilidade, campos e mark-template:
 
@@ -82,7 +82,7 @@ gh project list --owner <owner> --format json \
   | jq '.projects[] | select(.title == "ProdOps — <repo-name>") | {number, title, id}'
 ```
 
-**Se não encontrado:** registrar `PROJETO GERENCIADO AUSENTE`. O Provision criará via cópia do template.
+**Se não encontrado:** registrar `PROJETO GERENCIADO AUSENTE`. O Reconcile criará via cópia do template.
 Não continuar para campos e views.
 
 **Se encontrado:** verificar visibilidade e campos canônicos:
@@ -116,7 +116,7 @@ gh api graphql -f query='
 
 Registrar: `VIEW AUSENTE: <nome>`, `VIEW DIVERGENTE: encontrada "<atual>", esperado "<canônico>"`.
 
-> Projetos com outros nomes são projetos manuais — ignorar completamente. Nunca reportar como divergências.
+> Projetos com outros nomes são projetos manuais — ignorar completamente. Nunca reportar como Workspace Drift.
 
 ### 5. Verificar Issues de infraestrutura abertos
 
@@ -127,12 +127,12 @@ gh issue list --repo <owner>/<repo> \
   --json number,title
 ```
 
-Usar os números para anotar o diff: gaps com Issue aberto incluem `(Issue #X)` — Provision não criará duplicata.
+Usar os números para anotar o Drift Report: gaps com Issue aberto incluem `(Issue #X)` — Reconcile não criará duplicata.
 
-### 6. Produzir diff consolidado
+### 6. Produzir Drift Report consolidado
 
 ```
-=== WORKSPACE DIFF — <data> ===
+=== DRIFT REPORT — <data> ===
 
 LABELS (<N> ausentes, <N> divergentes):
   LABEL AUSENTE:          operation:capture
@@ -143,15 +143,15 @@ MILESTONES (<N> ausentes):
 
 TEMPLATE (ProdOps — template):
   ✅ encontrado — #<N> (id: PVT_...)
-  ⚠️ TEMPLATE AUSENTE — Provision criará e configurará
+  ⚠️ TEMPLATE AUSENTE — Reconcile criará e configurará
   TEMPLATE FIELD AUSENTE: Artifact Type (SINGLE_SELECT)
 
 PROJETO GERENCIADO (ProdOps — payments-api):
   ✅ encontrado — #<N> (id: PVT_...)
-  ⚠️ PROJETO GERENCIADO AUSENTE — Provision copiará do template
+  ⚠️ PROJETO GERENCIADO AUSENTE — Reconcile copiará do template
   FIELD AUSENTE:          Evidence Required (CHECKBOX) (Issue #57 já aberto)
   VIEW AUSENTE:           All Work Items — API impossível, criar no template (Issue #58 aberto)
-  VIEW AUSENTE:           Diligence — API impossível, criar no template (Provision abrirá Issue)
+  VIEW AUSENTE:           Diligence — API impossível, criar no template (Reconcile abrirá Issue)
 
 PROJETOS MANUAIS IGNORADOS: "Turma Junho 2026" (#22), "Sprint Junho" (#17)
 ```
@@ -160,12 +160,12 @@ PROJETOS MANUAIS IGNORADOS: "Turma Junho 2026" (#22), "Sprint Junho" (#17)
 
 Concluído quando **todos** os itens abaixo são verdadeiros:
 
-- Labels verificadas contra a spec completa
+- Labels verificadas contra a Canonical Specification completa
 - Milestones verificados contra OBCs com release no Iteration Plan
 - Template `ProdOps — template` verificado (existência + campos)
 - Projeto gerenciado `ProdOps — <repo-name>` verificado (existência + campos + views)
-- Projetos manuais ignorados listados explicitamente no diff
-- Issues de infraestrutura abertos anotados no diff
+- Projetos manuais ignorados listados explicitamente no Drift Report
+- Issues de infraestrutura abertos anotados no Drift Report
 
 ## Guardrails
 
@@ -173,12 +173,12 @@ Concluído quando **todos** os itens abaixo são verdadeiros:
 - **Nunca operar em projetos manuais** — qualquer projeto sem o prefixo `ProdOps — ` é ignorado.
 - Não criar nem atualizar nada neste step.
 - Verificar template antes do projeto gerenciado — o estado do template determina se a cópia é viável.
-- Se o template não existir: registrar e avançar — Provision cuida da criação.
+- Se o template não existir: registrar e avançar — Reconcile cuida da criação.
 - Se o projeto gerenciado não existir: registrar e não tentar verificar campos/views.
 
 ## Out of scope
 
-- `workspace` **não** cria nem atualiza nada — isso é Provision.
-- `workspace` **não** remove labels extras — remoção requer confirmação explícita.
-- `workspace` **não** verifica Issues individuais — isso é Scan.
-- `workspace` **não** atualiza o sync manifest — isso é Verify.
+- `inspect` **não** cria nem atualiza nada — isso é Reconcile.
+- `inspect` **não** remove labels extras — remoção requer confirmação explícita.
+- `inspect` **não** verifica Issues individuais — isso é Scan (Diligence Async).
+- `inspect` **não** atualiza o sync manifest — isso é Verify.

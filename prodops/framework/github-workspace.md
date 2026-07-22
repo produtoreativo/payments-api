@@ -1,16 +1,18 @@
-# GitHub Workspace — Especificação Canônica
+# GitHub Workspace — Canonical Specification
 
-Este arquivo é a fonte de verdade para a infraestrutura do GitHub Project do produto. O step `workspace` do ciclo `diligence-infra` lê este arquivo e compara com o estado real do repositório.
+Este arquivo é a Canonical Specification da infraestrutura do GitHub Workspace do produto. O step `inspect` da capability `workspace-reconciliation` lê este arquivo e compara com o Actual Workspace (estado real do repositório via API) para detectar Workspace Drift.
 
 ---
 
-## Fluxo de provisioning
+## Fluxo de Workspace Reconciliation
+
+A capability `workspace-reconciliation` lê esta Canonical Specification e a compara com o Actual Workspace para detectar Workspace Drift, reconciliar divergências e produzir um Conformance Report.
 
 ```mermaid
 flowchart TD
-    START([diligence-infra]) --> WORKSPACE
+    START([Workspace Reconciliation]) --> INSPECT
 
-    subgraph WORKSPACE["① Workspace — leitura e diff"]
+    subgraph INSPECT["① Inspect — leitura e Drift Report"]
         W1[Labels\ngh label list] --> W2
         W2[Milestones\ngh api milestones] --> W3
         W3{"Template\nProdOps — template\nexiste na org?"}
@@ -23,12 +25,12 @@ flowchart TD
         W4 -->|não| W4C[PROJETO GERENCIADO\nAUSENTE]
         W4B --> W5
         W4C --> W5
-        W5[Diff consolidado]
+        W5[Drift Report consolidado]
     end
 
-    WORKSPACE --> PROVISION
+    INSPECT --> RECONCILE
 
-    subgraph PROVISION["② Provision — execução"]
+    subgraph RECONCILE["② Reconcile — execução idempotente"]
         P1[Labels\ngh label create / edit]
         P1 --> P2
 
@@ -52,9 +54,9 @@ flowchart TD
         P5[Milestones ausentes?\nIssue para Product Owner]
     end
 
-    PROVISION --> VERIFY
+    RECONCILE --> VERIFY
 
-    subgraph VERIFY["③ Verify — confirmação"]
+    subgraph VERIFY["③ Verify — Conformance Report"]
         V1[Re-verificar template +\nprojeto gerenciado +\nlabels + milestones]
         V1 --> V2[Atualizar sync manifest]
     end
@@ -148,7 +150,7 @@ O framework mantém **dois** GitHub Projects na org, ambos identificados por nom
 
 Projeto marcado como template via `gh project mark-template`. Contém todos os campos canônicos e as views canônicas. Serve como source de `gh project copy` ao criar projetos gerenciados para novos repositórios.
 
-**Quando criar:** na primeira execução de `diligence-infra provision` se ainda não existir.
+**Quando criar:** na primeira execução de `workspace-reconciliation reconcile` se ainda não existir.
 **Criação:**
 ```bash
 gh project create --owner <org> --title "ProdOps — template"
@@ -209,7 +211,7 @@ gh project edit <number> --owner <org> --visibility PUBLIC   # público por defa
 **Criar as views no template (uma vez):**
 1. Abrir `ProdOps — template` no GitHub
 2. Para cada view: clicar em `+ New view`, nomear e configurar filtro e agrupamento
-3. Executar `/diligence diligence-infra verify` para confirmar via GraphQL
+3. Executar `workspace-reconciliation verify` para confirmar via GraphQL
 4. A partir daí, todos os novos projetos herdam as views via `gh project copy`
 
 ---
@@ -217,5 +219,5 @@ gh project edit <number> --owner <org> --visibility PUBLIC   # público por defa
 ## Referências
 
 → [Work Item Schema](execution-mapping/work-item-schema.md) — campos, enums e título canônico
-→ [Diligence Infra cycle](../journeys/diligence/diligence-infra.md)
+→ [Workspace Reconciliation capability](../journeys/diligence/capabilities/workspace-reconciliation/README.md)
 → [GitHub Sync Manifest](../artifacts/governance/github-sync-manifest.md)

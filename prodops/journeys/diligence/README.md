@@ -202,23 +202,17 @@ diligence-async: Scan → Flag → Repair
 
 → [diligence-async.md](diligence-async.md)
 
-### diligence-infra — Infraestrutura
-
-Bootstrappa e mantém sincronizada a infraestrutura do GitHub (Labels, Custom Fields, Views) a partir da especificação canônica. Executado no bootstrap de novos repositórios e após mudanças na spec.
-
-```
-diligence-infra: Workspace → Provision → Verify
-```
-
-→ [diligence-infra.md](diligence-infra.md)
-
 ---
 
 ## Capabilities
 
-Competências reutilizáveis consumidas pelos ciclos:
+Competências reutilizáveis invocadas pelos ciclos e pelo Bootstrap — não são ciclos standalone:
 
 → [capabilities/README.md](capabilities/README.md)
+
+| Capability | Propósito | Invocada por |
+|---|---|---|
+| [Workspace Reconciliation](capabilities/workspace-reconciliation/README.md) | Alinhar GitHub Workspace (Labels, Fields, Views, Projetos) à Canonical Specification. Detecta e corrige Workspace Drift via Inspect → Reconcile → Verify. | Bootstrap, Diligence Async, Diligence Sync |
 
 ---
 

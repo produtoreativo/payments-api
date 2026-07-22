@@ -1,13 +1,13 @@
 ---
-name: diligence/verify
-description: Confirm that the GitHub repository state matches the canonical workspace spec across all 4 categories. Reads Views via GraphQL. Updates the sync manifest with the verified state.
+name: diligence/workspace-reconciliation/verify
+description: Confirm that the GitHub repository state matches the Canonical Specification across all 4 categories. Reads Views via GraphQL. Updates the sync manifest with the verified conformance state. Produces the Conformance Report.
 ---
 
-# DILIGENCE INFRA → VERIFY
+# WORKSPACE RECONCILIATION → VERIFY
 
-Execute only the Verify step of the Diligence Infra flow.
+Execute only the Verify step of the Workspace Reconciliation capability.
 
-**Responsabilidade:** confirmar programaticamente o estado de todas as 4 categorias após o Provision e atualizar o sync manifest com o resultado verificado. Verify é a única fonte que atualiza o manifest com dados confirmados via API.
+**Responsabilidade:** confirmar programaticamente o estado de todas as 4 categorias após o Reconcile e atualizar o sync manifest com o resultado verificado. Verify é a única fonte que atualiza o manifest com dados confirmados via API.
 
 ## Ação
 
@@ -17,7 +17,7 @@ Execute only the Verify step of the Diligence Infra flow.
 gh label list --repo <owner>/<repo> --json name,color,description --limit 200
 ```
 
-Comparar com spec canônica. Contar: conformes, ausentes, divergentes.
+Comparar com Canonical Specification. Contar: conformes, ausentes, divergentes.
 
 ### 2. Verificar Milestones
 
@@ -52,7 +52,7 @@ query {
 
 Comparar nomes retornados com a lista canônica. Para cada view canônica: `CONFORME` se existe, `PENDENTE manual` se ausente.
 
-### 5. Produzir relatório de conformidade
+### 5. Produzir Conformance Report
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
@@ -81,7 +81,7 @@ Comparar nomes retornados com a lista canônica. Para cada view canônica: `CONF
 **Critério de resultado:**
 - `CONFORME` — todas as 4 categorias sem divergências automatizáveis pendentes
 - `PARCIAL` — divergências manuais pendentes (Views, Checkbox, Milestones) mas nada automatizável restante
-- `NÃO CONFORME` — Labels ou Fields automatizáveis ainda divergentes (Provision não foi executado ou falhou)
+- `NÃO CONFORME` — Labels ou Fields automatizáveis ainda divergentes (Reconcile não foi executado ou falhou)
 
 ### 5b. Verificar Issues de infraestrutura abertos
 
@@ -92,7 +92,7 @@ gh issue list --repo <owner>/<repo> \
   --json number,title,state
 ```
 
-Incluir no relatório de conformidade: lista de Issues `infra:` abertos com número e título. Issues abertos indicam gaps documentados — não são falhas de processo, são rastreamento explícito.
+Incluir no Conformance Report: lista de Issues `infra:` abertos com número e título. Issues abertos indicam gaps documentados — não são falhas de processo, são rastreamento explícito.
 
 ### 6. Atualizar o sync manifest
 
@@ -107,17 +107,17 @@ Escrever em `prodops/artifacts/governance/github-sync-manifest.md`:
 Concluído quando **todos** os itens abaixo são verdadeiros:
 
 - Todas as 4 categorias verificadas via API
-- Relatório de conformidade produzido com resultado explícito (`CONFORME`, `PARCIAL` ou `NÃO CONFORME`)
+- Conformance Report produzido com resultado explícito (`CONFORME`, `PARCIAL` ou `NÃO CONFORME`)
 - Sync manifest atualizado com o estado verificado neste ciclo
 
 ## Guardrails
 
 - **Verificar todas as 4 categorias** — não pular nenhuma mesmo que o manifest indique conformidade anterior.
 - Nunca marcar uma categoria como `CONFORME` no manifest sem ter verificado via API nesta execução.
-- Distinguir claramente entre `PENDENTE manual` (requer ação humana) e `NÃO CONFORME automatizável` (requer re-executar Provision).
+- Distinguir claramente entre `PENDENTE manual` (requer ação humana) e `NÃO CONFORME automatizável` (requer re-executar Reconcile).
 - Atualizar o manifest é obrigatório — Verify sem atualização de manifest não está completo.
 
 ## Out of scope
 
-- `verify` **não** corrige divergências — isso é Provision.
-- `verify` **não** verifica Issues individuais — isso é Scan.
+- `verify` **não** corrige divergências — isso é Reconcile.
+- `verify` **não** verifica Issues individuais — isso é Scan (Diligence Async).

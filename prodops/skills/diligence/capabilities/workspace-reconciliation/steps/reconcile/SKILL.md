@@ -1,13 +1,13 @@
 ---
-name: diligence/provision
-description: Create or update Labels, Template project, and Managed project. Tries every API path. On API failure, creates a tracking Issue. Never leaves a gap without a trail entry. Never touches manual projects.
+name: diligence/workspace-reconciliation/reconcile
+description: Create or update Labels, Template project, and Managed project to match the Canonical Specification. Tries every API path. On API failure, creates a tracking Issue. Never leaves a gap without a trail entry. Never touches manual projects. Idempotent.
 ---
 
-# DILIGENCE INFRA → PROVISION
+# WORKSPACE RECONCILIATION → RECONCILE
 
-Execute only the Provision step of the Diligence Infra flow.
+Execute only the Reconcile step of the Workspace Reconciliation capability.
 
-**Responsabilidade:** executar o que pode ser automatizado e, para o que não puder, registrar um Issue de rastreamento. Nunca termina sem declarar o status de todas as categorias.
+**Responsabilidade:** executar o que pode ser automatizado e, para o que não puder, registrar um Issue de rastreamento. Nunca termina sem declarar o status de todas as categorias. É idempotente — pode ser re-executado sem efeitos colaterais.
 
 **Princípio:** nenhum gap sem Issue de rastreamento. Nenhuma instrução flutuante — a instrução para o humano vai no corpo do Issue.
 
@@ -15,9 +15,9 @@ Execute only the Provision step of the Diligence Infra flow.
 
 ## Ação
 
-### 1. Ler o diff do Workspace
+### 1. Ler o Drift Report do Inspect
 
-Obter o diff produzido pelo step Workspace. Se Workspace não foi executado neste ciclo, executá-lo primeiro.
+Obter o Drift Report produzido pelo step Inspect. Se Inspect não foi executado neste ciclo, executá-lo primeiro.
 
 ### 2. Labels — criar ausentes e corrigir divergentes
 
@@ -41,7 +41,7 @@ gh label edit "<nome>" \
 
 ### 3. Template canônico — criar, configurar e marcar
 
-#### 3a. Se `TEMPLATE AUSENTE` no diff — criar projeto vazio e tornar público
+#### 3a. Se `TEMPLATE AUSENTE` no Drift Report — criar projeto vazio e tornar público
 
 ```bash
 NUMBER=$(gh project create \
@@ -55,7 +55,7 @@ gh project edit $NUMBER --owner <owner> --visibility PUBLIC
 
 Registrar o número retornado para os próximos sub-steps.
 
-Se `TEMPLATE PRIVADO` no diff (projeto existe mas está privado):
+Se `TEMPLATE PRIVADO` no Drift Report (projeto existe mas está privado):
 
 ```bash
 gh project edit <template-number> --owner <owner> --visibility PUBLIC
@@ -199,7 +199,7 @@ gh project edit $NUMBER --owner <owner> --visibility PUBLIC
 
 Registrar o número retornado no sync manifest.
 
-Se `GERENCIADO PRIVADO` no diff (projeto existe mas está privado):
+Se `GERENCIADO PRIVADO` no Drift Report (projeto existe mas está privado):
 
 ```bash
 gh project edit <managed-number> --owner <owner> --visibility PUBLIC
@@ -228,7 +228,7 @@ gh api graphql -f query='{ organization(login: "<owner>") { projectV2(number: <N
 
 ### 5. Milestones — registrar Issue para Product Owner
 
-Para cada `MILESTONE AUSENTE` no diff:
+Para cada `MILESTONE AUSENTE` no Drift Report:
 
 ```bash
 gh issue list --repo <owner>/<repo> \
@@ -250,7 +250,7 @@ When created: close this Issue."
 
 ### 6. Labels extras — listar sem remover
 
-Para cada label fora da spec canônica, reportar como nota. Nunca remover automaticamente.
+Para cada label fora da Canonical Specification, reportar como nota. Nunca remover automaticamente.
 
 ### 7. Registrar resultado no sync manifest
 
@@ -286,6 +286,6 @@ Concluído quando **todos** os itens abaixo são verdadeiros:
 
 ## Out of scope
 
-- `provision` **não** verifica Issues individuais — isso é Scan.
-- `provision` **não** atualiza labels em Issues existentes — isso é Repair.
-- `provision` **não** confirma o resultado final — isso é Verify.
+- `reconcile` **não** verifica Issues individuais — isso é Scan (Diligence Async).
+- `reconcile` **não** atualiza labels em Issues existentes — isso é Repair (Diligence Async).
+- `reconcile` **não** confirma o resultado final — isso é Verify.

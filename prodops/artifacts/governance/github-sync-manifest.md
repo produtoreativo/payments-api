@@ -1,9 +1,9 @@
 # GitHub Sync Manifest
 
-> Registro persistente do estado de conformidade da infraestrutura do GitHub em relação à especificação canônica.
-> Atualizado pelo step `verify` do ciclo `diligence-infra` ao final de cada execução.
+> Registro persistente do estado de conformidade do GitHub Workspace em relação à Canonical Specification.
+> Atualizado pelo step `verify` da capability `workspace-reconciliation` ao final de cada execução.
 >
-> Spec canônica: `prodops/framework/github-workspace.md`
+> Canonical Specification: `prodops/framework/github-workspace.md`
 
 **Repositório:** produtoreativo/payments-api
 **Última verificação:** 2026-07-22
@@ -167,6 +167,6 @@ Nenhum OBC no Iteration Plan possui campo `release` com versão definida. Nenhum
 | 2026-07-22 | diligence-agent | PARCIAL | Issues #57-62 criados. Label operation:provision criada. |
 | 2026-07-22 | christiano.m.almeida | REVISÃO | Separação gerenciado/manual estabelecida. Projeto gerenciado "ProdOps — payments-api" ainda não criado. |
 | 2026-07-22 | christiano.m.almeida | REVISÃO | Modelo de dois projetos: template canônico + gerenciado por repo. Fluxo: criar template → provisionar campos → mark-template → copy para repo. |
-| 2026-07-22 | diligence-agent | PARCIAL | diligence-infra completo. Template #23 criado, campos 7/8 provisionados, mark-template executado. Gerenciado #24 criado via copy. Issues #57-62 atualizados para referenciar template. Labels CONFORME 37/37. Views 0/5 PENDENTE manual. |
+| 2026-07-22 | diligence-agent | PARCIAL | workspace-reconciliation completo. Template #23 criado, campos 7/8 provisionados, mark-template executado. Gerenciado #24 criado via copy. Issues #57-62 atualizados para referenciar template. Labels CONFORME 37/37. Views 0/5 PENDENTE manual. |
 | 2026-07-22 | christiano.m.almeida + diligence-agent | CONFORME (views) | Views criadas via REST POST /projectsV2/{N}/views. 5/5 views em template #23 e gerenciado #24. Issues #58-62 fechados. Endpoint correto descoberto: projectsV2 (não projects). group_by não disponível via API. |
 | 2026-07-22 | christiano.m.almeida | CONFORME (campos) | Evidence Required criado como SINGLE_SELECT (fallback GitOps — CHECKBOX ausente do enum). Issue #57 fechado. Template #23 e gerenciado #24 agora CONFORME 8/8 campos. |
