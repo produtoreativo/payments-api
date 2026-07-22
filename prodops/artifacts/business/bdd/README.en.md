@@ -18,4 +18,4 @@ Committed BDD Features — promoted from Upstream to Downstream mode.
 
 Features in this directory were promoted from Discovery (Upstream) after Decision Package review.
 
-Exploratory (uncommitted) features stay in `prodops/journeys/discovery/experiments/<NNN-slug>/features/`.
+Exploratory (uncommitted) features stay in `prodops/artifacts/experiments/<NNN-slug>/features/`.

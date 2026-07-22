@@ -80,7 +80,7 @@ Executar uma atividade no modo Upstream (exploratório) para:
 
 | Artefato | Localização |
 |---|---|
-| Experimento EXP-007 (análise completa) | `prodops/journeys/discovery/experiments/007-split-payment-model/experiment.md` |
-| Trail do experimento | `prodops/journeys/discovery/experiments/007-split-payment-model/upstream-trail.md` |
-| OBC candidato (draft) | `prodops/journeys/discovery/experiments/007-split-payment-model/obcs/payment-composition.md` |
+| Experimento EXP-007 (análise completa) | `prodops/artifacts/experiments/007-split-payment-model/experiment.md` |
+| Trail do experimento | `prodops/artifacts/experiments/007-split-payment-model/upstream-trail.md` |
+| OBC candidato (draft) | `prodops/artifacts/experiments/007-split-payment-model/obcs/payment-composition.md` |
 | BDD Feature | `prodops/artifacts/business/bdd/payment-composition.feature` — **a criar após decisão de política** |

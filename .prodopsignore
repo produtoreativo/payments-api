@@ -1,0 +1,37 @@
+# .prodopsignore
+#
+# Declara as áreas deste repositório que nunca devem ser sobrescritas
+# por um mecanismo de sync do Framework (ex: CI+PR sync do prodops-framework).
+#
+# Regra: qualquer path listado aqui pertence ao produto (payments-api),
+# não ao Framework canônico. Ao sincronizar atualizações do Framework,
+# o mecanismo de sync deve preservar esses paths intactos.
+#
+# Este arquivo NÃO substitui .gitignore.
+# Paths listados aqui continuam versionados e visíveis ao git.
+
+# ── Artefatos do produto ─────────────────────────────────────────────────────
+# Knowledge Space local: OBCs, BDD, planos, trilhas, intents, evidências.
+# O Framework define a estrutura (schema); o conteúdo pertence ao produto.
+prodops/artifacts/
+
+# ── Configuração operacional do produto ─────────────────────────────────────
+# manifest.yaml declara as configurações de execução deste produto específico.
+# framework-lock.yaml rastreia a versão do Framework consumida.
+# Ambos são gerados e mantidos pelo produto; nunca pelo sync.
+prodops/exec/manifest.yaml
+prodops/exec/framework-lock.yaml
+prodops/exec/cards/
+
+# ── Skills locais do produto ─────────────────────────────────────────────────
+# Skills que existem apenas neste produto e não fazem parte do Framework.
+prodops/skills/payments-api-local-testing/
+
+# ── Referências de engenharia opcionais ─────────────────────────────────────
+# Escolha técnica deste produto; outros produtos podem ter escolhas diferentes.
+prodops/skills/references/engineering/clean-code/
+prodops/skills/references/engineering/ddd/
+
+# ── Scripts específicos do produto ──────────────────────────────────────────
+# Scripts de entrega e automação locais, não portáveis para outros produtos.
+prodops/scripts/delivery/

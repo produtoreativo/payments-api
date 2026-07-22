@@ -88,7 +88,7 @@ flowchart TD
 
 **Nunca representa:** Um modo de execução. Upstream e Downstream não são jornadas.
 
-→ [journeys/README.md](../journeys/README.md)
+→ [journeys/README.md](journeys/README.md)
 
 ---
 
@@ -155,7 +155,7 @@ flowchart TD
 
 **Contém:** Upstream (modo de exploração), Downstream (modo de compromisso), regras de transição entre modos.
 
-→ [execution-model/README.md](../execution-model/README.md)
+→ [execution-model/README.md](execution-model/README.md)
 
 ---
 
@@ -187,7 +187,7 @@ Esses grupos são organizados por onde as Capabilities foram originalmente defin
 
 **Nunca representa:** Uma Phase, um Cycle, uma Journey ou uma Skill. Product Capability não é um mecanismo do Framework — é o objeto do trabalho.
 
-→ [journeys/delivery/capabilities/](../journeys/delivery/capabilities/) · [journeys/diligence/capabilities/](../journeys/diligence/capabilities/)
+→ [journeys/delivery/capabilities/](journeys/delivery/capabilities/) · [journeys/diligence/capabilities/](journeys/diligence/capabilities/)
 
 ---
 
@@ -263,6 +263,6 @@ Este documento é a fonte única de verdade da hierarquia de conceitos ProdOps.
 |---|---|
 | [glossary.md](glossary.md) | Definições lexicais de todos os termos — referencia esta ontologia para hierarquia |
 | [operating-model.md](operating-model.md) | Modelo operacional e fluxo — referencia esta ontologia para os conceitos estruturais |
-| [execution-model/README.md](../execution-model/README.md) | Detalha Upstream e Downstream — é uma especialização desta ontologia |
-| [journeys/README.md](../journeys/README.md) | Detalha cada Journey — referencia Cycle e Phase desta ontologia |
+| [execution-model/README.md](execution-model/README.md) | Detalha Upstream e Downstream — é uma especialização desta ontologia |
+| [journeys/README.md](journeys/README.md) | Detalha cada Journey — referencia Cycle e Phase desta ontologia |
 | [skills/README.md](../skills/README.md) | Catálogo de Skills — referencia esta ontologia para o posicionamento de Skill e Step |

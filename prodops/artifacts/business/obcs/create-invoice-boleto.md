@@ -65,4 +65,4 @@ O gateway deve retornar ao Checkout:
 - BDD: `prodops/artifacts/business/bdd/create-invoice-boleto.feature`
 - Iteration Plan: `prodops/artifacts/governance/plans/iteration-plan.md`
 - OBC relacionado: `prodops/artifacts/business/obcs/api-token-validation.md`
-- Risks: `prodops/journeys/assessment/risks.md` — seção Riscos Boleto
+- Risks: `prodops/artifacts/risks/risks.md` — seção Riscos Boleto

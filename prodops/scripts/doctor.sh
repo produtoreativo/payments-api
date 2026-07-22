@@ -15,6 +15,10 @@ pass() {
   printf 'PASS: %s\n' "$1"
 }
 
+skip() {
+  printf 'SKIP: %s\n' "$1" >&2
+}
+
 check_path() {
   local path="$1"
   if [[ -e "${path}" ]]; then
@@ -30,13 +34,29 @@ check_path "prodops/artifacts/business/bdd"
 check_path "prodops/artifacts/business/obcs"
 check_path "prodops/artifacts/governance/plans"
 check_path "prodops/artifacts/governance/trails/release-trail.md"
-check_path "prodops/journeys/discovery/experiments"
-check_path "prodops/journeys/assessment/reliability-plans"
-check_path "prodops/journeys/assessment/risks.md"
-check_path "prodops/journeys/operation"
-check_path "prodops/journeys/delivery/phases/bootstrap/README.md"
-check_path "prodops/journeys/delivery/phases/hack/README.md"
-check_path "prodops/journeys/delivery/phases/finish/quality-gates.md"
+check_path "prodops/artifacts/experiments"
+check_path "prodops/artifacts/risks/risks.md"
+check_path "prodops/artifacts/governance/plans/reliability"
+check_path "prodops/framework/journeys"
+check_path "prodops/framework/execution-model"
+check_path "prodops/framework/journeys/operation"
+check_path "prodops/framework/journeys/delivery/phases/bootstrap/README.md"
+check_path "prodops/framework/journeys/delivery/phases/hack/README.md"
+check_path "prodops/framework/journeys/delivery/phases/finish/quality-gates.md"
+check_path "prodops/framework/execution-model/upstream.md"
+check_path "prodops/framework/execution-model/downstream.md"
+
+if [[ -e "prodops/journeys" ]]; then
+  fail "prodops/journeys/ still exists — should have been moved to prodops/framework/journeys/"
+else
+  pass "prodops/journeys/ correctly moved to framework"
+fi
+
+if [[ -e "prodops/execution-model" ]]; then
+  fail "prodops/execution-model/ still exists — should have been moved to prodops/framework/execution-model/"
+else
+  pass "prodops/execution-model/ correctly moved to framework"
+fi
 
 # Verify key committed OBC artifacts exist for items with Entrou status
 for obc in api-token-validation create-invoice-boleto webhook-configuration credit-card-authorization-confirmation; do
@@ -47,21 +67,28 @@ while IFS= read -r experiment_dir; do
   [[ -z "${experiment_dir}" ]] && continue
   check_path "${experiment_dir}/experiment.md"
   check_path "${experiment_dir}/upstream-trail.md"
-done < <(find prodops/journeys/discovery/experiments -mindepth 1 -maxdepth 1 -type d | sort)
+done < <(find prodops/artifacts/experiments -mindepth 1 -maxdepth 1 -type d | sort)
 
 # Legacy ProdOps path references. Trails and experiment records are exempt
 # because they legitimately record old layouts as history. `prodops/product/`
 # keeps a trailing slash so references to existing files such as
 # docs/prodops/product-deck.md do not false-positive on the old
 # prodops/product/ directory pattern.
-legacy_pattern='prodops/(upstream|product/|downstream/release-trail\.md|assessment/reliability-plan|assessment/reliability-plans|assessment/iteration-plans|assessment/event-storming|assessment/architecture)|prodops/operation/|delivery/flows/'
+#
+# Also catches paths moved in the journeys→artifacts split:
+#   journeys/discovery/experiments/ → artifacts/experiments/
+#   journeys/assessment/risks.md    → artifacts/risks/risks.md
+#   journeys/assessment/opportunities.md → artifacts/risks/opportunities.md
+# (assessment/reliability-plans and assessment/event-storming are already
+#  caught by the existing pattern prefixes.)
+legacy_pattern='prodops/(upstream|product/|downstream/release-trail\.md|assessment/reliability-plan|assessment/reliability-plans|assessment/iteration-plans|assessment/event-storming|assessment/architecture|journeys/|execution-model/)|prodops/operation/|delivery/flows/|journeys/discovery/experiments/|journeys/assessment/risks\.md|journeys/assessment/opportunities\.md'
 
 legacy_targets=(
   AGENTS.md
   prodops/README.md
   prodops/framework
-  prodops/execution-model
-  prodops/journeys
+  prodops/framework/execution-model
+  prodops/framework/journeys
   prodops/skills
   prodops/templates
   prodops/artifacts/business/intents
@@ -77,7 +104,7 @@ done
 # ripgrep quando disponível; fallback para grep (runners de CI não trazem rg).
 have_rg() { command -v rg >/dev/null 2>&1; }
 if ! have_rg; then
-  echo "doctor: ripgrep não encontrado — usando fallback com grep" >&2
+  skip "ripgrep not found — install rg for stale-ref check (grep fallback active; worktrees excluded)"
 fi
 
 if have_rg; then
@@ -86,19 +113,22 @@ if have_rg; then
       "${legacy_pattern}" \
       "${legacy_targets[@]}" \
       -g '!prodops/framework/canonical-paths*.md' \
-      -g '!prodops/journeys/discovery/upstream-trail*.md' \
-      -g '!prodops/journeys/discovery/experiments/**/upstream-trail*.md' \
-      -g '!prodops/journeys/discovery/experiments/**/experiment*.md' \
+      -g '!prodops/framework/journeys/discovery/upstream-trail*.md' \
+      -g '!prodops/artifacts/experiments/**/upstream-trail*.md' \
+      -g '!prodops/artifacts/experiments/**/experiment*.md' \
       -g '!prodops/documentation-review*.md' \
       -g '!.claude/worktrees/**' \
       -g '!.codex/worktrees/**' \
+      -g '!.claude/settings*.json' \
       || true
   )"
 else
   legacy_refs="$(
     grep -rEn "${legacy_pattern}" "${legacy_targets[@]}" 2>/dev/null \
-      | grep -vE '^(prodops/framework/canonical-paths(\.en)?\.md|prodops/journeys/discovery/upstream-trail(\.en)?\.md|prodops/documentation-review(\.en)?\.md):' \
-      | grep -vE '^prodops/journeys/discovery/experiments/[^:]*/(upstream-trail|experiment)(\.en)?\.md:' \
+      | grep -vE '^\.(claude|codex)/worktrees/' \
+      | grep -vE '^(prodops/framework/canonical-paths(\.en)?\.md|prodops/framework/journeys/discovery/upstream-trail(\.en)?\.md|prodops/documentation-review(\.en)?\.md):' \
+      | grep -vE '^prodops/artifacts/experiments/[^:]*/(upstream-trail|experiment)(\.en)?\.md:' \
+      | grep -vE '^\.(claude)/settings.*\.json:' \
       || true
   )"
 fi
@@ -144,6 +174,7 @@ else
     grep -rEn --include='*.md' --exclude-dir=.git --exclude-dir=node_modules \
       "${stale_pattern}" . 2>/dev/null \
       | sed 's|^\./||' \
+      | grep -vE '^\.(claude|codex)/worktrees/' \
       | grep -vE '^(prodops/framework/canonical-paths(\.en)?\.md|prodops/documentation-review(\.en)?\.md|PROJECT-REVIEW\.md):' \
       | grep -vE "${stale_annotation}" \
       || true
@@ -208,6 +239,25 @@ done < <(find . -type f -name '*.md' \
 
 if [[ "${broken_links}" -eq 0 ]]; then
   pass "all relative markdown links resolve"
+fi
+
+# ── Framework distribution integrity ──────────────────────────────────────────
+
+check_path ".prodopsignore"
+check_path "prodops/exec/framework-lock.yaml"
+
+if [[ -f "prodops/exec/framework-lock.yaml" ]]; then
+  if grep -q "status: self" prodops/exec/framework-lock.yaml; then
+    pass "framework-lock.yaml: status is self (empirical phase)"
+  else
+    fail "framework-lock.yaml: expected 'status: self' for empirical phase"
+  fi
+fi
+
+if grep -q "payments-api-local-testing" prodops/framework/canonical-paths.md 2>/dev/null; then
+  fail "canonical-paths.md references product-local skill (payments-api-local-testing) — remove it"
+else
+  pass "canonical-paths.md: no product-local skill references"
 fi
 
 if [[ "${failures}" -gt 0 ]]; then

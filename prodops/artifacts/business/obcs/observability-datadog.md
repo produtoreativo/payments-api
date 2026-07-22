@@ -42,6 +42,6 @@ Hoje, quando um cliente reclama que o pagamento não foi confirmado, o time prec
 ## Related Artifacts
 
 - BDD: `prodops/artifacts/business/bdd/observability-datadog.feature`
-- Experiment: `prodops/journeys/discovery/experiments/010-datadog-activation/experiment.md`
+- Experiment: `prodops/artifacts/experiments/010-datadog-activation/experiment.md`
 - Iteration Plan: `prodops/artifacts/governance/plans/iteration-plan.md`
 - OBCs relacionados: `prodops/artifacts/business/obcs/production-cicd-pipeline.md`

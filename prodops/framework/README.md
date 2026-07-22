@@ -44,6 +44,6 @@ O **OBC Partitioning** é o processo de governança que transforma um Global OBC
 
 → Definição completa: [obc.md — OBC Partitioning](obc.md#particionamento-do-obc)
 
-Para contexto de trabalho, ver os diretórios [assessment](../journeys/assessment/README.md), [product](../artifacts/product/) e [downstream](../execution-model/downstream.md).
+Para contexto de trabalho, ver os diretórios [assessment](journeys/assessment/README.md), [product](../artifacts/product/) e [downstream](execution-model/downstream.md).
 
 Para execução de agentes, ver [AGENTS.md](../../AGENTS.md) e [skills/](../skills/).

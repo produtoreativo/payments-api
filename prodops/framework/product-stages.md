@@ -104,7 +104,7 @@ O ProdOps organiza o ciclo de vida de um produto em seis estágios progressivos 
 | Produz | Aprendizado validado com cliente | Aprendizado técnico interno |
 | Código | Pode ser demonstrável ao cliente | Sempre descartável |
 | Quando usar | Fase de Validação de Hipóteses | Qualquer estágio, qualquer fase |
-| Registrado em | Experiment (`experiment.md`) | `prodops/journeys/discovery/spikes.md` |
+| Registrado em | Experiment (`experiment.md`) | `prodops/framework/journeys/discovery/spikes.md` |
 
 Um Spike Solution pode ocorrer **dentro** de um PoC (para responder uma pergunta técnica antes de demonstrar ao cliente) ou **independentemente** (em qualquer estágio, quando surge uma incerteza técnica que bloqueia progresso).
 
@@ -123,5 +123,5 @@ Cada estágio define o peso relativo das métricas DORA estendidas. Nos estágio
 → [Glossário](glossary.md)
 → [DORA Metrics — Extended Model](dora-metrics.md)
 → [Fluxo do Framework](flow.md)
-→ [Jornada Discovery](../journeys/discovery/README.md)
-→ [Spikes](../journeys/discovery/spikes.md)
+→ [Jornada Discovery](journeys/discovery/README.md)
+→ [Spikes](journeys/discovery/spikes.md)

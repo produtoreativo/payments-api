@@ -44,7 +44,7 @@ ProdOps adopts an extended DORA model of **7 metrics** that expands the 4 origin
 **OBC events that feed this metric:**
 `invoice.creation_failed`, `payment.boleto.creation_failed`, `invoice.provider_rejected`, `invoice.cancel_provider_not_found`, `webhook.rejected`, `webhook.delivery.failed`
 
-→ See full mapping in [`../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ See full mapping in [`../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
 
 ---
 
@@ -181,6 +181,6 @@ Used in specific profiles (especially `quality` and `ai_readiness`):
 
 → [Product Stages](product-stages.en.md)
 → [Glossary](glossary.en.md)
-→ [OBC → DORA Mapping](../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
-→ [Operation Journey](../journeys/operation/README.en.md)
-→ [Reliability Plans](../journeys/assessment/reliability-plans/README.en.md)
+→ [OBC → DORA Mapping](../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ [Operation Journey](journeys/operation/README.en.md)
+→ [Reliability Plans](../artifacts/governance/plans/reliability/README.en.md)

@@ -16,7 +16,7 @@ set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
 MANIFEST="prodops/exec/manifest.yaml"
-HOOK="prodops/journeys/delivery/capabilities/commit-workflow/scripts/commit-msg.sh"
+HOOK="prodops/framework/journeys/delivery/capabilities/commit-workflow/scripts/commit-msg.sh"
 
 FAILURES=0
 WARNINGS=0

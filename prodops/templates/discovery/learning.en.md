@@ -1,6 +1,6 @@
 # Upstream Learning
 
-Canonical location: new entry in `prodops/journeys/discovery/learnings.md`
+Canonical location: new entry in `prodops/framework/journeys/discovery/learnings.md`
 
 ## Status
 
@@ -35,7 +35,7 @@ Origin of this learning.
 
 Experiment(s):
 
-- `prodops/journeys/discovery/experiments/NNN-short-slug/experiment.md`
+- `prodops/artifacts/experiments/NNN-short-slug/experiment.md`
 
 Additional references:
 

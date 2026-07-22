@@ -74,7 +74,7 @@ Justification:
 
 ## Next step
 
-- If Upstream: create experiment in `prodops/journeys/discovery/experiments/`
+- If Upstream: create experiment in `prodops/artifacts/experiments/`
 - If Downstream: create OBC in `prodops/artifacts/business/obcs/` and BDD Feature in `prodops/artifacts/business/bdd/`
 
 ---

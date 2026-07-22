@@ -48,9 +48,9 @@ Use Upstream when the work is:
 Before starting, read:
 
 - `prodops/artifacts/product/`
-- `prodops/journeys/assessment/reliability-plans/`
-- `prodops/journeys/discovery/README.md`
-- `prodops/journeys/discovery/experiments.md`
+- `prodops/artifacts/governance/plans/reliability/`
+- `prodops/framework/journeys/discovery/README.md`
+- `prodops/framework/journeys/discovery/experiments.md`
 - `prodops/templates/discovery/experiment.md`
 - `prodops/templates/discovery/trail.md`
 
@@ -96,8 +96,8 @@ Every Upstream experiment must:
 6. Stop when the hypothesis is answered.
 7. Avoid expanding into unrelated or out-of-repository capabilities.
 8. Update impacted ProdOps artifacts.
-9. Register progress in the active experiment trail at `prodops/journeys/discovery/experiments/<NNN-slug>/upstream-trail.md`.
-10. Register reusable findings in `prodops/journeys/discovery/learnings.md`.
+9. Register progress in the active experiment trail at `prodops/artifacts/experiments/<NNN-slug>/upstream-trail.md`.
+10. Register reusable findings in `prodops/framework/journeys/discovery/learnings.md`.
 11. Finish with a recommendation.
 
 ## Expected Outputs
@@ -127,15 +127,15 @@ Possible targets:
 - `prodops/artifacts/product/context/product-deck.md`
 - `prodops/artifacts/product/context/service-decks/`
 - `prodops/artifacts/product/backlogs/tracking-list.md`
-- `prodops/journeys/discovery/experiments/<NNN-slug>/features/` (BDD Features — stay here until move-to-downstream)
-- `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` (OBC drafts — stay here until move-to-downstream)
-- `prodops/journeys/assessment/event-storming/`
-- `prodops/journeys/assessment/reliability-plans/`
+- `prodops/artifacts/experiments/<NNN-slug>/features/` (BDD Features — stay here until move-to-downstream)
+- `prodops/artifacts/experiments/<NNN-slug>/obcs/` (OBC drafts — stay here until move-to-downstream)
+- `prodops/artifacts/product/event-storming/`
+- `prodops/artifacts/governance/plans/reliability/`
 - `prodops/artifacts/business/obcs/` (committed OBCs — only after move-to-downstream)
 - `prodops/artifacts/business/bdd/` (committed BDD Features — only after move-to-downstream)
-- `prodops/journeys/discovery/learnings.md`
-- `prodops/journeys/discovery/experiments/<NNN-slug>/upstream-trail.md`
-- `prodops/journeys/discovery/upstream-trail.md` only for global milestones, promotions, migrations, or repository-wide Upstream process changes
+- `prodops/framework/journeys/discovery/learnings.md`
+- `prodops/artifacts/experiments/<NNN-slug>/upstream-trail.md`
+- `prodops/framework/journeys/discovery/upstream-trail.md` only for global milestones, promotions, migrations, or repository-wide Upstream process changes
 
 Do not update unrelated artifacts.
 

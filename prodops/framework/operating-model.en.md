@@ -158,7 +158,7 @@ Artifacts
 
 **Continuous Assessment** — continuously evaluates risks, opportunities, and decides the next step.
 
-**Execution Model** — the pair of modes that defines how any Journey executes (Upstream = exploration; Downstream = commitment). Not a Journey. → See [ontology.en.md — Execution Model](ontology.en.md#transversal-modifier-execution-model) and [execution-model/README.en.md](../execution-model/README.en.md).
+**Execution Model** — the pair of modes that defines how any Journey executes (Upstream = exploration; Downstream = commitment). Not a Journey. → See [ontology.en.md — Execution Model](ontology.en.md#transversal-modifier-execution-model) and [execution-model/README.en.md](execution-model/README.en.md).
 
 **Journey** — work path with a single responsibility (Discovery, Delivery, Operation, Assessment, Diligence). The Execution Model defines *how* the Journey executes, not *what* it is. → See [ontology.en.md — Journey](ontology.en.md#journey).
 
@@ -180,38 +180,38 @@ Artifacts
 
 Explores problems, hypotheses, and possibilities. Discovery exists in both Upstream and Downstream modes; it is not synonymous with either.
 
-→ [prodops/journeys/discovery/README.en.md](../journeys/discovery/README.en.md)
+→ [prodops/framework/journeys/discovery/README.en.md](journeys/discovery/README.en.md)
 
 ### Delivery
 
 Governed implementation. Uses the knowledge validated by Exploration to deliver with confidence. Requires committed OBC before starting.
 
-→ [prodops/journeys/delivery/README.en.md](../journeys/delivery/README.en.md)
+→ [prodops/framework/journeys/delivery/README.en.md](journeys/delivery/README.en.md)
 
 ### Operation
 
 Continuous operation. Runbooks, incidents, postmortems, operational trail.
 
-→ [prodops/journeys/operation/](../journeys/operation/)
+→ [prodops/framework/journeys/operation/](journeys/operation/)
 
 ### Assessment
 
 Cross-cutting journey. Evaluates risks, opportunities, OBCs, and Iteration Plans.
 
-→ [prodops/journeys/assessment/README.en.md](../journeys/assessment/README.en.md)
+→ [prodops/framework/journeys/assessment/README.en.md](journeys/assessment/README.en.md)
 
 ### Diligence
 
 Cross-cutting journey. Guardian of ProdOps work system consistency. Ensures that the state of each OBC remains synchronized across all backlogs, tools, and management artifacts, without modifying product code.
 
-→ [prodops/journeys/diligence/README.en.md](../journeys/diligence/README.en.md)
+→ [prodops/framework/journeys/diligence/README.en.md](journeys/diligence/README.en.md)
 → [Managed backlog hierarchy](backlogs.en.md)
 
 ---
 
 ## Execution Modes
 
-→ [prodops/execution-model/README.md](../execution-model/README.en.md)
+→ [prodops/framework/execution-model/README.md](execution-model/README.en.md)
 
 ---
 

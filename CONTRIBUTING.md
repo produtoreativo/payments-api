@@ -43,10 +43,10 @@ Mudanças pequenas dispensam Intent — basta abrir o PR.
 Ative os hooks locais de validação de commit (uma vez por clone):
 
 ```bash
-git config core.hooksPath prodops/journeys/delivery/capabilities/commit-workflow/hooks
+git config core.hooksPath prodops/framework/journeys/delivery/capabilities/commit-workflow/hooks
 ```
 
-Detalhes do Commit Workflow: [`prodops/journeys/delivery/capabilities/commit-workflow/README.md`](prodops/journeys/delivery/capabilities/commit-workflow/README.md).
+Detalhes do Commit Workflow: [`prodops/framework/journeys/delivery/capabilities/commit-workflow/README.md`](prodops/framework/journeys/delivery/capabilities/commit-workflow/README.md).
 
 ---
 

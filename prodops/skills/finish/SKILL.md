@@ -10,8 +10,8 @@ Use this skill to close a task with explicit quality evidence.
 ## Inputs
 
 - `AGENTS.md`
-- `prodops/journeys/delivery/phases/finish/quality-gates.md`
-- `prodops/journeys/delivery/phases/finish/done-criteria.md`
+- `prodops/framework/journeys/delivery/phases/finish/quality-gates.md`
+- `prodops/framework/journeys/delivery/phases/finish/done-criteria.md`
 - Current diff and test output
 
 ## Flow

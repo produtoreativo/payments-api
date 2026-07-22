@@ -15,7 +15,7 @@ Execute only the Capture step of the Diligence Sync flow.
 
 Identificar a decisão ou evento que acionou o ciclo:
 - Experimento Discovery concluído com decisão tomada
-- Decisão de Assessment registrada em `prodops/journeys/assessment/`
+- Decisão de Assessment registrada em `prodops/framework/journeys/assessment/`
 - Novo sinal de Operation que muda o estado de um OBC existente
 - Mudança estratégica de Roadmap
 

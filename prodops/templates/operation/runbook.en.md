@@ -1,6 +1,6 @@
 # Runbook — [Scenario Name]
 
-Canonical location: new section in `prodops/journeys/operation/runbooks.md`
+Canonical location: new section in `prodops/framework/journeys/operation/runbooks.md`
 
 ---
 

@@ -110,7 +110,7 @@
 | `prodops/README.md` | Updated operating model to show Origin Stream at the top. Added links to `framework/flow.md` and `framework/origin-streams.md`. Updated reading order. Updated portal with new description of `framework/`. |
 | `prodops/framework/canonical-paths.md` | Added entries for `flow.md` and `origin-streams.md` in the Framework section. Renamed section "Business Intents" to "Intents". Added entry for Intent template. Renamed section "Delivery — Capabilities" to "Delivery — Capabilities (Delivery Capabilities)". |
 | `AGENTS.md` | Updated reading order to include `flow.md` and `origin-streams.md`. Added entries in Source of Truth: official flow, Origin Streams, registered Intents. Updated OBC naming to "Observable Business Contracts". Updated "capability" reference to "Product Capability". |
-| `prodops/journeys/assessment/README.md` | Corrected OBC definition from "Outcome-Based Criteria" to "Observable Business Contracts". |
+| `prodops/framework/journeys/assessment/README.md` | Corrected OBC definition from "Outcome-Based Criteria" to "Observable Business Contracts". |
 
 ---
 

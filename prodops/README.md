@@ -26,16 +26,16 @@ Este diretório é o **ProdOps Workspace** do produto `payments-api`. Ele combin
 
 ### Quero entender as jornadas
 
-→ [journeys/README.md](journeys/README.md) — visão geral das cinco jornadas e seus fluxos\
-→ [journeys/discovery/](journeys/discovery/) — exploração, experimentos, protótipos\
-→ [journeys/delivery/](journeys/delivery/) — fases CI Sync e CI Async, práticas, capabilities\
-→ [journeys/assessment/](journeys/assessment/) — análise de riscos, oportunidades, Reliability Plan\
-→ [journeys/operation/](journeys/operation/) — incidentes, postmortems, runbooks, trilha operacional\
-→ [journeys/diligence/](journeys/diligence/) — sincronização, drift de workspace, reconciliação
+→ [journeys/README.md](framework/journeys/README.md) — visão geral das cinco jornadas e seus fluxos\
+→ [journeys/discovery/](framework/journeys/discovery/) — exploração, experimentos, protótipos\
+→ [journeys/delivery/](framework/journeys/delivery/) — fases CI Sync e CI Async, práticas, capabilities\
+→ [journeys/assessment/](framework/journeys/assessment/) — análise de riscos, oportunidades, Reliability Plan\
+→ [journeys/operation/](framework/journeys/operation/) — incidentes, postmortems, runbooks, trilha operacional\
+→ [journeys/diligence/](framework/journeys/diligence/) — sincronização, drift de workspace, reconciliação
 
 ### Quero executar uma ação (como agente)
 
-→ [../../AGENTS.md](../../AGENTS.md) — roteador de entrada para agentes: qual skill invocar e quando\
+→ [../AGENTS.md](../AGENTS.md) — roteador de entrada para agentes: qual skill invocar e quando\
 → [skills/README.md](skills/README.md) — catálogo completo de skills executáveis\
 → [exec/manifest.yaml](exec/manifest.yaml) — fonte de verdade legível por máquina (paths, gates, vocabulário)\
 → Skills por fase de delivery: [bootstrap](skills/bootstrap/SKILL.md) · [hack](skills/hack/SKILL.md) · [sync](skills/sync/SKILL.md) · [finish](skills/finish/SKILL.md) · [ship](skills/ship/SKILL.md) · [validate](skills/validate/SKILL.md) · [promote](skills/promote/SKILL.md)\
@@ -58,11 +58,11 @@ Este diretório é o **ProdOps Workspace** do produto `payments-api`. Ele combin
 
 ### Quero entender a execução dos agentes
 
-→ [../../AGENTS.md](../../AGENTS.md) — roteador mínimo: qual skill, qual manifest, qual card\
+→ [../AGENTS.md](../AGENTS.md) — roteador mínimo: qual skill, qual manifest, qual card\
 → [exec/manifest.yaml](exec/manifest.yaml) — parâmetros de execução: produto, quality gates, commit types\
 → [framework/execution-mapping/matrix.md](framework/execution-mapping/matrix.md) — quais operações são permitidas por artefato\
 → [skills/](skills/) — implementação das skills por fase e jornada\
-→ [execution-model/](execution-model/) — diferença entre modo Upstream e modo Downstream
+→ [execution-model/](framework/execution-model/) — diferença entre modo Upstream e modo Downstream
 
 ---
 
@@ -71,12 +71,12 @@ Este diretório é o **ProdOps Workspace** do produto `payments-api`. Ele combin
 | Diretório | O que contém | Natureza |
 |---|---|---|
 | [framework/](framework/) | Princípios, glossário, fluxo, backlogs, OBC, governança, execution mapping | Canônico — distribuído do prodops-framework. Não modificar por produto. |
-| [journeys/](journeys/) | As cinco jornadas: Discovery, Delivery, Operation, Assessment, Diligence | Canônico (estrutura) + local (artefatos de jornada como experimentos e trilhas) |
+| [journeys/](framework/journeys/) | As cinco jornadas: Discovery, Delivery, Operation, Assessment, Diligence | Canônico (estrutura) + local (artefatos de jornada como experimentos e trilhas) |
 | [artifacts/](artifacts/) | OBCs, BDD Features, intents, planos, backlogs, arquitetura, trilhas, evidências | Local — pertence exclusivamente ao produto |
 | [skills/](skills/) | Skills executáveis por agentes: fases de delivery + jornadas | Canônico + extensões locais (ex: `payments-api-local-testing`, `diligence`) |
 | [templates/](templates/) | Templates reutilizáveis por tipo de artefato | Canônico — não modificar por produto |
 | [exec/](exec/) | `manifest.yaml` (fonte de verdade) + delivery cards | Local — pertence ao produto |
-| [execution-model/](execution-model/) | Definição dos modos Upstream e Downstream | Canônico — leitura |
+| [execution-model/](framework/execution-model/) | Definição dos modos Upstream e Downstream | Canônico — leitura |
 | [scripts/](scripts/) | Automações: validação do manifest, doctor check, sync de delivery | Canônico + local |
 
 ---
@@ -109,4 +109,4 @@ Origin Stream → Business Signal → Fluxo Global ou Local
   → Iteration Plan → Delivery (CI Sync → CI Async) → Operation
 ```
 
-→ [Fluxo completo](framework/flow.md) · [Origin Streams](framework/origin-streams.md) · [Jornadas](journeys/README.md)
+→ [Fluxo completo](framework/flow.md) · [Origin Streams](framework/origin-streams.md) · [Jornadas](framework/journeys/README.md)

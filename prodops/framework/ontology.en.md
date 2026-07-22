@@ -88,7 +88,7 @@ flowchart TD
 
 **Never represents:** An execution mode. Upstream and Downstream are not journeys.
 
-→ [journeys/README.en.md](../journeys/README.en.md)
+→ [journeys/README.en.md](journeys/README.en.md)
 
 ---
 
@@ -155,7 +155,7 @@ flowchart TD
 
 **Contains:** Upstream (exploration mode), Downstream (commitment mode), mode transition rules.
 
-→ [execution-model/README.en.md](../execution-model/README.en.md)
+→ [execution-model/README.en.md](execution-model/README.en.md)
 
 ---
 
@@ -187,7 +187,7 @@ These groups are organized by where Capabilities were originally defined, not by
 
 **Never represents:** A Phase, a Cycle, a Journey, or a Skill. Product Capability is not a Framework mechanism — it is the object of work.
 
-→ [journeys/delivery/capabilities/](../journeys/delivery/capabilities/) · [journeys/diligence/capabilities/](../journeys/diligence/capabilities/)
+→ [journeys/delivery/capabilities/](journeys/delivery/capabilities/) · [journeys/diligence/capabilities/](journeys/diligence/capabilities/)
 
 ---
 
@@ -263,6 +263,6 @@ This document is the single source of truth for the ProdOps concept hierarchy.
 |---|---|
 | [glossary.en.md](glossary.en.md) | Lexical definitions of all terms — references this ontology for hierarchy |
 | [operating-model.en.md](operating-model.en.md) | Operating model and flow — references this ontology for structural concepts |
-| [execution-model/README.en.md](../execution-model/README.en.md) | Details Upstream and Downstream — is a specialization of this ontology |
-| [journeys/README.en.md](../journeys/README.en.md) | Details each Journey — references Cycle and Phase from this ontology |
+| [execution-model/README.en.md](execution-model/README.en.md) | Details Upstream and Downstream — is a specialization of this ontology |
+| [journeys/README.en.md](journeys/README.en.md) | Details each Journey — references Cycle and Phase from this ontology |
 | [skills/README.en.md](../skills/README.en.md) | Skills catalog — references this ontology for Skill and Step positioning |

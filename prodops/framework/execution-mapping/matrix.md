@@ -167,7 +167,7 @@ Mapeamento completo de todos os Artefatos do Knowledge Space contra operações 
 
 | Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
 |---|---|---|---|---|---|
-| `Define` | Issue, Disc | Discovery | Upstream | Plano do experimento em `journeys/discovery/experiments/<slug>/` | PCE, SE |
+| `Define` | Issue, Disc | Discovery | Upstream | Plano do experimento em `artifacts/experiments/<slug>/` | PCE, SE |
 | `Execute` | Branch, PR | Discovery | Upstream | Resultados parciais no diretório do experimento | SE, PCE |
 | `Evaluate` | Issue, Disc | Discovery | Upstream | Avaliação documentada; hipótese confirmada ou refutada | PCE, PO |
 | `Promote` | PR | Discovery | Upstream → Down | Artefato graduado para `prodops/artifacts/`; experimento arquivado | PCE, TL |
@@ -205,7 +205,7 @@ O Context Capsule (`prodops/exec/cards/<slug>/context.md`) é gerado automaticam
 
 | Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
 |---|---|---|---|---|---|
-| `Create` | PR, Issue | Assessment | Downstream | `journeys/assessment/risks.md` atualizado | PRE, TL |
+| `Create` | PR, Issue | Assessment | Downstream | `artifacts/risks/risks.md` atualizado | PRE, TL |
 | `Update` | PR | Assessment, Delivery | Downstream | Risco revisado (probabilidade, impacto, mitigação) | PRE |
 | `Review` | Issue | Assessment | Downstream | Decisão sobre aceitar, mitigar ou escalar o risco | PRE, PM, TL |
 | `Close` | PR | Operation | N/A | Risco resolvido; nota de encerramento | PRE |

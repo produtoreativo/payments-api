@@ -6,7 +6,7 @@ Usar antes de promover uma capability de Upstream para Downstream, ou antes de f
 
 - [ ] OBC definido e mensurável.
 - [ ] Todos os critérios de aceite cobertos por testes.
-- [ ] Modos de falha documentados em `prodops/journeys/assessment/risks.md`.
+- [ ] Modos de falha documentados em `prodops/artifacts/risks/risks.md`.
 
 ## Observabilidade
 
@@ -17,7 +17,7 @@ Usar antes de promover uma capability de Upstream para Downstream, ou antes de f
 
 ## Prontidão operacional
 
-- [ ] Runbook existe ou foi atualizado em `prodops/journeys/operation/runbooks.md`.
+- [ ] Runbook existe ou foi atualizado em `prodops/framework/journeys/operation/runbooks.md`.
 - [ ] Time de on-call notificado sobre novo modo de falha.
 - [ ] Plano de rollback definido.
 

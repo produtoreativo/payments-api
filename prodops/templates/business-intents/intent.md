@@ -74,7 +74,7 @@ Justificativa:
 
 ## Próximo passo
 
-- Se Upstream: criar experimento em `prodops/journeys/discovery/experiments/`
+- Se Upstream: criar experimento em `prodops/artifacts/experiments/`
 - Se Downstream: criar OBC em `prodops/artifacts/business/obcs/` e BDD Feature em `prodops/artifacts/business/bdd/`
 
 ---

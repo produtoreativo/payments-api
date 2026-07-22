@@ -34,14 +34,14 @@ Scenarios (numbered, one line each):
 ## Risks
 
 Only entries relevant to this card, one line + ID each
-(source: `prodops/journeys/assessment/risks.md`):
+(source: `prodops/artifacts/risks/risks.md`):
 
 - `<RISK-ID>` — <one-line description and mitigation status>
 
 ## Reliability
 
 SLOs, timeouts, and idempotency requirements for this card
-(source: `prodops/journeys/assessment/reliability-plans/`):
+(source: `prodops/artifacts/governance/plans/reliability/`):
 
 - <SLO / timeout / idempotency requirement>
 

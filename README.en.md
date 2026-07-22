@@ -43,7 +43,7 @@ cd api && npm run lint              # lint + format check
 ### Set up Commit Workflow
 
 ```bash
-git config core.hooksPath prodops/journeys/delivery/capabilities/commit-workflow/hooks
+git config core.hooksPath prodops/framework/journeys/delivery/capabilities/commit-workflow/hooks
 ```
 
 ### Additional modes
@@ -75,7 +75,7 @@ This repository materializes the ProdOps Framework. To understand how the framew
 
 1. [prodops/README.en.md](prodops/README.en.md) — portal and navigation map
 2. [prodops/framework/principles.en.md](prodops/framework/principles.en.md) — principles
-3. [prodops/journeys/delivery/README.en.md](prodops/journeys/delivery/README.en.md) — CI Sync and CI Async
+3. [prodops/framework/journeys/delivery/README.en.md](prodops/framework/journeys/delivery/README.en.md) — CI Sync and CI Async
 
 ---
 

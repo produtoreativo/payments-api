@@ -266,7 +266,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 **Criteria to be in this view:**
 - Local OBC in Committed state
 - Functional, technical, and operational Discovery sufficient
-- Risks identified in `prodops/journeys/assessment/risks.md`
+- Risks identified in `prodops/artifacts/risks/risks.md`
 
 **Criteria to enter the Iteration Plan (begin execution):**
 - Local OBC committed in `prodops/artifacts/business/obcs/`
@@ -356,7 +356,7 @@ Diligence is the journey responsible for keeping backlogs synchronized at all le
   The two spaces are independent. An artifact does not "generate" Issues sequentially — Issues represent work initiated on it when needed.
 - Consistency between ProdOps artifacts and external tools
 
-→ [Diligence Journey](../journeys/diligence/README.en.md)
+→ [Diligence Journey](journeys/diligence/README.en.md)
 
 ---
 
@@ -386,4 +386,4 @@ Diligence is the journey responsible for keeping backlogs synchronized at all le
 - `prodops/artifacts/product/backlogs/iteration-backlog.md` — Iteration Backlog
 - `prodops/artifacts/governance/plans/iteration-plan.md` — Iteration Plan
 - `prodops/framework/glossary.en.md` — canonical definitions
-- `prodops/journeys/diligence/README.en.md` — Diligence Journey
+- `prodops/framework/journeys/diligence/README.en.md` — Diligence Journey

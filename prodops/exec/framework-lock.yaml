@@ -1,0 +1,34 @@
+schema_version: 1
+
+prodops_framework:
+  version: "1.0.0-empirical"
+  status: self
+  source_repository: payments-api
+  external_source: null
+  synchronization_mechanism: null
+  note: >
+    O repositório canônico prodops-framework ainda não existe.
+    Este repositório (payments-api) é o upstream empírico temporário do
+    ProdOps Framework. O conteúdo do Framework evolui aqui antes de ser
+    extraído para o repositório canônico dedicado.
+
+distribution:
+  state: empirical
+  lock_mode: self-managed
+  update_procedure: null
+
+drift:
+  status: not_applicable
+  reason: >
+    O drift do Framework não pode ser calculado enquanto este repositório
+    for a fonte canônica temporária. Quando prodops-framework for criado
+    e este repositório se tornar consumidor, a detecção de drift será ativada
+    e este campo passará a declarar a versão instalada versus a versão disponível.
+
+# ── Transição futura ──────────────────────────────────────────────────────────
+# Quando prodops-framework existir:
+#   status: consumer
+#   external_source: github.com/org/prodops-framework
+#   synchronization_mechanism: ci-pr-sync
+#   version: <semver instalado>
+#   drift.status: ok | behind | conflict

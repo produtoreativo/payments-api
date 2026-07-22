@@ -10,9 +10,9 @@ Copie o template para o local canônico indicado antes de preencher. Nunca preen
 
 | Template | Uso | Localização canônica |
 |---|---|---|
-| [experiment.md](discovery/experiment.md) | Novo experimento Upstream | `prodops/journeys/discovery/experiments/NNN-slug/experiment.md` |
-| [trail.md](discovery/trail.md) | Trail cronológico de um experimento | `prodops/journeys/discovery/experiments/NNN-slug/upstream-trail.md` |
-| [learning.md](discovery/learning.md) | Aprendizado consolidado de experimento | nova entrada em `prodops/journeys/discovery/learnings.md` |
+| [experiment.md](discovery/experiment.md) | Novo experimento Upstream | `prodops/artifacts/experiments/NNN-slug/experiment.md` |
+| [trail.md](discovery/trail.md) | Trail cronológico de um experimento | `prodops/artifacts/experiments/NNN-slug/upstream-trail.md` |
+| [learning.md](discovery/learning.md) | Aprendizado consolidado de experimento | nova entrada em `prodops/framework/journeys/discovery/learnings.md` |
 
 Crie um diretório `evidence/` ao lado do experimento quando precisar de outputs de comandos, payloads ou respostas do provedor.
 
@@ -40,7 +40,7 @@ Crie um diretório `evidence/` ao lado do experimento quando precisar de outputs
 
 | Template | Uso | Localização canônica |
 |---|---|---|
-| [assessment/decision-trail.md](assessment/decision-trail.md) | Registro de decisão sob incerteza | `prodops/journeys/assessment/` ou inline no trail |
+| [assessment/decision-trail.md](assessment/decision-trail.md) | Registro de decisão sob incerteza | `prodops/framework/journeys/assessment/` ou inline no trail |
 | [assessment/reliability-checklist.md](assessment/reliability-checklist.md) | Checklist de confiabilidade antes do Ship | usado no Finish/Ship |
 
 ---
@@ -57,8 +57,8 @@ Crie um diretório `evidence/` ao lado do experimento quando precisar de outputs
 
 | Template | Uso | Localização canônica |
 |---|---|---|
-| [operation/runbook.md](operation/runbook.md) | Runbook operacional | `prodops/journeys/operation/runbooks.md` (nova seção) |
-| [operation/postmortem.md](operation/postmortem.md) | Postmortem de incidente | `prodops/journeys/operation/postmortems.md` (nova entrada) |
+| [operation/runbook.md](operation/runbook.md) | Runbook operacional | `prodops/framework/journeys/operation/runbooks.md` (nova seção) |
+| [operation/postmortem.md](operation/postmortem.md) | Postmortem de incidente | `prodops/framework/journeys/operation/postmortems.md` (nova entrada) |
 
 ---
 

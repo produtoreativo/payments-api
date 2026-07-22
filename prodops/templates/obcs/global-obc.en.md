@@ -100,7 +100,7 @@ Draft.
 
 ### Experiments
 
-- <Experiment: link to prodops/journeys/discovery/experiments/<NNN-slug>/>
+- <Experiment: link to prodops/artifacts/experiments/<NNN-slug>/>
 
 ### Decisions
 

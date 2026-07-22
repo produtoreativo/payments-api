@@ -19,7 +19,7 @@ No OBC commitment, no Release Trail, no downstream gates — the goal is learnin
 
 Before running this step, confirm:
 
-- [ ] Experiment is registered in `prodops/journeys/discovery/experiments/`
+- [ ] Experiment is registered in `prodops/artifacts/experiments/`
 - [ ] Experiment branch exists in the repository
 - [ ] GitHub Environment `experiment` exists with the three secrets below
 - [ ] IAM role `payments-api-github-experiment` exists in AWS (deploy `api/infra/iam-experiment-role.yaml` once)

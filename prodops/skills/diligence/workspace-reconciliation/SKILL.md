@@ -113,10 +113,10 @@ Concluído quando **todos** os itens abaixo são verdadeiros:
 - **Ordem obrigatória:** Inspect → (Reconcile se drift) → Verify. Nunca inverter.
 - **Identificar projetos por nome exato, nunca por número.**
 - **Sync manifest é atualizado apenas pelo Verify** — nunca pelo Inspect ou Reconcile.
-- **Automation First (Princípio 8)** — tentar API → MCP → CLI → SDK → Browser Automation antes de declarar qualquer limitação. Manual Exception somente quando tudo falhar, sempre com Issue de rastreamento aberto. Ver [automation-first.md](../../../../framework/automation-first.md).
+- **Automation First (Princípio 8)** — tentar API → MCP → CLI → SDK → Browser Automation antes de declarar qualquer limitação. Manual Exception somente quando tudo falhar, sempre com Issue de rastreamento aberto. Ver [automation-first.md](../../../framework/automation-first.md).
 
 ## References
 
-→ [Capability README](../../../../journeys/diligence/workspace-reconciliation.md)
-→ [Canonical Specification](../../../../framework/github-workspace.md)
-→ [GitHub Sync Manifest](../../../../artifacts/governance/github-sync-manifest.md)
+→ [Capability README](../../../framework/journeys/diligence/workspace-reconciliation.md)
+→ [Canonical Specification](../../../framework/github-workspace.md)
+→ [GitHub Sync Manifest](../../../artifacts/governance/github-sync-manifest.md)

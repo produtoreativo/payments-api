@@ -201,7 +201,7 @@ Toda nova evidência atualiza o contrato. O OBC é um documento vivo — não um
 
 Durante o Upstream, o OBC permanece em Draft ou Refining. Pode ser alterado livremente, pode estar incompleto, não bloqueia experimentos. Registra aprendizados, hipóteses e decisões produzidas pelos experimentos. Nenhuma Skill deve exigir OBC completo durante o Upstream.
 
-OBCs produzidos dentro de experimentos Upstream permanecem no diretório do experimento (`prodops/journeys/discovery/experiments/<NNN-slug>/obcs/`) até a promoção formal.
+OBCs produzidos dentro de experimentos Upstream permanecem no diretório do experimento (`prodops/artifacts/experiments/<NNN-slug>/obcs/`) até a promoção formal.
 
 **Nota sobre modos:** Upstream e Downstream são **modos de execução**, não fases ou estágios. Um item pode iniciar Upstream em qualquer estágio do ciclo de vida — quando concluído, retorna ao estágio original. O modo nunca muda o estágio.
 
@@ -259,7 +259,7 @@ Todas as Skills do Downstream utilizam o Local OBC como principal fonte de conte
 
 | Situação | Localização |
 |---|---|
-| OBC exploratório (em experimento Upstream) | `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md` |
+| OBC exploratório (em experimento Upstream) | `prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md` |
 | Global OBC committed | Repositório de portfólio da plataforma (externo a este repositório) |
 | Local OBC committed | `prodops/artifacts/business/obcs/<slug>.md` |
 
@@ -280,5 +280,5 @@ Não usar OBC como substituto de tarefa técnica isolada ou ticket de bug sem Bu
 → [Hierarquia de backlogs](backlogs.md)
 → [Governança de artefatos](artifact-governance.md)
 → [Fases: Concepção e Inception](phases.md)
-→ [Jornada Discovery](../journeys/discovery/README.md)
-→ [Reliability Plans](../journeys/assessment/reliability-plans/README.md)
+→ [Jornada Discovery](journeys/discovery/README.md)
+→ [Reliability Plans](../artifacts/governance/plans/reliability/README.md)

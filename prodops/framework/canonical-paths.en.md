@@ -3,6 +3,8 @@
 Canonical locations for all ProdOps artifacts and resources.
 Use this table as the primary navigation source before reading or writing any artifact.
 
+> **Scope:** This file describes only canonical ProdOps Framework paths — structures and artifacts that must exist equally in any product consuming the Framework. Product-local paths (artifacts, operational configuration, and product-specific skills) are declared in `prodops/exec/manifest.yaml` and are not part of this canonical source.
+
 ---
 
 ## Framework
@@ -24,9 +26,9 @@ Use this table as the primary navigation source before reading or writing any ar
 
 | Concern | Canonical path |
 |---|---|
-| Modes overview | `prodops/execution-model/README.md` |
-| Upstream mode (discovery) | `prodops/execution-model/upstream.md` |
-| Downstream mode (delivery) | `prodops/execution-model/downstream.md` |
+| Modes overview | `prodops/framework/execution-model/README.md` |
+| Upstream mode (discovery) | `prodops/framework/execution-model/upstream.md` |
+| Downstream mode (delivery) | `prodops/framework/execution-model/downstream.md` |
 
 ---
 
@@ -34,12 +36,12 @@ Use this table as the primary navigation source before reading or writing any ar
 
 | Concern | Canonical path |
 |---|---|
-| Journeys overview | `prodops/journeys/README.md` |
-| Journey: Discovery | `prodops/journeys/discovery/README.md` |
-| Journey: Assessment | `prodops/journeys/assessment/README.md` |
-| Journey: Delivery | `prodops/journeys/delivery/README.md` |
-| Journey: Operation | `prodops/journeys/operation/README.md` |
-| Journey: Diligence | `prodops/journeys/diligence/README.md` |
+| Journeys overview | `prodops/framework/journeys/README.md` |
+| Journey: Discovery | `prodops/framework/journeys/discovery/README.md` |
+| Journey: Assessment | `prodops/framework/journeys/assessment/README.md` |
+| Journey: Delivery | `prodops/framework/journeys/delivery/README.md` |
+| Journey: Operation | `prodops/framework/journeys/operation/README.md` |
+| Journey: Diligence | `prodops/framework/journeys/diligence/README.md` |
 
 ---
 
@@ -47,17 +49,17 @@ Use this table as the primary navigation source before reading or writing any ar
 
 | Concern | Canonical path |
 |---|---|
-| Experiments index | `prodops/journeys/discovery/experiments.md` |
-| Experiments directory | `prodops/journeys/discovery/experiments/` |
-| Individual experiment | `prodops/journeys/discovery/experiments/<NNN-slug>/experiment.md` |
-| Experiment trail | `prodops/journeys/discovery/experiments/<NNN-slug>/upstream-trail.md` |
-| Experiment evidence | `prodops/journeys/discovery/experiments/<NNN-slug>/evidence/` |
-| Exploratory OBCs (in experiment) | `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` |
-| Exploratory BDD Features (in experiment) | `prodops/journeys/discovery/experiments/<NNN-slug>/features/` |
-| Global discovery trail | `prodops/journeys/discovery/upstream-trail.md` |
-| Consolidated learnings | `prodops/journeys/discovery/learnings.md` |
-| Spikes | `prodops/journeys/discovery/spikes.md` |
-| Prototypes | `prodops/journeys/discovery/prototypes.md` |
+| Experiments index | `prodops/framework/journeys/discovery/experiments.md` |
+| Experiments directory | `prodops/artifacts/experiments/` |
+| Individual experiment | `prodops/artifacts/experiments/<NNN-slug>/experiment.md` |
+| Experiment trail | `prodops/artifacts/experiments/<NNN-slug>/upstream-trail.md` |
+| Experiment evidence | `prodops/artifacts/experiments/<NNN-slug>/evidence/` |
+| Exploratory OBCs (in experiment) | `prodops/artifacts/experiments/<NNN-slug>/obcs/` |
+| Exploratory BDD Features (in experiment) | `prodops/artifacts/experiments/<NNN-slug>/features/` |
+| Global discovery trail | `prodops/framework/journeys/discovery/upstream-trail.md` |
+| Consolidated learnings | `prodops/framework/journeys/discovery/learnings.md` |
+| Spikes | `prodops/framework/journeys/discovery/spikes.md` |
+| Prototypes | `prodops/framework/journeys/discovery/prototypes.md` |
 
 ---
 
@@ -65,14 +67,14 @@ Use this table as the primary navigation source before reading or writing any ar
 
 | Concern | Canonical path |
 |---|---|
-| Reliability Plans | `prodops/journeys/assessment/reliability-plans/` |
-| Reliability Plan — Objectives | `prodops/journeys/assessment/reliability-plans/objectives.md` |
-| Reliability Plan — Premortem | `prodops/journeys/assessment/reliability-plans/premortem.md` |
-| Setup: iteration-plan prompt | `prodops/journeys/assessment/reliability-plans/setup/iteration-plan.prompt.md` |
-| Setup: reliability-plan prompt | `prodops/journeys/assessment/reliability-plans/setup/reliability-plan.prompt.md` |
-| Risks | `prodops/journeys/assessment/risks.md` |
-| Opportunities | `prodops/journeys/assessment/opportunities.md` |
-| Event Storming | `prodops/journeys/assessment/event-storming/` |
+| Reliability Plans | `prodops/artifacts/governance/plans/reliability/` |
+| Reliability Plan — Objectives | `prodops/artifacts/governance/plans/reliability/objectives.md` |
+| Reliability Plan — Premortem | `prodops/artifacts/governance/plans/reliability/premortem.md` |
+| Setup: iteration-plan prompt | `prodops/framework/journeys/assessment/reliability-plans/setup/iteration-plan.prompt.md` |
+| Setup: reliability-plan prompt | `prodops/framework/journeys/assessment/reliability-plans/setup/reliability-plan.prompt.md` |
+| Risks | `prodops/artifacts/risks/risks.md` |
+| Opportunities | `prodops/artifacts/risks/opportunities.md` |
+| Event Storming | `prodops/artifacts/product/event-storming/` |
 | Architecture overview | `prodops/artifacts/product/architecture/overview.md` |
 | Product architecture Decision Trail | `prodops/artifacts/product/architecture/decision-trail.md` |
 
@@ -82,49 +84,49 @@ Use this table as the primary navigation source before reading or writing any ar
 
 | Phase | Canonical path |
 |---|---|
-| Bootstrap | `prodops/journeys/delivery/phases/bootstrap/README.md` |
-| Hack | `prodops/journeys/delivery/phases/hack/README.md` |
-| Sync | `prodops/journeys/delivery/phases/sync/README.md` |
-| Finish | `prodops/journeys/delivery/phases/finish/README.md` |
-| Finish — Done criteria | `prodops/journeys/delivery/phases/finish/done-criteria.md` |
-| Finish — Quality gates | `prodops/journeys/delivery/phases/finish/quality-gates.md` |
+| Bootstrap | `prodops/framework/journeys/delivery/phases/bootstrap/README.md` |
+| Hack | `prodops/framework/journeys/delivery/phases/hack/README.md` |
+| Sync | `prodops/framework/journeys/delivery/phases/sync/README.md` |
+| Finish | `prodops/framework/journeys/delivery/phases/finish/README.md` |
+| Finish — Done criteria | `prodops/framework/journeys/delivery/phases/finish/done-criteria.md` |
+| Finish — Quality gates | `prodops/framework/journeys/delivery/phases/finish/quality-gates.md` |
 
 ## Delivery — Phases (CI Async)
 
 | Phase | Canonical path |
 |---|---|
-| Ship | `prodops/journeys/delivery/phases/ship/README.md` |
-| Validate | `prodops/journeys/delivery/phases/validate/README.md` |
-| Promote | `prodops/journeys/delivery/phases/promote/README.md` |
+| Ship | `prodops/framework/journeys/delivery/phases/ship/README.md` |
+| Validate | `prodops/framework/journeys/delivery/phases/validate/README.md` |
+| Promote | `prodops/framework/journeys/delivery/phases/promote/README.md` |
 
 ## Delivery — Pipelines
 
 | Concern | Canonical path |
 |---|---|
-| CI Sync — local sequence | `prodops/journeys/delivery/ci-sync.md` |
-| CI Async — platform sequence | `prodops/journeys/delivery/ci-async.md` |
+| CI Sync — local sequence | `prodops/framework/journeys/delivery/ci-sync.md` |
+| CI Async — platform sequence | `prodops/framework/journeys/delivery/ci-async.md` |
 
 ## Delivery — Capabilities (Delivery Capabilities)
 
 | Delivery Capability | Canonical path |
 |---|---|
-| Commit Workflow | `prodops/journeys/delivery/capabilities/commit-workflow/README.md` |
-| Commit Workflow — PR template | `prodops/journeys/delivery/capabilities/commit-workflow/templates/pull_request.md` |
-| Commit Workflow — task closing template | `prodops/journeys/delivery/capabilities/commit-workflow/templates/task-closing.md` |
-| Contract Management | `prodops/journeys/delivery/capabilities/contract-management.md` |
-| Evidence Management | `prodops/journeys/delivery/capabilities/evidence-management.md` |
-| Observability (capability) | `prodops/journeys/delivery/capabilities/observability.md` |
-| Observability Policy | `prodops/journeys/delivery/capabilities/observability-policy.md` |
-| Reliability (capability) | `prodops/journeys/delivery/capabilities/reliability.md` |
-| Reliability Policy | `prodops/journeys/delivery/capabilities/reliability-policy.md` |
+| Commit Workflow | `prodops/framework/journeys/delivery/capabilities/commit-workflow/README.md` |
+| Commit Workflow — PR template | `prodops/framework/journeys/delivery/capabilities/commit-workflow/templates/pull_request.md` |
+| Commit Workflow — task closing template | `prodops/framework/journeys/delivery/capabilities/commit-workflow/templates/task-closing.md` |
+| Contract Management | `prodops/framework/journeys/delivery/capabilities/contract-management.md` |
+| Evidence Management | `prodops/framework/journeys/delivery/capabilities/evidence-management.md` |
+| Observability (capability) | `prodops/framework/journeys/delivery/capabilities/observability.md` |
+| Observability Policy | `prodops/framework/journeys/delivery/capabilities/observability-policy.md` |
+| Reliability (capability) | `prodops/framework/journeys/delivery/capabilities/reliability.md` |
+| Reliability Policy | `prodops/framework/journeys/delivery/capabilities/reliability-policy.md` |
 
 ## Delivery — Practices
 
 | Practice | Canonical path |
 |---|---|
-| ProdOps TDD | `prodops/journeys/delivery/practices/prodops-tdd.md` |
-| Testing Policy | `prodops/journeys/delivery/practices/testing-policy.md` |
-| Integration Testing Policy | `prodops/journeys/delivery/practices/integration-testing-policy.md` |
+| ProdOps TDD | `prodops/framework/journeys/delivery/practices/prodops-tdd.md` |
+| Testing Policy | `prodops/framework/journeys/delivery/practices/testing-policy.md` |
+| Integration Testing Policy | `prodops/framework/journeys/delivery/practices/integration-testing-policy.md` |
 
 ---
 
@@ -132,11 +134,11 @@ Use this table as the primary navigation source before reading or writing any ar
 
 | Concern | Canonical path |
 |---|---|
-| Overview | `prodops/journeys/operation/README.md` |
-| Operational trail | `prodops/journeys/operation/operational-trail.md` |
-| Incidents | `prodops/journeys/operation/incidents.md` |
-| Postmortems | `prodops/journeys/operation/postmortems.md` |
-| Runbooks | `prodops/journeys/operation/runbooks.md` |
+| Overview | `prodops/framework/journeys/operation/README.md` |
+| Operational trail | `prodops/framework/journeys/operation/operational-trail.md` |
+| Incidents | `prodops/framework/journeys/operation/incidents.md` |
+| Postmortems | `prodops/framework/journeys/operation/postmortems.md` |
+| Runbooks | `prodops/framework/journeys/operation/runbooks.md` |
 
 ---
 
@@ -199,19 +201,13 @@ Use this table as the primary navigation source before reading or writing any ar
 | Ship — Workflow reference | `prodops/skills/ship/references/workflow.md` |
 | Validate | `prodops/skills/validate/SKILL.md` |
 | Promote | `prodops/skills/promote/SKILL.md` |
-| Payments API Local Testing | `prodops/skills/payments-api-local-testing/SKILL.md` |
-| Local Testing — Local runtime | `prodops/skills/payments-api-local-testing/references/local-runtime.md` |
-| Local Testing — Payment contracts | `prodops/skills/payments-api-local-testing/references/payment-contracts.md` |
-| Local Testing — Repository standards | `prodops/skills/payments-api-local-testing/references/repository-standards.md` |
 
 ---
 
-## Engineering References
+## Framework Engineering References
 
 | Reference | Canonical path |
 |---|---|
-| Clean Code | `prodops/skills/references/engineering/clean-code/README.md` |
-| DDD | `prodops/skills/references/engineering/ddd/README.md` |
 | TDD ProdOps | `prodops/skills/references/engineering/tdd-prodops/README.md` |
 | TDD ProdOps — Integration-first | `prodops/skills/references/engineering/tdd-prodops/integration-first.md` |
 | TDD ProdOps — Mocking Policy | `prodops/skills/references/engineering/tdd-prodops/mocking-policy.md` |
@@ -248,11 +244,11 @@ These paths may appear in migrated historical entries. **Do not use for new arti
 
 | Legacy path | Replacement |
 |---|---|
-| `prodops/upstream/` | `prodops/journeys/discovery/` |
+| `prodops/upstream/` | `prodops/framework/journeys/discovery/` |
 | `prodops/product/` | `prodops/artifacts/product/` |
-| `prodops/assessment/` | `prodops/journeys/assessment/` or `prodops/artifacts/governance/plans/` depending on the artifact |
-| `prodops/assessment/reliability-plan/` | `prodops/journeys/assessment/reliability-plans/` |
-| `prodops/assessment/reliability-plans/` | `prodops/journeys/assessment/reliability-plans/` |
+| `prodops/assessment/` | `prodops/framework/journeys/assessment/` or `prodops/artifacts/governance/plans/` depending on the artifact |
+| `prodops/assessment/reliability-plan/` | `prodops/artifacts/governance/plans/reliability/` |
+| `prodops/assessment/reliability-plans/` | `prodops/artifacts/governance/plans/reliability/` |
 | `prodops/downstream/release-trail.md` | `prodops/artifacts/governance/trails/release-trail.md` |
 | `prodops/current-state/` | `prodops/artifacts/` (product/context, business/bdd, business/obcs) |
 | `prodops/current-state/features/` | `prodops/artifacts/business/bdd/` |

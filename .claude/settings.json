@@ -9,7 +9,11 @@
       "Bash(git config core.hooksPath*)",
       "Bash(cd api && npm run lint)",
       "Bash(cd api && npm run build)",
-      "Bash(./scripts/test-acceptance.sh*)"
+      "Bash(./scripts/test-acceptance.sh*)",
+      "Bash(xargs sed -i '' 's|prodops/framework/journeys/|prodops/framework/journeys/|g; s|prodops/framework/execution-model/|prodops/framework/execution-model/|g')",
+      "Bash(xargs sed -i '' 's|\\\\.\\\\./\\\\.\\\\./journeys/|../../framework/journeys/|g; s|\\\\.\\\\./\\\\.\\\\./execution-model/|../../framework/execution-model/|g')",
+      "Bash(xargs sed -i '' 's|\\\\.\\\\./\\\\.\\\\./\\\\.\\\\./journeys/|../../../framework/journeys/|g; s|\\\\.\\\\./\\\\.\\\\./\\\\.\\\\./execution-model/|../../../framework/execution-model/|g')",
+      "Bash(xargs sed -i '' 's|\\\\.\\\\./\\\\.\\\\./\\\\.\\\\./\\\\.\\\\./journeys/|../../../../framework/journeys/|g; s|\\\\.\\\\./\\\\.\\\\./\\\\.\\\\./\\\\.\\\\./execution-model/|../../../../framework/execution-model/|g')"
     ],
     "deny": [
       "Bash(git push --force*)"

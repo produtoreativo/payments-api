@@ -18,4 +18,4 @@ BDD Features comprometidas — promovidas do modo Upstream para Downstream.
 
 Features neste diretório foram promovidas do Discovery (Upstream) após revisão do Decision Package.
 
-Features exploratórias (não comprometidas) ficam em `prodops/journeys/discovery/experiments/<NNN-slug>/features/`.
+Features exploratórias (não comprometidas) ficam em `prodops/artifacts/experiments/<NNN-slug>/features/`.

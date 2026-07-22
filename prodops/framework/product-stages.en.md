@@ -104,7 +104,7 @@ ProdOps organizes the lifecycle of a product into six progressive stages divided
 | Produces | Customer-validated learning | Internal technical learning |
 | Code | May be demonstrable to customer | Always disposable |
 | When to use | Hypothesis Validation phase | Any stage, any phase |
-| Recorded in | Experiment (`experiment.md`) | `prodops/journeys/discovery/spikes.md` |
+| Recorded in | Experiment (`experiment.md`) | `prodops/framework/journeys/discovery/spikes.md` |
 
 A Spike Solution may occur **inside** a PoC (to answer a technical question before demonstrating to the customer) or **independently** (at any stage, whenever a technical uncertainty blocks progress).
 
@@ -123,5 +123,5 @@ Each stage defines the relative weight of the extended DORA metrics. In early st
 → [Glossary](glossary.en.md)
 → [DORA Metrics — Extended Model](dora-metrics.en.md)
 → [Framework Flow](flow.en.md)
-→ [Discovery Journey](../journeys/discovery/README.md)
-→ [Spikes](../journeys/discovery/spikes.md)
+→ [Discovery Journey](journeys/discovery/README.md)
+→ [Spikes](journeys/discovery/spikes.md)

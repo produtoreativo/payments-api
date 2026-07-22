@@ -44,7 +44,7 @@ Previously, production was updated manually via terminal: anyone with AWS creden
 ## Related Artifacts
 
 - BDD: `prodops/artifacts/business/bdd/production-cicd-pipeline.feature`
-- Experiment: `prodops/journeys/discovery/experiments/012-production-cicd-pipeline/experiment.md`
+- Experiment: `prodops/artifacts/experiments/012-production-cicd-pipeline/experiment.md`
 - IaC: `api/infra/iam-deploy-role.yaml`, `.github/workflows/deploy-production.yml`
 - Iteration Plan: `prodops/artifacts/governance/plans/iteration-plan.md`
 - Related OBCs: `prodops/artifacts/business/obcs/observability-datadog.md`, `prodops/artifacts/business/obcs/dynamodb-optimization.md`

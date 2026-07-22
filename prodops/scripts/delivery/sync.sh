@@ -377,7 +377,7 @@ step_align() {
 
   # ── 2. Domain Events → Event Storming ───────────────────────────────────────
   section "2/4  Event Storming"
-  note "Rule: new/renamed/removed domain event → prodops/journeys/assessment/event-storming/plan.json"
+  note "Rule: new/renamed/removed domain event → prodops/artifacts/product/event-storming/plan.json"
 
   local event_diff
   event_diff=$(git diff "${BASE_BRANCH}...HEAD" -U0 -- "api/" | grep '^+' | grep -E "eventEmitter\.emit\(|@OnEvent\(" || true)
@@ -385,15 +385,15 @@ step_align() {
   if [[ -n "${event_diff}" ]]; then
     warn "Domain event changes detected:"
     echo "${event_diff}" | head -10 | while IFS= read -r line; do note "    ${line}"; done
-    note "  Update prodops/journeys/assessment/event-storming/plan.json:"
+    note "  Update prodops/artifacts/product/event-storming/plan.json:"
     note "    - customEvents: add/rename/remove event entries"
     note "    - sloSuggestions: add entry if event is on the critical path"
     note "    - assumptions[last]: update date and summary"
-    note "  Format ref: prodops/journeys/assessment/event-storming/plan-model.json"
+    note "  Format ref: prodops/artifacts/product/event-storming/plan-model.json"
 
     # Check if event-storming was already updated
     local es_updated
-    es_updated=$(git diff "${BASE_BRANCH}...HEAD" --name-only -- "prodops/journeys/assessment/event-storming/" || true)
+    es_updated=$(git diff "${BASE_BRANCH}...HEAD" --name-only -- "prodops/artifacts/product/event-storming/" || true)
     if [[ -n "${es_updated}" ]]; then
       pass "event-storming/plan.json was updated in this branch"
     else

@@ -7,7 +7,7 @@ This directory contains committed **Local OBCs** for this product repository. It
 ## Rules
 
 - Every committed Local OBC must have its own file in this directory: `prodops/artifacts/business/obcs/<slug>.md`
-- Exploratory OBCs (Draft/Refining) remain under `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/` until formal promotion.
+- Exploratory OBCs (Draft/Refining) remain under `prodops/artifacts/experiments/<NNN-slug>/obcs/` until formal promotion.
 - Each Local OBC must reference its corresponding Global OBC (or indicate "Local — direct flow" if none).
 - Product Decks, BDD Features, Reliability Plans, and other artifacts must reference the OBC without duplicating its definition.
 

@@ -42,6 +42,6 @@ It is the difference between searching a problem in a text file and seeing a map
 ## Related Artifacts
 
 - BDD: `prodops/artifacts/business/bdd/observability-datadog.feature`
-- Experiment: `prodops/journeys/discovery/experiments/010-datadog-activation/experiment.md`
+- Experiment: `prodops/artifacts/experiments/010-datadog-activation/experiment.md`
 - Iteration Plan: `prodops/artifacts/governance/plans/iteration-plan.md`
 - Related OBCs: `prodops/artifacts/business/obcs/production-cicd-pipeline.md`

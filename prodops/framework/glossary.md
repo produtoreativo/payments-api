@@ -242,9 +242,9 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 | Objetivo | Validar com feedback real | Responder pergunta técnica |
 | Código | Pode ser demonstrável | Sempre descartável |
 
-**Onde registrar:** `prodops/journeys/discovery/spikes.md` (se isolado) ou `upstream-trail.md` do experimento (se dentro de um Upstream ativo).
+**Onde registrar:** `prodops/framework/journeys/discovery/spikes.md` (se isolado) ou `upstream-trail.md` do experimento (se dentro de um Upstream ativo).
 
-**Relação com outros conceitos:** Ver **PoC**, **Estágio de Produto**, [`product-stages.md`](product-stages.md) e [`../journeys/discovery/spikes.md`](../journeys/discovery/spikes.md).
+**Relação com outros conceitos:** Ver **PoC**, **Estágio de Produto**, [`product-stages.md`](product-stages.md) e [`journeys/discovery/spikes.md`](journeys/discovery/spikes.md).
 
 ---
 
@@ -446,7 +446,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 | **Discovery** | Jornada | O nome da jornada do Framework que implementa Exploration |
 | **Upstream / Downstream** | Execution Mode | O compromisso e o rigor aplicados durante Discovery |
 
-Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discovery/README.md) e [`../execution-model/upstream.md`](../execution-model/upstream.md).
+Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/README.md) e [`execution-model/upstream.md`](execution-model/upstream.md).
 
 ---
 
@@ -460,7 +460,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Quando não usar:** Discovery não é sinônimo de Upstream e não determina, sozinha, se haverá entrega.
 
-**Relação com outros conceitos:** Discovery é a jornada que implementa Exploration e existe nos modos Upstream e Downstream. Ver [`../journeys/discovery/README.md`](../journeys/discovery/README.md).
+**Relação com outros conceitos:** Discovery é a jornada que implementa Exploration e existe nos modos Upstream e Downstream. Ver [`journeys/discovery/README.md`](journeys/discovery/README.md).
 
 ---
 
@@ -474,7 +474,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Quando não usar:** Não confundir com "Product Capability". Uma Delivery Capability é um mecanismo do Framework, não uma funcionalidade do produto.
 
-**Relação com outros conceitos:** Usada pelas Phases da jornada Delivery. Ver [`../journeys/delivery/capabilities/`](../journeys/delivery/capabilities/).
+**Relação com outros conceitos:** Usada pelas Phases da jornada Delivery. Ver [`journeys/delivery/capabilities/`](journeys/delivery/capabilities/).
 
 ---
 
@@ -494,13 +494,13 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## BDD Feature
 
-**Definição:** Especificação Gherkin que descreve o comportamento esperado de uma Product Capability. Fica em `prodops/artifacts/business/bdd/` (comprometida) ou `prodops/journeys/discovery/experiments/<NNN-slug>/features/` (exploratória — dentro do diretório do experimento). Usada como insumo de TDD no Downstream.
+**Definição:** Especificação Gherkin que descreve o comportamento esperado de uma Product Capability. Fica em `prodops/artifacts/business/bdd/` (comprometida) ou `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratória — dentro do diretório do experimento). Usada como insumo de TDD no Downstream.
 
 ---
 
 ## Reliability Plan
 
-**Definição:** Produto da jornada transversal de Assessment que define riscos, SLOs e ações de mitigação para um item comprometido. Fica em `prodops/journeys/assessment/reliability-plans/`.
+**Definição:** Produto da jornada transversal de Assessment que define riscos, SLOs e ações de mitigação para um item comprometido. Fica em `prodops/artifacts/governance/plans/reliability/`.
 
 **Obrigatoriedade:** Condicional e verificável. É gate de Delivery quando houver movimentação financeira, integração externa, mudança de SLO, risco alto/crítico ou alteração de persistência ou segurança. Fora desses gatilhos é opcional.
 
@@ -612,13 +612,13 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## CI Sync
 
-**Definição:** O agrupamento síncrono do ProdOps Delivery. Representa o trabalho local, colaborativo e conduzido pelo engenheiro. Inclui Bootstrap, Hack, Sync e Finish. Produz: task fechada, PR com narrativa, evidências, commits organizados, validações locais executadas. Ver [`journeys/delivery/README.md`](../journeys/delivery/README.md).
+**Definição:** O agrupamento síncrono do ProdOps Delivery. Representa o trabalho local, colaborativo e conduzido pelo engenheiro. Inclui Bootstrap, Hack, Sync e Finish. Produz: task fechada, PR com narrativa, evidências, commits organizados, validações locais executadas. Ver [`journeys/delivery/README.md`](journeys/delivery/README.md).
 
 ---
 
 ## CI Async
 
-**Definição:** O agrupamento assíncrono do ProdOps Delivery. Representa o trabalho conduzido pela plataforma, pipelines e ambientes. Inclui Ship, Validate e Promote. Produz: artefato publicado, deploy realizado, validação em runtime, promoção controlada. Ver [`journeys/delivery/README.md`](../journeys/delivery/README.md).
+**Definição:** O agrupamento assíncrono do ProdOps Delivery. Representa o trabalho conduzido pela plataforma, pipelines e ambientes. Inclui Ship, Validate e Promote. Produz: artefato publicado, deploy realizado, validação em runtime, promoção controlada. Ver [`journeys/delivery/README.md`](journeys/delivery/README.md).
 
 ---
 
@@ -628,7 +628,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Regra fundamental:** O Execution Model define *como* as Journeys executam — não *o que* elas são. Qualquer Journey pode operar em qualquer modo.
 
-→ Definição completa: [`ontology.md — Execution Model`](ontology.md#modificador-transversal-execution-model) · [`execution-model/README.md`](../execution-model/README.md)
+→ Definição completa: [`ontology.md — Execution Model`](ontology.md#modificador-transversal-execution-model) · [`execution-model/README.md`](execution-model/README.md)
 
 ---
 
@@ -638,7 +638,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Regra fundamental:** Journeys não são modos de execução. Upstream e Downstream não são jornadas — são modos do Execution Model que se aplicam sobre as jornadas.
 
-→ Definição completa: [`ontology.md — Journey`](ontology.md#journey-jornada) · [`journeys/README.md`](../journeys/README.md)
+→ Definição completa: [`ontology.md — Journey`](ontology.md#journey-jornada) · [`journeys/README.md`](journeys/README.md)
 
 ---
 
@@ -678,7 +678,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 ## Bootstrap
 
-**Definição:** O primeiro estágio do CI Sync. Instala dependências, prepara infraestrutura local, verifica configuração e executa o smoke gate. Não lê código, testes ou artefatos de produto e não cria branch; Git flow pertence ao Hack Start. Ver [`journeys/delivery/phases/bootstrap/README.md`](../journeys/delivery/phases/bootstrap/README.md).
+**Definição:** O primeiro estágio do CI Sync. Instala dependências, prepara infraestrutura local, verifica configuração e executa o smoke gate. Não lê código, testes ou artefatos de produto e não cria branch; Git flow pertence ao Hack Start. Ver [`journeys/delivery/phases/bootstrap/README.md`](journeys/delivery/phases/bootstrap/README.md).
 
 ---
 
@@ -688,7 +688,7 @@ Ver [`flow.md`](flow.md), [`../journeys/discovery/README.md`](../journeys/discov
 
 **Importante:** Upstream não muda o estágio do item. Um item em Discovery que inicia Upstream continua em Discovery; quando o Upstream termina, retorna ao estágio em que estava.
 
-Ver [`prodops/journeys/discovery/README.md`](../journeys/discovery/README.md).
+Ver [`prodops/framework/journeys/discovery/README.md`](journeys/discovery/README.md).
 
 ---
 
@@ -696,43 +696,43 @@ Ver [`prodops/journeys/discovery/README.md`](../journeys/discovery/README.md).
 
 **Definição:** **Modo de execução** padrão, com compromisso de entrega que aplica todos os quality gates vigentes em todas as jornadas. Guia o item e para em cada lacuna até atingir readiness; então executa o fluxo completo `Bootstrap → Hack → Sync → Finish → Ship → Validate → Promote`. Não é uma fase — é um modo de execução. Pode iniciar em qualquer estágio do ciclo de vida.
 
-Ver [`prodops/execution-model/downstream.md`](../execution-model/downstream.md).
+Ver [`prodops/framework/execution-model/downstream.md`](execution-model/downstream.md).
 
 ---
 
 ## Hack Flow
 
-**Definição:** A fase de codificação em Upstream e Downstream. Segundo estágio do CI Sync, sucede o Bootstrap. Definido em [`journeys/delivery/phases/hack/README.md`](../journeys/delivery/phases/hack/README.md). Mecânica de execução em [`skills/hack/`](../skills/hack/).
+**Definição:** A fase de codificação em Upstream e Downstream. Segundo estágio do CI Sync, sucede o Bootstrap. Definido em [`journeys/delivery/phases/hack/README.md`](journeys/delivery/phases/hack/README.md). Mecânica de execução em [`skills/hack/`](../skills/hack/).
 
 ---
 
 ## Sync
 
-**Definição:** O terceiro estágio do CI Sync. Tem dois steps independentes: `rebase` (sincroniza a feature branch com a base — fetch, integração, conflitos, validação) e `align` (alinha artefatos ProdOps com a implementação — BDD Features, Event Storming, arquitetura, Release Trail). Invocados via `/sync rebase` e `/sync align`. Ver [`journeys/delivery/phases/sync/README.md`](../journeys/delivery/phases/sync/README.md).
+**Definição:** O terceiro estágio do CI Sync. Tem dois steps independentes: `rebase` (sincroniza a feature branch com a base — fetch, integração, conflitos, validação) e `align` (alinha artefatos ProdOps com a implementação — BDD Features, Event Storming, arquitetura, Release Trail). Invocados via `/sync rebase` e `/sync align`. Ver [`journeys/delivery/phases/sync/README.md`](journeys/delivery/phases/sync/README.md).
 
 ---
 
 ## Ship
 
-**Definição:** O primeiro estágio do CI Async. Transforma a implementação finalizada em artefato executável e conduz o deploy. Organizado em duas famílias: Preparation (Build, Package, Version, Sign, SBOM, Publish Artifact) e Deployment (Deploy, Progressive Delivery, Feature Flags, Rollout, Rollback, Infrastructure Validation). Build, Package e Publish são capabilities internas do Ship — não são etapas independentes do fluxo principal. Ver fases: [Ship](../journeys/delivery/phases/ship/README.md), [Validate](../journeys/delivery/phases/validate/README.md), [Promote](../journeys/delivery/phases/promote/README.md).
+**Definição:** O primeiro estágio do CI Async. Transforma a implementação finalizada em artefato executável e conduz o deploy. Organizado em duas famílias: Preparation (Build, Package, Version, Sign, SBOM, Publish Artifact) e Deployment (Deploy, Progressive Delivery, Feature Flags, Rollout, Rollback, Infrastructure Validation). Build, Package e Publish são capabilities internas do Ship — não são etapas independentes do fluxo principal. Ver fases: [Ship](journeys/delivery/phases/ship/README.md), [Validate](journeys/delivery/phases/validate/README.md), [Promote](journeys/delivery/phases/promote/README.md).
 
 ---
 
 ## Validate
 
-**Definição:** O segundo estágio do CI Async. Verifica a entrega em execução no ambiente alvo. Capabilities: Smoke Tests, Runtime Contract Validation, Synthetic Monitoring, Health Checks, Observability Validation, SLO Validation, Business Validation, Incident Signals. Ver fases: [Ship](../journeys/delivery/phases/ship/README.md), [Validate](../journeys/delivery/phases/validate/README.md), [Promote](../journeys/delivery/phases/promote/README.md).
+**Definição:** O segundo estágio do CI Async. Verifica a entrega em execução no ambiente alvo. Capabilities: Smoke Tests, Runtime Contract Validation, Synthetic Monitoring, Health Checks, Observability Validation, SLO Validation, Business Validation, Incident Signals. Ver fases: [Ship](journeys/delivery/phases/ship/README.md), [Validate](journeys/delivery/phases/validate/README.md), [Promote](journeys/delivery/phases/promote/README.md).
 
 ---
 
 ## Promote
 
-**Definição:** O terceiro estágio do CI Async. Oficializa a evolução da versão com aprovação formal e evidência registrada. Capabilities: Promotion Gates, Environment Promotion, Release Approval, Release Trail, Operational Evidence, Release Documentation, Rollback Readiness. Ver fases: [Ship](../journeys/delivery/phases/ship/README.md), [Validate](../journeys/delivery/phases/validate/README.md), [Promote](../journeys/delivery/phases/promote/README.md).
+**Definição:** O terceiro estágio do CI Async. Oficializa a evolução da versão com aprovação formal e evidência registrada. Capabilities: Promotion Gates, Environment Promotion, Release Approval, Release Trail, Operational Evidence, Release Documentation, Rollback Readiness. Ver fases: [Ship](journeys/delivery/phases/ship/README.md), [Validate](journeys/delivery/phases/validate/README.md), [Promote](journeys/delivery/phases/promote/README.md).
 
 ---
 
 ## ProdOps TDD
 
-**Definição:** A prática utilizada dentro do Hack Flow para produzir código observável e confiável. Definida em [`journeys/delivery/practices/prodops-tdd.md`](../journeys/delivery/practices/prodops-tdd.md).
+**Definição:** A prática utilizada dentro do Hack Flow para produzir código observável e confiável. Definida em [`journeys/delivery/practices/prodops-tdd.md`](journeys/delivery/practices/prodops-tdd.md).
 
 ---
 
@@ -796,7 +796,7 @@ Ver [`prodops/execution-model/downstream.md`](../execution-model/downstream.md).
 
 **O que não faz:** Não implementa software. Não cria Pull Requests de implementação. Não modifica código do produto. Não toma decisões de produto que competem ao Assessment.
 
-**Relação com outros conceitos:** Jornada transversal. Consome artefatos do Assessment e alimenta a Delivery com trabalho organizado e rastreável. Ver [`../journeys/diligence/README.md`](../journeys/diligence/README.md) e [`backlogs.md`](backlogs.md).
+**Relação com outros conceitos:** Jornada transversal. Consome artefatos do Assessment e alimenta a Delivery com trabalho organizado e rastreável. Ver [`journeys/diligence/README.md`](journeys/diligence/README.md) e [`backlogs.md`](backlogs.md).
 
 ---
 
@@ -824,7 +824,7 @@ Exemplos de Work Items corretos:
 Um mesmo artefato pode ter dezenas de Work Items ao longo de sua vida.
 Um mesmo Work Item pode afetar múltiplos artefatos.
 
-**Relação com outros conceitos:** Gerenciada pela Diligence. Ver [`backlogs.md`](backlogs.md) e [`../journeys/diligence/README.md`](../journeys/diligence/README.md).
+**Relação com outros conceitos:** Gerenciada pela Diligence. Ver [`backlogs.md`](backlogs.md) e [`journeys/diligence/README.md`](journeys/diligence/README.md).
 
 → [Knowledge vs Execution](knowledge-vs-execution.md)
 

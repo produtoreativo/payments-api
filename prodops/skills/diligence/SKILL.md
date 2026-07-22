@@ -40,7 +40,7 @@ Quando invocado com argumento de step (`/diligence diligence-sync capture`), exe
 - OBC ativo: `prodops/artifacts/business/obcs/<obc-id>.md`
 - Iteration Plan: `prodops/artifacts/governance/plans/iteration-plan.md`
 - BDD Features: `prodops/artifacts/business/bdd/`
-- Riscos: `prodops/journeys/assessment/risks.md`
+- Riscos: `prodops/artifacts/risks/risks.md`
 - Schema de Work Item: `prodops/framework/execution-mapping/work-item-schema.md`
 - Matriz de execução: `prodops/framework/execution-mapping/matrix.md`
 
@@ -99,7 +99,7 @@ Invocável pelo usuário (`/diligence workspace-reconciliation`) e pelos ciclos 
 
 ## References
 
-→ [Diligence journey README](../../journeys/diligence/README.md)
+→ [Diligence journey README](../../framework/journeys/diligence/README.md)
 → [Execution Mapping](../../framework/execution-mapping/README.md)
 → [Work Item Schema](../../framework/execution-mapping/work-item-schema.md)
 → [Mapping Matrix](../../framework/execution-mapping/matrix.md)

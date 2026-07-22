@@ -12,7 +12,7 @@ Execute only the TDD cycle of the Hack flow.
 Read before starting:
 
 - Relevant BDD Feature in `prodops/artifacts/business/bdd/` (committed) or
-  `prodops/journeys/discovery/experiments/<NNN-slug>/features/` (exploratory)
+  `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratory)
 - Relevant OBC in `prodops/artifacts/business/obcs/` or experiment directory
 - The module being changed and its existing tests
 - Direct imports and shared contracts required to understand the change
@@ -46,7 +46,7 @@ Read before starting:
 The Yellow Bar is where refactoring **and** the transversal Security, Quality, and
 Documentation validations run. These are not extra steps — they are the cycle's
 exit gates. The full checklist is in
-[`../../../../journeys/delivery/phases/hack/quality-gates.md`](../../../../journeys/delivery/phases/hack/quality-gates.md).
+[`../../../../framework/journeys/delivery/phases/hack/quality-gates.md`](../../../../framework/journeys/delivery/phases/hack/quality-gates.md).
 
 1. **Refactor** — improve names, reduce duplication, apply Clean Code rules.
    Do not change behavior. Re-run tests after each refactor step to stay green.
@@ -59,15 +59,15 @@ exit gates. The full checklist is in
 4. **Quality gate** — confirm the diff contains no forbidden test double
    (`jest.fn()` as a service replacement, `.overrideProvider()`) and no `.only`
    left in a spec. See
-   [`../../../../journeys/delivery/phases/finish/quality-gates.md`](../../../../journeys/delivery/phases/finish/quality-gates.md).
+   [`../../../../framework/journeys/delivery/phases/finish/quality-gates.md`](../../../../framework/journeys/delivery/phases/finish/quality-gates.md).
 5. **Event Storming** — if the change adds, removes, or renames a domain event
    (`eventEmitter.emit()` or `@OnEvent()`), update
-   `prodops/journeys/assessment/event-storming/plan.json`:
+   `prodops/artifacts/product/event-storming/plan.json`:
    - add both success and `_exception` variants to `customEvents`;
    - add the event to relevant flow bands;
    - add an `sloSuggestions` entry if on the critical path;
    - update `assumptions[last]` with today's date and a change summary.
-   Use `prodops/journeys/assessment/event-storming/plan-model.json` as the format reference.
+   Use `prodops/artifacts/product/event-storming/plan-model.json` as the format reference.
 6. **Architecture** — if the change is structural (new module, route, external
    dependency, table, or event topic), update
    `prodops/artifacts/product/architecture/overview.md`:
@@ -89,7 +89,7 @@ exit gates. The full checklist is in
 - No secrets or PII in the diff; no forbidden mock (`jest.fn()`, `.overrideProvider()`) or `.only` left behind.
 - Impacted ProdOps artifacts updated (Event Storming, architecture, BDD if needed).
 - Release Trail has the full TDD evidence entry.
-- Every gate in [`quality-gates.md`](../../../../journeys/delivery/phases/hack/quality-gates.md) is satisfied.
+- Every gate in [`quality-gates.md`](../../../../framework/journeys/delivery/phases/hack/quality-gates.md) is satisfied.
 
 ## Guardrails
 

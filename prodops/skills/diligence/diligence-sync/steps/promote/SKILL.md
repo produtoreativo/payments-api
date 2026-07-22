@@ -26,7 +26,7 @@ Localizar o estado atual do OBC:
 **Transição → Iteration Plan:**
 - [ ] OBC committed
 - [ ] BDD Feature committed em `prodops/artifacts/business/bdd/`
-- [ ] Riscos documentados em `prodops/journeys/assessment/risks.md`
+- [ ] Riscos documentados em `prodops/artifacts/risks/risks.md`
 - [ ] Reliability Plan quando aplicável (movimento de dinheiro, integração externa, mudança de SLO, risco alto/crítico, mudança de persistência ou segurança)
 
 ### 3. Executar a transição ou registrar bloqueio

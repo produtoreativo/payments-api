@@ -27,7 +27,7 @@ A decisão principal é reduzir o lote: entregar uma jornada menor, completa e c
 
 | Risco | Impacto no negócio | Probabilidade | Influência sobre o escopo |
 | --- | --- | --- | --- |
-| Novo gateway ainda desabilitado por Feature Flag devido a bug localizado. | Muito alto: impede ativação da Release e, segundo `prodops/journeys/assessment/risks.md`, existe risco contratual relevante. | Alta | Reduzir escopo para a jornada mais importante, evitando incluir funcionalidades paralelas que desviem foco da ativação. |
+| Novo gateway ainda desabilitado por Feature Flag devido a bug localizado. | Muito alto: impede ativação da Release e, segundo `prodops/artifacts/risks/risks.md`, existe risco contratual relevante. | Alta | Reduzir escopo para a jornada mais importante, evitando incluir funcionalidades paralelas que desviem foco da ativação. |
 | Notification Service já teve incidentes que afetaram confirmação ao cliente. | Alto: cliente pode pagar e não receber informação confiável. | Alta | Manter notificação de status dentro da Release, mas apenas como parte da jornada principal, não como plataforma completa de comunicação. |
 | Desacoplamento do monolito aumenta complexidade entre times e serviços. | Alto: falhas de integração podem impedir a experiência ponta a ponta. | Alta | Preferir uma jornada completa menor em vez de múltiplas jornadas incompletas. |
 | Pix e Boleto possuem regras e expectativas diferentes. | Médio/alto: tratar ambos como variação simples pode aumentar erro de negócio. | Média | Dividir Boleto e não comprometer a Release principal com todas as variações do meio de pagamento. |
@@ -111,9 +111,9 @@ Fallback/Itau ficou fora porque aumentaria muito o tamanho da Release. A oportun
 - `prodops/artifacts/business/bdd/create-invoice.feature`
 - `prodops/artifacts/business/bdd/payment-confirmation.feature`
 - `prodops/artifacts/business/bdd/cancel-invoice.feature`
-- `prodops/journeys/assessment/`
+- `prodops/framework/journeys/assessment/`
 - `prodops/artifacts/product/backlogs/iteration-backlog.md`
-- `prodops/journeys/assessment/event-storming/plan.json`
+- `prodops/artifacts/product/event-storming/plan.json`
 - `api/src/modules/invoices`
 - `api/src/infra/asaas.service.ts`
 - `api/test/criar-invoice.e2e-spec.ts`

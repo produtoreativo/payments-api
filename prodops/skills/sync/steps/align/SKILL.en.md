@@ -13,7 +13,7 @@ Execute only the artifact alignment step of the Sync flow.
 
 - Current diff (`git diff main...HEAD`) — what changed in this branch
 - `prodops/artifacts/business/bdd/` — BDD Features
-- `prodops/journeys/assessment/event-storming/plan.json` — Event Storming
+- `prodops/artifacts/product/event-storming/plan.json` — Event Storming
 - `prodops/artifacts/product/architecture/overview.md` — architecture diagram
 - `prodops/artifacts/governance/trails/sessions/` — active session trail
 - Relevant OBC in `prodops/artifacts/business/obcs/`
@@ -36,7 +36,7 @@ For each item identified, locate the canonical artifact in `prodops/`. Use this 
 | Change in the code | Canonical artifact |
 |---|---|
 | New or altered behavior | BDD Feature in `prodops/artifacts/business/bdd/` |
-| Domain event added, renamed, or removed | `prodops/journeys/assessment/event-storming/plan.json` |
+| Domain event added, renamed, or removed | `prodops/artifacts/product/event-storming/plan.json` |
 | New module, route, external dependency, or table | `prodops/artifacts/product/architecture/overview.md` |
 | OBC satisfied or altered | `prodops/artifacts/business/obcs/<slug>.md` |
 

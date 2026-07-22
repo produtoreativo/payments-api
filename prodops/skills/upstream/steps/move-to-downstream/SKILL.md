@@ -16,10 +16,10 @@ locations and registering the capability in the Iteration Plan.
 1. Read the experiment's `experiment.md` and confirm the Decision Package has
    recommendation `Promover` or `Promover com restrição`.
 2. Move the BDD Feature:
-   - From: `prodops/journeys/discovery/experiments/<NNN-slug>/features/<slug>.feature`
+   - From: `prodops/artifacts/experiments/<NNN-slug>/features/<slug>.feature`
    - To: `prodops/artifacts/business/bdd/<slug>.feature`
 3. Move the OBC:
-   - From: `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md`
+   - From: `prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md`
    - To: `prodops/artifacts/business/obcs/<slug>.md`
    - Remove any "Upstream draft only" marking from the file.
 4. Add an entry to the Iteration Plan at
@@ -30,10 +30,10 @@ locations and registering the capability in the Iteration Plan.
 5. If the capability had a Repository Tracking List entry, update its status to
    "Promovido para Downstream" in `prodops/artifacts/product/backlogs/tracking-list.md`.
 6. Append a promotion entry to the experiment's trail:
-   `prodops/journeys/discovery/experiments/<NNN-slug>/upstream-trail.md`
+   `prodops/artifacts/experiments/<NNN-slug>/upstream-trail.md`
    — include date, decision, participants, and next steps.
 7. Append a high-level entry to the global upstream trail:
-   `prodops/journeys/discovery/upstream-trail.md`
+   `prodops/framework/journeys/discovery/upstream-trail.md`
    — one line: what was promoted and when.
 
 ## Post-conditions

@@ -153,7 +153,7 @@ Posso executar a limpeza das views extras utilizando Browser Automation. Deseja 
 ## Cross-references
 
 → [Principles](principles.md) — lista canônica de princípios do framework (Princípio 8)
-→ [Workspace Reconciliation capability](../journeys/diligence/workspace-reconciliation.md) — contexto de aplicação primária
+→ [Workspace Reconciliation capability](journeys/diligence/workspace-reconciliation.md) — contexto de aplicação primária
 → [Reconcile SKILL](../skills/diligence/workspace-reconciliation/steps/reconcile/SKILL.md) — implementação do passo Reconcile
 → [Verify SKILL](../skills/diligence/workspace-reconciliation/steps/verify/SKILL.md) — Conformance Report
 → [GitHub Workspace](github-workspace.md) — Known Platform Limitations documentadas

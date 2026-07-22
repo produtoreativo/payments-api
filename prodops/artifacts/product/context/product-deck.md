@@ -215,7 +215,7 @@ O ProdOps avalia a maturidade de delivery do produto por meio das 7 métricas DO
 **Assessment de maturidade:** executar no Certificare com perfil `balanced` para obter score 0–5 por métrica e roadmap priorizado.
 
 → Definições e pesos completos: [`../../../framework/dora-metrics.md`](../../../framework/dora-metrics.md)
-→ Mapeamento Observable Events → DORA: [`../../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../../../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ Mapeamento Observable Events → DORA: [`../../experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../../experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
 
 ---
 

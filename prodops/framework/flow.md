@@ -134,7 +134,7 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 **O que acontece:** A jornada Discovery explora a Business Intent no nível de plataforma. Experimentos, benchmarks, spikes, pesquisas, entrevistas, protótipos e premortems podem ser conduzidos. Todos os aprendizados retornam ao Global OBC.
 
 **O que é produzido:**
-- Experimentos em `prodops/journeys/discovery/experiments/<NNN-slug>/`
+- Experimentos em `prodops/artifacts/experiments/<NNN-slug>/`
 - Decision Package (hipótese respondida, recomendação clara, aprendizados)
 - Global OBC refinado (estado: Refining)
 - Compreensão dos produtos envolvidos e dos bounded contexts
@@ -143,7 +143,7 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 
 **Quando avançar:** Quando a hipótese central tiver sido respondida e a incerteza remanescente for aceitável para o particionamento.
 
-→ [Jornada Discovery](../journeys/discovery/README.md)
+→ [Jornada Discovery](journeys/discovery/README.md)
 
 ---
 
@@ -177,7 +177,7 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 
 **Quando avançar:** Quando o comportamento esperado estiver suficientemente compreendido e a incerteza remanescente for aceitável para entrar em Downstream. A decisão de avançar é explícita (PM + Tech Lead — Assessment Review).
 
-→ [Jornada Discovery](../journeys/discovery/README.md)
+→ [Jornada Discovery](journeys/discovery/README.md)
 
 ---
 
@@ -205,12 +205,12 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 **O que acontece:** Os riscos identificados são transformados em um plano de confiabilidade. SLOs, ações de mitigação, critérios de rollback e pontos de falha são documentados explicitamente. Assessment corre em paralelo às demais jornadas.
 
 **O que é produzido:**
-- Entrada no Reliability Plan em `prodops/journeys/assessment/reliability-plans/`
-- Riscos atualizados em `prodops/journeys/assessment/risks.md`
+- Entrada no Reliability Plan em `prodops/artifacts/governance/plans/reliability/`
+- Riscos atualizados em `prodops/artifacts/risks/risks.md`
 
 **Quando avançar:** Reliability Plan atualizado e Assessment Review concluída para o item.
 
-→ [Reliability Plans](../journeys/assessment/reliability-plans/)
+→ [Reliability Plans](../artifacts/governance/plans/reliability/)
 
 ---
 
@@ -244,8 +244,8 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 
 **Quando avançar:** Promote concluído, Release Trail atualizado, OBC validado em produção.
 
-→ [Jornada Delivery](../journeys/delivery/README.md)
-→ [Execution Mode Downstream](../execution-model/downstream.md)
+→ [Jornada Delivery](journeys/delivery/README.md)
+→ [Execution Mode Downstream](execution-model/downstream.md)
 
 ---
 
@@ -265,7 +265,7 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 
 **Quando avançar:** Operação é contínua — não tem ponto de encerramento definido. O ciclo recomeça com novos Business Signals gerados pelo aprendizado operacional.
 
-→ [Jornada Operation](../journeys/operation/)
+→ [Jornada Operation](journeys/operation/)
 
 ---
 
@@ -298,5 +298,5 @@ Ao descrever o fluxo macro, use **Exploration**. Ao referenciar a jornada espec�
 → [Glossário](glossary.md)
 → [Fases da Business Intent: Concepção e Inception](phases.md)
 → [Modelo operacional](operating-model.md)
-→ [Execution Model](../execution-model/README.md)
-→ [Jornadas](../journeys/README.md)
+→ [Execution Model](execution-model/README.md)
+→ [Jornadas](journeys/README.md)

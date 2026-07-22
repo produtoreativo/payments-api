@@ -8,4 +8,4 @@ Read `prodops/skills/sync/steps/rebase/SKILL.md` and execute the Rebase step.
 
 **Fora do escopo:** não abre PR (Finish), não roda pipeline completa (Ship), não adiciona cobertura nem corrige code smell herdado (Hack/Yellow Bar), não alinha artefatos ProdOps (`align`). Se um conflito exigir alterar uma BDD Feature ou OBC committed, sinalize como bloqueador — não reescreva o artefato aqui.
 
-Execute apenas o step `rebase`. Importe o contexto de `AGENTS.md` e `prodops/journeys/delivery/phases/sync/README.md` quando houver dúvida sobre fronteira.
+Execute apenas o step `rebase`. Importe o contexto de `AGENTS.md` e `prodops/framework/journeys/delivery/phases/sync/README.md` quando houver dúvida sobre fronteira.

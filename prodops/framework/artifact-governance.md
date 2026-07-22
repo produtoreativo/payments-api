@@ -246,7 +246,7 @@ Operation
 |---|---|
 | **Owner** | Tech Lead + SRE |
 | **Onde nasce** | Assessment — produzido durante Premortem ou Assessment Review |
-| **Artefato canônico** | `prodops/journeys/assessment/reliability-plans/` |
+| **Artefato canônico** | `prodops/artifacts/governance/plans/reliability/` |
 | **Quem modifica** | Tech Lead, SRE, engenheiros |
 | **Quem aprova** | Tech Lead + Product Owner |
 | **Consumidores** | Iteration Plan, Delivery, Operation |

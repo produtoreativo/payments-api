@@ -46,6 +46,6 @@ Not applicable — persistence infrastructure change without API contract modifi
 ## Related Artifacts
 
 - BDD: `prodops/artifacts/business/bdd/dynamodb-optimization.feature`
-- Experiment: `prodops/journeys/discovery/experiments/011-dynamodb-optimization/experiment.md`
+- Experiment: `prodops/artifacts/experiments/011-dynamodb-optimization/experiment.md`
 - Iteration Plan: `prodops/artifacts/governance/plans/iteration-plan.md`
 - Related OBCs: `prodops/artifacts/business/obcs/production-cicd-pipeline.md`

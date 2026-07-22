@@ -44,7 +44,7 @@ O ProdOps adota um modelo DORA estendido de **7 métricas** que expande as 4 mé
 **Eventos de OBC que alimentam esta métrica:**
 `invoice.creation_failed`, `payment.boleto.creation_failed`, `invoice.provider_rejected`, `invoice.cancel_provider_not_found`, `webhook.rejected`, `webhook.delivery.failed`
 
-→ Ver mapeamento completo em [`../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ Ver mapeamento completo em [`../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
 
 ---
 
@@ -181,6 +181,6 @@ Usadas em perfis específicos (especialmente `quality` e `ai_readiness`):
 
 → [Estágios de Produto](product-stages.md)
 → [Glossário](glossary.md)
-→ [Mapeamento OBC → DORA](../journeys/discovery/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
-→ [Jornada Operation](../journeys/operation/README.md)
-→ [Reliability Plans](../journeys/assessment/reliability-plans/README.md)
+→ [Mapeamento OBC → DORA](../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ [Jornada Operation](journeys/operation/README.md)
+→ [Reliability Plans](../artifacts/governance/plans/reliability/README.md)

@@ -1,6 +1,6 @@
 # Postmortem — [Título do Incidente]
 
-Localização canônica: nova entrada em `prodops/journeys/operation/postmortems.md`
+Localização canônica: nova entrada em `prodops/framework/journeys/operation/postmortems.md`
 
 ---
 

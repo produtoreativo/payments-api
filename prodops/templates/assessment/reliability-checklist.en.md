@@ -6,7 +6,7 @@ Use before promoting a capability from Upstream to Downstream, or before shippin
 
 - [ ] OBC defined and measurable.
 - [ ] All acceptance criteria covered by tests.
-- [ ] Failure modes documented in `prodops/journeys/assessment/risks.md`.
+- [ ] Failure modes documented in `prodops/artifacts/risks/risks.md`.
 
 ## Observability
 
@@ -17,7 +17,7 @@ Use before promoting a capability from Upstream to Downstream, or before shippin
 
 ## Operational readiness
 
-- [ ] Runbook exists or was updated in `prodops/journeys/operation/runbooks.md`.
+- [ ] Runbook exists or was updated in `prodops/framework/journeys/operation/runbooks.md`.
 - [ ] On-call team notified of new failure mode.
 - [ ] Rollback plan defined.
 

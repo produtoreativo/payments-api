@@ -23,7 +23,7 @@ Before executing either cycle, evaluate the capability against all current Downs
 
 1. OBC committed in `prodops/artifacts/business/obcs/`.
 2. BDD Feature committed in `prodops/artifacts/business/bdd/`.
-3. Risks documented in `prodops/journeys/assessment/risks.md`.
+3. Risks documented in `prodops/artifacts/risks/risks.md`.
 4. Item committed in the Iteration Plan with status `Entrou`.
 5. Reliability Plan produced by Assessment when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change.
 
@@ -59,6 +59,6 @@ When all prerequisites exist, generate `prodops/exec/cards/<card-slug>/context.m
 
 ## References
 
-→ [Execution Mapping](../framework/execution-mapping/README.md)
-→ [Work Item Schema](../framework/execution-mapping/work-item-schema.md)
-→ [Mapping Matrix](../framework/execution-mapping/matrix.md)
+→ [Execution Mapping](../../framework/execution-mapping/README.md)
+→ [Work Item Schema](../../framework/execution-mapping/work-item-schema.md)
+→ [Mapping Matrix](../../framework/execution-mapping/matrix.md)

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Delegates all logic to the script. Keep this file minimal.
+set -euo pipefail
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+exec "$REPO_ROOT/prodops/framework/journeys/delivery/capabilities/commit-workflow/scripts/pre-push.sh"

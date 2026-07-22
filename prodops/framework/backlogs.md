@@ -266,7 +266,7 @@ Um item pode estar no BIB, associado a um Roadmap e a uma Platform Release, ao m
 **Critérios para estar nesta view:**
 - Local OBC no estado Committed
 - Discovery funcional, técnico e operacional suficiente
-- Riscos identificados em `prodops/journeys/assessment/risks.md`
+- Riscos identificados em `prodops/artifacts/risks/risks.md`
 
 **Critérios para entrar no Iteration Plan (iniciar execução):**
 - Local OBC committed em `prodops/artifacts/business/obcs/`
@@ -356,7 +356,7 @@ A Diligence é a jornada responsável por manter os backlogs sincronizados em to
   Os dois espaços são independentes. Um artefato não "gera" Issues sequencialmente — Issues representam trabalho iniciado sobre ele quando necessário.
 - Consistência entre artefatos ProdOps e ferramentas externas
 
-→ [Jornada Diligence](../journeys/diligence/README.md)
+→ [Jornada Diligence](journeys/diligence/README.md)
 
 ---
 
@@ -386,4 +386,4 @@ A Diligence é a jornada responsável por manter os backlogs sincronizados em to
 - `prodops/artifacts/product/backlogs/iteration-backlog.md` — Iteration Backlog
 - `prodops/artifacts/governance/plans/iteration-plan.md` — Iteration Plan
 - `prodops/framework/glossary.md` — definições canônicas
-- `prodops/journeys/diligence/README.md` — Jornada Diligence
+- `prodops/framework/journeys/diligence/README.md` — Jornada Diligence

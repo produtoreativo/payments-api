@@ -10,9 +10,9 @@ Copy the template to the canonical location indicated before filling it in. Neve
 
 | Template | Usage | Canonical location |
 |---|---|---|
-| [experiment.md](discovery/experiment.md) | New Upstream experiment | `prodops/journeys/discovery/experiments/NNN-slug/experiment.md` |
-| [trail.md](discovery/trail.md) | Chronological trail of an experiment | `prodops/journeys/discovery/experiments/NNN-slug/upstream-trail.md` |
-| [learning.md](discovery/learning.md) | Consolidated experiment learning | new entry in `prodops/journeys/discovery/learnings.md` |
+| [experiment.md](discovery/experiment.md) | New Upstream experiment | `prodops/artifacts/experiments/NNN-slug/experiment.md` |
+| [trail.md](discovery/trail.md) | Chronological trail of an experiment | `prodops/artifacts/experiments/NNN-slug/upstream-trail.md` |
+| [learning.md](discovery/learning.md) | Consolidated experiment learning | new entry in `prodops/framework/journeys/discovery/learnings.md` |
 
 Create an `evidence/` directory next to the experiment when you need command outputs, payloads, or provider responses.
 
@@ -40,7 +40,7 @@ Create an `evidence/` directory next to the experiment when you need command out
 
 | Template | Usage | Canonical location |
 |---|---|---|
-| [assessment/decision-trail.md](assessment/decision-trail.md) | Decision record under uncertainty | `prodops/journeys/assessment/` or inline in the trail |
+| [assessment/decision-trail.md](assessment/decision-trail.md) | Decision record under uncertainty | `prodops/framework/journeys/assessment/` or inline in the trail |
 | [assessment/reliability-checklist.md](assessment/reliability-checklist.md) | Reliability checklist before Ship | used in Finish/Ship |
 
 ---
@@ -57,8 +57,8 @@ Create an `evidence/` directory next to the experiment when you need command out
 
 | Template | Usage | Canonical location |
 |---|---|---|
-| [operation/runbook.md](operation/runbook.md) | Operational runbook | `prodops/journeys/operation/runbooks.md` (new section) |
-| [operation/postmortem.md](operation/postmortem.md) | Incident postmortem | `prodops/journeys/operation/postmortems.md` (new entry) |
+| [operation/runbook.md](operation/runbook.md) | Operational runbook | `prodops/framework/journeys/operation/runbooks.md` (new section) |
+| [operation/postmortem.md](operation/postmortem.md) | Incident postmortem | `prodops/framework/journeys/operation/postmortems.md` (new entry) |
 
 ---
 

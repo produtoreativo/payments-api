@@ -52,4 +52,4 @@ An implementation is done when all of the following are true:
 ## Ready for Sync + Finish
 
 - [ ] All items above are checked.
-- [ ] The change is ready to enter [Finish](../../journeys/delivery/phases/finish/README.md).
+- [ ] The change is ready to enter [Finish](../../framework/journeys/delivery/phases/finish/README.md).

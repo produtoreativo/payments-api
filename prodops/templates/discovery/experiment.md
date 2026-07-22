@@ -3,21 +3,21 @@
 Localização canônica:
 
 ```text
-prodops/journeys/discovery/experiments/NNN-short-slug/experiment.md
+prodops/artifacts/experiments/NNN-short-slug/experiment.md
 ```
 
 Cada experimento deve ter também:
 
 ```text
-prodops/journeys/discovery/experiments/NNN-short-slug/upstream-trail.md
-prodops/journeys/discovery/experiments/NNN-short-slug/evidence/
-prodops/journeys/discovery/experiments/NNN-short-slug/features/   ← BDD Features (criadas durante o experimento)
-prodops/journeys/discovery/experiments/NNN-short-slug/obcs/       ← OBC drafts (criados durante o experimento)
+prodops/artifacts/experiments/NNN-short-slug/upstream-trail.md
+prodops/artifacts/experiments/NNN-short-slug/evidence/
+prodops/artifacts/experiments/NNN-short-slug/features/   ← BDD Features (criadas durante o experimento)
+prodops/artifacts/experiments/NNN-short-slug/obcs/       ← OBC drafts (criados durante o experimento)
 ```
 
 `features/` e `obcs/` são criados conforme necessário. Artefatos ficam aqui até `move-to-downstream`, quando são movidos para `prodops/artifacts/business/bdd/` e `prodops/artifacts/business/obcs/`.
 
-Não criar arquivos de experimento diretamente em `prodops/journeys/discovery/experiments/` — sempre dentro de um subdiretório com slug.
+Não criar arquivos de experimento diretamente em `prodops/artifacts/experiments/` — sempre dentro de um subdiretório com slug.
 
 ## Status
 
@@ -234,8 +234,8 @@ Exemplos:
 - Service Deck (`prodops/artifacts/product/context/service-decks/`)
 - Repository Tracking List (`prodops/artifacts/product/backlogs/tracking-list.md`)
 - Icebox (`prodops/artifacts/product/backlogs/icebox-backlog.md`)
-- Event Storming (`prodops/journeys/assessment/event-storming/`)
-- Reliability Plan (`prodops/journeys/assessment/reliability-plans/`)
+- Event Storming (`prodops/artifacts/product/event-storming/`)
+- Reliability Plan (`prodops/artifacts/governance/plans/reliability/`)
 - OBC (`prodops/artifacts/business/obcs/`)
 - BDD Features (`prodops/artifacts/business/bdd/`)
 

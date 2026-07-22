@@ -44,6 +44,6 @@ This directory contains the Framework documentation as applied to this **Product
 
 → Full definition: [obc.en.md — OBC Partitioning](obc.en.md#obc-partitioning)
 
-For work context, see the [assessment](../journeys/assessment/README.en.md), [product](../artifacts/product/), and [downstream](../execution-model/downstream.en.md) directories.
+For work context, see the [assessment](journeys/assessment/README.en.md), [product](../artifacts/product/), and [downstream](execution-model/downstream.en.md) directories.
 
 For agent execution, see [AGENTS.md](../../AGENTS.md) and [skills/](../skills/).

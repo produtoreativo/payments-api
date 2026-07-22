@@ -1,6 +1,6 @@
 # Iteration Plan - Payments Release
 
-> Document generated from `prodops/journeys/assessment/reliability-plans/setup/iteration-plan.prompt.md`.
+> Document generated from `prodops/framework/journeys/assessment/reliability-plans/setup/iteration-plan.prompt.md`.
 > Focus: business scope decision for the next iteration. This document does not replace the Reliability Plan.
 
 ## Executive Summary
@@ -23,7 +23,7 @@ The main decision is to reduce the batch: deliver a smaller, complete and unders
 
 | Risk | Business impact | Probability | Influence on scope |
 | --- | --- | --- | --- |
-| New gateway still disabled by Feature Flag due to a localized bug. | Very high: prevents Release activation and, per `prodops/journeys/assessment/risks.md`, there is a relevant contractual risk. | High | Reduce scope to the most important journey, avoiding parallel features that divert focus from activation. |
+| New gateway still disabled by Feature Flag due to a localized bug. | Very high: prevents Release activation and, per `prodops/artifacts/risks/risks.md`, there is a relevant contractual risk. | High | Reduce scope to the most important journey, avoiding parallel features that divert focus from activation. |
 | Notification Service has had incidents affecting customer confirmation. | High: customer may pay and not receive reliable information. | High | Keep status notification inside the Release, but only as part of the main journey, not as a full communication platform. |
 | Monolith decoupling increases complexity between teams and services. | High: integration failures may prevent the end-to-end experience. | High | Prefer one smaller complete journey over multiple incomplete journeys. |
 | Pix and Boleto have different rules and expectations. | Medium/high: treating both as a simple variation can increase business error. | Medium | Split Boleto and do not commit the main Release to all payment method variations. |
@@ -101,9 +101,9 @@ Fallback/Itau was excluded because it would greatly increase the Release size. T
 - `prodops/artifacts/business/bdd/create-invoice.feature`
 - `prodops/artifacts/business/bdd/payment-confirmation.feature`
 - `prodops/artifacts/business/bdd/cancel-invoice.feature`
-- `prodops/journeys/assessment/`
+- `prodops/framework/journeys/assessment/`
 - `prodops/artifacts/product/backlogs/iteration-backlog.md`
-- `prodops/journeys/assessment/event-storming/plan.json`
+- `prodops/artifacts/product/event-storming/plan.json`
 - `api/src/modules/invoices`
 - `api/src/infra/asaas.service.ts`
 - `api/test/criar-invoice.e2e-spec.ts`

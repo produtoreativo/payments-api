@@ -11,4 +11,4 @@ Current product state, product artifacts and committed features.
 | Icebox | [../backlogs/icebox-backlog.md](../backlogs/icebox-backlog.md) |
 
 Committed features live in `prodops/artifacts/business/bdd/`.
-Exploratory features live in `prodops/journeys/discovery/experiments/<NNN-slug>/features/`.
+Exploratory features live in `prodops/artifacts/experiments/<NNN-slug>/features/`.

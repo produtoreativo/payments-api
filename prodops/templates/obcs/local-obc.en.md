@@ -10,10 +10,10 @@
 <!-- Declare the current state of the contract.
      Possible states: Draft | Refining | Committed | In Delivery | Operational | Archived
      Location by state:
-       Draft/Refining: prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md
+       Draft/Refining: prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md
        Committed+:     prodops/artifacts/business/obcs/<slug>.md -->
 
-Draft. Located at `prodops/journeys/discovery/experiments/<NNN-slug>/obcs/<slug>.md`.
+Draft. Located at `prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md`.
 
 ## Global OBC
 

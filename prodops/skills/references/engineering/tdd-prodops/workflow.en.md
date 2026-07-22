@@ -81,7 +81,7 @@ log output must be asserted in tests.
 ## Step 7 — Record Evidence
 
 **What it means:** Update the active session trail (`prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`) with: what was tested, Red Bar
-output (paste the failure), Green Bar confirmation, and any risk from `prodops/journeys/assessment/risks.md`
+output (paste the failure), Green Bar confirmation, and any risk from `prodops/artifacts/risks/risks.md`
 that was exercised.
 
 **Done when:** Release trail entry exists for this iteration with test output attached.

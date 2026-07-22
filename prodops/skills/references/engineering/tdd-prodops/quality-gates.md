@@ -8,7 +8,7 @@ These must be satisfied before any implementation is considered done for release
 
 - Relevant ProdOps context read before implementation (Feature file, OBC, upstream experiment)
 - All behavior changes are covered by tests; BDD Feature file updated when applicable
-- Reliability Plan risks impacted by the change reviewed in `prodops/journeys/assessment/risks.md`
+- Reliability Plan risks impacted by the change reviewed in `prodops/artifacts/risks/risks.md`
 - Build, test, and validation evidence recorded in the active session trail (`prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`)
 - Operational follow-ups (alerts, runbooks, rollback notes) recorded explicitly — not left implicit
 
@@ -37,14 +37,14 @@ The following violations in `api/test/` **block merge** with no exceptions:
 
 **Finish** consumes these quality gates as its exit criteria. No iteration advances to Ship until
 all Delivery Gates and Test Quality Gates above are satisfied. See:
-`prodops/journeys/delivery/phases/finish/`
+`prodops/framework/journeys/delivery/phases/finish/`
 
 **Ship** verifies gate evidence before creating the PR: build artifacts, test output, and a
 completed release trail entry must exist. Ship does not re-run the gates — it verifies evidence
 that Finish recorded.
 
 **Canonical source:** The authoritative gate definitions (the ones that block merge) live in
-[`../../../../journeys/delivery/phases/finish/quality-gates.md`](../../../../journeys/delivery/phases/finish/quality-gates.md).
+[`../../../../framework/journeys/delivery/phases/finish/quality-gates.md`](../../../../framework/journeys/delivery/phases/finish/quality-gates.md).
 This file is the engineering reference; that file is the enforcement definition.
 
 ---
@@ -52,6 +52,6 @@ This file is the engineering reference; that file is the enforcement definition.
 ## Definition of Done
 
 The per-cycle exit checklist (Red → Green → Yellow) is canonical in
-[`../../../../journeys/delivery/phases/hack/quality-gates.md`](../../../../journeys/delivery/phases/hack/quality-gates.md).
+[`../../../../framework/journeys/delivery/phases/hack/quality-gates.md`](../../../../framework/journeys/delivery/phases/hack/quality-gates.md).
 This engineering reference does not duplicate it — consult that file for the gates
 that a TDD iteration must satisfy before commit.

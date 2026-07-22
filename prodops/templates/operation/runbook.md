@@ -1,6 +1,6 @@
 # Runbook — [Nome do Cenário]
 
-Localização canônica: nova seção em `prodops/journeys/operation/runbooks.md`
+Localização canônica: nova seção em `prodops/framework/journeys/operation/runbooks.md`
 
 ---
 

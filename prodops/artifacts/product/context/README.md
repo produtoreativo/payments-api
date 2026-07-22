@@ -11,4 +11,4 @@ Estado atual do produto, artefatos de produto e features comprometidas.
 | Icebox | [../backlogs/icebox-backlog.md](../backlogs/icebox-backlog.md) |
 
 Features comprometidas ficam em `prodops/artifacts/business/bdd/`.
-Features exploratórias ficam em `prodops/journeys/discovery/experiments/<NNN-slug>/features/`.
+Features exploratórias ficam em `prodops/artifacts/experiments/<NNN-slug>/features/`.

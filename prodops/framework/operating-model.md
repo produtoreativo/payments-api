@@ -157,7 +157,7 @@ Artifacts
 
 **Continuous Assessment** — avalia continuamente riscos, oportunidades e decide o próximo passo.
 
-**Execution Model** — o par de modos que define como qualquer Journey executa (Upstream = exploração; Downstream = compromisso). Não é uma Journey. → Ver [ontology.md — Execution Model](ontology.md#execution-model) e [execution-model/README.md](../execution-model/README.md).
+**Execution Model** — o par de modos que define como qualquer Journey executa (Upstream = exploração; Downstream = compromisso). Não é uma Journey. → Ver [ontology.md — Execution Model](ontology.md#execution-model) e [execution-model/README.md](execution-model/README.md).
 
 **Journey** — caminho de trabalho com responsabilidade única (Discovery, Delivery, Operation, Assessment, Diligence). O Execution Model define *como* a Journey executa, não *o que* ela é. → Ver [ontology.md — Journey](ontology.md#journey-jornada).
 
@@ -179,38 +179,38 @@ Artifacts
 
 Explora problemas, hipóteses e possibilidades. Discovery existe em Upstream e Downstream; não é sinônimo de nenhum dos modos.
 
-→ [prodops/journeys/discovery/README.md](../journeys/discovery/README.md)
+→ [prodops/framework/journeys/discovery/README.md](journeys/discovery/README.md)
 
 ### Delivery
 
 Implementação governada. Usa o conhecimento validado pela Exploration para entregar com confiança. Exige OBC committed antes de iniciar.
 
-→ [prodops/journeys/delivery/README.md](../journeys/delivery/README.md)
+→ [prodops/framework/journeys/delivery/README.md](journeys/delivery/README.md)
 
 ### Operation
 
 Operação contínua. Runbooks, incidentes, postmortems, trilha operacional.
 
-→ [prodops/journeys/operation/](../journeys/operation/)
+→ [prodops/framework/journeys/operation/](journeys/operation/)
 
 ### Assessment
 
 Jornada transversal. Avalia riscos, oportunidades, OBCs e Iteration Plans.
 
-→ [prodops/journeys/assessment/README.md](../journeys/assessment/README.md)
+→ [prodops/framework/journeys/assessment/README.md](journeys/assessment/README.md)
 
 ### Diligence
 
 Jornada transversal. Guardiã da consistência do sistema de trabalho do ProdOps. Garante que o estado de cada OBC permaneça sincronizado em todos os backlogs, ferramentas e artefatos de gestão, sem modificar o código do produto.
 
-→ [prodops/journeys/diligence/README.md](../journeys/diligence/README.md)
+→ [prodops/framework/journeys/diligence/README.md](journeys/diligence/README.md)
 → [Hierarquia de backlogs gerenciados](backlogs.md)
 
 ---
 
 ## Execution Modes
 
-→ [prodops/execution-model/README.md](../execution-model/README.md)
+→ [prodops/framework/execution-model/README.md](execution-model/README.md)
 
 ---
 

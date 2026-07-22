@@ -41,4 +41,4 @@ Concluído quando **todos** os itens abaixo são verdadeiros:
 ## References
 
 → [Diligence SKILL.md](../SKILL.md)
-→ [Diligence journey README](../../../journeys/diligence/README.md)
+→ [Diligence journey README](../../../framework/journeys/diligence/README.md)

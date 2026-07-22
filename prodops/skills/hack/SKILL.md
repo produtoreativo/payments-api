@@ -67,7 +67,7 @@ Feature listed in Required context above.
 `start → tdd → commit` are **sequential steps**. Security, quality, and
 documentation validations are **not** extra steps — they are transversal and run
 inside each cycle's Yellow Bar. See
-[`../../journeys/delivery/phases/hack/README.md`](../../journeys/delivery/phases/hack/README.md#steps-sequenciais-vs-validações-transversais).
+[`../../framework/journeys/delivery/phases/hack/README.md`](../../framework/journeys/delivery/phases/hack/README.md#steps-sequenciais-vs-validações-transversais).
 
 ## Quality Gates (mandatory — cycle exit criteria)
 
@@ -84,9 +84,9 @@ next step — when every gate below is satisfied:
 | ProdOps artifacts | Event Storming / architecture updated when impacted | see [tdd step](steps/tdd/SKILL.md) |
 
 These gates are the minimum to commit. The canonical checklist lives in
-[`../../journeys/delivery/phases/hack/quality-gates.md`](../../journeys/delivery/phases/hack/quality-gates.md).
+[`../../framework/journeys/delivery/phases/hack/quality-gates.md`](../../framework/journeys/delivery/phases/hack/quality-gates.md).
 Release-blocking gates (what blocks merge) live in
-[`../../journeys/delivery/phases/finish/quality-gates.md`](../../journeys/delivery/phases/finish/quality-gates.md).
+[`../../framework/journeys/delivery/phases/finish/quality-gates.md`](../../framework/journeys/delivery/phases/finish/quality-gates.md).
 
 ## Guardrails
 

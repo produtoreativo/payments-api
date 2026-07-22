@@ -22,19 +22,19 @@ Para cada item, aplicar a ação corretora correspondente:
 **Work Item ausente:** executar step Attach para o OBC afetado.
 
 ```
-→ prodops/skills/diligence/steps/attach/SKILL.md
+→ prodops/skills/diligence/diligence-sync/steps/attach/SKILL.md
 ```
 
 **Work Item aberto com OBC Operational:** executar step Close para o OBC afetado.
 
 ```
-→ prodops/skills/diligence/steps/close/SKILL.md
+→ prodops/skills/diligence/diligence-sync/steps/close/SKILL.md
 ```
 
 **OBC absent do Iteration Plan com pré-requisitos satisfeitos:** executar step Promote para o OBC afetado.
 
 ```
-→ prodops/skills/diligence/steps/promote/SKILL.md
+→ prodops/skills/diligence/diligence-sync/steps/promote/SKILL.md
 ```
 
 **Artefato de gestão desatualizado (Iteration Plan, Roadmap, Product Backlog):** atualizar o artefato diretamente, registrando a data e a decisão que originou a mudança.
@@ -42,7 +42,7 @@ Para cada item, aplicar a ação corretora correspondente:
 **OBC sem estado canônico correto:** executar step Capture para o OBC afetado.
 
 ```
-→ prodops/skills/diligence/steps/capture/SKILL.md
+→ prodops/skills/diligence/diligence-sync/steps/capture/SKILL.md
 ```
 
 ### 3. Parar em itens que exigem decisão de produto

@@ -3,20 +3,20 @@
 Canonical location:
 
 ```text
-prodops/journeys/discovery/experiments/NNN-short-slug/upstream-trail.md
+prodops/artifacts/experiments/NNN-short-slug/upstream-trail.md
 ```
 
 This file records the chronological activity of an Upstream experiment.
 
 Do not use this template as a global trail. The global trail at
-`prodops/journeys/discovery/upstream-trail.md` is only a high-level index for
+`prodops/framework/journeys/discovery/upstream-trail.md` is only a high-level index for
 milestones between experiments, migrations, promotions, and Upstream process changes in the repository.
 
 ## Experiment
 
 Reference:
 
-`prodops/journeys/discovery/experiments/NNN-short-slug/experiment.md`
+`prodops/artifacts/experiments/NNN-short-slug/experiment.md`
 
 ---
 

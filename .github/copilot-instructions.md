@@ -30,7 +30,7 @@ For all canonical paths: `prodops/framework/canonical-paths.md`.
 ## Architecture
 
 - Preserve existing module boundaries, naming, DTOs, and dependency direction.
-- Update `prodops/journeys/assessment/architecture/overview.md` for structural changes.
+- Update `prodops/framework/journeys/assessment/architecture/overview.md` for structural changes.
 - Do not invent missing business context. Read `prodops/artifacts/product/` first.
 
 ## Canonical paths (quick reference)
@@ -42,10 +42,10 @@ For all canonical paths: `prodops/framework/canonical-paths.md`.
 | BDD Features (committed) | `prodops/artifacts/bdd/` |
 | Iteration Plan | `prodops/artifacts/plans/iteration-plan.md` |
 | Release Trail | `prodops/artifacts/trails/release-trail.md` |
-| Risks | `prodops/journeys/assessment/risks.md` |
-| Reliability Plans | `prodops/journeys/assessment/reliability-plans/` |
-| Architecture | `prodops/journeys/assessment/architecture/overview.md` |
-| Discovery experiments | `prodops/journeys/discovery/experiments/` |
-| Discovery global trail | `prodops/journeys/discovery/upstream-trail.md` |
-| ProdOps TDD | `prodops/journeys/delivery/practices/prodops-tdd.md` |
-| Testing Policy | `prodops/journeys/delivery/practices/testing-policy.md` |
+| Risks | `prodops/artifacts/risks/risks.md` |
+| Reliability Plans | `prodops/framework/journeys/assessment/reliability-plans/` |
+| Architecture | `prodops/framework/journeys/assessment/architecture/overview.md` |
+| Discovery experiments | `prodops/artifacts/experiments/` |
+| Discovery global trail | `prodops/framework/journeys/discovery/upstream-trail.md` |
+| ProdOps TDD | `prodops/framework/journeys/delivery/practices/prodops-tdd.md` |
+| Testing Policy | `prodops/framework/journeys/delivery/practices/testing-policy.md` |

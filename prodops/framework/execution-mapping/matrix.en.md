@@ -167,7 +167,7 @@ Complete mapping of all Knowledge Space Artifacts against allowed operations, Gi
 
 | Operation | GitHub Resources | Journeys | Mode | Expected Evidence | Responsible |
 |---|---|---|---|---|---|
-| `Define` | Issue, Disc | Discovery | Upstream | Experiment plan in `journeys/discovery/experiments/<slug>/` | PCE, SE |
+| `Define` | Issue, Disc | Discovery | Upstream | Experiment plan in `artifacts/experiments/<slug>/` | PCE, SE |
 | `Execute` | Branch, PR | Discovery | Upstream | Partial results in experiment directory | SE, PCE |
 | `Evaluate` | Issue, Disc | Discovery | Upstream | Evaluation documented; hypothesis confirmed or refuted | PCE, PO |
 | `Promote` | PR | Discovery | Upstream → Down | Artifact graduated to `prodops/artifacts/`; experiment archived | PCE, TL |
@@ -205,7 +205,7 @@ The Context Capsule (`prodops/exec/cards/<slug>/context.md`) is automatically ge
 
 | Operation | GitHub Resources | Journeys | Mode | Expected Evidence | Responsible |
 |---|---|---|---|---|---|
-| `Create` | PR, Issue | Assessment | Downstream | `journeys/assessment/risks.md` updated | PRE, TL |
+| `Create` | PR, Issue | Assessment | Downstream | `artifacts/risks/risks.md` updated | PRE, TL |
 | `Update` | PR | Assessment, Delivery | Downstream | Risk revised (probability, impact, mitigation) | PRE |
 | `Review` | Issue | Assessment | Downstream | Decision to accept, mitigate, or escalate the risk | PRE, PM, TL |
 | `Close` | PR | Operation | N/A | Risk resolved; closure note | PRE |

@@ -82,7 +82,7 @@ Use these standards to keep prompt iterations and code changes aligned with this
 
 ## Acceptance Test Rules
 
-These rules apply to everything under `api/test/` and are enforced by `prodops/journeys/delivery/phases/finish/quality-gates.md`.
+These rules apply to everything under `api/test/` and are enforced by `prodops/framework/journeys/delivery/phases/finish/quality-gates.md`.
 
 **No test doubles.** `jest.fn()` as a service replacement, `jest.spyOn(...).mockXxx()`, and `.overrideProvider()` are prohibited. Tests must use the real NestJS application with the real service instances.
 

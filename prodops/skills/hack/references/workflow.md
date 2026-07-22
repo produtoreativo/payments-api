@@ -62,7 +62,7 @@ Do not skip the red phase unless the task is documentation-only, mechanical clea
 
 ## No Mocks Rule
 
-> **Definição técnica do No Mocks Rule.** Para o gate de enforcement (o que bloqueia merge), ver [`quality-gates.md`](../../../journeys/delivery/phases/finish/quality-gates.md). Para os Yellow Bar patterns aceitáveis, ver [`mocking-policy.md`](../../references/engineering/tdd-prodops/mocking-policy.md).
+> **Definição técnica do No Mocks Rule.** Para o gate de enforcement (o que bloqueia merge), ver [`quality-gates.md`](../../../framework/journeys/delivery/phases/finish/quality-gates.md). Para os Yellow Bar patterns aceitáveis, ver [`mocking-policy.md`](../../references/engineering/tdd-prodops/mocking-policy.md).
 
 **Acceptance and integration tests never use test doubles.** This is an unconditional rule.
 

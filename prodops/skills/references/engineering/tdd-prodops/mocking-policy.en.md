@@ -1,7 +1,7 @@
 # Mocking Policy — No Mocks Rule
 
 > **Authority hierarchy:**
-> - Enforcement gate (what blocks merge): [`journeys/delivery/phases/finish/quality-gates.md`](../../../../journeys/delivery/phases/finish/quality-gates.md)
+> - Enforcement gate (what blocks merge): [`journeys/delivery/phases/finish/quality-gates.md`](../../../../framework/journeys/delivery/phases/finish/quality-gates.md)
 > - Canonical technical definition: [`prodops/skills/hack/references/workflow.md § No Mocks Rule`](../../../hack/references/workflow.md)
 > - This file: engineering reference — consolidates the policy with examples and Yellow Bar patterns
 

@@ -12,9 +12,9 @@ For detailed Codex submission mechanics, read `references/workflow.md`.
 ## Inputs
 
 - `AGENTS.md`
-- `prodops/journeys/assessment/reliability-plans/`
+- `prodops/artifacts/governance/plans/reliability/`
 - `prodops/artifacts/governance/trails/sessions/` (active session trail)
-- `prodops/journeys/delivery/phases/finish/quality-gates.md`
+- `prodops/framework/journeys/delivery/phases/finish/quality-gates.md`
 - Current branch diff and validation evidence
 
 ## Flow
