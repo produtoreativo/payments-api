@@ -33,7 +33,25 @@ gh issue view <number> --repo produtoreativo/payments-api --json state,title
 
 Registrar cada gap com a linha afetada da tracking list e a ação corretora.
 
-### 2. Listar todos os OBCs ativos
+### 2. Verificar conformidade de Issues existentes
+
+Listar todos os Issues abertos e verificar:
+
+```bash
+gh issue list --repo <owner>/<repo> --state all --json number,title,labels --limit 200
+```
+
+Para cada Issue, verificar:
+
+| Check | Sinal de divergência |
+|---|---|
+| Título segue `[artifact-id]: descrição` | Título começa com `[Operation] —` (padrão antigo) |
+| Label `operation:<valor>` presente | Issue sem label `operation:*` |
+| Label `artifact-type:<valor>` presente | Issue sem label `artifact-type:*` |
+
+Issues com padrão antigo ou sem labels canônicas → divergência `[ ] Média` — Repair atualiza título e adiciona labels.
+
+### 4. Listar todos os OBCs ativos
 
 ```bash
 ls prodops/artifacts/business/obcs/
@@ -41,7 +59,7 @@ ls prodops/artifacts/business/obcs/
 
 Para cada OBC: ler o arquivo e extrair o estado declarado (Draft, Committed, In Delivery, Operational).
 
-### 4. Verificar consistência de cada OBC
+### 5. Verificar consistência de cada OBC
 
 Para cada OBC ativo, verificar os seguintes checks:
 
@@ -73,7 +91,7 @@ Comparar o estado retornado com o estado canônico do OBC:
 
 Se `gh` não estiver disponível ou o repositório não for acessível, registrar como limitação no relatório — não como divergência do OBC.
 
-### 5. Produzir relatório de divergências
+### 6. Produzir relatório de divergências
 
 Para cada divergência encontrada, registrar:
 

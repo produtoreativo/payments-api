@@ -173,7 +173,7 @@ Do not continue implementation after the experiment question has been answered.
 ## Guardrails
 
 - Do not create GitHub Issues, PRs, or Discussions without declaring artifact_type, artifact_id, operation, and journey. Follow the Work Item schema: `prodops/framework/execution-mapping/work-item-schema.md`.
-- Use the canonical Work Item title pattern: `[Operation] — [Artifact Type] [Artifact ID]: description`.
+- Use the canonical Work Item title pattern: `[Artifact ID]: description`. Set `operation:<value>` and `artifact-type:<value>` as labels.
 
 ## References
 

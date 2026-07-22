@@ -183,24 +183,52 @@ Os campos nativos do GitHub Project (`Status`, `Priority`, `Assignees`, `Milesto
 O título de um Work Item deve seguir o padrão:
 
 ```
-[Operation] — [Artifact Type] [Artifact ID]: [descrição concisa]
+[Artifact ID]: descrição concisa
 ```
+
+O título é orientado ao objeto de trabalho — o que está sendo trabalhado. `Operation` e `Artifact Type` são detalhes de processo e vão para labels e campos do body, onde têm espaço para ser lidos com contexto.
 
 Exemplos:
 ```
-Refine — Local OBC payments-invoice-v2: seção BDD incompleta
-Review — Local OBC payments-invoice-v2: Assessment pré-Downstream
-Implement — Local OBC payments-invoice-v2: split de pagamento PIX
-Update — Architecture overview: novo módulo WebhookWorker
-Split — Global OBC platform-billing-v3: decompor em 3 Local OBCs
-Validate — BDD Feature payments-invoice.feature: CI gate pré-release
-Promote — Business Signal SIG-089: gerar Business Intent
+payments-invoice-v2: seção BDD incompleta
+payments-invoice-v2: Assessment pré-Downstream
+payments-invoice-v2: split de pagamento PIX
+architecture-overview: novo módulo WebhookWorker
+platform-billing-v3: decompor em 3 Local OBCs
+payments-invoice.feature: CI gate pré-release
+SIG-089: gerar Business Intent
 ```
 
-Este padrão:
-- identifica o artefato sem ambiguidade
-- nomeia a operação sem usar "Issue de X"
-- permite busca e filtro por artefato ou operação no GitHub
+---
+
+## Labels canônicas de Work Items
+
+`Operation` e `Artifact Type` são declarados como labels para permitir busca e filtro via `gh issue list` e GitHub search.
+
+### Padrão de label
+
+```
+operation:<valor>       # ex: operation:refine, operation:promote, operation:capture
+artifact-type:<valor>   # ex: artifact-type:local-obc, artifact-type:business-signal
+```
+
+Os valores seguem os enums canônicos em letras minúsculas com hífen.
+
+### Exemplos
+
+```bash
+gh issue list --label "operation:promote"
+gh issue list --label "artifact-type:local-obc"
+gh issue list --label "operation:capture" --label "artifact-type:business-signal"
+```
+
+### Labels obrigatórias por Work Item
+
+| Label | Obrigatória | Valores |
+|---|---|---|
+| `operation:<valor>` | Sim | enums da família `operation` |
+| `artifact-type:<valor>` | Sim | enums de `artifact_type` |
+| `journey:<valor>` | Recomendada | enums de `journey` |
 
 ---
 
@@ -211,7 +239,8 @@ Um Work Item está corretamente estruturado quando:
 - [ ] `artifact_id` referencia um artefato existente no repositório
 - [ ] `operation` está preenchida com uma operação permitida para aquele tipo de artefato (ver [Matriz](matrix.md))
 - [ ] `journey` está preenchida
-- [ ] O título segue o padrão `[Operation] — [Artifact Type] [Artifact ID]: ...`
+- [ ] O título segue o padrão `[Artifact ID]: descrição concisa`
+- [ ] Labels `operation:<valor>` e `artifact-type:<valor>` estão presentes no Issue
 
 ---
 

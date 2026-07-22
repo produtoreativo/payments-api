@@ -202,6 +202,16 @@ diligence-async: Scan → Flag → Repair
 
 → [diligence-async.md](diligence-async.md)
 
+### diligence-infra — Infraestrutura
+
+Bootstrappa e mantém sincronizada a infraestrutura do GitHub (Labels, Custom Fields, Views) a partir da especificação canônica. Executado no bootstrap de novos repositórios e após mudanças na spec.
+
+```
+diligence-infra: Workspace → Provision → Verify
+```
+
+→ [diligence-infra.md](diligence-infra.md)
+
 ---
 
 ## Capabilities

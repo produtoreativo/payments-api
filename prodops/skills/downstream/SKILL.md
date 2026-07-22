@@ -55,7 +55,7 @@ When all prerequisites exist, generate `prodops/exec/cards/<card-slug>/context.m
 - Do not skip quality gates without an explicit recorded decision and risk acceptance.
 - Do not promote unresolved high-risk items without explicit acceptance.
 - Do not create GitHub Issues or PRs without declaring artifact_type, artifact_id, operation, and journey. Follow the Work Item schema: `prodops/framework/execution-mapping/work-item-schema.md`.
-- Use the canonical Work Item title pattern: `[Operation] — [Artifact Type] [Artifact ID]: description`.
+- Use the canonical Work Item title pattern: `[Artifact ID]: description`. Set `operation:<value>` and `artifact-type:<value>` as labels.
 
 ## References
 

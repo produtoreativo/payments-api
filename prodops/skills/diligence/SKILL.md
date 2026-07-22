@@ -12,8 +12,9 @@ Diligence é a jornada transversal que mantém o sistema de trabalho do ProdOps 
 | Command | Scope |
 |---|---|
 | `/diligence diligence-sync <obc-id>` | Capture → Attach → Promote → Close para o OBC informado |
-| `/diligence diligence-async` | Scan → Flag → Repair em todos os OBCs ativos |
-| `/diligence full <obc-id>` | diligence-sync para o OBC + diligence-async para detecção de drift correlato |
+| `/diligence diligence-async` | Scan → Flag → Repair em todos os OBCs e Issues ativos |
+| `/diligence diligence-infra` | Workspace → Provision → Verify na infraestrutura do GitHub |
+| `/diligence full <obc-id>` | diligence-sync para o OBC + diligence-async + diligence-infra |
 
 Quando o escopo é omitido, usar `diligence-sync` e reportar essa escolha explicitamente.
 
@@ -30,6 +31,9 @@ Quando invocado com argumento de step (`/diligence diligence-sync capture`), exe
 | diligence-async | `scan` | [steps/scan/SKILL.md](steps/scan/SKILL.md) |
 | diligence-async | `flag` | [steps/flag/SKILL.md](steps/flag/SKILL.md) |
 | diligence-async | `repair` | [steps/repair/SKILL.md](steps/repair/SKILL.md) |
+| diligence-infra | `workspace` | [steps/workspace/SKILL.md](steps/workspace/SKILL.md) |
+| diligence-infra | `provision` | [steps/provision/SKILL.md](steps/provision/SKILL.md) |
+| diligence-infra | `verify` | [steps/verify/SKILL.md](steps/verify/SKILL.md) |
 
 ## Inputs
 
@@ -51,9 +55,15 @@ Parar em qualquer bloqueio. Registrar o artefato ausente, a jornada responsável
 
 ## Diligence Async flow
 
-1. **Scan** — ler todos os OBCs ativos e comparar estado declarado com ferramentas externas.
+1. **Scan** — ler todos os OBCs ativos e Issues, comparar estado declarado com ferramentas externas e verificar conformidade de título e labels.
 2. **Flag** — classificar divergências com severidade e ação corretora.
 3. **Repair** — executar correções dos itens reparáveis; escalar itens bloqueados.
+
+## Diligence Infra flow
+
+1. **Workspace** — ler spec canônica em `prodops/framework/github-workspace.md` e comparar com estado atual do repositório GitHub.
+2. **Provision** — criar labels ausentes, corrigir divergentes, adicionar custom fields ao Project. Nunca remove sem confirmação.
+3. **Verify** — confirmar conformidade pós-Provision e produzir relatório.
 
 Parar antes de Repair quando uma divergência exige decisão de produto. Escalar com o OBC afetado, o gap e a jornada responsável.
 
@@ -64,9 +74,25 @@ Parar antes de Repair quando uma divergência exige decisão de produto. Escalar
 - Nunca tomar decisões de produto — essas pertencem ao Assessment.
 - Nunca pular uma transição de Promote sem registrar o pré-requisito ausente e seu artefato canônico.
 - Nunca inventar OBCs, BDD Features ou riscos — apenas sincronizar o que já existe.
-- Usar sempre o padrão canônico de título de Work Item: `[Operation] — [Artifact Type] [Artifact ID]: descrição`.
+- Usar sempre o padrão canônico de título de Work Item: `[Artifact ID]: descrição`. Declarar `operation:<valor>` e `artifact-type:<valor>` como labels do Issue.
 - Preencher sempre `artifact_type`, `artifact_id`, `operation` e `journey` ao criar Work Items.
 - Parar e surfacing bloqueio quando uma divergência exige decisão de produto para ser resolvida.
+
+### Guardrails de projeto gerenciado
+
+- **O projeto gerenciado é identificado pelo nome `ProdOps — <repo-name>`, nunca por número.** O número muda a cada criação — o nome é o contrato.
+- **Projetos manuais são intocáveis.** Qualquer projeto cujo nome não comece com `ProdOps — ` é ignorado pelo Diligence. Não criar campos, views nem Issues neles sem diretiva explícita do usuário.
+- **Criação é automática via API.** Se o projeto gerenciado não existir, `gh project create` é o caminho — não criar Issue para isso.
+- **Estratégia de template:** quando o projeto gerenciado estiver completamente configurado, `gh project mark-template` + `gh project copy` viabiliza bootstrap de novos repositórios sem configuração manual.
+- **Visibilidade PUBLIC por default** — todo projeto gerenciado (`ProdOps — template`, `ProdOps — <repo>`) é criado e mantido como PUBLIC. Alterar para PRIVATE somente mediante diretiva explícita. Workspace verifica e Provision corrige automaticamente.
+
+### Guardrails de infraestrutura (diligence-infra)
+
+- **Tentar API antes de declarar impossibilidade** — nunca assumir que uma API não existe sem executar a tentativa e capturar o erro.
+- **Nenhum gap sem Issue de rastreamento** — qualquer ação que não pode ser automatizada gera um Issue com título `infra: <descrição>`, labels `operation:provision` e `journey:diligence`, e corpo com o erro de API, a ação requerida e o critério de resolução.
+- **Nunca declarar "ação manual" como texto flutuante** — a instrução para o humano vai no corpo do Issue, não como mensagem de output do agente.
+- **Sync manifest como registro de verdade** — o manifest registra: CONFORME (verificado via API neste ciclo), PARCIAL (Issue #X aberto com gap documentado) ou NÃO CONFORME (problema automatizável não resolvido).
+- Scripts temporários de provisioning criados no scratchpad devem ser documentados no Histórico do manifest com path e resultado.
 
 ## References
 

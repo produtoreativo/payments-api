@@ -32,9 +32,16 @@ Criar Work Item com os campos obrigatórios do schema canônico:
 
 → Schema completo em `prodops/framework/execution-mapping/work-item-schema.md`
 
-Título canônico: `[Operation] — [Artifact Type] [Artifact ID]: descrição concisa`
+Título canônico: `[Artifact ID]: descrição concisa`
 
-Exemplo: `Promote — Local OBC observability-datadog: avançar para Iteration Plan`
+Exemplo: `observability-datadog: avançar para Iteration Plan`
+
+Labels obrigatórias:
+```
+operation:promote
+artifact-type:local-obc
+journey:diligence
+```
 
 ### 3. Registrar link no OBC (opcional)
 

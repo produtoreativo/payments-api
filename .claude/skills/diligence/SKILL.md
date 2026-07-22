@@ -9,6 +9,7 @@ Supported scopes:
 
 - `diligence-sync`
 - `diligence-async`
+- `diligence-infra`
 - `full`
 
 When scope is omitted, use `diligence-sync` temporarily and report the default explicitly.

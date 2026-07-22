@@ -183,24 +183,52 @@ GitHub Project's native fields (`Status`, `Priority`, `Assignees`, `Milestone`) 
 A Work Item title should follow the pattern:
 
 ```
-[Operation] — [Artifact Type] [Artifact ID]: [concise description]
+[Artifact ID]: concise description
 ```
+
+The title is object-oriented — it describes what is being worked on. `Operation` and `Artifact Type` are process details that belong in labels and the body, where they can be read with context.
 
 Examples:
 ```
-Refine — Local OBC payments-invoice-v2: BDD section incomplete
-Review — Local OBC payments-invoice-v2: pre-Downstream Assessment
-Implement — Local OBC payments-invoice-v2: PIX payment split
-Update — Architecture overview: new WebhookWorker module
-Split — Global OBC platform-billing-v3: decompose into 3 Local OBCs
-Validate — BDD Feature payments-invoice.feature: pre-release CI gate
-Promote — Business Signal SIG-089: generate Business Intent
+payments-invoice-v2: BDD section incomplete
+payments-invoice-v2: pre-Downstream Assessment
+payments-invoice-v2: PIX payment split
+architecture-overview: new WebhookWorker module
+platform-billing-v3: decompose into 3 Local OBCs
+payments-invoice.feature: pre-release CI gate
+SIG-089: generate Business Intent
 ```
 
-This pattern:
-- identifies the artifact without ambiguity
-- names the operation without using "Issue for X"
-- enables search and filter by artifact or operation in GitHub
+---
+
+## Canonical Work Item labels
+
+`Operation` and `Artifact Type` are declared as labels to enable search and filter via `gh issue list` and GitHub search.
+
+### Label pattern
+
+```
+operation:<value>       # e.g. operation:refine, operation:promote, operation:capture
+artifact-type:<value>   # e.g. artifact-type:local-obc, artifact-type:business-signal
+```
+
+Values follow the canonical enums in lowercase with hyphens.
+
+### Examples
+
+```bash
+gh issue list --label "operation:promote"
+gh issue list --label "artifact-type:local-obc"
+gh issue list --label "operation:capture" --label "artifact-type:business-signal"
+```
+
+### Required labels per Work Item
+
+| Label | Required | Values |
+|---|---|---|
+| `operation:<value>` | Yes | enums from the `operation` family |
+| `artifact-type:<value>` | Yes | enums from `artifact_type` |
+| `journey:<value>` | Recommended | enums from `journey` |
 
 ---
 
@@ -211,7 +239,8 @@ A Work Item is correctly structured when:
 - [ ] `artifact_id` references an artifact that exists in the repository
 - [ ] `operation` is filled with an operation allowed for that artifact type (see [Matrix](matrix.en.md))
 - [ ] `journey` is filled
-- [ ] The title follows the pattern `[Operation] — [Artifact Type] [Artifact ID]: ...`
+- [ ] The title follows the pattern `[Artifact ID]: concise description`
+- [ ] Labels `operation:<value>` and `artifact-type:<value>` are present on the Issue
 
 ---
 
