@@ -23,18 +23,18 @@ If scope is absent, use `diligence-sync` and state that this is the temporary de
 
 ## Diligence Sync flow
 
-1. **Capture** — execute inline from `prodops/skills/diligence/steps/capture/SKILL.md`.
-2. **Attach** — execute inline from `prodops/skills/diligence/steps/attach/SKILL.md`.
-3. **Promote** — execute inline from `prodops/skills/diligence/steps/promote/SKILL.md`.
-4. **Close** — execute inline from `prodops/skills/diligence/steps/close/SKILL.md`.
+1. **Capture** — execute inline from `prodops/skills/diligence/diligence-sync/steps/capture/SKILL.md`.
+2. **Attach** — execute inline from `prodops/skills/diligence/diligence-sync/steps/attach/SKILL.md`.
+3. **Promote** — execute inline from `prodops/skills/diligence/diligence-sync/steps/promote/SKILL.md`.
+4. **Close** — execute inline from `prodops/skills/diligence/diligence-sync/steps/close/SKILL.md`.
 
 Stop on any blocker. Record the missing artifact, owning journey, and concrete next action before stopping.
 
 ## Diligence Async flow
 
-1. **Scan** — execute inline from `prodops/skills/diligence/steps/scan/SKILL.md`.
-2. **Flag** — execute inline from `prodops/skills/diligence/steps/flag/SKILL.md`.
-3. **Repair** — execute inline from `prodops/skills/diligence/steps/repair/SKILL.md`.
+1. **Scan** — execute inline from `prodops/skills/diligence/diligence-async/steps/scan/SKILL.md`.
+2. **Flag** — execute inline from `prodops/skills/diligence/diligence-async/steps/flag/SKILL.md`.
+3. **Repair** — execute inline from `prodops/skills/diligence/diligence-async/steps/repair/SKILL.md`.
 
 Stop before Repair when a divergence requires a product decision. Escalate with the affected OBC, the gap, and the owning journey.
 

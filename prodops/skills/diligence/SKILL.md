@@ -9,12 +9,12 @@ Diligence é a jornada transversal que mantém o sistema de trabalho do ProdOps 
 
 ## Commands
 
-| Command | Scope |
-|---|---|
-| `/diligence diligence-sync <obc-id>` | Capture → Attach → Promote → Close para o OBC informado |
-| `/diligence diligence-async` | Scan → Flag → Repair em todos os OBCs e Issues ativos |
-| `/diligence full <obc-id>` | diligence-sync para o OBC + diligence-async |
-| `/diligence workspace-reconciliation` | Inspect → Reconcile → Verify do GitHub Workspace. Invocável pelo usuário e pelos ciclos. |
+| Command | Scope | Orquestrador |
+|---|---|---|
+| `/diligence diligence-sync <obc-id>` | Capture → Attach → Promote → Close para o OBC informado | [diligence-sync/SKILL.md](diligence-sync/SKILL.md) |
+| `/diligence diligence-async` | Scan → Flag → Repair em todos os OBCs e Issues ativos | [diligence-async/SKILL.md](diligence-async/SKILL.md) |
+| `/diligence full <obc-id>` | diligence-sync para o OBC + diligence-async | — |
+| `/diligence workspace-reconciliation` | Inspect → Reconcile → Verify do GitHub Workspace. Invocável pelo usuário e pelos ciclos. | [workspace-reconciliation/SKILL.md](workspace-reconciliation/SKILL.md) |
 
 Quando o escopo é omitido, usar `diligence-sync` e reportar essa escolha explicitamente.
 
@@ -24,13 +24,13 @@ Quando invocado com argumento de step (`/diligence diligence-sync capture`), exe
 
 | Command | Step | Arquivo |
 |---|---|---|
-| diligence-sync | `capture` | [steps/capture/SKILL.md](steps/capture/SKILL.md) |
-| diligence-sync | `attach` | [steps/attach/SKILL.md](steps/attach/SKILL.md) |
-| diligence-sync | `promote` | [steps/promote/SKILL.md](steps/promote/SKILL.md) |
-| diligence-sync | `close` | [steps/close/SKILL.md](steps/close/SKILL.md) |
-| diligence-async | `scan` | [steps/scan/SKILL.md](steps/scan/SKILL.md) |
-| diligence-async | `flag` | [steps/flag/SKILL.md](steps/flag/SKILL.md) |
-| diligence-async | `repair` | [steps/repair/SKILL.md](steps/repair/SKILL.md) |
+| diligence-sync | `capture` | [diligence-sync/steps/capture/SKILL.md](diligence-sync/steps/capture/SKILL.md) |
+| diligence-sync | `attach` | [diligence-sync/steps/attach/SKILL.md](diligence-sync/steps/attach/SKILL.md) |
+| diligence-sync | `promote` | [diligence-sync/steps/promote/SKILL.md](diligence-sync/steps/promote/SKILL.md) |
+| diligence-sync | `close` | [diligence-sync/steps/close/SKILL.md](diligence-sync/steps/close/SKILL.md) |
+| diligence-async | `scan` | [diligence-async/steps/scan/SKILL.md](diligence-async/steps/scan/SKILL.md) |
+| diligence-async | `flag` | [diligence-async/steps/flag/SKILL.md](diligence-async/steps/flag/SKILL.md) |
+| diligence-async | `repair` | [diligence-async/steps/repair/SKILL.md](diligence-async/steps/repair/SKILL.md) |
 | workspace-reconciliation | `inspect` | [workspace-reconciliation/steps/inspect/SKILL.md](workspace-reconciliation/steps/inspect/SKILL.md) |
 | workspace-reconciliation | `reconcile` | [workspace-reconciliation/steps/reconcile/SKILL.md](workspace-reconciliation/steps/reconcile/SKILL.md) |
 | workspace-reconciliation | `verify` | [workspace-reconciliation/steps/verify/SKILL.md](workspace-reconciliation/steps/verify/SKILL.md) |
