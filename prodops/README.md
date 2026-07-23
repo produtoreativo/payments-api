@@ -73,7 +73,7 @@ Este diretório é o **ProdOps Workspace** do produto `payments-api`. Ele combin
 | [framework/](framework/) | Princípios, glossário, fluxo, backlogs, OBC, governança, execution mapping | Canônico — distribuído do prodops-framework. Não modificar por produto. |
 | [journeys/](framework/journeys/) | As cinco jornadas: Discovery, Delivery, Operation, Assessment, Diligence | Canônico (estrutura) + local (artefatos de jornada como experimentos e trilhas) |
 | [artifacts/](artifacts/) | OBCs, BDD Features, intents, planos, backlogs, arquitetura, trilhas, evidências | Local — pertence exclusivamente ao produto |
-| [skills/](skills/) | Skills executáveis por agentes: fases de delivery + jornadas | Canônico + extensões locais (ex: `payments-api-local-testing`, `diligence`) |
+| [skills/](skills/) | Skills executáveis por agentes: fases de delivery + jornadas | Canônico + Skills do produto em `skills/local/` (ex: `payments-api-local-testing`) |
 | [templates/](templates/) | Templates reutilizáveis por tipo de artefato | Canônico — não modificar por produto |
 | [exec/](exec/) | `manifest.yaml` (fonte de verdade) + delivery cards | Local — pertence ao produto |
 | [execution-model/](framework/execution-model/) | Definição dos modos Upstream e Downstream | Canônico — leitura |

@@ -19,7 +19,7 @@ description: Validate, debug, and modify this repository's payment sandbox witho
 6. Validate from the browser path, not only from backend unit assumptions. CORS preflight must succeed for frontend testing.
 7. When the task is payload validation, run:
    ```sh
-   prodops/skills/payments-api-local-testing/scripts/validate-local-payloads.sh
+   prodops/skills/local/payments-api-local-testing/scripts/validate-local-payloads.sh
    ```
 
 ## Local Expectations

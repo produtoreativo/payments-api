@@ -81,7 +81,7 @@ done < <(find prodops/artifacts/experiments -mindepth 1 -maxdepth 1 -type d | so
 #   journeys/assessment/opportunities.md → artifacts/risks/opportunities.md
 # (assessment/reliability-plans and assessment/event-storming are already
 #  caught by the existing pattern prefixes.)
-legacy_pattern='prodops/(upstream|product/|downstream/release-trail\.md|assessment/reliability-plan|assessment/reliability-plans|assessment/iteration-plans|assessment/event-storming|assessment/architecture|journeys/|execution-model/)|prodops/operation/|delivery/flows/|journeys/discovery/experiments/|journeys/assessment/risks\.md|journeys/assessment/opportunities\.md'
+legacy_pattern='prodops/(upstream|product/|downstream/release-trail\.md|assessment/reliability-plan|assessment/reliability-plans|assessment/iteration-plans|assessment/event-storming|assessment/architecture|journeys/|execution-model/|skills/payments-api-local-testing/)|prodops/operation/|delivery/flows/|journeys/discovery/experiments/|journeys/assessment/risks\.md|journeys/assessment/opportunities\.md'
 
 legacy_targets=(
   AGENTS.md
@@ -258,6 +258,23 @@ if grep -q "payments-api-local-testing" prodops/framework/canonical-paths.md 2>/
   fail "canonical-paths.md references product-local skill (payments-api-local-testing) — remove it"
 else
   pass "canonical-paths.md: no product-local skill references"
+fi
+
+# ── Product-local skills space ─────────────────────────────────────────────
+check_path "prodops/skills/local"
+check_path "prodops/skills/local/README.md"
+check_path "prodops/skills/local/payments-api-local-testing/SKILL.md"
+
+if [[ -e "prodops/skills/payments-api-local-testing" ]]; then
+  fail "prodops/skills/payments-api-local-testing still exists — should be at prodops/skills/local/payments-api-local-testing"
+else
+  pass "prodops/skills/payments-api-local-testing correctly moved to local/"
+fi
+
+if grep -q "prodops/skills/local/" .prodopsignore 2>/dev/null; then
+  pass ".prodopsignore protects prodops/skills/local/"
+else
+  fail ".prodopsignore missing prodops/skills/local/ protection"
 fi
 
 if [[ "${failures}" -gt 0 ]]; then

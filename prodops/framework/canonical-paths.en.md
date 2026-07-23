@@ -202,6 +202,8 @@ Use this table as the primary navigation source before reading or writing any ar
 | Validate | `prodops/skills/validate/SKILL.md` |
 | Promote | `prodops/skills/promote/SKILL.md` |
 
+> **Note:** Products may maintain product-specific Skills in `prodops/skills/local/`. This directory is not a Framework sync target — its content belongs to the product. See `prodops/skills/local/README.en.md`.
+
 ---
 
 ## Framework Engineering References

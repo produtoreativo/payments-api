@@ -76,7 +76,7 @@ Use these standards to keep prompt iterations and code changes aligned with this
 - Backend build: `cd api && npm run build`.
 - Backend acceptance test: `cd api && npm run test:acceptance` (requires LocalStack running).
 - Frontend build: `cd validation-workbench && npm run build`.
-- Local payload smoke test: `prodops/skills/payments-api-local-testing/scripts/validate-local-payloads.sh`.
+- Local payload smoke test: `prodops/skills/local/payments-api-local-testing/scripts/validate-local-payloads.sh`.
 - CI acceptance tests run against LocalStack (real DynamoDB API) with `ASAAS_MOCK=true`.
 - Local acceptance test setup: `./scripts/test-acceptance.sh` (starts LocalStack if needed, sets env vars, runs Jest).
 

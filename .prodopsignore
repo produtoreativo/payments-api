@@ -24,8 +24,9 @@ prodops/exec/framework-lock.yaml
 prodops/exec/cards/
 
 # ── Skills locais do produto ─────────────────────────────────────────────────
-# Skills que existem apenas neste produto e não fazem parte do Framework.
-prodops/skills/payments-api-local-testing/
+# Protege o diretório inteiro de Skills do produto. Toda Skill em skills/local/
+# pertence a este repositório e não deve ser sobrescrita por sync do Framework.
+prodops/skills/local/
 
 # ── Referências de engenharia opcionais ─────────────────────────────────────
 # Escolha técnica deste produto; outros produtos podem ter escolhas diferentes.

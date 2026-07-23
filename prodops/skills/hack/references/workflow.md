@@ -20,7 +20,7 @@ HACK is the implementation phase. The agent repeats the work engineers did manua
 - Follow existing module boundaries, naming, DTOs, env vars, and scripts.
 - Prefer small changes that preserve current architecture.
 - Add abstractions only when they remove real duplication or match an existing local pattern.
-- For this payments-api repository, read `prodops/skills/payments-api-local-testing/references/repository-standards.md` before changing payment behavior.
+- Execute a Product Skill declarada pelo produto em `prodops/skills/local/` (quando existir) para padrões específicos do repositório antes de alterar comportamento de pagamento.
 
 ## Code Style — Active Lint Rules
 

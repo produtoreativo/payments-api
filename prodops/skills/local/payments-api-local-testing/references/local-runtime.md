@@ -47,13 +47,13 @@ npm run build
 Smoke-test payloads:
 
 ```sh
-prodops/skills/payments-api-local-testing/scripts/validate-local-payloads.sh
+prodops/skills/local/payments-api-local-testing/scripts/validate-local-payloads.sh
 ```
 
 Override API URL:
 
 ```sh
-API_URL=http://localhost:3011 prodops/skills/payments-api-local-testing/scripts/validate-local-payloads.sh
+API_URL=http://localhost:3011 prodops/skills/local/payments-api-local-testing/scripts/validate-local-payloads.sh
 ```
 
 ## Common Failures

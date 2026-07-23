@@ -42,7 +42,7 @@ Declarado em `.prodopsignore`.
 - `prodops/exec/manifest.yaml` — configuração operacional do produto
 - `prodops/exec/framework-lock.yaml` — lock de distribuição do produto
 - `prodops/exec/cards/` — work cards de execução
-- `prodops/skills/payments-api-local-testing/` — skill local desta API
+- `prodops/skills/local/` — Skills locais desta API (ex: `payments-api-local-testing`)
 - `prodops/skills/references/engineering/clean-code/` — referência opcional do produto
 - `prodops/skills/references/engineering/ddd/` — referência opcional do produto
 - `prodops/scripts/delivery/` — scripts específicos do produto

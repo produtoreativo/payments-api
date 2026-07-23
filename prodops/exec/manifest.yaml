@@ -71,7 +71,7 @@ gates:
     in: [api/src, api/test]
     expect: zero_hits
   smoke:
-    # descritivo — mecânica em prodops/skills/payments-api-local-testing/
+    # descritivo — mecânica em prodops/skills/local/payments-api-local-testing/
     cmd: "api/scripts/start-sandbox-api.sh && POST /invoices"
     expect: "201"
     when: bootstrap

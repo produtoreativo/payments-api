@@ -47,11 +47,15 @@ Skills are **not** conceptual documentation, templates, or capabilities.
 | `diligence-async` | Scan → Flag → Repair across all active OBCs and Issues | [diligence/diligence-async/SKILL.md](diligence/diligence-async/SKILL.md) |
 | `workspace-reconciliation` | Inspect → Reconcile → Verify the GitHub Workspace | [diligence/workspace-reconciliation/SKILL.md](diligence/workspace-reconciliation/SKILL.md) |
 
-## Local Skills (product-specific)
+## Product Skills (`skills/local/`)
+
+Skills maintained in this repository. They are not part of the canonical
+Framework and must not be distributed to other products. They may consume the
+Framework; the Framework does not depend on them. See [`local/README.en.md`](local/README.en.md).
 
 | Skill | Purpose | Link |
 |---|---|---|
-| `payments-api-local-testing` | Run and validate local tests with payment contracts | [payments-api-local-testing/SKILL.md](payments-api-local-testing/SKILL.md) |
+| `payments-api-local-testing` | Run and validate local tests with payment contracts | [local/payments-api-local-testing/SKILL.md](local/payments-api-local-testing/SKILL.md) |
 
 ## Engineering References
 

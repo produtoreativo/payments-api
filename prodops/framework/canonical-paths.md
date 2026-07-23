@@ -202,6 +202,8 @@ Use esta tabela como fonte primária de navegação antes de ler ou escrever qua
 | Validate | `prodops/skills/validate/SKILL.md` |
 | Promote | `prodops/skills/promote/SKILL.md` |
 
+> **Nota:** Produtos podem manter Skills específicas em `prodops/skills/local/`. Esse diretório não é um target de sync do Framework — seu conteúdo pertence ao produto. Ver `prodops/skills/local/README.md`.
+
 ---
 
 ## Framework Engineering References

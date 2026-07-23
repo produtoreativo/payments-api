@@ -73,7 +73,7 @@ This directory is the **ProdOps Workspace** for the `payments-api` product. It c
 | [framework/](framework/) | Principles, glossary, flow, backlogs, OBC, governance, execution mapping | Canonical — distributed from prodops-framework. Do not modify per product. |
 | [journeys/](framework/journeys/) | The five journeys: Discovery, Delivery, Operation, Assessment, Diligence | Canonical (structure) + local (journey artifacts such as experiments and trails) |
 | [artifacts/](artifacts/) | OBCs, BDD Features, intents, plans, backlogs, architecture, trails, evidence | Local — belongs exclusively to the product |
-| [skills/](skills/) | Agent-executable skills: delivery phases + journeys | Canonical + local extensions (e.g. `payments-api-local-testing`, `diligence`) |
+| [skills/](skills/) | Agent-executable skills: delivery phases + journeys | Canonical + product Skills in `skills/local/` (e.g. `payments-api-local-testing`) |
 | [templates/](templates/) | Reusable templates by artifact type | Canonical — do not modify per product |
 | [exec/](exec/) | `manifest.yaml` (source of truth) + delivery cards | Local — belongs to the product |
 | [execution-model/](framework/execution-model/) | Definition of Upstream and Downstream modes | Canonical — read only |
