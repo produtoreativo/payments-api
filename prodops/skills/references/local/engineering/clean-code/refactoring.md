@@ -102,4 +102,4 @@ Refactor only code that is covered by a passing test. If there is no test, there
 If you want to refactor untested code, write the test first (Red Bar), make it green, then refactor.
 
 For the complete rules on what is allowed and prohibited in each phase, see
-[../tdd-prodops/red-green-refactor.md](../tdd-prodops/red-green-refactor.md).
+[../../../engineering/tdd-prodops/red-green-refactor.md](../../../engineering/tdd-prodops/red-green-refactor.md).
