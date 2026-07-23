@@ -1,0 +1,123 @@
+schema_version: 1
+
+# ============================================================================
+# ProdOps Framework — Export Manifest
+# ============================================================================
+#
+# Declara o contrato declarativo de extração do ProdOps Framework para o
+# repositório canônico `prodops-framework`.
+#
+# Este arquivo define O QUÊ é exportável — não implementa o mecanismo de sync.
+# Leia prodops/exec/export-boundary.md para a explicação do modelo.
+#
+# Aplicável apenas ao upstream empírico (status: self).
+# Após a transição para consumer, este arquivo pode ser removido.
+# ============================================================================
+
+source:
+  repository_role: empirical-upstream
+  root: prodops
+  note: >
+    Este repositório (payments-api) é o upstream empírico temporário do
+    ProdOps Framework. O conteúdo exportável aqui definido deve ser extraído
+    para o repositório canônico `prodops-framework` antes da transição para
+    status: consumer.
+
+export:
+  include:
+    - framework/**
+    - skills/**
+    - templates/**
+    - scripts/doctor.sh
+    - scripts/validate-manifest.sh
+    - scripts/validate-export-manifest.sh
+    - scripts/README.md
+    - scripts/README.en.md
+  exclude:
+    - skills/local/**
+    - skills/references/local/**
+    - templates/local/**
+    - scripts/local/**
+    - artifacts/**
+    - exec/**
+
+conventions:
+  consumer_owned_paths:
+    - artifacts/
+    - skills/local/
+    - skills/references/local/
+    - templates/local/
+    - scripts/local/
+  note: >
+    O Framework define que estes caminhos existem como espaços de propriedade
+    do consumidor. Seu conteúdo nunca é exportado nem sobrescrito por sync.
+    O Framework documenta a existência e o propósito de cada espaço; o
+    conteúdo pertence integralmente ao produto consumidor.
+
+installation_state:
+  generate_on_install:
+    - exec/manifest.yaml
+    - exec/framework-lock.yaml
+  preserve_on_update:
+    - exec/manifest.yaml
+    - exec/framework-lock.yaml
+    - .prodopsignore
+  note: >
+    Arquivos de estado de instalação descrevem como um consumidor instalou ou
+    rastreia o Framework. Não são simplesmente canônicos nem simplesmente
+    locais — requerem tratamento especial. São gerados localmente na instalação
+    e nunca sobrescritos por sync.
+
+transforms:
+  - id: remove-empirical-references
+    description: >
+      Remover ou substituir referências ao papel empírico do payments-api
+      (status: self, linguagem empirical-upstream, referências a
+      "este repositório") do conteúdo exportável antes da distribuição.
+    scope: framework/**
+    apply_when: extracting_to_framework_repository
+    examples:
+      - prodops/framework/operating-model.md — menciona payments-api como Product Repository
+      - prodops/framework/glossary.md — cita payments-api como exemplo de Product Repository
+      - prodops/framework/README.md — descreve o Framework "aplicado a este Product Repository"
+  - id: generalize-product-examples
+    description: >
+      Substituir exemplos específicos do payments-api (Asaas, DynamoDB, NestJS,
+      runbooks de produto) por placeholders genéricos em documentos canônicos
+      exportáveis.
+    scope: framework/**
+    apply_when: extracting_to_framework_repository
+    examples:
+      - prodops/framework/journeys/operation/runbooks.md — runbooks são produto-específicos
+      - prodops/framework/execution-mapping/matrix.md — menciona NestJS, DynamoDB como exemplos
+      - prodops/framework/execution-mapping/work-item-schema.md — payments-api como exemplo
+  - id: extract-discovery-history
+    description: >
+      O trail de discovery e os experimentos do payments-api são históricos
+      e produto-específicos. Não devem ser exportados como conteúdo canônico.
+      O Framework exporta apenas a estrutura e os templates das jornadas —
+      não o histórico de execução de um produto específico.
+    scope: framework/journeys/discovery/**
+    apply_when: extracting_to_framework_repository
+    examples:
+      - prodops/framework/journeys/discovery/upstream-trail.md — histórico do payments-api
+      - prodops/framework/journeys/discovery/experiments.md — índice de experimentos do produto
+      - prodops/framework/journeys/discovery/learnings.md — learnings do produto
+
+notes:
+  - >
+    Este arquivo define o contorno de uma distribuição do Framework —
+    não o algoritmo de sincronização. O algoritmo é um passo futuro de
+    implementação.
+  - >
+    Uma exclusão sempre tem precedência sobre uma inclusão.
+  - >
+    Caminhos de convenção são definidos pelo Framework mas pertencentes ao
+    consumidor. Aparecem em conventions.consumer_owned_paths, não em
+    export.include.
+  - >
+    Transformações são identificadas aqui para rastreabilidade, mas
+    executadas manualmente ou por ferramenta futura no momento da extração.
+  - >
+    O nível prodops/ é preservado na estrutura do repositório prodops-framework.
+    Ver export-boundary.md — Seção "Layout do repositório prodops-framework".

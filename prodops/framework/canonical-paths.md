@@ -260,6 +260,24 @@ Use esta tabela como fonte primária de navegação antes de ler ou escrever qua
 
 ---
 
+## Upstream Empírico — Extração do Framework
+
+> **Escopo restrito:** Os arquivos abaixo pertencem ao processo de extração do
+> Framework para o repositório `prodops-framework`. Existem **apenas enquanto
+> este repositório for o upstream empírico** (`status: self` em
+> `prodops/exec/framework-lock.yaml`). Após a transição para `status: consumer`,
+> podem ser removidos ou mantidos como histórico. Não fazem parte do conteúdo
+> funcional canônico do Framework.
+
+| Concern | Canonical path |
+|---|---|
+| Contrato declarativo de extração | `prodops/exec/export-manifest.yaml` |
+| Documentação do modelo de fronteira (PT) | `prodops/exec/export-boundary.md` |
+| Documentação do modelo de fronteira (EN) | `prodops/exec/export-boundary.en.md` |
+| Validação da fronteira de exportação | `prodops/scripts/validate-export-manifest.sh` |
+
+---
+
 ## Legacy Paths
 
 Estes caminhos podem aparecer em entradas históricas migradas. **Não usar para novos artefatos.**

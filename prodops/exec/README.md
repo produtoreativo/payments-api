@@ -1,7 +1,7 @@
 # prodops/exec/
 
-Espaço de execução operacional do produto. Contém configurações e controles
-de runtime que pertencem a este repositório, não ao Framework canônico.
+Espaço de execução operacional do produto. Contém configurações, controles de
+runtime e contratos de distribuição do Framework para este repositório.
 
 ---
 
@@ -11,7 +11,13 @@ de runtime que pertencem a este repositório, não ao Framework canônico.
 |---|---|
 | `manifest.yaml` | Configuração operacional do produto: skills ativos, paths locais, gates, vocabulário canônico, GitHub Projects |
 | `framework-lock.yaml` | Lock de distribuição do Framework: versão instalada, status de sync, estado de drift |
+| `export-manifest.yaml` | Contrato declarativo de extração: define o contorno exportável do Framework para o repositório `prodops-framework` *(apenas upstream empírico)* |
+| `export-boundary.md` | Documentação do modelo de fronteira: propriedade, classificações, layout, transformações e invariantes do sync *(apenas upstream empírico)* |
 | `cards/` | Work cards de execução (contexto de fase ativo — efêmero) |
+
+> **Contratos distintos:** `manifest.yaml`, `framework-lock.yaml` e
+> `export-manifest.yaml` respondem a perguntas diferentes e não se substituem.
+> Ver seção abaixo.
 
 ---
 
@@ -57,14 +63,19 @@ Conteúdo efêmero ou gerado durante a execução — não é artefato permanent
 
 ---
 
-## Distinção entre manifest.yaml e framework-lock.yaml
+## Três contratos, três perguntas distintas
 
-| | `manifest.yaml` | `framework-lock.yaml` |
-|---|---|---|
-| **Propósito** | Configuração de execução | Controle de distribuição |
-| **Pergunta respondida** | *Como este produto executa o Framework?* | *Qual versão do Framework está instalada?* |
-| **Quem escreve** | Equipe do produto | Mecanismo de sync (ou produto, na fase empírica) |
-| **Quando muda** | Quando muda a configuração de execução do produto | Quando o Framework é atualizado |
-| **Conteúdo** | Skills, paths, gates, vocabulário, GitHub | Versão, status, drift, mecanismo de sync |
+| | `manifest.yaml` | `framework-lock.yaml` | `export-manifest.yaml` |
+|---|---|---|---|
+| **Propósito** | Configuração de execução | Controle de distribuição | Contorno de exportação |
+| **Pergunta respondida** | *Como este produto executa o Framework?* | *Qual versão do Framework está instalada?* | *O que pertence ao Framework e deve ser exportado?* |
+| **Quem escreve** | Equipe do produto | Mecanismo de sync (ou produto, na fase empírica) | Upstream empírico (este repositório) |
+| **Quando muda** | Quando muda a configuração de execução do produto | Quando o Framework é atualizado | Quando a fronteira de exportação é revisada |
+| **Conteúdo** | Skills, paths, gates, vocabulário, GitHub | Versão, status, drift, mecanismo de sync | Includes, excludes, transformações, convention-only paths |
+| **Escopo** | Todo produto consumidor | Todo produto consumidor | Apenas upstream empírico |
 
-Os dois arquivos são complementares e não se substituem.
+Os três arquivos são complementares e não se substituem.
+
+`export-manifest.yaml` e `export-boundary.md` existem **apenas enquanto este
+repositório for o upstream empírico** (`status: self`). Após a transição para
+`status: consumer`, eles podem ser removidos ou mantidos como histórico.

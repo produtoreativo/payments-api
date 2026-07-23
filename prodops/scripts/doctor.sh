@@ -373,6 +373,59 @@ check_path "prodops/templates/obcs/obc.md"
 check_path "prodops/templates/operation/runbook.md"
 check_path "prodops/templates/operation/postmortem.md"
 
+# ── Export boundary integrity ──────────────────────────────────────────────────
+
+check_path "prodops/exec/export-manifest.yaml"
+check_path "prodops/exec/export-boundary.md"
+check_path "prodops/exec/export-boundary.en.md"
+
+# YAML validity check for export-manifest
+if command -v python3 >/dev/null 2>&1; then
+  if python3 -c "import yaml" 2>/dev/null; then
+    if python3 -c "import yaml; yaml.safe_load(open('prodops/exec/export-manifest.yaml'))" 2>/dev/null; then
+      pass "export-manifest.yaml: YAML valid"
+    else
+      fail "export-manifest.yaml: YAML invalid"
+    fi
+  else
+    skip "PyYAML not installed — YAML validation of export-manifest skipped"
+  fi
+else
+  skip "python3 not found — YAML validation of export-manifest skipped"
+fi
+
+# Confirm local areas are excluded
+if grep -qF "skills/local/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
+  pass "export-manifest.yaml: skills/local/** excluded"
+else
+  fail "export-manifest.yaml: skills/local/** not excluded"
+fi
+
+if grep -qF "artifacts/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
+  pass "export-manifest.yaml: artifacts/** excluded"
+else
+  fail "export-manifest.yaml: artifacts/** not excluded"
+fi
+
+if grep -qF "exec/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
+  pass "export-manifest.yaml: exec/** excluded from direct export"
+else
+  fail "export-manifest.yaml: exec/** not excluded from direct export"
+fi
+
+# Confirm canonical roots are included
+if grep -qF "framework/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
+  pass "export-manifest.yaml: framework/** included"
+else
+  fail "export-manifest.yaml: framework/** not included in export"
+fi
+
+if grep -qF "skills/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
+  pass "export-manifest.yaml: skills/** included"
+else
+  fail "export-manifest.yaml: skills/** not included in export"
+fi
+
 if [[ "${failures}" -gt 0 ]]; then
   printf '\nProdOps doctor found %s issue(s).\n' "${failures}" >&2
   printf 'Run the fix/* branches or repair the listed files.\n' >&2
