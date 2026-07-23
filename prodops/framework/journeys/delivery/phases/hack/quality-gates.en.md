@@ -44,9 +44,9 @@ These gates are the minimum to commit and move to the next step.
 | Step | References |
 |---|---|
 | `start` | n/a |
-| `tdd` (Red) | [DDD](../../../../../skills/references/engineering/ddd/README.en.md) (ubiquitous language, domain events) · [ProdOps TDD](../../../../../skills/references/engineering/tdd-prodops/README.en.md) (integration-first, mocking policy) |
-| `tdd` (Green) | [Clean Code](../../../../../skills/references/engineering/clean-code/README.en.md) (naming, functions) |
-| `tdd` (Yellow) | [Clean Code — refactoring](../../../../../skills/references/engineering/clean-code/refactoring.en.md) · [DDD](../../../../../skills/references/engineering/ddd/README.en.md) (aggregates, repositories) · [observability](../../../../../skills/references/engineering/tdd-prodops/observability.en.md) |
+| `tdd` (Red) | [DDD](../../../../../skills/references/local/engineering/ddd/README.en.md) (ubiquitous language, domain events) _(product-local reference)_ · [ProdOps TDD](../../../../../skills/references/engineering/tdd-prodops/README.en.md) (integration-first, mocking policy) |
+| `tdd` (Green) | [Clean Code](../../../../../skills/references/local/engineering/clean-code/README.en.md) (naming, functions) _(product-local reference)_ |
+| `tdd` (Yellow) | [Clean Code — refactoring](../../../../../skills/references/local/engineering/clean-code/refactoring.en.md) _(local reference)_ · [DDD](../../../../../skills/references/local/engineering/ddd/README.en.md) (aggregates, repositories) _(local reference)_ · [observability](../../../../../skills/references/engineering/tdd-prodops/observability.en.md) |
 | `commit` | [Conventional Commits](../../capabilities/commit-workflow/README.md#conventional-commits) · commit scope |
 
 ---

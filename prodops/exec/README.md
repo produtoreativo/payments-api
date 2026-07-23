@@ -43,8 +43,8 @@ Declarado em `.prodopsignore`.
 - `prodops/exec/framework-lock.yaml` — lock de distribuição do produto
 - `prodops/exec/cards/` — work cards de execução
 - `prodops/skills/local/` — Skills locais desta API (ex: `payments-api-local-testing`)
-- `prodops/skills/references/engineering/clean-code/` — referência opcional do produto
-- `prodops/skills/references/engineering/ddd/` — referência opcional do produto
+- `prodops/skills/references/local/engineering/clean-code/` — referência opcional do produto
+- `prodops/skills/references/local/engineering/ddd/` — referência opcional do produto
 - `prodops/scripts/delivery/` — scripts específicos do produto
 
 **Protegido por `.prodopsignore`:** Nunca sobrescrito por sync do Framework.

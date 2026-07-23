@@ -28,10 +28,10 @@ prodops/exec/cards/
 # pertence a este repositório e não deve ser sobrescrita por sync do Framework.
 prodops/skills/local/
 
-# ── Referências de engenharia opcionais ─────────────────────────────────────
-# Escolha técnica deste produto; outros produtos podem ter escolhas diferentes.
-prodops/skills/references/engineering/clean-code/
-prodops/skills/references/engineering/ddd/
+# ── Referências de engenharia e convenções escolhidas pelo produto ───────────
+# Literatura e convenções locais; outros produtos podem fazer escolhas diferentes.
+# Protege toda a área local — cada subdiretório pertence ao produto.
+prodops/skills/references/local/
 
 # ── Scripts específicos do produto ──────────────────────────────────────────
 # Scripts de entrega e automação locais, não portáveis para outros produtos.

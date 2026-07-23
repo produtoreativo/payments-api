@@ -101,15 +101,15 @@ Release-blocking gates (what blocks merge) live in
   Reliability Plan requires a contract change.
 
 For Clean Code rules (naming, functions, refactoring) see
-[`../references/engineering/clean-code/`](../references/engineering/clean-code/README.md).
+[`../references/local/engineering/clean-code/`](../references/local/engineering/clean-code/README.md) _(product-local reference)_.
 
 ## Engineering References
 
 | Area | File | When to read |
 |---|---|---|
-| Clean Code | [`../references/engineering/clean-code/`](../references/engineering/clean-code/README.md) | Naming, functions, refactoring, error handling |
 | TDD ProdOps | [`../references/engineering/tdd-prodops/`](../references/engineering/tdd-prodops/README.md) | Red/green/yellow cycle, mocking policy, quality gates |
-| DDD | [`../references/engineering/ddd/`](../references/engineering/ddd/README.md) | Aggregates, repositories, domain events, ubiquitous language |
+| Clean Code _(local)_ | [`../references/local/engineering/clean-code/`](../references/local/engineering/clean-code/README.md) | Naming, functions, refactoring, error handling |
+| DDD _(local)_ | [`../references/local/engineering/ddd/`](../references/local/engineering/ddd/README.md) | Aggregates, repositories, domain events, ubiquitous language |
 
 ## Quality gates
 

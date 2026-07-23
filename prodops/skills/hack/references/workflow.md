@@ -44,7 +44,7 @@ The `api/` package enforces these rules via `eslint.config.mjs`. Write code that
 
 ## Clean Code
 
-See [`references/engineering/clean-code/`](../../references/engineering/clean-code/README.md) for the full reference.
+See [`references/local/engineering/clean-code/`](../../references/local/engineering/clean-code/README.md) for the full reference _(product-local reference)_.
 
 Key operational rule for this repo: avoid drive-by cleanup, speculative refactors, and broad formatting churn. Refactor only in the Yellow phase, only under green tests.
 

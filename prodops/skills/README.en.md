@@ -59,13 +59,22 @@ Framework; the Framework does not depend on them. See [`local/README.en.md`](loc
 
 ## Engineering References
 
-Knowledge bases used by agents — these are not executable skills.
+Knowledge bases used by agents — these are not executable skills. See [`references/README.en.md`](references/README.en.md) for the full index.
+
+### Canonical References (Framework)
 
 | Reference | Content | Link |
 |---|---|---|
-| Clean Code | Clean code principles and practices | [references/engineering/clean-code/](references/engineering/clean-code/) |
-| DDD | Domain-Driven Design applied to the product | [references/engineering/ddd/](references/engineering/ddd/) |
 | TDD ProdOps | TDD practice in the ProdOps context | [references/engineering/tdd-prodops/](references/engineering/tdd-prodops/) |
+
+### Product-local References
+
+Literature and conventions adopted by this product. Framework Skills do **not** depend on them as requirements; they are optional guidance available at [`references/local/`](references/local/).
+
+| Reference | Content | Link |
+|---|---|---|
+| Clean Code | Clean code principles and practices | [references/local/engineering/clean-code/](references/local/engineering/clean-code/) |
+| DDD | Domain-Driven Design applied to the product | [references/local/engineering/ddd/](references/local/engineering/ddd/) |
 
 ## Skill Structure
 

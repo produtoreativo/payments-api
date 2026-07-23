@@ -218,6 +218,8 @@ Use esta tabela como fonte primária de navegação antes de ler ou escrever qua
 | TDD ProdOps — Red/Green/Refactor | `prodops/skills/references/engineering/tdd-prodops/red-green-refactor.md` |
 | TDD ProdOps — Workflow | `prodops/skills/references/engineering/tdd-prodops/workflow.md` |
 
+> **Referências locais do produto:** Produtos podem declarar literatura e convenções próprias em `prodops/skills/references/local/`. Esse diretório é protegido de sync por `.prodopsignore` e pertence ao produto. Framework Skills não dependem de referências locais como requisito. Ver `prodops/skills/references/README.md`.
+
 ---
 
 ## Templates

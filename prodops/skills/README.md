@@ -59,13 +59,22 @@ Framework não depende delas. Ver [`local/README.md`](local/README.md).
 
 ## Referências de engenharia
 
-Bases de conhecimento utilizadas pelos agentes — não são skills executáveis.
+Bases de conhecimento utilizadas pelos agentes — não são skills executáveis. Ver [`references/README.md`](references/README.md) para o índice completo.
+
+### Referências canônicas (Framework)
 
 | Referência | Conteúdo | Link |
 |---|---|---|
-| Clean Code | Princípios e práticas de código limpo | [references/engineering/clean-code/](references/engineering/clean-code/) |
-| DDD | Domain-Driven Design aplicado ao produto | [references/engineering/ddd/](references/engineering/ddd/) |
 | TDD ProdOps | Prática TDD no contexto do ProdOps | [references/engineering/tdd-prodops/](references/engineering/tdd-prodops/) |
+
+### Referências locais do produto
+
+Literatura e convenções adotadas por este produto. Framework Skills **não dependem** delas como requisito; são orientações opcionais disponíveis em [`references/local/`](references/local/).
+
+| Referência | Conteúdo | Link |
+|---|---|---|
+| Clean Code | Princípios e práticas de código limpo | [references/local/engineering/clean-code/](references/local/engineering/clean-code/) |
+| DDD | Domain-Driven Design aplicado ao produto | [references/local/engineering/ddd/](references/local/engineering/ddd/) |
 
 ## Estrutura de cada Skill
 

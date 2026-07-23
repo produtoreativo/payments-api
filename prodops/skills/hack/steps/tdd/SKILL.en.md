@@ -21,7 +21,7 @@ Read before starting:
 
 ### Red — write the failing test
 
-*References: [DDD](../../../references/engineering/ddd/README.en.md) (ubiquitous language, domain events) · [ProdOps TDD](../../../references/engineering/tdd-prodops/README.en.md) (integration-first, mocking policy).*
+*References: [DDD](../../../references/local/engineering/ddd/README.en.md) (ubiquitous language, domain events) _(product-local)_ · [ProdOps TDD](../../../references/engineering/tdd-prodops/README.en.md) (integration-first, mocking policy).*
 
 1. Derive the test scenario from the BDD Feature or OBC. Do not invent criteria.
 2. Write the narrowest test that would fail because the behavior does not exist yet.
@@ -31,7 +31,7 @@ Read before starting:
 
 ### Green — implement the minimum
 
-*References: [Clean Code](../../../references/engineering/clean-code/README.en.md) (naming, functions).*
+*References: [Clean Code](../../../references/local/engineering/clean-code/README.en.md) (naming, functions) _(product-local)_.*
 
 1. Write the smallest change that makes the failing test pass.
 2. Do not refactor yet. Do not add behavior beyond what the test requires.
@@ -41,7 +41,7 @@ Read before starting:
 
 ### Yellow — quality and artifact closure
 
-*References: [Clean Code — refactoring](../../../references/engineering/clean-code/refactoring.en.md) · [DDD](../../../references/engineering/ddd/README.en.md) (aggregates, repositories) · [observability](../../../references/engineering/tdd-prodops/observability.en.md).*
+*References: [Clean Code — refactoring](../../../references/local/engineering/clean-code/refactoring.en.md) _(product-local)_ · [DDD](../../../references/local/engineering/ddd/README.en.md) (aggregates, repositories) _(product-local)_ · [observability](../../../references/engineering/tdd-prodops/observability.en.md).*
 
 The Yellow Bar is where refactoring **and** the transversal Security, Quality, and
 Documentation validations run. These are not extra steps — they are the cycle's
@@ -107,4 +107,4 @@ exit gates. The full checklist is in
 | [`../../../references/engineering/tdd-prodops/red-green-refactor.md`](../../../references/engineering/tdd-prodops/red-green-refactor.md) | Allowed/prohibited actions per phase |
 | [`../../../references/engineering/tdd-prodops/mocking-policy.md`](../../../references/engineering/tdd-prodops/mocking-policy.md) | What is permitted in Yellow Bar |
 | [`../../../references/engineering/tdd-prodops/observability.md`](../../../references/engineering/tdd-prodops/observability.md) | What to validate after Green |
-| [`../../../references/engineering/clean-code/refactoring.md`](../../../references/engineering/clean-code/refactoring.md) | Refactoring techniques for Yellow phase |
+| [`../../../references/local/engineering/clean-code/refactoring.md`](../../../references/local/engineering/clean-code/refactoring.md) _(local)_ | Refactoring techniques for Yellow phase |

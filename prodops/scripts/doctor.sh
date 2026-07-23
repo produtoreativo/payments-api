@@ -103,7 +103,7 @@ done < <(find prodops/artifacts/experiments -mindepth 1 -maxdepth 1 -type d | so
 #   journeys/assessment/opportunities.md → artifacts/risks/opportunities.md
 # (assessment/reliability-plans and assessment/event-storming are already
 #  caught by the existing pattern prefixes.)
-legacy_pattern='prodops/(upstream|product/|downstream/release-trail\.md|assessment/reliability-plan|assessment/reliability-plans|assessment/iteration-plans|assessment/event-storming|assessment/architecture|journeys/|execution-model/|skills/payments-api-local-testing/)|prodops/operation/|delivery/flows/|journeys/discovery/experiments/|journeys/assessment/risks\.md|journeys/assessment/opportunities\.md|artifacts/business/(obcs|bdd|intents)|artifacts/governance/(plans|trails|evidence)|artifacts/product/(architecture|event-storming)'
+legacy_pattern='prodops/(upstream|product/|downstream/release-trail\.md|assessment/reliability-plan|assessment/reliability-plans|assessment/iteration-plans|assessment/event-storming|assessment/architecture|journeys/|execution-model/|skills/payments-api-local-testing/|skills/references/engineering/clean-code/|skills/references/engineering/ddd/)|prodops/operation/|delivery/flows/|journeys/discovery/experiments/|journeys/assessment/risks\.md|journeys/assessment/opportunities\.md|artifacts/business/(obcs|bdd|intents)|artifacts/governance/(plans|trails|evidence)|artifacts/product/(architecture|event-storming)'
 
 legacy_targets=(
   AGENTS.md
@@ -297,6 +297,31 @@ if grep -q "prodops/skills/local/" .prodopsignore 2>/dev/null; then
   pass ".prodopsignore protects prodops/skills/local/"
 else
   fail ".prodopsignore missing prodops/skills/local/ protection"
+fi
+
+# ── Engineering references layout ─────────────────────────────────────────
+check_path "prodops/skills/references/engineering/tdd-prodops"
+check_path "prodops/skills/references/local"
+check_path "prodops/skills/references/local/README.md"
+check_path "prodops/skills/references/local/engineering/clean-code"
+check_path "prodops/skills/references/local/engineering/ddd"
+
+if [[ -e "prodops/skills/references/engineering/clean-code" ]]; then
+  fail "prodops/skills/references/engineering/clean-code still exists — should be at references/local/engineering/clean-code"
+else
+  pass "clean-code correctly moved to references/local/"
+fi
+
+if [[ -e "prodops/skills/references/engineering/ddd" ]]; then
+  fail "prodops/skills/references/engineering/ddd still exists — should be at references/local/engineering/ddd"
+else
+  pass "ddd correctly moved to references/local/"
+fi
+
+if grep -q "prodops/skills/references/local/" .prodopsignore 2>/dev/null; then
+  pass ".prodopsignore protects prodops/skills/references/local/"
+else
+  fail ".prodopsignore missing prodops/skills/references/local/ protection"
 fi
 
 if [[ "${failures}" -gt 0 ]]; then
