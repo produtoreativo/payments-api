@@ -260,10 +260,10 @@ Use esta tabela como fonte primária de navegação antes de ler ou escrever qua
 
 ---
 
-## Upstream Empírico — Extração do Framework
+## Upstream Empírico — Reconciliação com o Framework
 
-> **Escopo restrito:** Os arquivos abaixo pertencem ao processo de extração do
-> Framework para o repositório `prodops-framework`. Existem **apenas enquanto
+> **Escopo restrito:** Os arquivos abaixo pertencem ao processo de reconciliação com
+> o repositório canônico existente `prodops-framework`. Existem **apenas enquanto
 > este repositório for o upstream empírico** (`status: self` em
 > `prodops/exec/framework-lock.yaml`). Após a transição para `status: consumer`,
 > podem ser removidos ou mantidos como histórico. Não fazem parte do conteúdo

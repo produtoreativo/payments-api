@@ -27,8 +27,8 @@ Três categorias de conteúdo coexistem neste repositório:
 
 ### 1. Upstream canônico temporário (Framework)
 
-Conteúdo que pertence ao ProdOps Framework e que, quando `prodops-framework`
-existir, será sincronizado a partir do repositório canônico.
+Conteúdo que pertence ao ProdOps Framework e que será sincronizado a partir do
+repositório canônico existente `prodops-framework` após a reconciliação.
 
 - `prodops/framework/` — princípios, glossário, ontologia, fluxo, canonical-paths
 - `prodops/framework/execution-model/` — upstream e downstream
@@ -37,7 +37,7 @@ existir, será sincronizado a partir do repositório canônico.
 - `prodops/skills/references/engineering/tdd-prodops/` — prática de engenharia canônica do Framework
 - `prodops/templates/` — templates canônicos
 
-**Protegido por sync:** Estas áreas podem receber atualizações do mecanismo de sync futuro.
+**Protegido por sync:** Estas áreas receberão atualizações do mecanismo de sync após a reconciliação com prodops-framework.
 
 ### 2. Local do produto
 

@@ -9,8 +9,8 @@ model — it does not replicate it.
 
 ## Purpose of this boundary
 
-The ProdOps Framework evolved empirically in this repository. Before creating the
-canonical `prodops-framework` repository, it is necessary to define precisely:
+The ProdOps Framework evolved empirically in this repository. To reconcile with
+the existing canonical `prodops-framework` repository, it is necessary to define precisely:
 
 1. What belongs to the Framework and must be exported.
 2. What belongs to the product and must never be overwritten.
@@ -18,7 +18,7 @@ canonical `prodops-framework` repository, it is necessary to define precisely:
 4. What describes how the consumer installed the Framework (installation-state).
 
 This boundary allows the extraction to be performed safely and ensures that the
-future sync mechanism respects ownership invariants.
+sync mechanism respects ownership invariants.
 
 ---
 

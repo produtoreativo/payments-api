@@ -260,10 +260,10 @@ Use this table as the primary navigation source before reading or writing any ar
 
 ---
 
-## Empirical Upstream — Framework Extraction
+## Empirical Upstream — Reconciliation with the Framework
 
-> **Restricted scope:** The files below belong to the Framework extraction process
-> for the `prodops-framework` repository. They exist **only while this repository
+> **Restricted scope:** The files below belong to the reconciliation process with
+> the existing canonical `prodops-framework` repository. They exist **only while this repository
 > is the empirical upstream** (`status: self` in `prodops/exec/framework-lock.yaml`).
 > After transitioning to `status: consumer`, they may be removed or kept as
 > historical record. They are not part of the canonical Framework's functional content.

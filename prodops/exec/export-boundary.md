@@ -9,8 +9,8 @@ modelo — não o replica.
 
 ## Propósito desta fronteira
 
-O ProdOps Framework evoluiu empiricamente neste repositório. Antes de criar o
-repositório canônico `prodops-framework`, é necessário definir com precisão:
+O ProdOps Framework evoluiu empiricamente neste repositório. Para reconciliar com
+o repositório canônico existente `prodops-framework`, é necessário definir com precisão:
 
 1. O que pertence ao Framework e deve ser exportado.
 2. O que pertence ao produto e nunca deve ser sobrescrito.
@@ -18,7 +18,7 @@ repositório canônico `prodops-framework`, é necessário definir com precisão
 4. O que descreve como o consumidor instalou o Framework (installation-state).
 
 Esta fronteira permite que a extração seja feita com segurança e que o mecanismo
-de sync futuro respeite os invariantes de propriedade.
+de sync respeite os invariantes de propriedade.
 
 ---
 
