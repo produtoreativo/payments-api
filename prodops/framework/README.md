@@ -2,7 +2,7 @@
 
 ProdOps é um framework de engenharia orientado a produto. Organiza o trabalho em cinco jornadas (Discovery, Delivery, Operation, Assessment, Diligence) executadas em dois modos (Upstream ou Downstream), conectadas por práticas compartilhadas, contratos e evidências.
 
-Este diretório contém a documentação do Framework aplicada a este **Product Repository** (`payments-api`). O Framework canônico é um nível acima — este repositório o adota e o estende com seus próprios artefatos de produto.
+Este diretório contém a documentação canônica do ProdOps Framework. O conteúdo aqui define o Framework — cada produto consumidor o adota e o estende com seus próprios artefatos locais.
 
 ## Estrutura
 

@@ -275,6 +275,12 @@ Use esta tabela como fonte primária de navegação antes de ler ou escrever qua
 | Documentação do modelo de fronteira (PT) | `prodops/exec/export-boundary.md` |
 | Documentação do modelo de fronteira (EN) | `prodops/exec/export-boundary.en.md` |
 | Validação da fronteira de exportação | `prodops/scripts/validate-export-manifest.sh` |
+| Orientação sobre papel empírico (PT) | `prodops/exec/empirical-upstream.md` |
+| Orientação sobre papel empírico (EN) | `prodops/exec/empirical-upstream.en.md` |
+
+> **Mecanismo de sync:** `scripts/sync-framework-docs.sh` NÃO é um script canônico —
+> está desabilitado (guard no início do arquivo). Não deve ser executado até ser alinhado
+> com `export-manifest.yaml`. Não listar como script canônico.
 
 ---
 

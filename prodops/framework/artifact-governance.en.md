@@ -45,7 +45,7 @@ This document defines the governance of all ProdOps Framework artifacts: where e
 
 - Implements and operates a specific product.
 - Governs Product Tracking List (Business Signals), Product Backlog (Business Intents), Icebox (VIEW), Iteration Backlog (VIEW), Release (VIEW), Iteration Plan, OBCs, Reliability Plans.
-- This repository (`payments-api`) is a Product Repository.
+- Each repository that consumes the Framework is a Product Repository.
 
 ---
 

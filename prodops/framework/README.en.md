@@ -2,7 +2,7 @@
 
 ProdOps is a product-driven engineering framework. It organizes work into five journeys (Discovery, Delivery, Operation, Assessment, Diligence) executed in two modes (Upstream or Downstream), connected by shared practices, contracts, and evidence.
 
-This directory contains the Framework documentation as applied to this **Product Repository** (`payments-api`). The canonical Framework lives one level above — this repository adopts and extends it with its own product artifacts.
+This directory contains the canonical ProdOps Framework documentation. The content here defines the Framework — each consumer product adopts and extends it with its own local artifacts.
 
 ## Structure
 

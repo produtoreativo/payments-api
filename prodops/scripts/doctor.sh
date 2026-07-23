@@ -426,6 +426,30 @@ else
   fail "export-manifest.yaml: skills/** not included in export"
 fi
 
+# ── Canonicalization integrity ──────────────────────────────────────────────
+
+# Runbook must not contain product-specific terms
+for product_term in "Asaas" "DynamoDB" "/webhook/payments" "ASAAS_WEBHOOK_TOKEN"; do
+  if grep -q "${product_term}" prodops/framework/journeys/operation/runbooks.md 2>/dev/null; then
+    fail "runbooks.md contains product-specific term: ${product_term}"
+  else
+    pass "runbooks.md: no reference to '${product_term}'"
+  fi
+done
+
+# sync-framework-docs.sh must be disabled
+if [[ -f "scripts/sync-framework-docs.sh" ]]; then
+  if head -30 scripts/sync-framework-docs.sh | grep -q "DISABLED"; then
+    pass "scripts/sync-framework-docs.sh is disabled"
+  else
+    fail "scripts/sync-framework-docs.sh is not disabled — risk of destructive execution"
+  fi
+fi
+
+# empirical-upstream.md exists
+check_path "prodops/exec/empirical-upstream.md"
+check_path "prodops/exec/empirical-upstream.en.md"
+
 if [[ "${failures}" -gt 0 ]]; then
   printf '\nProdOps doctor found %s issue(s).\n' "${failures}" >&2
   printf 'Run the fix/* branches or repair the listed files.\n' >&2

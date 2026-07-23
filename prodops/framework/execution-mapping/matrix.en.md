@@ -120,7 +120,7 @@ Complete mapping of all Knowledge Space Artifacts against allowed operations, Gi
 | `Update` | PR | Delivery | Both | Diagram updated; new component/route/table registered | SE, Arch |
 | `Deprecate` | PR | Operation | N/A | Component marked as deprecated in diagram | Arch |
 
-**Guardrail rule (from AGENTS.md):** PR that adds a NestJS module, route, external dependency, DynamoDB table, event topic, or SQS queue MUST include an update to overview.md.
+**Guardrail rule:** PR that adds an application module, route, external dependency, persistence table, event topic, or async queue MUST include an update to overview.md. The product defines which specific technologies apply in `prodops/exec/manifest.yaml` and the local `AGENTS.md`.
 
 **Never:** standalone Issue without corresponding PR; Release
 

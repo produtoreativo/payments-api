@@ -109,11 +109,11 @@ Esta é a distinção mais importante do modelo:
 ```
 Um artefato pode receber dezenas de Work Items ao longo de sua vida:
 
-Local OBC (payments-invoice-v2)
+Local OBC (feature-name-v2)
   ├─ Issue: "Refinar critérios de aceite — Sprint 12"          → fechada
   ├─ Issue: "Atualizar OBC com resultado do postmortem"        → fechada
-  ├─ PR: feat(invoice): implement payment split logic          → mergeado
-  ├─ PR: fix(invoice): correct tax calculation edge case       → mergeado
+  ├─ PR: feat(feature): implement composition logic            → mergeado
+  ├─ PR: fix(feature): correct calculation edge case           → mergeado
   ├─ PR: docs(obc): add operational evidence month-3           → mergeado
   └─ Release: v2.1.0                                           → entregue
 
@@ -123,10 +123,10 @@ O OBC continua existindo com toda essa história acumulada.
 ```
 Um Work Item pode afetar mais de um artefato simultaneamente:
 
-Issue: "Adequar pagamentos e faturas ao novo regulamento XYZ"
-  ├─ modifica: Local OBC payments-invoice-v2
-  ├─ modifica: Local OBC payments-settlement-v1
-  ├─ modifica: BDD feature payments-invoice.feature
+Issue: "Adequar serviço X ao novo regulamento XYZ"
+  ├─ modifica: Local OBC feature-name-v2
+  ├─ modifica: Local OBC feature-settlement-v1
+  ├─ modifica: BDD feature feature-name.feature
   └─ modifica: Architecture overview.md
 
 A Issue fecha. Os três artefatos continuam existindo, atualizados.
@@ -141,7 +141,7 @@ Todo Work Item deve referenciar explicitamente os artefatos que afeta:
 | Campo | Descrição | Exemplo |
 |---|---|---|
 | **Artifact Type** | Tipo do artefato afetado | `Local OBC` |
-| **Artifact ID** | Identificador ou caminho do artefato | `payments-invoice-v2` |
+| **Artifact ID** | Identificador ou caminho do artefato | `feature-name-v2` |
 | **Operation** | O que está sendo feito sobre o artefato | `Refine`, `Create`, `Review`, `Update evidence` |
 | **Journey** | Jornada ProdOps em execução | `Discovery`, `Delivery`, `Operation`, `Assessment` |
 | **Execution Mode** | Modo de execução | `Upstream`, `Downstream` |
@@ -189,9 +189,9 @@ O ciclo completo de um artefato é: ele existe antes do primeiro Work Item, sobr
 ### Correto ✓
 
 ```
-OBC payments-invoice-v2
+OBC feature-name-v2
   └─ Issue: "Refinar OBC — seção BDD incompleta"
-       → referencia: payments-invoice-v2
+       → referencia: feature-name-v2
        → operation: Refine
        → journey: Discovery
        → fecha quando BDD está completo
@@ -265,7 +265,7 @@ Diligence não cria Issues "para" artefatos. Ela cria Issues quando há **trabal
 
 | Erro | Por que é errado | Como corrigir |
 |---|---|---|
-| "O OBC está na Issue #234" | O OBC é um arquivo Markdown. A Issue é trabalho sobre o OBC. | "A Issue #234 registra trabalho de refinamento sobre o OBC `payments-invoice-v2`" |
+| "O OBC está na Issue #234" | O OBC é um arquivo Markdown. A Issue é trabalho sobre o OBC. | "A Issue #234 registra trabalho de refinamento sobre o OBC `feature-name-v2`" |
 | "Fechar a Issue quando o OBC estiver Committed" | O estado do OBC é independente do estado da Issue | "Fechar a Issue quando o trabalho de refinamento estiver concluído. O OBC atingirá Committed quando seus critérios mínimos forem satisfeitos." |
 | "Criar uma Issue para cada Business Intent" | Uma Business Intent pode ter dezenas de Issues ao longo de sua vida | "Criar Issues para operações específicas sobre a Intent: Discovery, Review, Atualizar OBC, etc." |
 | "GitHub Project contém Business Signals" | O Project contém Work Items. Os Signals são artefatos nos arquivos. | "GitHub Project contém Work Items sobre Business Signals" |

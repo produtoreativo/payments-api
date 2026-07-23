@@ -169,7 +169,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 **Purpose:** Group BIB items that form a coherent platform delivery — a combination of Product Repository versions to be released together.
 
 **Example:**
-- Platform Release 3.0 = payments-api v3 + webshop-api v8 + order-api v2
+- Platform Release 3.0 = product-a v3 + product-b v8 + product-c v2
 
 **What it represents:** A strategic grouping of BIB items by platform version. It is the Portfolio's decision of which products and versions will be coordinated in the same delivery.
 

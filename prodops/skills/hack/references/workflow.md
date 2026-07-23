@@ -73,11 +73,11 @@ Prohibited in `api/test/`:
 - `.overrideProvider()` in `Test.createTestingModule()`
 - Any class, object, or function that replaces a real owned service with a test-controlled substitute
 
-**`ASAAS_MOCK=true` is not a mock.** It is a designed behavior mode of the real `AsaasService`. The real service is instantiated and runs; it returns deterministic data via an internal branch rather than making HTTP calls. This is acceptable because it exercises the real code path.
+**Designed behavior modes are not mocks.** When the product defines a provider mode (e.g., `<PROVIDER>_MOCK=true`), the real service is instantiated and runs; it returns deterministic data via an internal branch rather than making external HTTP calls. This is acceptable because it exercises the real code path. Each product declares its own provider mode variable.
 
 **Error paths that require external system failure** (provider timeout, provider returning malformed data, network errors) are not covered by acceptance tests. Those scenarios belong in focused unit or service-layer tests that can use test doubles because they test a single unit in isolation. Acceptance tests cover the contract visible at the HTTP boundary using only the real system.
 
-**Shared app per file.** Each acceptance test file creates the NestJS app once in `beforeAll` and tears it down in `afterAll`. Tables are truncated in `beforeEach`. Recreating the app per test is prohibited — it bypasses shared state that the real system maintains and makes test runs artificially expensive.
+**Shared app per file.** Each acceptance test file creates the application under test once in `beforeAll` and tears it down in `afterAll`. Tables are truncated in `beforeEach`. Recreating the app per test is prohibited — it bypasses shared state that the real system maintains and makes test runs artificially expensive.
 
 ## Tests and Validation
 

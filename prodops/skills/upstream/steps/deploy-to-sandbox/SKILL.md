@@ -1,109 +1,97 @@
 ---
 name: upstream/deploy-to-sandbox
-description: Deploy an experiment branch to a real AWS sandbox environment without downstream rigor. Use when an experiment needs to validate behavior against a real provider (e.g., Asaas sandbox) that cannot be exercised locally.
+description: Fazer deploy de uma branch de experimento em um ambiente de sandbox real na nuvem, sem o rigor Downstream. Use quando um experimento precisa validar comportamento contra um provedor externo real que não pode ser exercitado localmente.
 ---
 
 # UPSTREAM / DEPLOY TO SANDBOX
 
-Use this step to deploy an experiment to real AWS infrastructure for Upstream validation.
+Use este step para fazer deploy de um experimento em infraestrutura de nuvem real para validação Upstream.
 
-No OBC commitment, no Release Trail, no downstream gates — the goal is learning.
+Sem OBC committed, sem Release Trail, sem gates Downstream — o objetivo é aprendizado.
 
-## When to Use
+## Quando usar
 
-- The experiment hypothesis requires a real provider response (Asaas sandbox, webhooks, payment lifecycle)
-- LocalStack or mock mode is insufficient to answer the experiment question
-- The team needs an accessible URL to demonstrate or validate behavior with real data
+- A hipótese do experimento requer uma resposta real do provedor (ex: provedor externo de pagamentos, webhooks, ciclo de vida de dados)
+- Simulação local ou modo mock são insuficientes para responder à pergunta do experimento
+- O time precisa de uma URL acessível para demonstrar ou validar comportamento com dados reais
 
-## Pre-conditions
+## Pré-condições
 
-Before running this step, confirm:
+Antes de executar este step, confirmar:
 
-- [ ] Experiment is registered in `prodops/artifacts/experiments/`
-- [ ] Experiment branch exists in the repository
-- [ ] GitHub Environment `experiment` exists with the three secrets below
-- [ ] IAM role `payments-api-github-experiment` exists in AWS (deploy `api/infra/iam-experiment-role.yaml` once)
+- [ ] Experimento registrado em `prodops/artifacts/experiments/`
+- [ ] Branch do experimento existe no repositório
+- [ ] GitHub Environment `experiment` existe com os secrets necessários (ver setup local do produto)
+- [ ] Identidade cloud para deploy de experimento existe (ver infraestrutura local do produto)
 
-## Required Setup (one-time, per repository)
+## Setup necessário (uma vez por produto — definido na área local do produto)
 
 ### 1. GitHub Environment
 
-Create a GitHub Environment named `experiment`:
+Criar um GitHub Environment chamado `experiment`:
 
-- No required reviewers (intentional — bypass the approval gate)
-- Secrets:
-  - `EXPERIMENT_ASAAS_TOKEN` — Asaas sandbox API key
-  - `EXPERIMENT_ASAAS_WEBHOOK_TOKEN` — Asaas sandbox webhook token
-  - `EXPERIMENT_ADMIN_SECRET` — admin secret for `/admin/tokens`
+- Sem revisores obrigatórios (intencional — bypass do gate de aprovação)
+- Secrets: definidos pelo produto (chaves de API do provedor, tokens de webhook, secrets de admin)
+- Ver: `prodops/skills/local/` para instruções de setup específicas do produto
 
-### 2. IAM Role
+### 2. Identidade cloud
 
-Deploy the CloudFormation template once:
+Fazer deploy do template de identidade cloud uma vez (definido pelo produto):
 
 ```bash
-aws cloudformation deploy \
-  --template-file api/infra/iam-experiment-role.yaml \
-  --stack-name payments-api-iam-experiment-role \
-  --capabilities CAPABILITY_NAMED_IAM \
-  --parameter-overrides GitHubOrg=<org> GitHubRepo=<repo>
+# Comando específico do produto — ver skills locais do produto ou scripts de infra
 ```
 
-This creates `payments-api-github-experiment` — scoped to `experiment-*` resources only. It cannot touch staging or production stacks.
+Isso cria uma identidade com escopo apenas para recursos `experiment-*`. Não pode afetar stacks de staging ou produção.
 
-## How to Deploy
+## Como fazer o deploy
 
-Trigger `.github/workflows/experiment-deploy.yml` via `workflow_dispatch`:
+Trigger do workflow de experimento via `workflow_dispatch` (workflow definido pelo produto):
 
-| Input | Value |
+| Input | Valor |
 |---|---|
-| `branch` | experiment branch name |
-| `experiment_id` | e.g., `EXP-007` |
+| `branch` | nome da branch do experimento |
+| `experiment_id` | ex: `EXP-007` |
 | `action` | `deploy` |
 
-The workflow runs: `quick-check → deploy-experiment`.
+O workflow executa uma verificação rápida (lint + build apenas — sem testes de aceitação). O gate é intencionalmente mais leve que o de staging.
 
-`quick-check` is lint + build only — no acceptance tests. The gate is intentionally lighter than staging.
+## O que é deployado
 
-## What Gets Deployed
+Todos os recursos de nuvem têm prefixo `experiment-*`, isolados de `staging-*` e `production-*`:
 
-All AWS resources are prefixed `experiment-*`:
+- Compute (Lambda, container ou equivalente)
+- Datastore (tabelas de banco, filas)
+- Infraestrutura de eventos
 
-| Resource | Name |
-|---|---|
-| CloudFormation (Lambda) | `payments-api-experiment` |
-| CloudFormation (DynamoDB) | `payments-api-dynamo-experiment` |
-| DynamoDB tables | `experiment-TransactionsTable`, `experiment-TenantsTable`, etc. |
-| Lambda function | `payments-api-experiment-*` |
-| SQS queues | `experiment-*` |
+O isolamento garante que recursos de experimento não possam afetar staging ou produção.
 
-Isolated from `staging-*` and `production-*` — different prefix, different tables.
+## Após o deploy
 
-## After Deploy
-
-The Job Summary shows the API URL and Webhook URL. Register the URL in the experiment trail:
+Registrar o deploy de sandbox no trail do experimento:
 
 ```markdown
 ## Sandbox Deploy Record
 
-| Field | Value |
+| Campo | Valor |
 |---|---|
-| Deploy date | YYYY-MM-DD |
+| Data do deploy | YYYY-MM-DD |
 | Branch | branch-name |
 | API URL | https://... |
-| Triggered by | name |
+| Disparado por | nome |
 ```
 
-## Teardown Obligation
+## Obrigação de teardown
 
-The experiment stack **must be torn down** when the experiment concludes.
+O stack do experimento **deve ser removido** quando o experimento for concluído.
 
-Trigger `.github/workflows/experiment-deploy.yml` with `action=teardown`. Both CloudFormation stacks will be deleted.
+Trigger do workflow de experimento com `action=teardown`. Todos os recursos do experimento serão deletados.
 
-Do not leave experiment stacks running after the experiment ends. They accumulate cost and are not monitored by any operational SLO.
+Não deixar stacks de experimento rodando após o fim do experimento. Eles acumulam custo e não são monitorados por nenhum SLO operacional.
 
-## What This Is Not
+## O que isto NÃO é
 
-- This is not a staging environment.
-- This is not a release gate.
-- Evidence collected here is Upstream evidence — it does not substitute Downstream validation.
-- This does not advance work in the Release Trail.
+- Não é um ambiente de staging.
+- Não é um gate de release.
+- Evidências coletadas aqui são evidências Upstream — não substituem a validação Downstream.
+- Não avança trabalho no Release Trail.

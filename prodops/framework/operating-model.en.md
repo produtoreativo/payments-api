@@ -11,7 +11,7 @@ ProdOps Portfolio
        ↓
 ProdOps Workspace
        ↓
-Product Repository     ←  this repository (payments-api)
+Product Repository     ←  the consumer product repository
 ```
 
 | Level | Responsibility | Does not contain |
@@ -21,7 +21,7 @@ Product Repository     ←  this repository (payments-api)
 | **Workspace** | Integration and joint execution of Product Repositories | Roadmap, Business Intents |
 | **Product Repository** | Implement and operate a specific product | — |
 
-This repository (`payments-api`) is a **Product Repository**. It serves as the reference implementation of the ProdOps Framework. The Portfolio and Workspace levels exist in the architecture and are referenced in this documentation; they do not yet have physical repositories created.
+Each **Product Repository** implements and operates a specific product within the ProdOps architecture. The Portfolio and Workspace levels exist in the architecture and are referenced in this documentation — their physical implementation is defined by the organization adopting the Framework.
 
 → See [glossary.en.md](glossary.en.md) for canonical definitions of each level.
 

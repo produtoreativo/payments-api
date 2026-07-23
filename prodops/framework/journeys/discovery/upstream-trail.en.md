@@ -72,6 +72,12 @@ Additional observations, blockers or follow-up actions.
 
 # History
 
+> **Empirical context note:** The entries below record the real evolution history of
+> the `payments-api` repository while it acts as the empirical upstream of the
+> ProdOps Framework (`status: self`). This is a product append-only record — it is
+> not part of the exportable canonical Framework content.
+> See `prodops/exec/empirical-upstream.en.md` for an explanation of the empirical role.
+
 > Append new entries below.
 > Never rewrite previous entries.
 

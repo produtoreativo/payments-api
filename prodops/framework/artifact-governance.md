@@ -45,7 +45,7 @@ Este documento define a governança de todos os artefatos do Framework ProdOps: 
 
 - Implementa e opera um produto específico.
 - Governa Product Tracking List (Business Signals), Product Backlog (Business Intents), Icebox (VIEW), Iteration Backlog (VIEW), Release (VIEW), Iteration Plan, OBCs, Reliability Plans.
-- Este repositório (`payments-api`) é um Product Repository.
+- Cada repositório consumidor do Framework é um Product Repository.
 
 ---
 

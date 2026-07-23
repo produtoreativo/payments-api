@@ -120,7 +120,7 @@ Mapeamento completo de todos os Artefatos do Knowledge Space contra operações 
 | `Update` | PR | Delivery | Both | Diagrama atualizado; novo componente/rota/tabela registrado | SE, Arch |
 | `Deprecate` | PR | Operation | N/A | Componente marcado como deprecated no diagrama | Arch |
 
-**Regra de guardião (de AGENTS.md):** PR que adiciona módulo NestJS, rota, dependência externa, tabela DynamoDB, tópico de evento ou fila SQS DEVE incluir atualização do overview.md.
+**Regra de guardião:** PR que adiciona módulo de aplicação, rota, dependência externa, tabela de persistência, tópico de evento ou fila assíncrona DEVE incluir atualização do overview.md. O produto define quais tecnologias específicas se aplicam em `prodops/exec/manifest.yaml` e no `AGENTS.md` local.
 
 **Nunca:** Issue autônoma sem PR correspondente; Release
 

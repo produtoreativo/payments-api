@@ -167,9 +167,9 @@ Execution Mapping natively supports multi-repository scenarios:
 ```
 Business Intent BI-042 (Global OBC in portfolio repository)
   │
-  ├─ Local OBC in payments-api      ← Work Items in payments-api
-  ├─ Local OBC in webshop-api       ← Work Items in webshop-api
-  └─ Local OBC in order-api         ← Work Items in order-api
+  ├─ Local OBC in product-a      ← Work Items in product-a
+  ├─ Local OBC in product-b      ← Work Items in product-b
+  └─ Local OBC in product-c      ← Work Items in product-c
 ```
 
 Each repository tracks its own work via Work Items. The link between repositories is established by `artifact_id` (referencing the same Global OBC) — not by Issue mirroring.
@@ -181,7 +181,7 @@ Each repository tracks its own work via Work Items. The link between repositorie
 ```
 Markdown > GitHub > External tools
 
-prodops/artifacts/obcs/payments-invoice-v2.md
+prodops/artifacts/obcs/feature-name-v2.md
   = source of truth for the OBC's CONTENT and STATE
 
 GitHub Issue #234 "Refine OBC — BDD section incomplete"

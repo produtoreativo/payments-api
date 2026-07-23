@@ -16,7 +16,7 @@ Every Work Item must explicitly declare its canonical fields.
 | Field | Type | Description | Example |
 |---|---|---|---|
 | `artifact_type` | enum | Type of the primary affected artifact | `Local OBC` |
-| `artifact_id` | string | Identifier or path of the artifact | `payments-invoice-v2` |
+| `artifact_id` | string | Identifier or path of the artifact | `feature-name-v2` |
 | `operation` | enum | Operation being executed | `Refine` |
 | `journey` | enum | ProdOps journey in progress | `Discovery` |
 
@@ -29,7 +29,7 @@ Every Work Item must explicitly declare its canonical fields.
 | `status` | enum | Work Item state | `In Progress` |
 | `priority` | enum | Priority | `High` |
 | `release` | string | Target release (when applicable) | `v2.1.0` |
-| `repository` | string | Repository containing the artifact | `payments-api` |
+| `repository` | string | Repository containing the artifact | `product-repository` |
 
 ### Traceability fields
 
@@ -37,14 +37,14 @@ Every Work Item must explicitly declare its canonical fields.
 |---|---|---|---|
 | `depends_on` | list | Work Items that must be completed first | `[#234, #198]` |
 | `blocked_by` | list | Work Items blocking this one | `[#301]` |
-| `related_artifacts` | list | Secondary artifacts also affected | `[bdd/payments-invoice.feature]` |
+| `related_artifacts` | list | Secondary artifacts also affected | `[bdd/feature-name.feature]` |
 
 ### Evidence fields
 
 | Field | Type | Description | Example |
 |---|---|---|---|
 | `evidence_required` | boolean | Whether the operation should produce evidence | `true` |
-| `evidence_location` | string | Path where evidence will be stored | `artifacts/obcs/payments-invoice-v2.md#evidence` |
+| `evidence_location` | string | Path where evidence will be stored | `artifacts/obcs/feature-name-v2.md#evidence` |
 
 ---
 
@@ -149,7 +149,7 @@ custom_fields:
 
   - name: Artifact ID
     type: text
-    description: "Slug or relative path of the artifact (e.g., payments-invoice-v2)"
+    description: "Slug or relative path of the artifact (e.g., feature-name-v2)"
 
   - name: Operation
     type: single_select
@@ -190,12 +190,12 @@ The title is object-oriented — it describes what is being worked on. `Operatio
 
 Examples:
 ```
-payments-invoice-v2: BDD section incomplete
-payments-invoice-v2: pre-Downstream Assessment
-payments-invoice-v2: PIX payment split
-architecture-overview: new WebhookWorker module
+feature-name-v2: BDD section incomplete
+feature-name-v2: pre-Downstream Assessment
+feature-name-v2: new composition capability
+architecture-overview: new WorkerService module
 platform-billing-v3: decompose into 3 Local OBCs
-payments-invoice.feature: pre-release CI gate
+feature-name.feature: pre-release CI gate
 SIG-089: generate Business Intent
 ```
 

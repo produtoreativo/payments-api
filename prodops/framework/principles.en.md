@@ -19,7 +19,7 @@ Every delivery decision — promote, revert, accept risk — must be backed by r
 Reliability objectives are defined before implementation, tracked via OBCs and SLOs, and validated before promotion. See [reliability-plans](../artifacts/plans/reliability/).
 
 ## 7. No shortcuts in production code
-Production code must not contain test-only branches, environment-specific hacks, or hidden overrides that alter behavior in tests. Exception: `ASAAS_MOCK=true` is a designed behavior mode, not a test shortcut.
+Production code must not contain test-only branches, environment-specific hacks, or hidden overrides that alter behavior in tests. Designed behavior modes (e.g., external provider mock) are valid exceptions when explicitly declared as an intentional product feature — not as a test shortcut.
 
 ## 8. Automation First
 An agent must always attempt to execute an action itself before instructing a human to do it. Manual intervention is a last resort (a documented **Manual Exception**), never the default path. Canonical order of attempts: API → MCP → CLI → SDK → Browser Automation → Manual Exception only when all else fails. Phrases like "do it manually", "access the UI", or "configure manually" are prohibited unless all automation options have been demonstrably exhausted and recorded in a tracking Issue. See [automation-first.md](automation-first.md) for the full decision tree.

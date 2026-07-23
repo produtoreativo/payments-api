@@ -169,7 +169,7 @@ Um item pode estar no BIB, associado a um Roadmap e a uma Platform Release, ao m
 **Propósito:** Agrupar itens do BIB que formam uma entrega coerente da plataforma como um todo — uma combinação de versões de Product Repositories que serão lançadas juntas.
 
 **Exemplo:**
-- Platform Release 3.0 = payments-api v3 + webshop-api v8 + order-api v2
+- Platform Release 3.0 = product-a v3 + product-b v8 + product-c v2
 
 **O que representa:** Um agrupamento estratégico de itens do BIB por versão de plataforma. É a decisão do Portfolio de quais produtos e versões serão coordenados numa mesma entrega.
 

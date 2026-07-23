@@ -41,10 +41,10 @@ ProdOps adopts an extended DORA model of **7 metrics** that expands the 4 origin
 
 **How to measure:** OBC failure events (`*_failed`, `*_rejected`, `*_refused`) correlated with deploys in the preceding 30 minutes.
 
-**OBC events that feed this metric:**
-`invoice.creation_failed`, `payment.boleto.creation_failed`, `invoice.provider_rejected`, `invoice.cancel_provider_not_found`, `webhook.rejected`, `webhook.delivery.failed`
+**OBC event pattern feeding this metric:**
+Events with suffix `*_failed`, `*_rejected`, `*_refused`, `*_error` correlated with recent deploys. Product example (payments-api): `invoice.creation_failed`, `webhook.delivery.failed`.
 
-→ See full mapping in [`../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ See product mapping in [`../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
 
 ---
 
@@ -53,10 +53,10 @@ ProdOps adopts an extended DORA model of **7 metrics** that expands the 4 origin
 
 **Why it matters:** failures happen. What differentiates mature teams is recovery speed. In advanced stages (MVT/MLP), high MTTR is unacceptable.
 
-**How to measure:** time gap between failure event and corresponding recovery event, by `correlationId` or `invoiceId`.
+**How to measure:** time gap between failure event and corresponding recovery event, by `correlationId` or domain entity identifier.
 
-**Event pairs that feed this metric:**
-`invoice.creation_failed` → `invoice.created`, `webhook.delivery.failed` → `webhook.delivery.sent`
+**Event pair pattern feeding this metric:**
+`<entity>.creation_failed` → `<entity>.created`, `<entity>.delivery.failed` → `<entity>.delivery.sent`
 
 ---
 
@@ -67,14 +67,14 @@ ProdOps adopts an extended DORA model of **7 metrics** that expands the 4 origin
 
 **Why it matters:** responsiveness metric. In early stages (PoC/MVP), high Reaction Time indicates slow architecture or manual processes. It is analogous to MTTD (Mean Time to Detect).
 
-**How to measure:** gap between `webhook.received` and `payment.confirmed` (or another processing event), by `correlationId`.
+**How to measure:** gap between the received external signal event and the first corresponding internal processing event, by `correlationId`.
 
-**OBC events that feed this metric:**
-`webhook.received` → `payment.confirmed`, `payment.card.authorization.requested` → `payment.card.authorized`, `webhook.delivery.sent` (delivery latency)
+**Event pattern feeding this metric:**
+`<signal>.received` → `<entity>.processed`, `<entity>.authorization.requested` → `<entity>.authorized`, `<signal>.delivery.sent` (delivery latency)
 
-**Existing aligned SLIs:**
-- Webhook deliveries within 5s — 95% (webhook-configuration OBC)
-- Card outcomes within 5min — 99% (credit-card OBC)
+**Typical aligned SLIs:**
+- Notification deliveries within X seconds — Y% (defined by product OBC)
+- Confirmation outcomes within N minutes — Y% (defined by product OBC)
 
 ---
 
@@ -85,8 +85,8 @@ ProdOps adopts an extended DORA model of **7 metrics** that expands the 4 origin
 
 **How to measure:** count of idempotency and refund events per time window.
 
-**OBC events that feed this metric:**
-`invoice.idempotency_hit`, `payment.boleto.idempotency_hit`, `invoice.cancel_idempotency_hit`, `payment.card.refund.requested`, `payment.card.refund.required`
+**OBC event pattern feeding this metric:**
+Events with suffix `*_idempotency_hit`, `*_refund.requested`, `*_refund.required`, `*_retry`. Product example (payments-api): `invoice.idempotency_hit`, `payment.card.refund.requested`.
 
 ---
 
@@ -97,12 +97,12 @@ ProdOps adopts an extended DORA model of **7 metrics** that expands the 4 origin
 
 **How to measure:** ratio of success events to total attempts per time window.
 
-**Event ratios that feed this metric:**
-`invoice.created` / (`invoice.created` + `invoice.creation_failed`),
-`payment.confirmed` / `PAYMENT_CONFIRMED` webhooks received,
-`webhook.delivery.sent` / (`webhook.delivery.sent` + `webhook.delivery.failed`)
+**Event ratio pattern feeding this metric:**
+`<entity>.created` / (`<entity>.created` + `<entity>.creation_failed`),
+`<entity>.confirmed` / external confirmation signals received,
+`<signal>.delivery.sent` / (`<signal>.delivery.sent` + `<signal>.delivery.failed`)
 
-**Existing aligned SLIs:** all 99.9% and 100% SLIs in the OBCs are directly Availability metrics.
+**Typical aligned SLIs:** availability SLIs defined in product OBCs (e.g., 99%, 99.9%, 100%) are directly Availability metrics.
 
 ---
 

@@ -41,10 +41,10 @@ O ProdOps adota um modelo DORA estendido de **7 métricas** que expande as 4 mé
 
 **Como medir:** eventos de falha de OBC (`*_failed`, `*_rejected`, `*_refused`) correlacionados com deploys nos 30 minutos anteriores.
 
-**Eventos de OBC que alimentam esta métrica:**
-`invoice.creation_failed`, `payment.boleto.creation_failed`, `invoice.provider_rejected`, `invoice.cancel_provider_not_found`, `webhook.rejected`, `webhook.delivery.failed`
+**Padrão de eventos de OBC que alimentam esta métrica:**
+Eventos com sufixo `*_failed`, `*_rejected`, `*_refused`, `*_error` correlacionados com deploys recentes. Exemplo de produto (payments-api): `invoice.creation_failed`, `webhook.delivery.failed`.
 
-→ Ver mapeamento completo em [`../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ Ver mapeamento de produto em [`../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
 
 ---
 
@@ -53,10 +53,10 @@ O ProdOps adota um modelo DORA estendido de **7 métricas** que expande as 4 mé
 
 **Por que importa:** falhas acontecem. O que diferencia times maduros é a velocidade de recuperação. Nos estágios avançados (MVT/MLP), MTTR alto é inaceitável.
 
-**Como medir:** gap de tempo entre evento de falha e evento de recovery correspondente, por `correlationId` ou `invoiceId`.
+**Como medir:** gap de tempo entre evento de falha e evento de recovery correspondente, por `correlationId` ou identificador de entidade de domínio.
 
-**Pares de eventos que alimentam esta métrica:**
-`invoice.creation_failed` → `invoice.created`, `webhook.delivery.failed` → `webhook.delivery.sent`
+**Pares de eventos que alimentam esta métrica (padrão):**
+`<entidade>.creation_failed` → `<entidade>.created`, `<entidade>.delivery.failed` → `<entidade>.delivery.sent`
 
 ---
 
@@ -67,14 +67,14 @@ O ProdOps adota um modelo DORA estendido de **7 métricas** que expande as 4 mé
 
 **Por que importa:** métrica de responsividade. Nos estágios iniciais (PoC/MVP), Reaction Time alto indica arquitetura lenta ou processo manual. É análogo ao MTTD (Mean Time to Detect).
 
-**Como medir:** gap entre `webhook.received` e `payment.confirmed` (ou outro evento de processamento), por `correlationId`.
+**Como medir:** gap entre o evento de sinal externo recebido e o primeiro evento de processamento interno correspondente, por `correlationId`.
 
-**Eventos de OBC que alimentam esta métrica:**
-`webhook.received` → `payment.confirmed`, `payment.card.authorization.requested` → `payment.card.authorized`, `webhook.delivery.sent` (latência de entrega)
+**Padrão de eventos que alimentam esta métrica:**
+`<signal>.received` → `<entity>.processed`, `<entity>.authorization.requested` → `<entity>.authorized`, `<signal>.delivery.sent` (latência de entrega)
 
-**SLIs existentes alinhados:**
-- Entregas de webhook em até 5s — 95% (OBC webhook-configuration)
-- Card outcomes em até 5min — 99% (OBC credit-card)
+**SLIs típicos alinhados:**
+- Entregas de notificação em X segundos — Y% (definido por OBC do produto)
+- Outcomes de confirmação em até N minutos — Y% (definido por OBC do produto)
 
 ---
 
@@ -85,8 +85,8 @@ O ProdOps adota um modelo DORA estendido de **7 métricas** que expande as 4 mé
 
 **Como medir:** contagem de eventos de idempotência e estorno por janela de tempo.
 
-**Eventos de OBC que alimentam esta métrica:**
-`invoice.idempotency_hit`, `payment.boleto.idempotency_hit`, `invoice.cancel_idempotency_hit`, `payment.card.refund.requested`, `payment.card.refund.required`
+**Padrão de eventos de OBC que alimentam esta métrica:**
+Eventos com sufixo `*_idempotency_hit`, `*_refund.requested`, `*_refund.required`, `*_retry`. Exemplo de produto (payments-api): `invoice.idempotency_hit`, `payment.card.refund.requested`.
 
 ---
 
@@ -97,12 +97,12 @@ O ProdOps adota um modelo DORA estendido de **7 métricas** que expande as 4 mé
 
 **Como medir:** razão entre eventos de sucesso e total de tentativas por janela de tempo.
 
-**Razões de eventos que alimentam esta métrica:**
-`invoice.created` / (`invoice.created` + `invoice.creation_failed`),
-`payment.confirmed` / webhooks `PAYMENT_CONFIRMED` recebidos,
-`webhook.delivery.sent` / (`webhook.delivery.sent` + `webhook.delivery.failed`)
+**Padrão de razões de eventos que alimentam esta métrica:**
+`<entidade>.created` / (`<entidade>.created` + `<entidade>.creation_failed`),
+`<entidade>.confirmed` / sinais externos de confirmação recebidos,
+`<signal>.delivery.sent` / (`<signal>.delivery.sent` + `<signal>.delivery.failed`)
 
-**SLIs existentes alinhados:** todos os SLIs de 99.9% e 100% dos OBCs são diretamente métricas de Availability.
+**SLIs típicos alinhados:** SLIs de disponibilidade definidos nos OBCs do produto (ex: 99%, 99.9%, 100%) são diretamente métricas de Availability.
 
 ---
 

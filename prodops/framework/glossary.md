@@ -61,7 +61,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 ## Product Repository
 
-**Definição:** O nível de implementação e operação de um produto específico dentro da arquitetura ProdOps. Este repositório (`payments-api`) é um Product Repository.
+**Definição:** O nível de implementação e operação de um produto específico dentro da arquitetura ProdOps. Cada repositório consumidor do Framework é um Product Repository.
 
 **Propósito:** Implementar Product Capabilities, operar o produto em produção e manter a rastreabilidade completa de Intents até evidências de operação.
 

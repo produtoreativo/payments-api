@@ -36,7 +36,7 @@ Continuous Assessment uses the extended DORA metrics to identify when the produc
 | DORA Metric | Weight at this stage | Operational signal | Action when deteriorating |
 |---|---|---|---|
 | Lead Time for Change | High (8→5) | Average time from commit to first event in production | Technology Intent: review pipeline and automation |
-| Reaction Time | High (5→3) | Gap `webhook.received` → `payment.confirmed` | Technology Intent: review processing architecture |
+| Reaction Time | High (5→3) | Gap `<signal>.received` → `<entity>.processed` | Technology Intent: review processing architecture |
 | Release Frequency | Growing (5→8) | Deploy count per week | Team Intent: review delivery process |
 | Change Fail Rate | Growing (3→5) | Rate of `*_failed` events correlated with deploys | Technology Intent: test quality and gates |
 | MTTR | Growing (1→3) | Gap failure event → recovery by `correlationId` | Technology Intent: runbooks + alerts |

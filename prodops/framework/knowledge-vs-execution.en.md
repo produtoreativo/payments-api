@@ -109,11 +109,11 @@ This is the most important distinction in the model:
 ```
 One artifact can receive dozens of Work Items over its lifetime:
 
-Local OBC (payments-invoice-v2)
+Local OBC (feature-name-v2)
   ├─ Issue: "Refine acceptance criteria — Sprint 12"            → closed
   ├─ Issue: "Update OBC with postmortem result"                 → closed
-  ├─ PR: feat(invoice): implement payment split logic           → merged
-  ├─ PR: fix(invoice): correct tax calculation edge case        → merged
+  ├─ PR: feat(feature): implement composition logic             → merged
+  ├─ PR: fix(feature): correct calculation edge case            → merged
   ├─ PR: docs(obc): add operational evidence month-3            → merged
   └─ Release: v2.1.0                                            → shipped
 
@@ -123,10 +123,10 @@ The OBC continues to exist with all that accumulated history.
 ```
 One Work Item can affect more than one artifact simultaneously:
 
-Issue: "Adapt payments and invoices to new regulation XYZ"
-  ├─ modifies: Local OBC payments-invoice-v2
-  ├─ modifies: Local OBC payments-settlement-v1
-  ├─ modifies: BDD feature payments-invoice.feature
+Issue: "Adapt service X to new regulation XYZ"
+  ├─ modifies: Local OBC feature-name-v2
+  ├─ modifies: Local OBC feature-settlement-v1
+  ├─ modifies: BDD feature feature-name.feature
   └─ modifies: Architecture overview.md
 
 The Issue closes. The three artifacts continue to exist, updated.
@@ -141,7 +141,7 @@ Every Work Item must explicitly reference the artifacts it affects:
 | Field | Description | Example |
 |---|---|---|
 | **Artifact Type** | Type of the affected artifact | `Local OBC` |
-| **Artifact ID** | Identifier or path of the artifact | `payments-invoice-v2` |
+| **Artifact ID** | Identifier or path of the artifact | `feature-name-v2` |
 | **Operation** | What is being done on the artifact | `Refine`, `Create`, `Review`, `Update evidence` |
 | **Journey** | ProdOps journey in execution | `Discovery`, `Delivery`, `Operation`, `Assessment` |
 | **Execution Mode** | Execution mode | `Upstream`, `Downstream` |
@@ -189,9 +189,9 @@ The complete lifecycle of an artifact: it exists before the first Work Item, sur
 ### Correct ✓
 
 ```
-OBC payments-invoice-v2
+OBC feature-name-v2
   └─ Issue: "Refine OBC — BDD section incomplete"
-       → references: payments-invoice-v2
+       → references: feature-name-v2
        → operation: Refine
        → journey: Discovery
        → closes when BDD is complete
@@ -265,7 +265,7 @@ Diligence does not create Issues "for" artifacts. It creates Issues when **ident
 
 | Error | Why it's wrong | How to correct |
 |---|---|---|
-| "The OBC is in Issue #234" | The OBC is a Markdown file. The Issue is work on the OBC. | "Issue #234 records refinement work on OBC `payments-invoice-v2`" |
+| "The OBC is in Issue #234" | The OBC is a Markdown file. The Issue is work on the OBC. | "Issue #234 records refinement work on OBC `feature-name-v2`" |
 | "Close the Issue when the OBC is Committed" | OBC state is independent of Issue state | "Close the Issue when the refinement work is complete. The OBC reaches Committed when its minimum criteria are satisfied." |
 | "Create an Issue for each Business Intent" | A Business Intent can have dozens of Issues over its lifetime | "Create Issues for specific operations on the Intent: Discovery, Review, Update OBC, etc." |
 | "GitHub Project contains Business Signals" | The Project contains Work Items. Signals are artifacts in files. | "GitHub Project contains Work Items about Business Signals" |

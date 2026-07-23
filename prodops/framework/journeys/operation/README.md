@@ -36,7 +36,7 @@ O Continuous Assessment usa as métricas DORA estendidas para identificar quando
 | Métrica DORA | Peso neste estágio | Sinal operacional | Ação quando deteriora |
 |---|---|---|---|
 | Lead Time for Change | Alto (8→5) | Tempo médio entre commit e primeiro evento em produção | Intent Technology: revisar pipeline e automação |
-| Reaction Time | Alto (5→3) | Gap `webhook.received` → `payment.confirmed` | Intent Technology: revisar arquitetura de processamento |
+| Reaction Time | Alto (5→3) | Gap `<signal>.received` → `<entity>.processed` | Intent Technology: revisar arquitetura de processamento |
 | Release Frequency | Crescente (5→8) | Contagem de deploys por semana | Intent Team: revisar processo de entrega |
 | Change Fail Rate | Crescente (3→5) | Taxa de `*_failed` correlacionada com deploys | Intent Technology: qualidade de testes e gates |
 | MTTR | Crescente (1→3) | Gap evento de falha → recovery por `correlationId` | Intent Technology: runbooks + alertas |

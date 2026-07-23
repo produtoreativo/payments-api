@@ -274,6 +274,12 @@ Use this table as the primary navigation source before reading or writing any ar
 | Boundary model documentation (PT) | `prodops/exec/export-boundary.md` |
 | Boundary model documentation (EN) | `prodops/exec/export-boundary.en.md` |
 | Export boundary validation script | `prodops/scripts/validate-export-manifest.sh` |
+| Empirical role orientation (PT) | `prodops/exec/empirical-upstream.md` |
+| Empirical role orientation (EN) | `prodops/exec/empirical-upstream.en.md` |
+
+> **Sync mechanism:** `scripts/sync-framework-docs.sh` is NOT a canonical script —
+> it is disabled (guard at the beginning of the file). It must not be executed until
+> aligned with `export-manifest.yaml`. Do not list as a canonical script.
 
 ---
 

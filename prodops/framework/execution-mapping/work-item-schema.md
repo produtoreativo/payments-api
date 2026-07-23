@@ -16,7 +16,7 @@ Todo Work Item deve declarar explicitamente seus campos canônicos.
 | Campo | Tipo | Descrição | Exemplo |
 |---|---|---|---|
 | `artifact_type` | enum | Tipo do artefato principal afetado | `Local OBC` |
-| `artifact_id` | string | Identificador ou path do artefato | `payments-invoice-v2` |
+| `artifact_id` | string | Identificador ou path do artefato | `feature-name-v2` |
 | `operation` | enum | Operação sendo executada | `Refine` |
 | `journey` | enum | Jornada ProdOps em curso | `Discovery` |
 
@@ -29,7 +29,7 @@ Todo Work Item deve declarar explicitamente seus campos canônicos.
 | `status` | enum | Estado do Work Item | `In Progress` |
 | `priority` | enum | Prioridade | `High` |
 | `release` | string | Release alvo (quando aplicável) | `v2.1.0` |
-| `repository` | string | Repositório que contém o artefato | `payments-api` |
+| `repository` | string | Repositório que contém o artefato | `product-repository` |
 
 ### Campos de rastreabilidade
 
@@ -37,14 +37,14 @@ Todo Work Item deve declarar explicitamente seus campos canônicos.
 |---|---|---|---|
 | `depends_on` | list | Work Items que devem ser concluídos antes | `[#234, #198]` |
 | `blocked_by` | list | Work Items que bloqueiam este | `[#301]` |
-| `related_artifacts` | list | Artefatos secundários também afetados | `[bdd/payments-invoice.feature]` |
+| `related_artifacts` | list | Artefatos secundários também afetados | `[bdd/feature-name.feature]` |
 
 ### Campos de evidência
 
 | Campo | Tipo | Descrição | Exemplo |
 |---|---|---|---|
 | `evidence_required` | boolean | Se a operação deve produzir evidência | `true` |
-| `evidence_location` | string | Path onde a evidência será armazenada | `artifacts/obcs/payments-invoice-v2.md#evidências` |
+| `evidence_location` | string | Path onde a evidência será armazenada | `artifacts/obcs/feature-name-v2.md#evidências` |
 
 ---
 
@@ -149,7 +149,7 @@ custom_fields:
 
   - name: Artifact ID
     type: text
-    description: "Slug ou path relativo do artefato (ex: payments-invoice-v2)"
+    description: "Slug ou path relativo do artefato (ex: feature-name-v2)"
 
   - name: Operation
     type: single_select
@@ -190,12 +190,12 @@ O título é orientado ao objeto de trabalho — o que está sendo trabalhado. `
 
 Exemplos:
 ```
-payments-invoice-v2: seção BDD incompleta
-payments-invoice-v2: Assessment pré-Downstream
-payments-invoice-v2: split de pagamento PIX
-architecture-overview: novo módulo WebhookWorker
+feature-name-v2: seção BDD incompleta
+feature-name-v2: Assessment pré-Downstream
+feature-name-v2: novo capability de composição
+architecture-overview: novo módulo WorkerService
 platform-billing-v3: decompor em 3 Local OBCs
-payments-invoice.feature: CI gate pré-release
+feature-name.feature: CI gate pré-release
 SIG-089: gerar Business Intent
 ```
 

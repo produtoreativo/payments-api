@@ -60,7 +60,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 ## Product Repository
 
-**Definition:** The implementation and operation level for a specific product within the ProdOps architecture. This repository (`payments-api`) is a Product Repository.
+**Definition:** The implementation and operation level for a specific product within the ProdOps architecture. Each repository that consumes the Framework is a Product Repository.
 
 **Purpose:** Implement Product Capabilities, operate the product in production, and maintain full traceability from Business Intents to operation evidence.
 
