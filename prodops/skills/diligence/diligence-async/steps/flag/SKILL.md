@@ -22,6 +22,7 @@ Para cada divergência, classificar a ação corretora e o responsável:
 | Tipo de gap | Ação | Quem pode reparar |
 |---|---|---|
 | OBC committed sem Work Item | Attach — criar Work Item | Diligence |
+| Issue com labels canônicas fora do projeto gerenciado | Attach — adicionar Issue ao projeto | Diligence |
 | Item no Iteration Plan sem BDD Feature | Bloqueio — BDD Feature deve ser criada antes | Delivery (Downstream readiness) |
 | Item no Iteration Plan sem riscos documentados | Bloqueio — documentar riscos em risks.md | Assessment |
 | Work Item aberto com OBC Operational | Close — fechar Work Item | Diligence |

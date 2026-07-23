@@ -51,6 +51,46 @@ Para cada Issue, verificar:
 
 Issues com padrão antigo ou sem labels canônicas → divergência `[ ] Média` — Repair atualiza título e adiciona labels.
 
+### 3. Verificar membership de Issues no projeto gerenciado
+
+Obter o número do projeto `ProdOps — <repo-name>`:
+
+```bash
+gh project list --owner <owner> --format json \
+  | jq '.projects[] | select(.title == "ProdOps — <repo-name>") | .number'
+```
+
+Se o projeto não existir: registrar como limitação do scan — não como divergência de
+OBC. Workspace Reconciliation deve ser executado primeiro.
+
+Listar todos os itens membros do projeto gerenciado:
+
+```bash
+gh project item-list <project-number> --owner <owner> --format json \
+  | jq '[.items[].content.number]'
+```
+
+Para cada Issue aberto com label `journey:*` ou `operation:*`, verificar se o número
+está na lista de membros:
+
+| Sinal | Divergência |
+|---|---|
+| Issue com label `journey:*` ausente da lista | Issue sem project membership — Attach obrigatório |
+| Issue com label `operation:*` ausente da lista | Issue sem project membership — Attach obrigatório |
+
+Registrar cada gap:
+
+```
+OBC: <obc-id se identificável pelo título do Issue>
+Gap: Issue #N ("título") não é membro do projeto ProdOps — <repo-name>
+Severidade: Média
+Ação corretora: gh project item-add <project-number> --owner <owner> --url <issue-url>
+Responsável: Diligence
+```
+
+Se `gh project item-list` falhar por permissão ou projeto inacessível: registrar como
+limitação — não como divergência de OBC.
+
 ### 4. Listar todos os OBCs ativos
 
 ```bash
@@ -112,6 +152,7 @@ Responsável sugerido: Diligence | Assessment | Delivery
 Concluído quando:
 
 - Todos os OBCs ativos foram verificados
+- Membership de Issues com labels canônicas no projeto gerenciado verificada
 - Relatório de divergências produzido (pode ser vazio se não há gaps)
 - Nenhuma correção executada
 

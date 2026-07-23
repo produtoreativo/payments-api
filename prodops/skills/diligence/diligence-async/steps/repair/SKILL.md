@@ -25,6 +25,24 @@ Para cada item, aplicar a ação corretora correspondente:
 → prodops/skills/diligence/diligence-sync/steps/attach/SKILL.md
 ```
 
+**Issue com labels canônicas fora do projeto gerenciado:**
+
+```bash
+gh project item-add <project-number> \
+  --owner <owner> \
+  --url https://github.com/<owner>/<repo>/issues/<issue-number>
+```
+
+Verificar membership após adição:
+
+```bash
+gh project item-list <project-number> --owner <owner> --format json \
+  | jq '.items[] | select(.content.number == <issue-number>) | .id'
+```
+
+Se o projeto gerenciado não existir: registrar bloqueio — escalar para Workspace
+Reconciliation antes de continuar.
+
 **Work Item aberto com OBC Operational:** executar step Close para o OBC afetado.
 
 ```
