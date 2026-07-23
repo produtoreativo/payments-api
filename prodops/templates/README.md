@@ -6,6 +6,18 @@ Copie o template para o local canônico indicado antes de preencher. Nunca preen
 
 ---
 
+## Definição, template e instância
+
+| Conceito | O que é | Onde fica |
+|---|---|---|
+| **Definição** | Estrutura e semântica do artefato | `prodops/framework/` |
+| **Template** | Estrutura vazia pronta para copiar | `prodops/templates/` |
+| **Instância** | Template preenchido com dados reais | `prodops/artifacts/` |
+
+Instâncias preenchidas pertencem a `prodops/artifacts/`, nunca a `prodops/templates/`.
+
+---
+
 ## Discovery (Upstream)
 
 | Template | Uso | Localização canônica |
@@ -22,6 +34,7 @@ Crie um diretório `evidence/` ao lado do experimento quando precisar de outputs
 
 | Template | Uso | Localização canônica |
 |---|---|---|
+| [delivery/context-capsule.md](delivery/context-capsule.md) | Context Capsule gerada pelo Downstream readiness | `prodops/exec/cards/<card-slug>/context.md` |
 | [delivery/release-entry.md](delivery/release-entry.md) | Entrada no Release Trail | acrescentar no trail da sessão ativa em `prodops/artifacts/trails/sessions/` |
 | [delivery/pull-request-checklist.md](delivery/pull-request-checklist.md) | Checklist de PR antes do Finish | usado na revisão do Pull Request |
 
@@ -53,6 +66,16 @@ Crie um diretório `evidence/` ao lado do experimento quando precisar de outputs
 
 ---
 
+## OBCs
+
+| Template | Uso | Localização canônica |
+|---|---|---|
+| [obcs/local-obc.md](obcs/local-obc.md) | Local OBC — contrato de implementação de um produto | `prodops/artifacts/obcs/<slug>.md` |
+| [obcs/global-obc.md](obcs/global-obc.md) | Global OBC — contrato de plataforma (uso no repositório de portfólio) | repositório de portfólio da plataforma |
+| [obcs/obc.md](obcs/obc.md) | Roteador: qual template OBC usar | referência histórica |
+
+---
+
 ## Operation
 
 | Template | Uso | Localização canônica |
@@ -62,8 +85,37 @@ Crie um diretório `evidence/` ao lado do experimento quando precisar de outputs
 
 ---
 
+## Adaptações locais do produto (`templates/local/`)
+
+Quando o produto precisar adaptar um template canônico (ex.: checklist com gates específicos, OBC com campos extras), a adaptação vai em `prodops/templates/local/`.
+
+Regras:
+- `templates/local/` pertence ao produto, não ao Framework canônico.
+- `templates/local/` é protegido de sync por `.prodopsignore`.
+- Uma Skill canônica não pode depender de um template local por nome.
+- Uma Product Skill pode consumir um template local.
+- Instâncias preenchidas nunca ficam em `templates/local/` — vão para `prodops/artifacts/`.
+
+Este produto **não possui templates locais** no momento. O diretório `templates/local/` será criado somente quando houver conteúdo real.
+
+---
+
+## Direção de dependência
+
+```
+Framework Skill  →  pode usar template canônico
+Framework Skill  →  não requer template local específico
+Product Skill    →  pode usar template canônico ou local
+Template (vazio) →  copiado e preenchido → vira Artefato em prodops/artifacts/
+```
+
+---
+
 ## Regras
 
 - Nunca preencher templates no lugar — copie para o destino canônico.
 - Nunca criar artefatos de produto ou de release aqui — templates são estrutura, não conteúdo.
 - Ao evoluir um template, verificar se instâncias existentes nos artefatos precisam ser migradas.
+- Templates canônicos não dependem de adaptações locais.
+- Relação com Skills: ver `prodops/skills/README.md`.
+- Relação com Artifacts: ver `prodops/artifacts/README.md`.

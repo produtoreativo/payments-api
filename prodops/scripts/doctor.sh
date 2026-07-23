@@ -324,6 +324,25 @@ else
   fail ".prodopsignore missing prodops/skills/references/local/ protection"
 fi
 
+# ── Canonical templates layout ────────────────────────────────────────────────
+check_path "prodops/templates/README.md"
+check_path "prodops/templates/business-intents/intent.md"
+check_path "prodops/templates/discovery/experiment.md"
+check_path "prodops/templates/discovery/learning.md"
+check_path "prodops/templates/discovery/trail.md"
+check_path "prodops/templates/assessment/decision-trail.md"
+check_path "prodops/templates/assessment/reliability-checklist.md"
+check_path "prodops/templates/delivery/context-capsule.md"
+check_path "prodops/templates/delivery/pull-request-checklist.md"
+check_path "prodops/templates/delivery/release-entry.md"
+check_path "prodops/templates/engineering/definition-of-done.md"
+check_path "prodops/templates/engineering/test-plan.md"
+check_path "prodops/templates/obcs/local-obc.md"
+check_path "prodops/templates/obcs/global-obc.md"
+check_path "prodops/templates/obcs/obc.md"
+check_path "prodops/templates/operation/runbook.md"
+check_path "prodops/templates/operation/postmortem.md"
+
 if [[ "${failures}" -gt 0 ]]; then
   printf '\nProdOps doctor found %s issue(s).\n' "${failures}" >&2
   printf 'Run the fix/* branches or repair the listed files.\n' >&2

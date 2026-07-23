@@ -233,12 +233,18 @@ Use this table as the primary navigation source before reading or writing any ar
 | Discovery Trail | `prodops/templates/discovery/trail.md` |
 | Decision Trail | `prodops/templates/assessment/decision-trail.md` |
 | Reliability Checklist | `prodops/templates/assessment/reliability-checklist.md` |
+| Context Capsule | `prodops/templates/delivery/context-capsule.md` |
 | Pull Request Checklist | `prodops/templates/delivery/pull-request-checklist.md` |
 | Release Entry | `prodops/templates/delivery/release-entry.md` |
 | Definition of Done | `prodops/templates/engineering/definition-of-done.md` |
 | Test Plan | `prodops/templates/engineering/test-plan.md` |
+| Local OBC | `prodops/templates/obcs/local-obc.md` |
+| Global OBC | `prodops/templates/obcs/global-obc.md` |
+| OBC Router | `prodops/templates/obcs/obc.md` |
 | Runbook | `prodops/templates/operation/runbook.md` |
 | Postmortem | `prodops/templates/operation/postmortem.md` |
+
+> **Product-local adaptations:** Products may declare template adaptations in `prodops/templates/local/`. That directory belongs to the product and is protected from sync by `.prodopsignore`. Framework Skills do not depend on local templates by name. See `prodops/templates/README.en.md`.
 
 ---
 
