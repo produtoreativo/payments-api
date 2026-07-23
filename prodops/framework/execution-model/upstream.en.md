@@ -97,9 +97,9 @@ Objective: validate behavior against a real provider (e.g.: Asaas sandbox) when 
 
 A capability promoted from Upstream to Downstream must have:
 
-1. BDD Feature moved from `prodops/artifacts/experiments/<NNN-slug>/features/` to `prodops/artifacts/business/bdd/`
-2. OBC moved from `prodops/artifacts/experiments/<NNN-slug>/obcs/` to `prodops/artifacts/business/obcs/`
-3. Entry in the Iteration Plan in `prodops/artifacts/governance/plans/iteration-plan.md`
+1. BDD Feature moved from `prodops/artifacts/experiments/<NNN-slug>/features/` to `prodops/artifacts/bdd/`
+2. OBC moved from `prodops/artifacts/experiments/<NNN-slug>/obcs/` to `prodops/artifacts/obcs/`
+3. Entry in the Iteration Plan in `prodops/artifacts/plans/iteration-plan.md`
 4. Reliability Plan updated in `prodops/framework/journeys/assessment/reliability-plans/`
 
 → [Full promotion process](../journeys/discovery/README.md#processo-de-promoção-para-downstream)

@@ -108,7 +108,7 @@ Incluir no Conformance Report: lista de Issues `infra:` abertos com número e t�
 
 ### 6. Atualizar o sync manifest
 
-Escrever em `prodops/artifacts/governance/github-sync-manifest.md`:
+Escrever em `prodops/artifacts/trails/github-sync-manifest.md`:
 - Status de cada categoria baseado na verificação via API deste ciclo
 - Para categorias PARCIAL: referenciar o Issue de rastreamento (ex: `PARCIAL — ver Issue #63`)
 - Marcar `[x]` nas views e campos confirmados via API como existentes

@@ -218,7 +218,7 @@ Operation
 |---|---|
 | **Owner** | Tech Lead / Product Owner |
 | **Onde nasce** | Product Repository — execução da iteração em andamento |
-| **Artefato canônico** | `prodops/artifacts/governance/plans/iteration-plan.md` |
+| **Artefato canônico** | `prodops/artifacts/plans/iteration-plan.md` |
 | **Quem modifica** | Equipe de Delivery |
 | **Quem aprova** | Product Owner + Tech Lead (para entrada de itens) |
 | **Consumidores** | Delivery (CI Sync, CI Async), Release Trail |
@@ -233,7 +233,7 @@ Operation
 |---|---|
 | **Owner** | Product Manager + Tech Lead do item |
 | **Onde nasce** | Business Intent Backlog (fluxo global) ou Product Backlog (fluxo local) |
-| **Artefato canônico** | `prodops/artifacts/business/obcs/<slug>.md` (quando committed) |
+| **Artefato canônico** | `prodops/artifacts/obcs/<slug>.md` (quando committed) |
 | **Quem modifica** | Product Manager, Tech Lead, engenheiros (com registro de mudanças) |
 | **Quem aprova** | Product Manager + Tech Lead (Assessment Review) |
 | **Consumidores** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |
@@ -246,7 +246,7 @@ Operation
 |---|---|
 | **Owner** | Tech Lead + SRE |
 | **Onde nasce** | Assessment — produzido durante Premortem ou Assessment Review |
-| **Artefato canônico** | `prodops/artifacts/governance/plans/reliability/` |
+| **Artefato canônico** | `prodops/artifacts/plans/reliability/` |
 | **Quem modifica** | Tech Lead, SRE, engenheiros |
 | **Quem aprova** | Tech Lead + Product Owner |
 | **Consumidores** | Iteration Plan, Delivery, Operation |

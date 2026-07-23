@@ -155,7 +155,7 @@ O ciclo Diligence Sync pode invocar Workspace Reconciliation quando o step Attac
 ## Referências
 
 → [Canonical Specification — github-workspace.md](../../github-workspace.md)
-→ [GitHub Sync Manifest](../../../artifacts/governance/github-sync-manifest.md)
+→ [GitHub Sync Manifest](../../../artifacts/trails/github-sync-manifest.md)
 → [Diligence journey README](../../README.md)
 → [Capabilities README](../../README.md)
 → [Orchestrator SKILL.md](../../../skills/diligence/workspace-reconciliation/SKILL.md)

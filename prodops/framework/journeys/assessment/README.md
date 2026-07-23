@@ -28,11 +28,11 @@ O Assessment pode ocorrer tanto no Upstream quanto no Downstream.
 |---|---|
 | Riscos | [../../../artifacts/risks/risks.md](../../../artifacts/risks/risks.md) |
 | Oportunidades | [../../../artifacts/risks/opportunities.md](../../../artifacts/risks/opportunities.md) |
-| Reliability Plans | [../../../artifacts/governance/plans/reliability/](../../../artifacts/governance/plans/reliability/) |
-| Event Storming | [../../../artifacts/product/event-storming/](../../../artifacts/product/event-storming/) |
-| Arquitetura | [../../../artifacts/product/architecture/](../../../artifacts/product/architecture/) |
-| OBCs (referência) | [../../../artifacts/business/obcs/](../../../artifacts/business/obcs/) |
-| Iteration Plans (referência) | [../../../artifacts/governance/plans/](../../../artifacts/governance/plans/) |
+| Reliability Plans | [../../../artifacts/plans/reliability/](../../../artifacts/plans/reliability/) |
+| Event Storming | [../../../artifacts/event-storming/](../../../artifacts/event-storming/) |
+| Arquitetura | [../../../artifacts/architecture/](../../../artifacts/architecture/) |
+| OBCs (referência) | [../../../artifacts/obcs/](../../../artifacts/obcs/) |
+| Iteration Plans (referência) | [../../../artifacts/plans/](../../../artifacts/plans/) |
 
 ## Relação com outras jornadas
 

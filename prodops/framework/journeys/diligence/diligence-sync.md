@@ -18,7 +18,7 @@ Diligence Sync produz:
 
 ### Capture
 
-Cria ou atualiza o OBC a partir da decisão que acionou o ciclo. Registra o estado canônico no arquivo Markdown em `prodops/artifacts/business/obcs/`. Não cria Work Items — apenas estabiliza o estado do OBC.
+Cria ou atualiza o OBC a partir da decisão que acionou o ciclo. Registra o estado canônico no arquivo Markdown em `prodops/artifacts/obcs/`. Não cria Work Items — apenas estabiliza o estado do OBC.
 
 Saída: OBC committed com estado canônico atualizado, data e decisão registradas.
 

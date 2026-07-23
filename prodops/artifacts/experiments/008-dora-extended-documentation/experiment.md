@@ -202,7 +202,7 @@ quando o produto precisa de uma nova Intent de melhoria.
 
 ## Camada 5 — Atualização do Template de Reliability Plan
 
-**Arquivo:** `prodops/artifacts/governance/plans/reliability/README.md` + `README.en.md`
+**Arquivo:** `prodops/artifacts/plans/reliability/README.md` + `README.en.md`
 
 **O que adicionar:** seção "DORA como referência de confiabilidade" indicando:
 
@@ -252,7 +252,7 @@ quando o produto precisa de uma nova Intent de melhoria.
 
 5. Camada 5 — Reliability Plan template
    (conecta avaliação de risco às métricas)
-   └── artifacts/governance/plans/reliability/README.md + .en.md
+   └── artifacts/plans/reliability/README.md + .en.md
 
 6. Camada 6 — Product Deck
    (posiciona o produto na escala de maturidade)
@@ -291,7 +291,7 @@ Artefatos a serem produzidos nas Camadas 1–6 (não modificados ainda):
 - `prodops/framework/dora-metrics.md` + `.en.md`
 - `prodops/framework/glossary.md` + `.en.md`
 - `prodops/journeys/operation/README.md` + `.en.md`
-- `prodops/artifacts/governance/plans/reliability/README.md` + `.en.md`
+- `prodops/artifacts/plans/reliability/README.md` + `.en.md`
 - `prodops/artifacts/product/product-deck.md` + `.en.md`
 - `evidence/obc-dora-mapping.md`
 
@@ -380,7 +380,7 @@ Lista os artefatos de produto gerados ou promovidos por este experimento.
 - `prodops/framework/dora-metrics.md` + `.en.md` — criados
 - `prodops/framework/glossary.md` + `.en.md` — atualizados (DORA Metrics + Maturity Level)
 - `prodops/journeys/operation/README.md` + `.en.md` — atualizados (seção DORA)
-- `prodops/artifacts/governance/plans/reliability/README.md` — atualizado (DORA como referência)
+- `prodops/artifacts/plans/reliability/README.md` — atualizado (DORA como referência)
 - `prodops/artifacts/product/context/product-deck.md` — atualizado (seção Maturidade de Delivery)
 - `prodops/artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md` — criado
 

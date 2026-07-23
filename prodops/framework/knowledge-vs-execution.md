@@ -65,11 +65,11 @@ Um artefato ProdOps é um documento com identidade própria que:
 | **Business Signal** | Portfolio/Product Tracking List | Observação de mercado, operação ou técnica que merece atenção |
 | **Business Intent** | Business Intent Backlog / Product Backlog | Decisão estratégica de investigar ou entregar algo |
 | **Global OBC** | Repositório de portfólio | Contrato de negócio completo de uma intenção (4 dimensões) |
-| **Local OBC** | `prodops/artifacts/business/obcs/<slug>.md` | Contrato de um único produto para uma intenção |
-| **BDD Feature** | `prodops/artifacts/business/bdd/<slug>.feature` | Critério de aceite executável |
-| **Architecture** | `prodops/artifacts/product/architecture/overview.md` | Diagrama canônico da infraestrutura e aplicações |
-| **Plans** | `prodops/artifacts/governance/plans/` | Iteration Plan, Reliability Plan |
-| **Trails** | `prodops/artifacts/governance/trails/` | Registros históricos de Release e decisões |
+| **Local OBC** | `prodops/artifacts/obcs/<slug>.md` | Contrato de um único produto para uma intenção |
+| **BDD Feature** | `prodops/artifacts/bdd/<slug>.feature` | Critério de aceite executável |
+| **Architecture** | `prodops/artifacts/architecture/overview.md` | Diagrama canônico da infraestrutura e aplicações |
+| **Plans** | `prodops/artifacts/plans/` | Iteration Plan, Reliability Plan |
+| **Trails** | `prodops/artifacts/trails/` | Registros históricos de Release e decisões |
 | **Risk Register** | `prodops/artifacts/risks/risks.md` | Registro de riscos identificados durante Assessment |
 | **Evidence** | Dentro de OBCs e Trails | Postmortems, métricas, resultados de experimentos |
 

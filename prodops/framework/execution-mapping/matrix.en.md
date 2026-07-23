@@ -49,7 +49,7 @@ Complete mapping of all Knowledge Space Artifacts against allowed operations, Gi
 
 | Operation | GitHub Resources | Journeys | Mode | Expected Evidence | Responsible |
 |---|---|---|---|---|---|
-| `Create` | Issue | Discovery | N/A | Intent document created in `artifacts/business/intents/` | PO, PCE |
+| `Create` | Issue | Discovery | N/A | Intent document created in `artifacts/business-intents/` | PO, PCE |
 | `Refine` | Issue, PR | Discovery | Upstream | OBC Draft updated; hypotheses recorded | PCE, TL |
 | `Explore` | Issue, Disc | Discovery | Upstream | Exploration results in OBC | PCE, SE |
 | `Review` | Issue, Disc | Discovery, Assessment | Upstream → Down | Review checklist; decision recorded | PO, TL |
@@ -83,7 +83,7 @@ Complete mapping of all Knowledge Space Artifacts against allowed operations, Gi
 
 | Operation | GitHub Resources | Journeys | Mode | Expected Evidence | Responsible |
 |---|---|---|---|---|---|
-| `Create` | PR | Discovery | Upstream | `artifacts/business/obcs/<slug>.md` in Draft state | PM, TL |
+| `Create` | PR | Discovery | Upstream | `artifacts/obcs/<slug>.md` in Draft state | PM, TL |
 | `Refine` | PR, Issue | Discovery, Assessment | Upstream | OBC in Refining state; criteria emerging | PM, TL, SE |
 | `Review` (Assessment) | Issue, Disc | Assessment | Upstream → Down | Assessment checklist completed | PM, TL |
 | `Approve` (→ Committed) | Issue | Assessment | Downstream | OBC in Committed state; minimums validated | PM, TL |
@@ -100,7 +100,7 @@ Complete mapping of all Knowledge Space Artifacts against allowed operations, Gi
 
 | Operation | GitHub Resources | Journeys | Mode | Expected Evidence | Responsible |
 |---|---|---|---|---|---|
-| `Create` | PR | Discovery, Delivery | Upstream | `.feature` file in `artifacts/business/bdd/` | PCE, SE |
+| `Create` | PR | Discovery, Delivery | Upstream | `.feature` file in `artifacts/bdd/` | PCE, SE |
 | `Refine` | PR | Discovery | Upstream | `.feature` updated with new scenarios | PCE, SE |
 | `Review` | PR review | Assessment, Delivery | Downstream | PR approved; comments resolved | PM, TL |
 | `Validate` | WF | Delivery | Downstream | CI pass; all scenarios green | SE |
@@ -115,7 +115,7 @@ Complete mapping of all Knowledge Space Artifacts against allowed operations, Gi
 
 | Operation | GitHub Resources | Journeys | Mode | Expected Evidence | Responsible |
 |---|---|---|---|---|---|
-| `Register` | PR | Delivery | Both | `artifacts/product/architecture/overview.md` updated | SE, Arch |
+| `Register` | PR | Delivery | Both | `artifacts/architecture/overview.md` updated | SE, Arch |
 | `Review` | Issue, Disc | Delivery, Assessment | Both | Comments and decisions recorded | Arch, TL |
 | `Update` | PR | Delivery | Both | Diagram updated; new component/route/table registered | SE, Arch |
 | `Deprecate` | PR | Operation | N/A | Component marked as deprecated in diagram | Arch |
@@ -130,7 +130,7 @@ Complete mapping of all Knowledge Space Artifacts against allowed operations, Gi
 
 | Operation | GitHub Resources | Journeys | Mode | Expected Evidence | Responsible |
 |---|---|---|---|---|---|
-| `Create` | Mile, PR | Delivery | Downstream | `artifacts/governance/plans/iteration-plan.md` created | PO |
+| `Create` | Mile, PR | Delivery | Downstream | `artifacts/plans/iteration-plan.md` created | PO |
 | `Update` | PR | Delivery | Downstream | Plan updated with progress, decisions, blockers | PO, SE |
 | `Close` | Rel, PR | Delivery | Downstream | Release Trail entry; item states recorded | PO, SE |
 
@@ -156,7 +156,7 @@ Complete mapping of all Knowledge Space Artifacts against allowed operations, Gi
 
 | Operation | GitHub Resources | Journeys | Mode | Expected Evidence | Responsible |
 |---|---|---|---|---|---|
-| `Create` | Rel, PR | Delivery | Downstream | Entry in `artifacts/governance/trails/release-trail.md` | SE, PO |
+| `Create` | Rel, PR | Delivery | Downstream | Entry in `artifacts/trails/release-trail.md` | SE, PO |
 | `Update` | PR | Operation | N/A | Trail updated with postmortem, incident, or review | SE, PRE |
 
 **Never:** standalone Issue; Discussion; Milestone

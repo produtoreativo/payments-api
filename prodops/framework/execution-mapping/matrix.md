@@ -49,7 +49,7 @@ Mapeamento completo de todos os Artefatos do Knowledge Space contra operações 
 
 | Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
 |---|---|---|---|---|---|
-| `Create` | Issue | Discovery | N/A | Intent document criado em `artifacts/business/intents/` | PO, PCE |
+| `Create` | Issue | Discovery | N/A | Intent document criado em `artifacts/business-intents/` | PO, PCE |
 | `Refine` | Issue, PR | Discovery | Upstream | OBC Draft atualizado; hipóteses registradas | PCE, TL |
 | `Explore` | Issue, Disc | Discovery | Upstream | Resultados de exploração no OBC | PCE, SE |
 | `Review` | Issue, Disc | Discovery, Assessment | Upstream → Down | Checklist de revisão; decisão registrada | PO, TL |
@@ -83,7 +83,7 @@ Mapeamento completo de todos os Artefatos do Knowledge Space contra operações 
 
 | Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
 |---|---|---|---|---|---|
-| `Create` | PR | Discovery | Upstream | `artifacts/business/obcs/<slug>.md` em estado Draft | PM, TL |
+| `Create` | PR | Discovery | Upstream | `artifacts/obcs/<slug>.md` em estado Draft | PM, TL |
 | `Refine` | PR, Issue | Discovery, Assessment | Upstream | OBC em estado Refining; critérios emergindo | PM, TL, SE |
 | `Review` (Assessment) | Issue, Disc | Assessment | Upstream → Down | Checklist de Assessment preenchido | PM, TL |
 | `Approve` (→ Committed) | Issue | Assessment | Downstream | OBC em estado Committed; mínimos validados | PM, TL |
@@ -100,7 +100,7 @@ Mapeamento completo de todos os Artefatos do Knowledge Space contra operações 
 
 | Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
 |---|---|---|---|---|---|
-| `Create` | PR | Discovery, Delivery | Upstream | `.feature` file em `artifacts/business/bdd/` | PCE, SE |
+| `Create` | PR | Discovery, Delivery | Upstream | `.feature` file em `artifacts/bdd/` | PCE, SE |
 | `Refine` | PR | Discovery | Upstream | `.feature` atualizado com novos cenários | PCE, SE |
 | `Review` | PR review | Assessment, Delivery | Downstream | PR aprovado; comentários resolvidos | PM, TL |
 | `Validate` | WF | Delivery | Downstream | CI pass; todos os cenários verdes | SE |
@@ -115,7 +115,7 @@ Mapeamento completo de todos os Artefatos do Knowledge Space contra operações 
 
 | Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
 |---|---|---|---|---|---|
-| `Register` | PR | Delivery | Both | `artifacts/product/architecture/overview.md` atualizado | SE, Arch |
+| `Register` | PR | Delivery | Both | `artifacts/architecture/overview.md` atualizado | SE, Arch |
 | `Review` | Issue, Disc | Delivery, Assessment | Both | Comentários e decisões registrados | Arch, TL |
 | `Update` | PR | Delivery | Both | Diagrama atualizado; novo componente/rota/tabela registrado | SE, Arch |
 | `Deprecate` | PR | Operation | N/A | Componente marcado como deprecated no diagrama | Arch |
@@ -130,7 +130,7 @@ Mapeamento completo de todos os Artefatos do Knowledge Space contra operações 
 
 | Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
 |---|---|---|---|---|---|
-| `Create` | Mile, PR | Delivery | Downstream | `artifacts/governance/plans/iteration-plan.md` criado | PO |
+| `Create` | Mile, PR | Delivery | Downstream | `artifacts/plans/iteration-plan.md` criado | PO |
 | `Update` | PR | Delivery | Downstream | Plano atualizado com progresso, decisões, bloqueios | PO, SE |
 | `Close` | Rel, PR | Delivery | Downstream | Entrada em Release Trail; estado dos itens registrado | PO, SE |
 
@@ -156,7 +156,7 @@ Mapeamento completo de todos os Artefatos do Knowledge Space contra operações 
 
 | Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
 |---|---|---|---|---|---|
-| `Create` | Rel, PR | Delivery | Downstream | Entrada em `artifacts/governance/trails/release-trail.md` | SE, PO |
+| `Create` | Rel, PR | Delivery | Downstream | Entrada em `artifacts/trails/release-trail.md` | SE, PO |
 | `Update` | PR | Operation | N/A | Trail atualizado com postmortem, incidente ou revisão | SE, PRE |
 
 **Nunca:** Issue autônoma; Discussion; Milestone

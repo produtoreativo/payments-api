@@ -1,6 +1,6 @@
 # Business Intent — [Título]
 
-Localização canônica: `prodops/artifacts/business/intents/<slug>.md`
+Localização canônica: `prodops/artifacts/business-intents/<slug>.md`
 
 > Uma **Business Intent** registra uma decisão estratégica de perseguir valor — nascida de um ou mais Business Signals. Não é um compromisso de implementação. É o ponto de entrada formal do Framework antes de decidir se o trabalho segue por Upstream (exploração) ou Downstream (entrega governada). Entidades nunca mudam de identidade: um Business Signal **gera** uma Business Intent; uma Business Intent **possui** um OBC como documento de contrato.
 
@@ -75,7 +75,7 @@ Justificativa:
 ## Próximo passo
 
 - Se Upstream: criar experimento em `prodops/artifacts/experiments/`
-- Se Downstream: criar OBC em `prodops/artifacts/business/obcs/` e BDD Feature em `prodops/artifacts/business/bdd/`
+- Se Downstream: criar OBC em `prodops/artifacts/obcs/` e BDD Feature em `prodops/artifacts/bdd/`
 
 ---
 

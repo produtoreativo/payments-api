@@ -194,4 +194,4 @@ O Business Signal Technology gera uma Business Intent quando investigado e recon
 → [Glossário: definições canônicas](glossary.md)
 → [Modelo operacional: camada Origin no topo da hierarquia](operating-model.md)
 → [Templates de Intent](../templates/business-intents/intent.md)
-→ [Intents ativas](../artifacts/business/intents/README.md)
+→ [Intents ativas](../artifacts/business-intents/README.md)

@@ -25,4 +25,4 @@ Usar antes de promover uma capability de Upstream para Downstream, ou antes de f
 
 - [ ] Execução de testes pré-deploy registrada.
 - [ ] Validação pós-deploy concluída.
-- [ ] Entrada adicionada no trail da sessão ativa em `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`.
+- [ ] Entrada adicionada no trail da sessão ativa em `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`.

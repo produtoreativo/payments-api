@@ -218,7 +218,7 @@ Operation
 |---|---|
 | **Owner** | Tech Lead / Product Owner |
 | **Where born** | Product Repository — ongoing iteration execution |
-| **Canonical artifact** | `prodops/artifacts/governance/plans/iteration-plan.md` |
+| **Canonical artifact** | `prodops/artifacts/plans/iteration-plan.md` |
 | **Who modifies** | Delivery team |
 | **Who approves** | Product Owner + Tech Lead (for item entry) |
 | **Consumers** | Delivery (CI Sync, CI Async), Release Trail |
@@ -233,7 +233,7 @@ Operation
 |---|---|
 | **Owner** | Product Manager + Tech Lead of the item |
 | **Where born** | Business Intent Backlog (global flow) or Product Backlog (local flow) |
-| **Canonical artifact** | `prodops/artifacts/business/obcs/<slug>.md` (when committed) |
+| **Canonical artifact** | `prodops/artifacts/obcs/<slug>.md` (when committed) |
 | **Who modifies** | Product Manager, Tech Lead, engineers (with change record) |
 | **Who approves** | Product Manager + Tech Lead (Assessment Review) |
 | **Consumers** | Delivery, Reliability Plan, BDD Feature, Release Trail, Iteration Plan |
@@ -246,7 +246,7 @@ Operation
 |---|---|
 | **Owner** | Tech Lead + SRE |
 | **Where born** | Assessment — produced during Premortem or Assessment Review |
-| **Canonical artifact** | `prodops/artifacts/governance/plans/reliability/` |
+| **Canonical artifact** | `prodops/artifacts/plans/reliability/` |
 | **Who modifies** | Tech Lead, SRE, engineers |
 | **Who approves** | Tech Lead + Product Owner |
 | **Consumers** | Iteration Plan, Delivery, Operation |

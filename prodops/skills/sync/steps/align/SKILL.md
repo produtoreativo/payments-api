@@ -12,11 +12,11 @@ Execute only the artifact alignment step of the Sync flow.
 ## Inputs
 
 - Current diff (`git diff main...HEAD`) — what changed in this branch
-- `prodops/artifacts/business/bdd/` — BDD Features
-- `prodops/artifacts/product/event-storming/plan.json` — Event Storming
-- `prodops/artifacts/product/architecture/overview.md` — architecture diagram
-- `prodops/artifacts/governance/trails/sessions/` — active session trail
-- Relevant OBC in `prodops/artifacts/business/obcs/`
+- `prodops/artifacts/bdd/` — BDD Features
+- `prodops/artifacts/event-storming/plan.json` — Event Storming
+- `prodops/artifacts/architecture/overview.md` — architecture diagram
+- `prodops/artifacts/trails/sessions/` — active session trail
+- Relevant OBC in `prodops/artifacts/obcs/`
 
 ## Action
 
@@ -35,10 +35,10 @@ For each item identified, locate the canonical artifact in `prodops/`. Use this 
 
 | Mudança no código | Artefato canônico |
 |---|---|
-| Comportamento novo ou alterado | BDD Feature em `prodops/artifacts/business/bdd/` |
-| Evento de domínio adicionado, renomeado ou removido | `prodops/artifacts/product/event-storming/plan.json` |
-| Novo módulo, rota, dependência externa ou tabela | `prodops/artifacts/product/architecture/overview.md` |
-| OBC satisfeito ou alterado | `prodops/artifacts/business/obcs/<slug>.md` |
+| Comportamento novo ou alterado | BDD Feature em `prodops/artifacts/bdd/` |
+| Evento de domínio adicionado, renomeado ou removido | `prodops/artifacts/event-storming/plan.json` |
+| Novo módulo, rota, dependência externa ou tabela | `prodops/artifacts/architecture/overview.md` |
+| OBC satisfeito ou alterado | `prodops/artifacts/obcs/<slug>.md` |
 
 Quando uma mudança não se encaixa em nenhuma linha da tabela, isso é um sinal de artefato canônico ausente — registre como gap (veja Guardrails), em vez de inventar um novo artefato.
 
@@ -58,7 +58,7 @@ Check that all internal links in updated files resolve. Verify changed Markdown 
 
 ### 5. Record in the Release Trail
 
-Append an entry to the active session trail (`prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`) when the alignment is meaningful (behavior change, structural update, or contract correction). Include:
+Append an entry to the active session trail (`prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`) when the alignment is meaningful (behavior change, structural update, or contract correction). Include:
 
 - what artifact was updated
 - why it was stale (what the implementation introduced)

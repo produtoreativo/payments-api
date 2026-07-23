@@ -10,7 +10,7 @@
 
 | From | To | Rationale |
 |---|---|---|
-| **Business Intent** | **Intent** | The name "Business Intent" suggested that only market needs (Business) were capturable by the Framework. The canonical naming becomes "Intent" with a declared "Origin Stream" attribute. The directory `prodops/artifacts/business/intents/` is kept for backward compatibility. |
+| **Business Intent** | **Intent** | The name "Business Intent" suggested that only market needs (Business) were capturable by the Framework. The canonical naming becomes "Intent" with a declared "Origin Stream" attribute. The directory `prodops/artifacts/business-intents/` is kept for backward compatibility. |
 | **OBC (Outcome-Based Criterion)** | **OBC (Observable Business Contract)** | The previous definition was incorrect. An OBC is not an "outcome-based criterion" but an "observable business contract" — the distinction is important because the contract is verifiable and anchors the entire delivery chain. |
 | **Capability** (ambiguous) | **Delivery Capability** or **Product Capability** | The term "capability" was used with two distinct meanings: (1) technical competencies of the delivery process (Commit Workflow, Contract Management, etc.) and (2) product features being built (split payment, Pix support). The ambiguity was resolved with qualified terms. |
 | **Business** (top node in operating model) | **Origin Stream (Business \| Enterprise \| Team \| Technology)** | The previous operating model showed only "Business" as the top node, omitting that there are four possible types of origin. |
@@ -45,7 +45,7 @@
 
 **Impact:** The naming reduced the perceived scope of the Framework, leading compliance, infrastructure, and process teams to not register Intents or to register them improvised.
 
-**Solution applied:** The canonical naming becomes "Intent" (without qualifier). The Origin Stream is an attribute of the Intent, not part of the name. The directory `prodops/artifacts/business/intents/` is kept for backward compatibility with an explanatory note in the README.
+**Solution applied:** The canonical naming becomes "Intent" (without qualifier). The Origin Stream is an attribute of the Intent, not part of the name. The directory `prodops/artifacts/business-intents/` is kept for backward compatibility with an explanatory note in the README.
 
 ---
 
@@ -105,7 +105,7 @@
 |---|---|
 | `prodops/framework/glossary.md` | Corrected OBC to "Observable Business Contract". Added entries: Origin Stream, Intent, Business (Origin Stream), Enterprise (Origin Stream), Team (Origin Stream), Technology (Origin Stream), Exploration, Discovery (revised), Delivery Capability, Product Capability. All entries now have: definition, purpose, when to use, when not to use, relationship with other concepts. |
 | `prodops/framework/operating-model.md` | Added Origin Stream layer at the top of the hierarchical diagram. Added Exploration layer between Intent and OBC. Renamed "Business Intent" to "Intent". Renamed "Capability" to "Delivery Capability". Updated lifecycle. Added links to `flow.md` and `origin-streams.md`. |
-| `prodops/artifacts/business/intents/README.md` | Updated to reflect Intent naming with Origin Stream. Added backward compatibility note. Added table of the four Origin Streams. Updated post-registration flow to include Exploration. Active Intents table with Origin Stream column. |
+| `prodops/artifacts/business-intents/README.md` | Updated to reflect Intent naming with Origin Stream. Added backward compatibility note. Added table of the four Origin Streams. Updated post-registration flow to include Exploration. Active Intents table with Origin Stream column. |
 | `prodops/templates/business-intents/intent.md` | Added "Origin Stream" field in the Identification table. Added explanatory note with the four Origin Streams and link to `origin-streams.md`. Renamed title from "Business Intent" to "Intent". Generalized "Business Hypotheses" to "Hypotheses". |
 | `prodops/README.md` | Updated operating model to show Origin Stream at the top. Added links to `framework/flow.md` and `framework/origin-streams.md`. Updated reading order. Updated portal with new description of `framework/`. |
 | `prodops/framework/canonical-paths.md` | Added entries for `flow.md` and `origin-streams.md` in the Framework section. Renamed section "Business Intents" to "Intents". Added entry for Intent template. Renamed section "Delivery — Capabilities" to "Delivery — Capabilities (Delivery Capabilities)". |
@@ -124,7 +124,7 @@ No files were removed.
 
 ### Preserved backward compatibility
 
-- **Directory `prodops/artifacts/business/intents/`:** Kept with explanatory note. Existing documents were not renamed.
+- **Directory `prodops/artifacts/business-intents/`:** Kept with explanatory note. Existing documents were not renamed.
 - **Internal links:** All existing links were preserved. New links were added.
 - **Existing artifacts (split-payment.md):** Not changed. The existing artifact remains valid as a Business origin Intent.
 
@@ -140,7 +140,7 @@ No files were removed.
 
 ### 7.1 — Update split-payment.md artifact to include Origin Stream
 
-The artifact `prodops/artifacts/business/intents/split-payment.md` is the only existing Intent and does not have the Origin Stream field. It is recommended to update it to include `origin_stream: Business` in the Identification table, serving as the canonical example of the new format.
+The artifact `prodops/artifacts/business-intents/split-payment.md` is the only existing Intent and does not have the Origin Stream field. It is recommended to update it to include `origin_stream: Business` in the Identification table, serving as the canonical example of the new format.
 
 ### 7.2 — Review use of "capability" in journey documents
 
@@ -152,7 +152,7 @@ Currently there is only one Intent example (split-payment.md, Business origin). 
 
 ### 7.4 — Consider separating the business-intents directory
 
-In the medium term, evaluate migrating `prodops/artifacts/business/intents/` to `prodops/intents/` to definitively eliminate the ambiguity. This step requires updating all internal links and should be done with team coordination. Not recommended in this cycle to avoid disruption.
+In the medium term, evaluate migrating `prodops/artifacts/business-intents/` to `prodops/intents/` to definitively eliminate the ambiguity. This step requires updating all internal links and should be done with team coordination. Not recommended in this cycle to avoid disruption.
 
 ### 7.5 — Add backward compatibility note to split-payment.md
 
@@ -165,7 +165,7 @@ Add an opening comment to split-payment.md indicating that this artifact was reg
 **Why "Intent" and not "Business Intent"?**
 Clarity surpasses familiarity. The name "Business Intent" created an entry barrier for all Origin Streams that are not Business. The choice to simplify to "Intent" (with Origin Stream as an attribute) is simultaneously more generic and more precise.
 
-**Why keep `prodops/artifacts/business/intents/` without renaming?**
+**Why keep `prodops/artifacts/business-intents/` without renaming?**
 Backward compatibility. Renaming the directory would break all existing links in artifacts, skills, and training documents. The decision to rename can be made in a dedicated cycle with lower disruption impact.
 
 **Why "Exploration" as the name of the flow step?**

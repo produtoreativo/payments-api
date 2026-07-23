@@ -65,11 +65,11 @@ A ProdOps artifact is a document with its own identity that:
 | **Business Signal** | Portfolio/Product Tracking List | Market, operational, or technical observation that deserves attention |
 | **Business Intent** | Business Intent Backlog / Product Backlog | Strategic decision to investigate or deliver something |
 | **Global OBC** | Portfolio repository | Complete business contract for an intention (4 dimensions) |
-| **Local OBC** | `prodops/artifacts/business/obcs/<slug>.md` | Contract of a single product for an intention |
-| **BDD Feature** | `prodops/artifacts/business/bdd/<slug>.feature` | Executable acceptance criterion |
-| **Architecture** | `prodops/artifacts/product/architecture/overview.md` | Canonical diagram of infrastructure and applications |
-| **Plans** | `prodops/artifacts/governance/plans/` | Iteration Plan, Reliability Plan |
-| **Trails** | `prodops/artifacts/governance/trails/` | Historical Release records and decisions |
+| **Local OBC** | `prodops/artifacts/obcs/<slug>.md` | Contract of a single product for an intention |
+| **BDD Feature** | `prodops/artifacts/bdd/<slug>.feature` | Executable acceptance criterion |
+| **Architecture** | `prodops/artifacts/architecture/overview.md` | Canonical diagram of infrastructure and applications |
+| **Plans** | `prodops/artifacts/plans/` | Iteration Plan, Reliability Plan |
+| **Trails** | `prodops/artifacts/trails/` | Historical Release records and decisions |
 | **Risk Register** | `prodops/artifacts/risks/risks.md` | Registry of risks identified during Assessment |
 | **Evidence** | Inside OBCs and Trails | Postmortems, metrics, experiment results |
 

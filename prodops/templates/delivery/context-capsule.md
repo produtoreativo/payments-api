@@ -14,7 +14,7 @@ Date: <YYYY-MM-DD>
 
 ## OBC
 
-Path: `prodops/artifacts/business/obcs/<capability>.md`
+Path: `prodops/artifacts/obcs/<capability>.md`
 
 Success criteria (verbatim — the 3–6 measurable lines from the OBC):
 
@@ -24,7 +24,7 @@ Success criteria (verbatim — the 3–6 measurable lines from the OBC):
 
 ## BDD
 
-Path: `prodops/artifacts/business/bdd/<capability>.feature`
+Path: `prodops/artifacts/bdd/<capability>.feature`
 
 Scenarios (numbered, one line each):
 
@@ -41,7 +41,7 @@ Only entries relevant to this card, one line + ID each
 ## Reliability
 
 SLOs, timeouts, and idempotency requirements for this card
-(source: `prodops/artifacts/governance/plans/reliability/`):
+(source: `prodops/artifacts/plans/reliability/`):
 
 - <SLO / timeout / idempotency requirement>
 

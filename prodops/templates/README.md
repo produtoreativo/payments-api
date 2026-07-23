@@ -22,7 +22,7 @@ Crie um diretório `evidence/` ao lado do experimento quando precisar de outputs
 
 | Template | Uso | Localização canônica |
 |---|---|---|
-| [delivery/release-entry.md](delivery/release-entry.md) | Entrada no Release Trail | acrescentar no trail da sessão ativa em `prodops/artifacts/governance/trails/sessions/` |
+| [delivery/release-entry.md](delivery/release-entry.md) | Entrada no Release Trail | acrescentar no trail da sessão ativa em `prodops/artifacts/trails/sessions/` |
 | [delivery/pull-request-checklist.md](delivery/pull-request-checklist.md) | Checklist de PR antes do Finish | usado na revisão do Pull Request |
 
 ---
@@ -49,7 +49,7 @@ Crie um diretório `evidence/` ao lado do experimento quando precisar de outputs
 
 | Template | Uso | Localização canônica |
 |---|---|---|
-| [business-intents/intent.md](business-intents/intent.md) | Nova Intent | `prodops/artifacts/business/intents/<slug>.md` |
+| [business-intents/intent.md](business-intents/intent.md) | Nova Intent | `prodops/artifacts/business-intents/<slug>.md` |
 
 ---
 

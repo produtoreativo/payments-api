@@ -37,9 +37,9 @@ Quando invocado com argumento de step (`/diligence diligence-sync capture`), exe
 
 ## Inputs
 
-- OBC ativo: `prodops/artifacts/business/obcs/<obc-id>.md`
-- Iteration Plan: `prodops/artifacts/governance/plans/iteration-plan.md`
-- BDD Features: `prodops/artifacts/business/bdd/`
+- OBC ativo: `prodops/artifacts/obcs/<obc-id>.md`
+- Iteration Plan: `prodops/artifacts/plans/iteration-plan.md`
+- BDD Features: `prodops/artifacts/bdd/`
 - Riscos: `prodops/artifacts/risks/risks.md`
 - Schema de Work Item: `prodops/framework/execution-mapping/work-item-schema.md`
 - Matriz de execução: `prodops/framework/execution-mapping/matrix.md`

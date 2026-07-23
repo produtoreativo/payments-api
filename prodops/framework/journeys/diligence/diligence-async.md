@@ -17,7 +17,7 @@ Diligence Async produz:
 
 ### Scan
 
-Lê todos os OBCs ativos em `prodops/artifacts/business/obcs/` e compara o estado declarado com o estado nos backlogs externos e ferramentas. Identifica gaps:
+Lê todos os OBCs ativos em `prodops/artifacts/obcs/` e compara o estado declarado com o estado nos backlogs externos e ferramentas. Identifica gaps:
 
 - OBC committed sem Work Item correspondente
 - Item no Iteration Plan sem BDD Feature committed

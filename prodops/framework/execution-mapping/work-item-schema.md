@@ -44,7 +44,7 @@ Todo Work Item deve declarar explicitamente seus campos canônicos.
 | Campo | Tipo | Descrição | Exemplo |
 |---|---|---|---|
 | `evidence_required` | boolean | Se a operação deve produzir evidência | `true` |
-| `evidence_location` | string | Path onde a evidência será armazenada | `artifacts/business/obcs/payments-invoice-v2.md#evidências` |
+| `evidence_location` | string | Path onde a evidência será armazenada | `artifacts/obcs/payments-invoice-v2.md#evidências` |
 
 ---
 

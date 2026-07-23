@@ -14,18 +14,18 @@ Execute only the Promote step of the Diligence Sync flow.
 ### 1. Identificar posição atual na hierarquia
 
 Localizar o estado atual do OBC:
-- `prodops/artifacts/governance/plans/iteration-plan.md` (Iteration Plan)
+- `prodops/artifacts/plans/iteration-plan.md` (Iteration Plan)
 - `prodops/artifacts/product/backlogs/iteration-backlog.md` (Iteration Backlog)
 - `prodops/artifacts/product/backlogs/icebox-backlog.md` (Icebox)
 
 ### 2. Verificar pré-requisitos da transição alvo
 
 **Transição → Iteration Backlog:**
-- [ ] OBC committed em `prodops/artifacts/business/obcs/`
+- [ ] OBC committed em `prodops/artifacts/obcs/`
 
 **Transição → Iteration Plan:**
 - [ ] OBC committed
-- [ ] BDD Feature committed em `prodops/artifacts/business/bdd/`
+- [ ] BDD Feature committed em `prodops/artifacts/bdd/`
 - [ ] Riscos documentados em `prodops/artifacts/risks/risks.md`
 - [ ] Reliability Plan quando aplicável (movimento de dinheiro, integração externa, mudança de SLO, risco alto/crítico, mudança de persistência ou segurança)
 
@@ -43,8 +43,8 @@ Se algum pré-requisito está ausente:
 ### 4. Commit das atualizações
 
 ```bash
-git add prodops/artifacts/governance/plans/iteration-plan.md
-git add prodops/artifacts/business/obcs/<obc-id>.md
+git add prodops/artifacts/plans/iteration-plan.md
+git add prodops/artifacts/obcs/<obc-id>.md
 git commit -m "docs(diligence): promote <obc-id> to Iteration Plan"
 ```
 

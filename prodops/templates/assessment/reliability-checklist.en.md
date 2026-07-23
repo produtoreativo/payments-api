@@ -25,4 +25,4 @@ Use before promoting a capability from Upstream to Downstream, or before shippin
 
 - [ ] Pre-deploy test run recorded.
 - [ ] Post-deploy validation completed.
-- [ ] Entry added to the active session trail at `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`.
+- [ ] Entry added to the active session trail at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`.

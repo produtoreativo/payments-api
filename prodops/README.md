@@ -49,12 +49,12 @@ Este diretório é o **ProdOps Workspace** do produto `payments-api`. Ele combin
 
 ### Quero ver o estado atual do produto
 
-→ [artifacts/governance/plans/iteration-plan.md](artifacts/governance/plans/iteration-plan.md) — o que está comprometido para esta iteração\
+→ [artifacts/plans/iteration-plan.md](artifacts/plans/iteration-plan.md) — o que está comprometido para esta iteração\
 → [artifacts/product/backlogs/iteration-backlog.md](artifacts/product/backlogs/iteration-backlog.md) — backlog da iteração\
 → [artifacts/product/backlogs/icebox-backlog.md](artifacts/product/backlogs/icebox-backlog.md) — Discovery preparatória pendente\
-→ [artifacts/business/obcs/](artifacts/business/obcs/) — todos os Observable Business Contracts ativos\
-→ [artifacts/governance/trails/release-trail.md](artifacts/governance/trails/release-trail.md) — histórico de entregas\
-→ [artifacts/product/architecture/overview.md](artifacts/product/architecture/overview.md) — diagrama e inventário da arquitetura atual
+→ [artifacts/obcs/](artifacts/obcs/) — todos os Observable Business Contracts ativos\
+→ [artifacts/trails/release-trail.md](artifacts/trails/release-trail.md) — histórico de entregas\
+→ [artifacts/architecture/overview.md](artifacts/architecture/overview.md) — diagrama e inventário da arquitetura atual
 
 ### Quero entender a execução dos agentes
 

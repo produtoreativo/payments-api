@@ -34,16 +34,16 @@ skills:
 
 # Localizações canônicas dos artefatos (fonte: framework/canonical-paths.md)
 paths:
-  obcs: prodops/artifacts/business/obcs/
-  bdd: prodops/artifacts/business/bdd/
-  intents: prodops/artifacts/business/intents/
+  obcs: prodops/artifacts/obcs/
+  bdd: prodops/artifacts/bdd/
+  intents: prodops/artifacts/business-intents/
   product: prodops/artifacts/product/
-  iteration_plan: prodops/artifacts/governance/plans/iteration-plan.md
-  release_trail: prodops/artifacts/governance/trails/release-trail.md
+  iteration_plan: prodops/artifacts/plans/iteration-plan.md
+  release_trail: prodops/artifacts/trails/release-trail.md
   risks: prodops/artifacts/risks/risks.md
-  reliability_plans: prodops/artifacts/governance/plans/reliability/
-  event_storming: prodops/artifacts/product/event-storming/plan.json
-  architecture: prodops/artifacts/product/architecture/overview.md
+  reliability_plans: prodops/artifacts/plans/reliability/
+  event_storming: prodops/artifacts/event-storming/plan.json
+  architecture: prodops/artifacts/architecture/overview.md
     # guardrail: atualizar antes de fechar task quando houver novo módulo NestJS,
     # nova rota, dependência externa, tabela DynamoDB, tópico de evento ou fila SQS.
   experiments: prodops/artifacts/experiments/

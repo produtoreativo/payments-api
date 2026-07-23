@@ -110,4 +110,4 @@
 ## References
 
 - `prodops/artifacts/experiments/007-split-payment-model/experiment.md`
-- `prodops/artifacts/business/intents/split-payment.md`
+- `prodops/artifacts/business-intents/split-payment.md`

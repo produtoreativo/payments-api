@@ -269,8 +269,8 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 - Risks identified in `prodops/artifacts/risks/risks.md`
 
 **Criteria to enter the Iteration Plan (begin execution):**
-- Local OBC committed in `prodops/artifacts/business/obcs/`
-- BDD Feature committed in `prodops/artifacts/business/bdd/`
+- Local OBC committed in `prodops/artifacts/obcs/`
+- BDD Feature committed in `prodops/artifacts/bdd/`
 - Reliability Plan entry when applicable: money movement, external integration, SLO change, high/critical risk, persistence or security change
 
 **Canonical artifact:** `prodops/artifacts/product/backlogs/iteration-backlog.md`
@@ -308,7 +308,7 @@ An item can be in the BIB, associated with a Roadmap, and linked to a Platform R
 
 **Does not contain:** Prioritization. Refinement. Icebox items. Items without Committed Local OBC.
 
-**Canonical artifact:** `prodops/artifacts/governance/plans/iteration-plan.md`
+**Canonical artifact:** `prodops/artifacts/plans/iteration-plan.md`
 
 ---
 
@@ -382,8 +382,8 @@ Diligence is the journey responsible for keeping backlogs synchronized at all le
 
 - `prodops/artifacts/product/backlogs/tracking-list.md` — Product Tracking List
 - `prodops/artifacts/product/backlogs/icebox-backlog.md` — Icebox
-- `prodops/artifacts/business/obcs/` — Committed OBCs
+- `prodops/artifacts/obcs/` — Committed OBCs
 - `prodops/artifacts/product/backlogs/iteration-backlog.md` — Iteration Backlog
-- `prodops/artifacts/governance/plans/iteration-plan.md` — Iteration Plan
+- `prodops/artifacts/plans/iteration-plan.md` — Iteration Plan
 - `prodops/framework/glossary.en.md` — canonical definitions
 - `prodops/framework/journeys/diligence/README.en.md` — Diligence Journey

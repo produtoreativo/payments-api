@@ -21,7 +21,7 @@ Identificar a decisão ou evento que acionou o ciclo:
 
 ### 2. Localizar ou criar o OBC
 
-Se o OBC já existe em `prodops/artifacts/business/obcs/<obc-id>.md`:
+Se o OBC já existe em `prodops/artifacts/obcs/<obc-id>.md`:
 - Ler o arquivo completo
 - Atualizar o campo de status e adicionar entrada no histórico de decisões
 
@@ -41,7 +41,7 @@ No corpo do OBC, registrar:
 
 Para OBC:
 ```bash
-git add prodops/artifacts/business/obcs/<obc-id>.md
+git add prodops/artifacts/obcs/<obc-id>.md
 git commit -m "docs(diligence): capture OBC state from <trigger>"
 ```
 

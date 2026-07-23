@@ -181,7 +181,7 @@ Each repository tracks its own work via Work Items. The link between repositorie
 ```
 Markdown > GitHub > External tools
 
-prodops/artifacts/business/obcs/payments-invoice-v2.md
+prodops/artifacts/obcs/payments-invoice-v2.md
   = source of truth for the OBC's CONTENT and STATE
 
 GitHub Issue #234 "Refine OBC — BDD section incomplete"

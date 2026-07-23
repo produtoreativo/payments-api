@@ -231,4 +231,4 @@ As views canônicas são criadas automaticamente pelo step `reconcile` da capabi
 
 → [Work Item Schema](execution-mapping/work-item-schema.md) — campos, enums e título canônico
 → [Workspace Reconciliation capability](journeys/diligence/workspace-reconciliation.md)
-→ [GitHub Sync Manifest](../artifacts/governance/github-sync-manifest.md)
+→ [GitHub Sync Manifest](../artifacts/trails/github-sync-manifest.md)

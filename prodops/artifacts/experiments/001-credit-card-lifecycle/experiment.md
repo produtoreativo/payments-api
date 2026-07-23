@@ -957,8 +957,8 @@ Lista os artefatos de produto gerados ou promovidos por este experimento.
 
 | Tipo | Artefato | Situação |
 |---|---|---|
-| OBC | `prodops/artifacts/business/obcs/credit-card-authorization-confirmation.md` | ✅ Downstream |
-| BDD Feature | `prodops/artifacts/business/bdd/credit-card-payment.feature` | ✅ Downstream (hosted slice) |
+| OBC | `prodops/artifacts/obcs/credit-card-authorization-confirmation.md` | ✅ Downstream |
+| BDD Feature | `prodops/artifacts/bdd/credit-card-payment.feature` | ✅ Downstream (hosted slice) |
 
 **Promovido para Downstream:** Sim — 2026-07-07
 **Slice:** Hosted card entry apenas. Tokenized, saved-card e new-card permanecem Upstream pendentes de decisões de Security e Product.

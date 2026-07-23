@@ -98,7 +98,7 @@ flowchart TD
 
 **O que é produzido:**
 - Business Signal Issue (GitHub: Portfolio GitHub Project)
-- Documento de Business Intent em `prodops/artifacts/business/intents/<slug>.md`
+- Documento de Business Intent em `prodops/artifacts/business-intents/<slug>.md`
 - Origin Stream declarado
 - Hipóteses e perguntas em aberto listadas
 - Sugestão de modo de execução (Upstream ou Downstream)
@@ -154,7 +154,7 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 **O que acontece:** Portfolio PM e Tech Leads dos produtos identificam as responsabilidades de cada produto, os repositórios envolvidos e os bounded contexts. O Global OBC é decomposto em Local OBCs especializados. Cada Local OBC referencia o Global OBC e contém apenas o contrato de responsabilidade daquele produto.
 
 **O que é produzido:**
-- Local OBC Draft para cada produto (em `prodops/artifacts/business/obcs/<slug>.md`)
+- Local OBC Draft para cada produto (em `prodops/artifacts/obcs/<slug>.md`)
 - Tabela de rastreabilidade atualizada no Global OBC
 - Itens criados nos Product Backlogs dos produtos envolvidos
 
@@ -188,13 +188,13 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 **O que acontece:** O Local OBC Draft é refinado pela Exploration (Discovery no Icebox) e pela Assessment. Na Assessment Review, PM e Tech Lead revisam o conjunto; quando aprovado, o Local OBC atinge o estado Committed e a BDD Feature é promovida para os diretórios committed. Sem esse conjunto, não há execução Downstream.
 
 **O que é produzido:**
-- Local OBC committed em `prodops/artifacts/business/obcs/<slug>.md`
-- BDD Feature committed em `prodops/artifacts/business/bdd/<slug>.feature`
+- Local OBC committed em `prodops/artifacts/obcs/<slug>.md`
+- BDD Feature committed em `prodops/artifacts/bdd/<slug>.feature`
 
 **Quando avançar:** Local OBC committed, BDD Feature committed, ambos revisados e aprovados.
 
 → [Definição completa do OBC](obc.md)
-→ [Artefatos OBC](../artifacts/business/obcs/)
+→ [Artefatos OBC](../artifacts/obcs/)
 
 ---
 
@@ -205,12 +205,12 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 **O que acontece:** Os riscos identificados são transformados em um plano de confiabilidade. SLOs, ações de mitigação, critérios de rollback e pontos de falha são documentados explicitamente. Assessment corre em paralelo às demais jornadas.
 
 **O que é produzido:**
-- Entrada no Reliability Plan em `prodops/artifacts/governance/plans/reliability/`
+- Entrada no Reliability Plan em `prodops/artifacts/plans/reliability/`
 - Riscos atualizados em `prodops/artifacts/risks/risks.md`
 
 **Quando avançar:** Reliability Plan atualizado e Assessment Review concluída para o item.
 
-→ [Reliability Plans](../artifacts/governance/plans/reliability/)
+→ [Reliability Plans](../artifacts/plans/reliability/)
 
 ---
 
@@ -221,12 +221,12 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 **O que acontece:** O conjunto aprovado — Local OBC Committed, BDD Feature, riscos e Reliability Plan (quando houver movimentação financeira, integração externa, mudança de SLO, risco alto/crítico ou alteração de persistência ou segurança) — entra no Iteration Plan com status `Entrou`. Isso representa compromisso formal de entrega; não é, isoladamente, prova de readiness.
 
 **O que é produzido:**
-- Entrada no Iteration Plan em `prodops/artifacts/governance/plans/iteration-plan.md` com status `Entrou`
+- Entrada no Iteration Plan em `prodops/artifacts/plans/iteration-plan.md` com status `Entrou`
 - Atualização da Product Tracking List se o item estava lá
 
 **Quando avançar:** Todos os gates de readiness Downstream estão satisfeitos.
 
-→ [Iteration Plan](../artifacts/governance/plans/iteration-plan.md)
+→ [Iteration Plan](../artifacts/plans/iteration-plan.md)
 
 ---
 

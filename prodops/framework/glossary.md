@@ -390,7 +390,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Contém:** Referência de origem obrigatória — Global OBC no fluxo global ou Intent + Repository Tracking Item no fluxo local —, Produto/Repositório/Bounded Context, APIs e Eventos, BDD/Critérios de Aceite, Observabilidade, Regras de Confiabilidade, Contrato de Resposta, Dependências Técnicas, Evidências.
 
-**Localização:** `prodops/artifacts/business/obcs/<slug>.md`
+**Localização:** `prodops/artifacts/obcs/<slug>.md`
 
 **Ciclo de vida:** Draft → Refining → Committed → In Delivery → Operational → Archived.
 
@@ -494,13 +494,13 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ## BDD Feature
 
-**Definição:** Especificação Gherkin que descreve o comportamento esperado de uma Product Capability. Fica em `prodops/artifacts/business/bdd/` (comprometida) ou `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratória — dentro do diretório do experimento). Usada como insumo de TDD no Downstream.
+**Definição:** Especificação Gherkin que descreve o comportamento esperado de uma Product Capability. Fica em `prodops/artifacts/bdd/` (comprometida) ou `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratória — dentro do diretório do experimento). Usada como insumo de TDD no Downstream.
 
 ---
 
 ## Reliability Plan
 
-**Definição:** Produto da jornada transversal de Assessment que define riscos, SLOs e ações de mitigação para um item comprometido. Fica em `prodops/artifacts/governance/plans/reliability/`.
+**Definição:** Produto da jornada transversal de Assessment que define riscos, SLOs e ações de mitigação para um item comprometido. Fica em `prodops/artifacts/plans/reliability/`.
 
 **Obrigatoriedade:** Condicional e verificável. É gate de Delivery quando houver movimentação financeira, integração externa, mudança de SLO, risco alto/crítico ou alteração de persistência ou segurança. Fora desses gatilhos é opcional.
 
@@ -602,7 +602,7 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ## Iteration Plan
 
-**Definição:** Registro da execução de Delivery de uma iteração. Não é um backlog de planejamento — representa exclusivamente a execução em andamento. Contém itens do Iteration Backlog, estratégia de execução, jornadas CI Sync e CI Async, evidências e critérios de saída. Artefato: `prodops/artifacts/governance/plans/iteration-plan.md`.
+**Definição:** Registro da execução de Delivery de uma iteração. Não é um backlog de planejamento — representa exclusivamente a execução em andamento. Contém itens do Iteration Backlog, estratégia de execução, jornadas CI Sync e CI Async, evidências e critérios de saída. Artefato: `prodops/artifacts/plans/iteration-plan.md`.
 
 **Pergunta:** O que está sendo executado nesta iteração?
 
@@ -780,7 +780,7 @@ Ver [`prodops/framework/execution-model/downstream.md`](execution-model/downstre
 
 ## Release Trail
 
-**Definição:** O log append-only de evidências do Downstream. Cada sessão de agente produz seu próprio arquivo em `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`. Ver modelo em [`artifacts/governance/trails/release-trail.md`](../artifacts/governance/trails/release-trail.md).
+**Definição:** O log append-only de evidências do Downstream. Cada sessão de agente produz seu próprio arquivo em `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`. Ver modelo em [`artifacts/trails/release-trail.md`](../artifacts/trails/release-trail.md).
 
 ---
 

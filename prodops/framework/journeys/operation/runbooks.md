@@ -3,7 +3,7 @@
 Procedimentos operacionais para suporte à release de Payments API.
 
 Os cenários cobertos aqui foram identificados no pré-mortem da release:
-[`prodops/artifacts/governance/plans/reliability/premortem.md`](../../../artifacts/governance/plans/reliability/premortem.md)
+[`prodops/artifacts/plans/reliability/premortem.md`](../../../artifacts/plans/reliability/premortem.md)
 
 Para cada runbook: diagnóstico → contenção imediata → resolução → verificação.
 

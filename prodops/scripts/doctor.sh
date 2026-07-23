@@ -29,14 +29,36 @@ check_path() {
 }
 
 check_path "prodops/framework/canonical-paths.md"
-check_path "prodops/artifacts/product"
-check_path "prodops/artifacts/business/bdd"
-check_path "prodops/artifacts/business/obcs"
-check_path "prodops/artifacts/governance/plans"
-check_path "prodops/artifacts/governance/trails/release-trail.md"
+
+# ── Artifact directories — type-based layout (post-reorganization) ────────────
+check_path "prodops/artifacts/obcs"
+check_path "prodops/artifacts/bdd"
+check_path "prodops/artifacts/business-intents"
+check_path "prodops/artifacts/architecture"
+check_path "prodops/artifacts/event-storming"
+check_path "prodops/artifacts/plans"
+check_path "prodops/artifacts/plans/reliability"
+check_path "prodops/artifacts/trails"
+check_path "prodops/artifacts/trails/release-trail.md"
+check_path "prodops/artifacts/evidence"
 check_path "prodops/artifacts/experiments"
 check_path "prodops/artifacts/risks/risks.md"
-check_path "prodops/artifacts/governance/plans/reliability"
+check_path "prodops/artifacts/product"
+
+# ── Old category containers must be absent ────────────────────────────────────
+if [[ -e "prodops/artifacts/business" ]]; then
+  fail "prodops/artifacts/business/ still exists — should be removed after reorganization"
+else
+  pass "prodops/artifacts/business/ correctly removed"
+fi
+
+if [[ -e "prodops/artifacts/governance" ]]; then
+  fail "prodops/artifacts/governance/ still exists — should be removed after reorganization"
+else
+  pass "prodops/artifacts/governance/ correctly removed"
+fi
+
+# ── Framework structure ────────────────────────────────────────────────────────
 check_path "prodops/framework/journeys"
 check_path "prodops/framework/execution-model"
 check_path "prodops/framework/journeys/operation"
@@ -60,7 +82,7 @@ fi
 
 # Verify key committed OBC artifacts exist for items with Entrou status
 for obc in api-token-validation create-invoice-boleto webhook-configuration credit-card-authorization-confirmation; do
-  check_path "prodops/artifacts/business/obcs/${obc}.md"
+  check_path "prodops/artifacts/obcs/${obc}.md"
 done
 
 while IFS= read -r experiment_dir; do
@@ -81,7 +103,7 @@ done < <(find prodops/artifacts/experiments -mindepth 1 -maxdepth 1 -type d | so
 #   journeys/assessment/opportunities.md → artifacts/risks/opportunities.md
 # (assessment/reliability-plans and assessment/event-storming are already
 #  caught by the existing pattern prefixes.)
-legacy_pattern='prodops/(upstream|product/|downstream/release-trail\.md|assessment/reliability-plan|assessment/reliability-plans|assessment/iteration-plans|assessment/event-storming|assessment/architecture|journeys/|execution-model/|skills/payments-api-local-testing/)|prodops/operation/|delivery/flows/|journeys/discovery/experiments/|journeys/assessment/risks\.md|journeys/assessment/opportunities\.md'
+legacy_pattern='prodops/(upstream|product/|downstream/release-trail\.md|assessment/reliability-plan|assessment/reliability-plans|assessment/iteration-plans|assessment/event-storming|assessment/architecture|journeys/|execution-model/|skills/payments-api-local-testing/)|prodops/operation/|delivery/flows/|journeys/discovery/experiments/|journeys/assessment/risks\.md|journeys/assessment/opportunities\.md|artifacts/business/(obcs|bdd|intents)|artifacts/governance/(plans|trails|evidence)|artifacts/product/(architecture|event-storming)'
 
 legacy_targets=(
   AGENTS.md
@@ -91,7 +113,7 @@ legacy_targets=(
   prodops/framework/journeys
   prodops/skills
   prodops/templates
-  prodops/artifacts/business/intents
+  prodops/artifacts/business-intents
 )
 
 # Repo-wide coverage: agent/tool instruction dirs and docs.

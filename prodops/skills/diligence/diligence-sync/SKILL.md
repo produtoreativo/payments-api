@@ -26,7 +26,7 @@ Para executar um step isolado: `/diligence diligence-sync <step> <obc-id>`.
 
 Concluído quando **todos** os itens abaixo são verdadeiros:
 
-- OBC existe em `prodops/artifacts/business/obcs/<obc-id>.md` com estado atualizado
+- OBC existe em `prodops/artifacts/obcs/<obc-id>.md` com estado atualizado
 - Work Item existe no backlog externo referenciando o OBC
 - Work Item está na posição correta da hierarquia (ou bloqueio registrado)
 - Se OBC em Operational: Work Item fechado

@@ -17,13 +17,13 @@ locations and registering the capability in the Iteration Plan.
    recommendation `Promover` or `Promover com restrição`.
 2. Move the BDD Feature:
    - From: `prodops/artifacts/experiments/<NNN-slug>/features/<slug>.feature`
-   - To: `prodops/artifacts/business/bdd/<slug>.feature`
+   - To: `prodops/artifacts/bdd/<slug>.feature`
 3. Move the OBC:
    - From: `prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md`
-   - To: `prodops/artifacts/business/obcs/<slug>.md`
+   - To: `prodops/artifacts/obcs/<slug>.md`
    - Remove any "Upstream draft only" marking from the file.
 4. Add an entry to the Iteration Plan at
-   `prodops/artifacts/governance/plans/iteration-plan.md` with decision status `In`
+   `prodops/artifacts/plans/iteration-plan.md` with decision status `In`
    in the main plan table — not merely in "Identified Iteration Backlog".
    This satisfies the Downstream pre-condition that requires status `In`
    before Bootstrap can begin.
@@ -38,8 +38,8 @@ locations and registering the capability in the Iteration Plan.
 
 ## Post-conditions
 
-- BDD Feature is in `prodops/artifacts/business/bdd/`.
-- OBC is in `prodops/artifacts/business/obcs/` with no draft marking.
+- BDD Feature is in `prodops/artifacts/bdd/`.
+- OBC is in `prodops/artifacts/obcs/` with no draft marking.
 - Iteration Plan has the capability entry.
 - Both trails are updated.
 

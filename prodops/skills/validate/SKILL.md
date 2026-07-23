@@ -11,8 +11,8 @@ Use this skill to prove release readiness with evidence.
 
 - `AGENTS.md`
 - Relevant OBCs under `prodops/`
-- Relevant BDD Features in `prodops/artifacts/business/bdd/` (committed) or `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratory)
-- `prodops/artifacts/governance/plans/reliability/`
+- Relevant BDD Features in `prodops/artifacts/bdd/` (committed) or `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratory)
+- `prodops/artifacts/plans/reliability/`
 - `prodops/framework/journeys/delivery/phases/finish/quality-gates.md`
 
 ## Flow

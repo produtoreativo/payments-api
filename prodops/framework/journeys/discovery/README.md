@@ -299,8 +299,8 @@ A decisão de promover é do Product Manager + Tech Lead responsáveis pela capa
 Antes de promover, confirmar que:
 
 1. O Decision Package do experimento tem recomendação clara (`Promover` ou `Promover com restrição`).
-2. O comportamento esperado está descrito em um BDD Feature em `prodops/artifacts/experiments/<NNN-slug>/features/` pronto para ser movido para `prodops/artifacts/business/bdd/`.
-3. O OBC draft em `prodops/artifacts/experiments/<NNN-slug>/obcs/` tem critérios mensuráveis e pode ser movido para `prodops/artifacts/business/obcs/`.
+2. O comportamento esperado está descrito em um BDD Feature em `prodops/artifacts/experiments/<NNN-slug>/features/` pronto para ser movido para `prodops/artifacts/bdd/`.
+3. O OBC draft em `prodops/artifacts/experiments/<NNN-slug>/obcs/` tem critérios mensuráveis e pode ser movido para `prodops/artifacts/obcs/`.
 4. O Reliability Plan foi atualizado com os riscos e mitigation actions identificados no experimento.
 5. A incerteza remanescente é aceitável para entrar em Downstream com compromisso de entrega.
 
@@ -309,15 +309,15 @@ Antes de promover, confirmar que:
 ```
 1. Mover BDD Feature:
    prodops/artifacts/experiments/<NNN-slug>/features/<slug>.feature
-   → prodops/artifacts/business/bdd/<slug>.feature
+   → prodops/artifacts/bdd/<slug>.feature
 
 2. Mover OBC:
    prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md
-   → prodops/artifacts/business/obcs/<slug>.md
+   → prodops/artifacts/obcs/<slug>.md
    (remover marcação de draft)
 
 3. Criar ou atualizar entrada no Iteration Plan:
-   prodops/artifacts/governance/plans/iteration-plan.md
+   prodops/artifacts/plans/iteration-plan.md
    (adicionar com decisão `Entrou` na tabela "Iteration Plan recomendado" —
    não apenas em "Iteration Backlog identificado", pois esta seção não satisfaz
    a pré-condição formal do Downstream)
@@ -338,7 +338,7 @@ Antes de promover, confirmar que:
 
 - Mover código para produção sem mover os artefatos ProdOps.
 - Criar um OBC committed sem BDD Feature correspondente.
-- Iniciar implementação Downstream antes de o OBC estar em `prodops/artifacts/business/obcs/`.
+- Iniciar implementação Downstream antes de o OBC estar em `prodops/artifacts/obcs/`.
 - Promover com recomendação `Não promover` ou `Requer outro experimento` no Decision Package.
 
 ---

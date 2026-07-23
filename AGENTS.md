@@ -29,11 +29,11 @@ manifest e nos artefatos do card — **não pré-leia a documentação do framew
   registrar em Decision Trail (`prodops/templates/assessment/decision-trail.md`).
 - Commits seguem Conventional Commits (tipos e limite de summary: no manifest).
 - Toda entrega Downstream relevante gera append no release trail
-  (`prodops/artifacts/governance/trails/release-trail.md`).
+  (`prodops/artifacts/trails/release-trail.md`).
 
 ## Arquitetura
 
-Diagrama canônico: `prodops/artifacts/product/architecture/overview.md`
+Diagrama canônico: `prodops/artifacts/architecture/overview.md`
 
 **Atualizar antes de fechar o task quando houver:** novo módulo NestJS, nova
 rota ou grupo de rotas, nova dependência externa, novo DynamoDB table ou índice,

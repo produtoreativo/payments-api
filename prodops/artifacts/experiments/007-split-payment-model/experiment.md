@@ -7,7 +7,7 @@
 - [x] Completed
 - [ ] Cancelled
 
-**Business Intent:** [`prodops/artifacts/business/intents/split-payment.md`](../../business/intents/split-payment.md)
+**Business Intent:** [`prodops/artifacts/business-intents/split-payment.md`](../../business-intents/split-payment.md)
 
 ---
 
@@ -315,11 +315,11 @@ Pagamentos simples continuam via `POST /v1/invoices`. Nenhum campo obrigatório 
 
 # Artifacts Updated
 
-- [x] Business Intent: `prodops/artifacts/business/intents/split-payment.md` — perguntas respondidas
+- [x] Business Intent: `prodops/artifacts/business-intents/split-payment.md` — perguntas respondidas
 - [x] Tracking List: `prodops/artifacts/product/tracking-list.md` — novos itens de produto
 - [x] OBC candidato: `prodops/artifacts/experiments/007-split-payment-model/obcs/payment-composition.md` — criado
 - [ ] BDD Feature — aguarda decisão sobre política de falha parcial
-- [ ] Event Storming — atualizar `prodops/artifacts/product/event-storming/` com novos eventos
+- [ ] Event Storming — atualizar `prodops/artifacts/event-storming/` com novos eventos
 
 ---
 
@@ -421,8 +421,8 @@ Lista os artefatos de produto gerados ou promovidos por este experimento.
 | Tipo | Artefato | Situação |
 |---|---|---|
 | OBC draft | `prodops/artifacts/experiments/007-split-payment-model/obcs/payment-composition.md` | Draft — aguarda decisão de produto |
-| BDD Feature | `prodops/artifacts/business/bdd/payment-composition.feature` | A criar após política de falha parcial definida |
-| Business Intent | `prodops/artifacts/business/intents/split-payment.md` | Criada — aguarda Downstream |
+| BDD Feature | `prodops/artifacts/bdd/payment-composition.feature` | A criar após política de falha parcial definida |
+| Business Intent | `prodops/artifacts/business-intents/split-payment.md` | Criada — aguarda Downstream |
 
 **Promovido para Downstream:** Não — aguarda decisão de produto sobre política de falha parcial.
 **Recomendação:** Política B — manter métodos confirmados, solicitar nova tentativa para o método falho.

@@ -11,9 +11,9 @@ Execute only the TDD cycle of the Hack flow.
 
 Read before starting:
 
-- Relevant BDD Feature in `prodops/artifacts/business/bdd/` (committed) or
+- Relevant BDD Feature in `prodops/artifacts/bdd/` (committed) or
   `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratory)
-- Relevant OBC in `prodops/artifacts/business/obcs/` or experiment directory
+- Relevant OBC in `prodops/artifacts/obcs/` or experiment directory
 - The module being changed and its existing tests
 - Direct imports and shared contracts required to understand the change
 
@@ -62,19 +62,19 @@ exit gates. The full checklist is in
    [`../../../../framework/journeys/delivery/phases/finish/quality-gates.md`](../../../../framework/journeys/delivery/phases/finish/quality-gates.md).
 5. **Event Storming** — if the change adds, removes, or renames a domain event
    (`eventEmitter.emit()` or `@OnEvent()`), update
-   `prodops/artifacts/product/event-storming/plan.json`:
+   `prodops/artifacts/event-storming/plan.json`:
    - add both success and `_exception` variants to `customEvents`;
    - add the event to relevant flow bands;
    - add an `sloSuggestions` entry if on the critical path;
    - update `assumptions[last]` with today's date and a change summary.
-   Use `prodops/artifacts/product/event-storming/plan-model.json` as the format reference.
+   Use `prodops/artifacts/event-storming/plan-model.json` as the format reference.
 6. **Architecture** — if the change is structural (new module, route, external
    dependency, table, or event topic), update
-   `prodops/artifacts/product/architecture/overview.md`:
+   `prodops/artifacts/architecture/overview.md`:
    - edit the Mermaid diagram;
    - add a row to the History table with today's date and a one-line description.
 
-7. **Release Trail** — append evidence to the active session trail (`prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`):
+7. **Release Trail** — append evidence to the active session trail (`prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`):
 
    - red test output (or reason TDD was not applicable);
    - green test output;

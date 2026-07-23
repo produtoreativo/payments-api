@@ -21,8 +21,8 @@ Until CI Async automation is complete, `/downstream` without a scope defaults to
 
 Before executing either cycle, evaluate the capability against all current Downstream prerequisites:
 
-1. OBC committed in `prodops/artifacts/business/obcs/`.
-2. BDD Feature committed in `prodops/artifacts/business/bdd/`.
+1. OBC committed in `prodops/artifacts/obcs/`.
+2. BDD Feature committed in `prodops/artifacts/bdd/`.
 3. Risks documented in `prodops/artifacts/risks/risks.md`.
 4. Item committed in the Iteration Plan with status `Entrou`.
 5. Reliability Plan produced by Assessment when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change.

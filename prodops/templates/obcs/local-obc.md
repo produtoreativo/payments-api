@@ -1,7 +1,7 @@
 # Local OBC - <Nome da Capability>
 
 <!-- Renomeie este arquivo para o slug da capability: ex. split-payment-api.md -->
-<!-- Mova para prodops/artifacts/business/obcs/<slug>.md ao promover para Committed -->
+<!-- Mova para prodops/artifacts/obcs/<slug>.md ao promover para Committed -->
 <!-- Definição completa do formato: prodops/framework/obc.md -->
 <!-- Owner: Product Manager + Tech Lead do produto -->
 
@@ -11,7 +11,7 @@
      Estados possíveis: Draft | Refining | Committed | In Delivery | Operational | Archived
      Localização por estado:
        Draft/Refining: prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md
-       Committed+:     prodops/artifacts/business/obcs/<slug>.md -->
+       Committed+:     prodops/artifacts/obcs/<slug>.md -->
 
 Draft. Localizado em `prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md`.
 
@@ -61,7 +61,7 @@ Draft. Localizado em `prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md`.
 - [ ] <Critério de aceite 1: comportamento esperado verificável.>
 - [ ] <Critério de aceite 2: comportamento em falha esperado.>
 
-**BDD Feature:** `prodops/artifacts/business/bdd/<slug>.feature` *(quando committed)*
+**BDD Feature:** `prodops/artifacts/bdd/<slug>.feature` *(quando committed)*
 
 ## Eventos Observáveis
 
@@ -111,6 +111,6 @@ Draft. Localizado em `prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md`.
 <!-- Preenchido durante e após Delivery.
      Registre links para evidências de implementação e operação. -->
 
-- Release Trail: `prodops/artifacts/governance/trails/sessions/<data>-<session-id>.md`
+- Release Trail: `prodops/artifacts/trails/sessions/<data>-<session-id>.md`
 - PR: *(link para o PR de implementação)*
 - Métricas em produção: *(link para dashboard de observabilidade)*

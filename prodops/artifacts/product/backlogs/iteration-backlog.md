@@ -5,7 +5,7 @@
 > Itens aqui podem entrar em Delivery assim que priorizados. Para entrar no Iteration Plan, precisam de OBC committed + BDD Feature committed.
 >
 > → [Hierarquia de backlogs](../../../framework/backlogs.md)
-> → [Escopo de entrega aprovado](../../governance/plans/iteration-plan.md) — para ver o que entrou/saiu/foi adiado
+> → [Escopo de entrega aprovado](../../plans/iteration-plan.md) — para ver o que entrou/saiu/foi adiado
 
 ## Objetivo
 

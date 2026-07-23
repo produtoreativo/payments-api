@@ -1,6 +1,6 @@
 # Release Trail Entry
 
-Canonical location: append to the active session trail at `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`
+Canonical location: append to the active session trail at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`
 
 ---
 
@@ -16,11 +16,11 @@ Canonical location: append to the active session trail at `prodops/artifacts/gov
 
 ### Related OBC
 
-<!-- prodops/artifacts/business/obcs/<capability>.md -->
+<!-- prodops/artifacts/obcs/<capability>.md -->
 
 ### Related BDD
 
-<!-- prodops/artifacts/business/bdd/<capability>.feature -->
+<!-- prodops/artifacts/bdd/<capability>.feature -->
 
 ### Evidence
 

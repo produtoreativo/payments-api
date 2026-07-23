@@ -97,9 +97,9 @@ Objetivo: validar comportamento contra um provedor real (ex: Asaas sandbox) quan
 
 Uma capability promovida do Upstream para Downstream deve ter:
 
-1. BDD Feature movida de `prodops/artifacts/experiments/<NNN-slug>/features/` para `prodops/artifacts/business/bdd/`
-2. OBC movido de `prodops/artifacts/experiments/<NNN-slug>/obcs/` para `prodops/artifacts/business/obcs/`
-3. Entrada no Iteration Plan em `prodops/artifacts/governance/plans/iteration-plan.md`
+1. BDD Feature movida de `prodops/artifacts/experiments/<NNN-slug>/features/` para `prodops/artifacts/bdd/`
+2. OBC movido de `prodops/artifacts/experiments/<NNN-slug>/obcs/` para `prodops/artifacts/obcs/`
+3. Entrada no Iteration Plan em `prodops/artifacts/plans/iteration-plan.md`
 4. Reliability Plan atualizado em `prodops/framework/journeys/assessment/reliability-plans/`
 
 → [Processo completo de promoção](../journeys/discovery/README.md#processo-de-promoção-para-downstream)

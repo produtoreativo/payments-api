@@ -55,8 +55,8 @@ Quando um reparo não pode ser executado sem uma decisão de produto:
 ### 4. Commit por grupo de reparos
 
 ```bash
-git add prodops/artifacts/business/obcs/
-git add prodops/artifacts/governance/plans/
+git add prodops/artifacts/obcs/
+git add prodops/artifacts/plans/
 git commit -m "docs(diligence): repair divergences from async scan"
 ```
 

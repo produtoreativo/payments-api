@@ -292,7 +292,7 @@ Para cada label fora da Canonical Specification, reportar como nota. Nunca remov
 
 ### 7. Registrar resultado no sync manifest
 
-Atualizar `prodops/artifacts/governance/github-sync-manifest.md`:
+Atualizar `prodops/artifacts/trails/github-sync-manifest.md`:
 - Template: número, ID, campos presentes, is-template status
 - Projeto gerenciado: número, ID, campos e views presentes
 - Issues abertos referenciados por categoria

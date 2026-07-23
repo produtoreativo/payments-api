@@ -18,7 +18,7 @@ Execute only the Inspect step of the Workspace Reconciliation capability.
 ### 0. Ler o sync manifest e a Canonical Specification
 
 ```bash
-cat prodops/artifacts/governance/github-sync-manifest.md
+cat prodops/artifacts/trails/github-sync-manifest.md
 cat prodops/framework/github-workspace.md
 ```
 

@@ -67,16 +67,16 @@ Use esta tabela como fonte primária de navegação antes de ler ou escrever qua
 
 | Concern | Canonical path |
 |---|---|
-| Reliability Plans | `prodops/artifacts/governance/plans/reliability/` |
-| Reliability Plan — Objectives | `prodops/artifacts/governance/plans/reliability/objectives.md` |
-| Reliability Plan — Premortem | `prodops/artifacts/governance/plans/reliability/premortem.md` |
+| Reliability Plans | `prodops/artifacts/plans/reliability/` |
+| Reliability Plan — Objectives | `prodops/artifacts/plans/reliability/objectives.md` |
+| Reliability Plan — Premortem | `prodops/artifacts/plans/reliability/premortem.md` |
 | Setup: iteration-plan prompt | `prodops/framework/journeys/assessment/reliability-plans/setup/iteration-plan.prompt.md` |
 | Setup: reliability-plan prompt | `prodops/framework/journeys/assessment/reliability-plans/setup/reliability-plan.prompt.md` |
 | Riscos | `prodops/artifacts/risks/risks.md` |
 | Oportunidades | `prodops/artifacts/risks/opportunities.md` |
-| Event Storming | `prodops/artifacts/product/event-storming/` |
-| Architecture overview | `prodops/artifacts/product/architecture/overview.md` |
-| Decision Trail — arquitetura do produto | `prodops/artifacts/product/architecture/decision-trail.md` |
+| Event Storming | `prodops/artifacts/event-storming/` |
+| Architecture overview | `prodops/artifacts/architecture/overview.md` |
+| Decision Trail — arquitetura do produto | `prodops/artifacts/architecture/decision-trail.md` |
 
 ---
 
@@ -155,15 +155,15 @@ Use esta tabela como fonte primária de navegação antes de ler ou escrever qua
 | Icebox | `prodops/artifacts/product/backlogs/icebox-backlog.md` |
 | Product Tracking List | `prodops/artifacts/product/backlogs/tracking-list.md` |
 | Iteration Backlog | `prodops/artifacts/product/backlogs/iteration-backlog.md` |
-| OBCs (committed) | `prodops/artifacts/business/obcs/` |
-| BDD Features (committed) | `prodops/artifacts/business/bdd/` |
-| Business Intents | `prodops/artifacts/business/intents/` |
-| Iteration Plan | `prodops/artifacts/governance/plans/iteration-plan.md` |
-| Architecture overview | `prodops/artifacts/product/architecture/overview.md` |
-| Decision Trail — arquitetura | `prodops/artifacts/product/architecture/decision-trail.md` |
-| Release Trail (model docs) | `prodops/artifacts/governance/trails/release-trail.md` |
-| Release Trail (active session) | `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md` |
-| Evidence (committed) | `prodops/artifacts/governance/evidence/` |
+| OBCs (committed) | `prodops/artifacts/obcs/` |
+| BDD Features (committed) | `prodops/artifacts/bdd/` |
+| Business Intents | `prodops/artifacts/business-intents/` |
+| Iteration Plan | `prodops/artifacts/plans/iteration-plan.md` |
+| Architecture overview | `prodops/artifacts/architecture/overview.md` |
+| Decision Trail — arquitetura | `prodops/artifacts/architecture/decision-trail.md` |
+| Release Trail (model docs) | `prodops/artifacts/trails/release-trail.md` |
+| Release Trail (active session) | `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md` |
+| Evidence (committed) | `prodops/artifacts/evidence/` |
 
 ---
 
@@ -171,8 +171,8 @@ Use esta tabela como fonte primária de navegação antes de ler ou escrever qua
 
 | Concern | Canonical path |
 |---|---|
-| Visão geral das Business Intents | `prodops/artifacts/business/intents/README.md` |
-| Business Intents individuais | `prodops/artifacts/business/intents/<slug>.md` |
+| Visão geral das Business Intents | `prodops/artifacts/business-intents/README.md` |
+| Business Intents individuais | `prodops/artifacts/business-intents/<slug>.md` |
 | Template de Business Intent | `prodops/templates/business-intents/intent.md` |
 
 ---
@@ -248,10 +248,10 @@ Estes caminhos podem aparecer em entradas históricas migradas. **Não usar para
 |---|---|
 | `prodops/upstream/` | `prodops/framework/journeys/discovery/` |
 | `prodops/product/` | `prodops/artifacts/product/` |
-| `prodops/assessment/` | `prodops/framework/journeys/assessment/` ou `prodops/artifacts/governance/plans/` dependendo do artefato |
-| `prodops/assessment/reliability-plan/` | `prodops/artifacts/governance/plans/reliability/` |
-| `prodops/assessment/reliability-plans/` | `prodops/artifacts/governance/plans/reliability/` |
-| `prodops/downstream/release-trail.md` | `prodops/artifacts/governance/trails/release-trail.md` |
+| `prodops/assessment/` | `prodops/framework/journeys/assessment/` ou `prodops/artifacts/plans/` dependendo do artefato |
+| `prodops/assessment/reliability-plan/` | `prodops/artifacts/plans/reliability/` |
+| `prodops/assessment/reliability-plans/` | `prodops/artifacts/plans/reliability/` |
+| `prodops/downstream/release-trail.md` | `prodops/artifacts/trails/release-trail.md` |
 | `prodops/current-state/` | `prodops/artifacts/` (product/context, business/bdd, business/obcs) |
-| `prodops/current-state/features/` | `prodops/artifacts/business/bdd/` |
+| `prodops/current-state/features/` | `prodops/artifacts/bdd/` |
 | root `templates/upstream-*.md` | `prodops/templates/discovery/` |

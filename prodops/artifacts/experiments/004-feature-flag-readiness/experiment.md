@@ -205,7 +205,7 @@ Lista os artefatos de produto gerados ou promovidos por este experimento.
 | Tipo | Artefato | Situação |
 |---|---|---|
 | OBC | — | — |
-| BDD Feature | `checkout-gateway-feature-flag.feature` | Removida — sem sucessor em `prodops/artifacts/business/bdd/` |
+| BDD Feature | `checkout-gateway-feature-flag.feature` | Removida — sem sucessor em `prodops/artifacts/bdd/` |
 
 **Promovido para Downstream:** Não — capability pertence ao repositório do Checkout.
 **Nota:** Feature Flag bloqueada por bug no Checkout. Registrada como dependência externa e risco de Release no Reliability Plan.

@@ -47,10 +47,10 @@ O Downstream possui três momentos explícitos:
 
 Antes de executar qualquer fase de Delivery, todos os requisitos abaixo devem estar satisfeitos:
 
-1. OBC em `prodops/artifacts/business/obcs/`
-2. BDD Feature em `prodops/artifacts/business/bdd/`
+1. OBC em `prodops/artifacts/obcs/`
+2. BDD Feature em `prodops/artifacts/bdd/`
 3. Riscos documentados em `prodops/artifacts/risks/risks.md`
-4. Entrada no Iteration Plan com status `Entrou` em `prodops/artifacts/governance/plans/iteration-plan.md`
+4. Entrada no Iteration Plan com status `Entrou` em `prodops/artifacts/plans/iteration-plan.md`
 
 5. Reliability Plan quando houver movimentação financeira, integração externa, mudança de SLO, risco alto/crítico ou alteração de persistência ou segurança
 
@@ -83,7 +83,7 @@ CI Async: Ship → Validate → Promote            (plataforma, pipelines, ambie
 
 ## Evidências
 
-Registrar evidências significativas de entrega no trail da sessão ativa em `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`.
+Registrar evidências significativas de entrega no trail da sessão ativa em `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`.
 
 ## O Downstream deve preservar
 

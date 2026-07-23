@@ -49,12 +49,12 @@ This directory is the **ProdOps Workspace** for the `payments-api` product. It c
 
 ### I want to see the current product state
 
-→ [artifacts/governance/plans/iteration-plan.md](artifacts/governance/plans/iteration-plan.md) — what is committed for this iteration\
+→ [artifacts/plans/iteration-plan.md](artifacts/plans/iteration-plan.md) — what is committed for this iteration\
 → [artifacts/product/backlogs/iteration-backlog.md](artifacts/product/backlogs/iteration-backlog.md) — iteration backlog\
 → [artifacts/product/backlogs/icebox-backlog.md](artifacts/product/backlogs/icebox-backlog.md) — pending preparatory Discovery\
-→ [artifacts/business/obcs/](artifacts/business/obcs/) — all active Observable Business Contracts\
-→ [artifacts/governance/trails/release-trail.md](artifacts/governance/trails/release-trail.md) — delivery history\
-→ [artifacts/product/architecture/overview.md](artifacts/product/architecture/overview.md) — current architecture diagram and inventory
+→ [artifacts/obcs/](artifacts/obcs/) — all active Observable Business Contracts\
+→ [artifacts/trails/release-trail.md](artifacts/trails/release-trail.md) — delivery history\
+→ [artifacts/architecture/overview.md](artifacts/architecture/overview.md) — current architecture diagram and inventory
 
 ### I want to understand how agents work
 

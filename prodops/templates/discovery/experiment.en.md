@@ -15,7 +15,7 @@ prodops/artifacts/experiments/NNN-short-slug/features/   ← BDD Features (creat
 prodops/artifacts/experiments/NNN-short-slug/obcs/       ← OBC drafts (created during the experiment)
 ```
 
-`features/` and `obcs/` are created as needed. Artifacts stay here until `move-to-downstream`, when they are moved to `prodops/artifacts/business/bdd/` and `prodops/artifacts/business/obcs/`.
+`features/` and `obcs/` are created as needed. Artifacts stay here until `move-to-downstream`, when they are moved to `prodops/artifacts/bdd/` and `prodops/artifacts/obcs/`.
 
 Do not create experiment files directly in `prodops/artifacts/experiments/` — always inside a subdirectory with a slug.
 
@@ -234,10 +234,10 @@ Examples:
 - Service Deck (`prodops/artifacts/product/context/service-decks/`)
 - Repository Tracking List (`prodops/artifacts/product/backlogs/tracking-list.md`)
 - Icebox (`prodops/artifacts/product/backlogs/icebox-backlog.md`)
-- Event Storming (`prodops/artifacts/product/event-storming/`)
-- Reliability Plan (`prodops/artifacts/governance/plans/reliability/`)
-- OBC (`prodops/artifacts/business/obcs/`)
-- BDD Features (`prodops/artifacts/business/bdd/`)
+- Event Storming (`prodops/artifacts/event-storming/`)
+- Reliability Plan (`prodops/artifacts/plans/reliability/`)
+- OBC (`prodops/artifacts/obcs/`)
+- BDD Features (`prodops/artifacts/bdd/`)
 
 ---
 

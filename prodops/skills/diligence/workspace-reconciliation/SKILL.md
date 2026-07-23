@@ -119,4 +119,4 @@ Concluído quando **todos** os itens abaixo são verdadeiros:
 
 → [Capability README](../../../framework/journeys/diligence/workspace-reconciliation.md)
 → [Canonical Specification](../../../framework/github-workspace.md)
-→ [GitHub Sync Manifest](../../../artifacts/governance/github-sync-manifest.md)
+→ [GitHub Sync Manifest](../../../artifacts/trails/github-sync-manifest.md)

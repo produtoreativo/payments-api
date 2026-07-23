@@ -7,7 +7,7 @@
 - [x] Completed
 - [ ] Cancelled
 
-**Business Intent:** [`prodops/artifacts/business/intents/split-payment.md`](../../business/intents/split-payment.md)
+**Business Intent:** [`prodops/artifacts/business-intents/split-payment.md`](../../business-intents/split-payment.md)
 
 ---
 
@@ -315,11 +315,11 @@ Simple payments continue via `POST /v1/invoices`. No mandatory field is removed 
 
 # Artifacts Updated
 
-- [x] Business Intent: `prodops/artifacts/business/intents/split-payment.md` — questions answered
+- [x] Business Intent: `prodops/artifacts/business-intents/split-payment.md` — questions answered
 - [x] Tracking List: `prodops/artifacts/product/tracking-list.md` — new product items
 - [x] Candidate OBC: `prodops/artifacts/experiments/007-split-payment-model/obcs/payment-composition.md` — created
 - [ ] BDD Feature — awaiting decision on partial failure policy
-- [ ] Event Storming — update `prodops/artifacts/product/event-storming/` with new events
+- [ ] Event Storming — update `prodops/artifacts/event-storming/` with new events
 
 ---
 

@@ -13,10 +13,10 @@ Identify or create a verifiable contract (OpenAPI, AsyncAPI, BDD Feature, schema
 Logs, errors, metrics, and traceability are part of the implementation, not add-ons added afterward. A feature is not done if its behavior cannot be observed in production.
 
 ## 5. Evidence-based decisions
-Every delivery decision — promote, revert, accept risk — must be backed by recorded evidence. See [release-trail](../artifacts/governance/trails/release-trail.md) and [operation/](journeys/operation/).
+Every delivery decision — promote, revert, accept risk — must be backed by recorded evidence. See [release-trail](../artifacts/trails/release-trail.md) and [operation/](journeys/operation/).
 
 ## 6. Reliability is a first-class concern
-Reliability objectives are defined before implementation, tracked via OBCs and SLOs, and validated before promotion. See [reliability-plans](../artifacts/governance/plans/reliability/).
+Reliability objectives are defined before implementation, tracked via OBCs and SLOs, and validated before promotion. See [reliability-plans](../artifacts/plans/reliability/).
 
 ## 7. No shortcuts in production code
 Production code must not contain test-only branches, environment-specific hacks, or hidden overrides that alter behavior in tests. Exception: `ASAAS_MOCK=true` is a designed behavior mode, not a test shortcut.

@@ -183,4 +183,4 @@ Used in specific profiles (especially `quality` and `ai_readiness`):
 → [Glossary](glossary.en.md)
 → [OBC → DORA Mapping](../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
 → [Operation Journey](journeys/operation/README.en.md)
-→ [Reliability Plans](../artifacts/governance/plans/reliability/README.en.md)
+→ [Reliability Plans](../artifacts/plans/reliability/README.en.md)

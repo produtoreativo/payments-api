@@ -28,11 +28,11 @@ Assessment can occur in both Upstream and Downstream.
 |---|---|
 | Risks | [../../../artifacts/risks/risks.md](../../../artifacts/risks/risks.md) |
 | Opportunities | [../../../artifacts/risks/opportunities.md](../../../artifacts/risks/opportunities.md) |
-| Reliability Plans | [../../../artifacts/governance/plans/reliability/](../../../artifacts/governance/plans/reliability/) |
-| Event Storming | [../../../artifacts/product/event-storming/](../../../artifacts/product/event-storming/) |
-| Architecture | [../../../artifacts/product/architecture/](../../../artifacts/product/architecture/) |
-| OBCs (reference) | [../../../artifacts/business/obcs/](../../../artifacts/business/obcs/) |
-| Iteration Plans (reference) | [../../../artifacts/governance/plans/](../../../artifacts/governance/plans/) |
+| Reliability Plans | [../../../artifacts/plans/reliability/](../../../artifacts/plans/reliability/) |
+| Event Storming | [../../../artifacts/event-storming/](../../../artifacts/event-storming/) |
+| Architecture | [../../../artifacts/architecture/](../../../artifacts/architecture/) |
+| OBCs (reference) | [../../../artifacts/obcs/](../../../artifacts/obcs/) |
+| Iteration Plans (reference) | [../../../artifacts/plans/](../../../artifacts/plans/) |
 
 ## Relationship With Other Journeys
 

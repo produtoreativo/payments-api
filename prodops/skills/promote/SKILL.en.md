@@ -10,8 +10,8 @@ Use this skill to move a release to the next stage or close it.
 ## Inputs
 
 - `AGENTS.md`
-- `prodops/artifacts/governance/plans/reliability/`
-- `prodops/artifacts/governance/trails/sessions/` (active session trail)
+- `prodops/artifacts/plans/reliability/`
+- `prodops/artifacts/trails/sessions/` (active session trail)
 - `prodops/framework/journeys/delivery/phases/finish/done-criteria.md`
 - `prodops/framework/journeys/operation/`
 

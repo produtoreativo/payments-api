@@ -22,8 +22,8 @@ Define, maintain, and verify contracts that describe the expected behavior of th
 
 ## Produced artifacts
 
-- BDD Feature in `prodops/artifacts/business/bdd/` (committed) or `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratory)
-- OBC in `prodops/artifacts/business/obcs/`
+- BDD Feature in `prodops/artifacts/bdd/` (committed) or `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratory)
+- OBC in `prodops/artifacts/obcs/`
 - Updated OpenAPI spec
 - Updated AsyncAPI spec
 

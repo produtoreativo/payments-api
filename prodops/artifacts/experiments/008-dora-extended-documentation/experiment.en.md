@@ -202,7 +202,7 @@ when the product needs a new improvement Intent.
 
 ## Layer 5 — Reliability Plan Template Update
 
-**File:** `prodops/artifacts/governance/plans/reliability/README.md` + `README.en.md`
+**File:** `prodops/artifacts/plans/reliability/README.md` + `README.en.md`
 
 **What to add:** section "DORA as a reliability reference" indicating:
 
@@ -252,7 +252,7 @@ when the product needs a new improvement Intent.
 
 5. Layer 5 — Reliability Plan template
    (connects risk assessment to the metrics)
-   └── artifacts/governance/plans/reliability/README.md + .en.md
+   └── artifacts/plans/reliability/README.md + .en.md
 
 6. Layer 6 — Product Deck
    (positions the product on the maturity scale)
@@ -291,7 +291,7 @@ Artifacts to be produced in Layers 1–6 (not yet modified):
 - `prodops/framework/dora-metrics.md` + `.en.md`
 - `prodops/framework/glossary.md` + `.en.md`
 - `prodops/journeys/operation/README.md` + `.en.md`
-- `prodops/artifacts/governance/plans/reliability/README.md` + `.en.md`
+- `prodops/artifacts/plans/reliability/README.md` + `.en.md`
 - `prodops/artifacts/product/product-deck.md` + `.en.md`
 - `evidence/obc-dora-mapping.md`
 

@@ -48,7 +48,7 @@ Use Upstream when the work is:
 Before starting, read:
 
 - `prodops/artifacts/product/`
-- `prodops/artifacts/governance/plans/reliability/`
+- `prodops/artifacts/plans/reliability/`
 - `prodops/framework/journeys/discovery/README.md`
 - `prodops/framework/journeys/discovery/experiments.md`
 - `prodops/templates/discovery/experiment.md`
@@ -129,10 +129,10 @@ Possible targets:
 - `prodops/artifacts/product/backlogs/tracking-list.md`
 - `prodops/artifacts/experiments/<NNN-slug>/features/` (BDD Features — stay here until move-to-downstream)
 - `prodops/artifacts/experiments/<NNN-slug>/obcs/` (OBC drafts — stay here until move-to-downstream)
-- `prodops/artifacts/product/event-storming/`
-- `prodops/artifacts/governance/plans/reliability/`
-- `prodops/artifacts/business/obcs/` (committed OBCs — only after move-to-downstream)
-- `prodops/artifacts/business/bdd/` (committed BDD Features — only after move-to-downstream)
+- `prodops/artifacts/event-storming/`
+- `prodops/artifacts/plans/reliability/`
+- `prodops/artifacts/obcs/` (committed OBCs — only after move-to-downstream)
+- `prodops/artifacts/bdd/` (committed BDD Features — only after move-to-downstream)
 - `prodops/framework/journeys/discovery/learnings.md`
 - `prodops/artifacts/experiments/<NNN-slug>/upstream-trail.md`
 - `prodops/framework/journeys/discovery/upstream-trail.md` only for global milestones, promotions, migrations, or repository-wide Upstream process changes

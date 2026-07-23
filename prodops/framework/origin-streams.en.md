@@ -194,4 +194,4 @@ A Business Signal with Technology Origin Stream generates a Business Intent when
 → [Glossary: canonical definitions](glossary.en.md)
 → [Operating model: Origin layer at the top of the hierarchy](operating-model.en.md)
 → [Intent templates](../templates/business-intents/intent.en.md)
-→ [Active Intents](../artifacts/business/intents/README.en.md)
+→ [Active Intents](../artifacts/business-intents/README.en.md)

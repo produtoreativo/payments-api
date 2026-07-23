@@ -371,7 +371,7 @@ Lista os artefatos de produto gerados ou promovidos por este experimento.
 
 | Tipo | Artefato | Situação |
 |---|---|---|
-| OBC draft | `prodops/artifacts/experiments/003-hosted-vs-tokenized/obcs/credit-card-authorization-confirmation.md` | Draft — mover para `prodops/artifacts/business/obcs/` ao promover |
+| OBC draft | `prodops/artifacts/experiments/003-hosted-vs-tokenized/obcs/credit-card-authorization-confirmation.md` | Draft — mover para `prodops/artifacts/obcs/` ao promover |
 | BDD Feature | — | Pendente |
 
 **Promovido para Downstream:** Não — experimento em andamento.

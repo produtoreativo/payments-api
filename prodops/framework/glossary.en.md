@@ -418,7 +418,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 - Technical Dependencies
 - Evidence (after Delivery)
 
-**Location:** `prodops/artifacts/business/obcs/<slug>.md` (when committed)
+**Location:** `prodops/artifacts/obcs/<slug>.md` (when committed)
 
 **Lifecycle:** Draft → Refining (Icebox) → Committed (Iteration Backlog) → In Delivery → Operational (Operation) → Archived
 
@@ -531,13 +531,13 @@ See [`flow.en.md`](flow.en.md), [`journeys/discovery/README.en.md`](journeys/dis
 
 ## BDD Feature
 
-**Definition:** Gherkin specification that describes the expected behavior of a Product Capability. Lives in `prodops/artifacts/business/bdd/` (committed) or `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratory — inside the experiment directory). Used as TDD input in Downstream.
+**Definition:** Gherkin specification that describes the expected behavior of a Product Capability. Lives in `prodops/artifacts/bdd/` (committed) or `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratory — inside the experiment directory). Used as TDD input in Downstream.
 
 ---
 
 ## Reliability Plan
 
-**Definition:** Product of the transversal Assessment journey that defines risks, SLOs, and mitigation actions for a committed item. Lives in `prodops/artifacts/governance/plans/reliability/`.
+**Definition:** Product of the transversal Assessment journey that defines risks, SLOs, and mitigation actions for a committed item. Lives in `prodops/artifacts/plans/reliability/`.
 
 **Requirement level:** Conditional and verifiable. It is a Delivery gate when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change. Outside those triggers it is optional.
 
@@ -646,7 +646,7 @@ See [`flow.en.md`](flow.en.md), [`journeys/discovery/README.en.md`](journeys/dis
 
 ## Iteration Plan
 
-**Definition:** Record of Delivery execution for an iteration. Not a planning backlog — it represents exclusively the execution in progress. Contains items from the Iteration Backlog, execution strategy, CI Sync and CI Async journeys, evidence, and exit criteria. Artifact: `prodops/artifacts/governance/plans/iteration-plan.md`.
+**Definition:** Record of Delivery execution for an iteration. Not a planning backlog — it represents exclusively the execution in progress. Contains items from the Iteration Backlog, execution strategy, CI Sync and CI Async journeys, evidence, and exit criteria. Artifact: `prodops/artifacts/plans/iteration-plan.md`.
 
 **Question:** What is being executed in this iteration?
 
@@ -772,7 +772,7 @@ See [`prodops/framework/execution-model/downstream.en.md`](execution-model/downs
 
 ## Release Trail
 
-**Definition:** The append-only log of Downstream evidence. Each agent session produces its own file at `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`. See model at [`artifacts/governance/trails/release-trail.en.md`](../artifacts/governance/trails/release-trail.en.md).
+**Definition:** The append-only log of Downstream evidence. Each agent session produces its own file at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`. See model at [`artifacts/trails/release-trail.en.md`](../artifacts/trails/release-trail.en.md).
 
 ---
 

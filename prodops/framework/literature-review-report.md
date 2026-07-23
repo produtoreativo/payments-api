@@ -10,7 +10,7 @@
 
 | De | Para | Justificativa |
 |---|---|---|
-| **Business Intent** | **Intent** | O nome "Business Intent" sugeria que apenas necessidades de mercado (Business) eram capturáveis pelo Framework. A nomenclatura canônica passa a ser "Intent" com um atributo "Origin Stream" declarado. O diretório `prodops/artifacts/business/intents/` é mantido por retrocompatibilidade. |
+| **Business Intent** | **Intent** | O nome "Business Intent" sugeria que apenas necessidades de mercado (Business) eram capturáveis pelo Framework. A nomenclatura canônica passa a ser "Intent" com um atributo "Origin Stream" declarado. O diretório `prodops/artifacts/business-intents/` é mantido por retrocompatibilidade. |
 | **OBC (Outcome-Based Criterion)** | **OBC (Observable Business Contract)** | A definição anterior era incorreta. Um OBC não é um "critério baseado em resultado" mas sim um "contrato observável de negócio" — a distinção é importante porque o contrato é verificável e âncora toda a cadeia de entrega. |
 | **Capability** (ambíguo) | **Delivery Capability** ou **Product Capability** | O termo "capability" era usado com dois significados distintos: (1) competências técnicas do processo de entrega (Commit Workflow, Contract Management, etc.) e (2) funcionalidades de produto sendo construídas (split payment, suporte a Pix). A ambiguidade foi resolvida com termos qualificados. |
 | **Business** (nó de topo no modelo operacional) | **Origin Stream (Business \| Enterprise \| Team \| Technology)** | O modelo operacional anterior mostrava apenas "Business" como nó de topo, omitindo que há quatro tipos de origem possíveis. |
@@ -45,7 +45,7 @@
 
 **Impacto:** A nomenclatura reduzia o escopo percebido do Framework, levando times de compliance, infraestrutura e processo a não registrar Intents ou registrá-las de forma improvisada.
 
-**Solução aplicada:** A nomenclatura canônica passa a ser "Intent" (sem qualificador). O Origin Stream é um atributo da Intent, não parte do nome. O diretório `prodops/artifacts/business/intents/` é mantido por retrocompatibilidade com nota explicativa no README.
+**Solução aplicada:** A nomenclatura canônica passa a ser "Intent" (sem qualificador). O Origin Stream é um atributo da Intent, não parte do nome. O diretório `prodops/artifacts/business-intents/` é mantido por retrocompatibilidade com nota explicativa no README.
 
 ---
 
@@ -105,7 +105,7 @@
 |---|---|
 | `prodops/framework/glossary.md` | Corrigido OBC para "Observable Business Contract". Adicionadas entradas: Origin Stream, Intent, Business (Origin Stream), Enterprise (Origin Stream), Team (Origin Stream), Technology (Origin Stream), Exploration, Discovery (revisada), Delivery Capability, Product Capability. Todas as entradas agora têm: definição, propósito, quando usar, quando não usar, relação com outros conceitos. |
 | `prodops/framework/operating-model.md` | Adicionada camada Origin Stream no topo do diagrama hierárquico. Adicionada camada Exploration entre Intent e OBC. Renomeado "Business Intent" para "Intent". Renomeado "Capability" para "Delivery Capability". Atualizado ciclo de vida. Adicionados links para `flow.md` e `origin-streams.md`. |
-| `prodops/artifacts/business/intents/README.md` | Atualizado para refletir a nomenclatura Intent com Origin Stream. Adicionada nota de retrocompatibilidade. Adicionada tabela dos quatro Origin Streams. Atualizado fluxo pós-registro para incluir Exploration. Tabela de Intents ativas com coluna Origin Stream. |
+| `prodops/artifacts/business-intents/README.md` | Atualizado para refletir a nomenclatura Intent com Origin Stream. Adicionada nota de retrocompatibilidade. Adicionada tabela dos quatro Origin Streams. Atualizado fluxo pós-registro para incluir Exploration. Tabela de Intents ativas com coluna Origin Stream. |
 | `prodops/templates/business-intents/intent.md` | Adicionado campo "Origin Stream" na tabela de Identificação. Adicionada nota explicativa com os quatro Origin Streams e link para `origin-streams.md`. Renomeado título de "Business Intent" para "Intent". Generalizado "Hipóteses de Negócio" para "Hipóteses". |
 | `prodops/README.md` | Atualizado modelo operacional para mostrar Origin Stream no topo. Adicionados links para `framework/flow.md` e `framework/origin-streams.md`. Atualizada ordem de leitura. Atualizado portal com nova descrição de `framework/`. |
 | `prodops/framework/canonical-paths.md` | Adicionadas entradas para `flow.md` e `origin-streams.md` na seção Framework. Renomeada seção "Business Intents" para "Intents". Adicionada entrada para template de Intent. Renomeada seção "Delivery — Capabilities" para "Delivery — Capabilities (Delivery Capabilities)". |
@@ -124,7 +124,7 @@ Nenhum arquivo foi removido.
 
 ### Retrocompatibilidade preservada
 
-- **Diretório `prodops/artifacts/business/intents/`:** Mantido com nota explicativa. Documentos existentes não foram renomeados.
+- **Diretório `prodops/artifacts/business-intents/`:** Mantido com nota explicativa. Documentos existentes não foram renomeados.
 - **Links internos:** Todos os links existentes foram preservados. Novos links foram adicionados.
 - **Artefatos existentes (split-payment.md):** Não alterados. O artefato existente continua válido como Intent de origem Business.
 
@@ -140,7 +140,7 @@ Nenhum arquivo foi removido.
 
 ### 7.1 — Atualizar artefato split-payment.md para incluir Origin Stream
 
-O artefato `prodops/artifacts/business/intents/split-payment.md` é a única Intent existente e não possui o campo Origin Stream. Recomenda-se atualizar para incluir `origin_stream: Business` na tabela de Identificação, servindo como exemplo canônico do novo formato.
+O artefato `prodops/artifacts/business-intents/split-payment.md` é a única Intent existente e não possui o campo Origin Stream. Recomenda-se atualizar para incluir `origin_stream: Business` na tabela de Identificação, servindo como exemplo canônico do novo formato.
 
 ### 7.2 — Revisar uso de "capability" em documentos de jornadas
 
@@ -152,7 +152,7 @@ Atualmente existe apenas um exemplo de Intent (split-payment.md, origem Business
 
 ### 7.4 — Considerar separação do diretório business-intents
 
-No médio prazo, avaliar migrar `prodops/artifacts/business/intents/` para `prodops/intents/` para eliminar definitivamente a ambiguidade. Este passo exige atualizar todos os links internos e deve ser feito com coordenação da equipe. Não recomendado neste ciclo para evitar ruptura.
+No médio prazo, avaliar migrar `prodops/artifacts/business-intents/` para `prodops/intents/` para eliminar definitivamente a ambiguidade. Este passo exige atualizar todos os links internos e deve ser feito com coordenação da equipe. Não recomendado neste ciclo para evitar ruptura.
 
 ### 7.5 — Adicionar nota de retrocompatibilidade ao split-payment.md
 
@@ -165,7 +165,7 @@ Adicionar comentário inicial ao split-payment.md indicando que este artefato fo
 **Por que "Intent" e não "Business Intent"?**
 Clareza supera familiaridade. O nome "Business Intent" criava uma barreira de entrada para todos os Origin Streams que não são Business. A escolha de simplificar para "Intent" (com Origin Stream como atributo) é mais genérica e mais precisa simultaneamente.
 
-**Por que manter `prodops/artifacts/business/intents/` sem renomear?**
+**Por que manter `prodops/artifacts/business-intents/` sem renomear?**
 Retrocompatibilidade. Renomear o diretório quebraria todos os links existentes nos artefatos, nas skills e nos documentos de treinamento. A decisão de renomear pode ser tomada em um ciclo dedicado com impacto menor de ruptura.
 
 **Por que "Exploration" como nome da etapa do fluxo?**

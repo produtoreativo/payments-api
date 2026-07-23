@@ -47,10 +47,10 @@ Downstream has three explicit moments:
 
 Before executing any Delivery phase, all requirements below must be satisfied:
 
-1. OBC in `prodops/artifacts/business/obcs/`
-2. BDD Feature in `prodops/artifacts/business/bdd/`
+1. OBC in `prodops/artifacts/obcs/`
+2. BDD Feature in `prodops/artifacts/bdd/`
 3. Risks documented in `prodops/artifacts/risks/risks.md`
-4. Iteration Plan entry with status `In` in `prodops/artifacts/governance/plans/iteration-plan.md`
+4. Iteration Plan entry with status `In` in `prodops/artifacts/plans/iteration-plan.md`
 
 5. Reliability Plan when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change
 
@@ -83,7 +83,7 @@ CI Async: Ship → Validate → Promote            (platform, pipelines, environ
 
 ## Evidence
 
-Record significant delivery evidence in the active session trail at `prodops/artifacts/governance/trails/sessions/YYYY-MM-DD-<session-id>.md`.
+Record significant delivery evidence in the active session trail at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`.
 
 ## Downstream must preserve
 

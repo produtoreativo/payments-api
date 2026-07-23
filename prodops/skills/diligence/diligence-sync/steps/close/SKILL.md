@@ -13,14 +13,14 @@ Execute only the Close step of the Diligence Sync flow.
 
 ### 1. Confirmar estado Operational no Release Trail
 
-Verificar em `prodops/artifacts/governance/trails/sessions/` se a entrega foi registrada no Release Trail com:
+Verificar em `prodops/artifacts/trails/sessions/` se a entrega foi registrada no Release Trail com:
 - Escopo confirmado
 - Validação executada
 - Data de conclusão
 
 ### 2. Atualizar o OBC
 
-No arquivo `prodops/artifacts/business/obcs/<obc-id>.md`:
+No arquivo `prodops/artifacts/obcs/<obc-id>.md`:
 - Atualizar o campo de status para `Operational`
 - Registrar data de conclusão e referência ao Release Trail
 
@@ -37,7 +37,7 @@ Se o item estava representado em Roadmap ou Product Backlog, atualizar para refl
 ### 5. Commit
 
 ```bash
-git add prodops/artifacts/business/obcs/<obc-id>.md
+git add prodops/artifacts/obcs/<obc-id>.md
 git commit -m "docs(diligence): close OBC <obc-id> — Operational"
 ```
 

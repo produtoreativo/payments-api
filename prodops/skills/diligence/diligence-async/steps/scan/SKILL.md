@@ -54,7 +54,7 @@ Issues com padrão antigo ou sem labels canônicas → divergência `[ ] Média`
 ### 4. Listar todos os OBCs ativos
 
 ```bash
-ls prodops/artifacts/business/obcs/
+ls prodops/artifacts/obcs/
 ```
 
 Para cada OBC: ler o arquivo e extrair o estado declarado (Draft, Committed, In Delivery, Operational).
@@ -66,7 +66,7 @@ Para cada OBC ativo, verificar os seguintes checks:
 | Check | Esperado | Sinal de divergência |
 |---|---|---|
 | Work Item ativo | Existe GitHub Issue aberto referenciando o OBC | OBC committed sem Issue correspondente |
-| BDD Feature | Existe `prodops/artifacts/business/bdd/<obc-id>.feature` quando OBC está em Iteration Plan | Item no Iteration Plan sem BDD Feature committed |
+| BDD Feature | Existe `prodops/artifacts/bdd/<obc-id>.feature` quando OBC está em Iteration Plan | Item no Iteration Plan sem BDD Feature committed |
 | Iteration Plan | OBC committed aparece no Iteration Plan | OBC committed ausente do Iteration Plan |
 | Work Item fechado | Issue fechado quando OBC é Operational | OBC Operational com Issue ainda aberto |
 | Riscos | Riscos documentados em `risks.md` quando OBC está em Iteration Plan | Entrada no Iteration Plan sem entrada correspondente em risks.md |

@@ -44,7 +44,7 @@ Every Work Item must explicitly declare its canonical fields.
 | Field | Type | Description | Example |
 |---|---|---|---|
 | `evidence_required` | boolean | Whether the operation should produce evidence | `true` |
-| `evidence_location` | string | Path where evidence will be stored | `artifacts/business/obcs/payments-invoice-v2.md#evidence` |
+| `evidence_location` | string | Path where evidence will be stored | `artifacts/obcs/payments-invoice-v2.md#evidence` |
 
 ---
 
