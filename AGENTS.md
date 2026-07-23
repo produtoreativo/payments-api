@@ -30,6 +30,8 @@ manifest e nos artefatos do card — **não pré-leia a documentação do framew
 - Commits seguem Conventional Commits (tipos e limite de summary: no manifest).
 - Toda entrega Downstream relevante gera append no release trail
   (`prodops/artifacts/trails/release-trail.md`).
+- **NUNCA executar** `scripts/sync-framework-docs.sh` — o script está desativado
+  e causaria exportação incorreta. Ver `prodops/exec/empirical-upstream.md`.
 
 ## Arquitetura
 
@@ -53,6 +55,30 @@ Ao criar qualquer Work Item (GitHub Issue, PR, Discussion):
 4. Nunca criar Work Item sem referência de artefato.
 
 Referência: `prodops/framework/execution-mapping/work-item-schema.md`
+
+## Mapa de áreas do repositório
+
+| Área | Tipo | Descrição |
+|---|---|---|
+| `prodops/framework/` | **Canônico do Framework** | Princípios, glossário, ontologia, jornadas, canonical-paths |
+| `prodops/skills/bootstrap`, `hack`, `sync`, `finish`, `ship`, `validate`, `promote`, `upstream`, `downstream`, `diligence` | **Canônico do Framework** | Skills executáveis do Framework |
+| `prodops/skills/references/engineering/` | **Canônico do Framework** | Prática TDD ProdOps |
+| `prodops/templates/` | **Canônico do Framework** | Templates canônicos |
+| `prodops/scripts/doctor.sh`, `validate-manifest.sh`, `validate-export-manifest.sh` | **Canônico do Framework** | Scripts de validação canônicos |
+| `prodops/artifacts/` | **Local do produto** | OBCs, BDD, planos, trilhas, evidências, runbooks de produto |
+| `prodops/skills/local/` | **Local do produto** | Skills específicas desta API (ex: `payments-api-local-testing`) |
+| `prodops/skills/references/local/` | **Local do produto** | Literatura e convenções locais |
+| `prodops/scripts/local/` | **Local do produto** | Automações locais |
+| `prodops/exec/` | **Local do produto** | Manifest, lock, cards, contratos de exportação |
+
+## Upstream empírico — estado atual
+
+Este repositório tem `status: self` em `prodops/exec/framework-lock.yaml`.
+Isso significa que é simultaneamente produto consumidor e fonte temporária do Framework.
+
+- Conteúdo canônico generalizável: `prodops/framework/`
+- Histórico empírico do produto: `prodops/artifacts/` e seção `# History` do upstream-trail
+- Documento de orientação: `prodops/exec/empirical-upstream.md`
 
 ## Doutrina do framework (humanos; agentes somente sob demanda explícita)
 

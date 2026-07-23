@@ -135,49 +135,65 @@ The `export-manifest.yaml` includes:
 
 ---
 
-## Transformations identified before extraction
+## State of transformations after internal canonicalization
 
-The exportable content contains references to payments-api's empirical role that
-must be removed or generalized before distribution:
+Internal canonicalization is complete. The transformations previously identified
+have been applied to this repository. Exportable content in `framework/` is now generic.
 
-### 1. `remove-empirical-references`
+### 1. `remove-empirical-references` — **RESOLVED**
 
-Scope: `framework/**`
+Structural references to `payments-api` have been generalized:
+- `framework/operating-model.md` and `.en.md` — generic
+- `framework/glossary.md` and `.en.md` — generic
+- `framework/README.md` and `.en.md` — generic
+- `framework/artifact-governance.md` — generic
+- `framework/principles.md` and `.en.md` — `ASAAS_MOCK=true` replaced with generic placeholder
 
-Affected files:
-- `framework/operating-model.md` and `.en.md` — references payments-api as Product Repository
-- `framework/glossary.md` and `.en.md` — cites payments-api as example
-- `framework/README.md` and `.en.md` — describes the Framework "applied to this product"
-- `framework/artifact-governance.md` — mentions payments-api as example
+### 2. `generalize-product-examples` — **RESOLVED**
 
-Action: Replace direct payments-api references with generic placeholders
-(e.g., `<your-product-repository>`).
+Product-specific examples have been generalized:
+- `framework/journeys/operation/runbooks.md` and `.en.md` — now canonical Runbook definition
+- `framework/execution-mapping/matrix.md` — NestJS/DynamoDB/SQS replaced with placeholders
+- `framework/execution-mapping/work-item-schema.md` — payments-invoice-v2 replaced with feature-name-v2
+- `framework/dora-metrics.md` and `.en.md` — specific events replaced with generic patterns
+- `framework/backlogs.md` and `.en.md` — specific product names removed
+- `framework/knowledge-vs-execution.md` and `.en.md` — examples generalized
+- `framework/journeys/operation/README.md` and `.en.md` — webhook/payment refs generalized
 
-### 2. `generalize-product-examples`
+The product runbook was preserved in `prodops/artifacts/runbooks/payments-api-runbook.en.md`.
 
-Scope: `framework/**`
+### 3. `extract-discovery-history` — **SEPARATED (not moved)**
 
-Affected files:
-- `framework/journeys/operation/runbooks.md` and `.en.md` — runbooks are product-specific
-  (Asaas, DynamoDB, webhook payments-api). This file should become a runbook template,
-  not a product runbook.
-- `framework/execution-mapping/matrix.md` — mentions NestJS, DynamoDB as examples
-- `framework/execution-mapping/work-item-schema.md` — payments-api as example value
-
-### 3. `extract-discovery-history`
-
-Scope: `framework/journeys/discovery/**`
-
-The payments-api discovery trail, experiment index, and learnings are historical and
-product-specific. The Framework exports only the journey structure and templates —
-not the execution history of a specific product.
+The discovery trail at `framework/journeys/discovery/upstream-trail.md` has a `# History`
+section with an explicit contextual note identifying it as a product empirical record.
+The separation is semantic (via section marker) — files remain in place as append-only records.
 
 Files **not** to export as canonical content:
-- `framework/journeys/discovery/upstream-trail.md` — payments-api history
+- `framework/journeys/discovery/upstream-trail.md` (section `# History`) — product history
 - `framework/journeys/discovery/experiments.md` — product experiment index
 - `framework/journeys/discovery/learnings.md` — product learnings
 
-Replace with: empty templates or generic examples.
+### 4. `disable-sync-script` — **COMPLETED**
+
+`scripts/sync-framework-docs.sh` has been disabled with an explicit guard that returns
+exit code 1 before any operation. The original content was preserved below the guard for
+future reference.
+
+---
+
+## Current state of the boundary
+
+**Content in `framework/` is generic and ready for extraction.**
+
+Non-blocking pending items (do not prevent export, must be addressed before any
+automated sync mechanism):
+
+1. **Export mechanism:** `scripts/sync-framework-docs.sh` needs to be aligned with
+   `export-manifest.yaml` before any use. The script is disabled.
+2. **`framework/journeys/discovery/upstream-trail.md`:** the `# History` section is product-specific
+   and must not be included in the canonical export. The `export-manifest.yaml` must include
+   an explicit exclusion or transformation for this file.
+3. **Link validation:** after export to `prodops-framework`, relative links must be verified.
 
 ---
 
@@ -336,18 +352,17 @@ Any future synchronization mechanism (CI+PR sync) **MUST**:
 
 ## Out-of-scope inconsistencies
 
-The following observations were identified during analysis but are outside the
-scope of this declarative boundary:
+The following observations were identified during analysis. Those marked **RESOLVED**
+were addressed during internal canonicalization.
 
-- **`framework/journeys/operation/runbooks.md`** — operational content for
-  payments-api (Asaas, DynamoDB, webhook) that lives in `framework/` but is
-  product-specific. Should be moved to `artifacts/` or replaced with a generic
-  template at extraction time.
-  (Not moving now — documented as `generalize-product-examples` transformation.)
+- **`framework/journeys/operation/runbooks.md`** — **RESOLVED.** The file was
+  rewritten as a canonical Runbook definition. Product-specific content was preserved
+  in `prodops/artifacts/runbooks/payments-api-runbook.en.md`.
 
-- **`framework/journeys/discovery/`** — empirical history of payments-api
-  (trails, experiments, learnings) that must not be exported as canonical content.
-  (Documented as `extract-discovery-history` transformation.)
+- **`framework/journeys/discovery/`** — **PARTIALLY RESOLVED.** The `upstream-trail.md`
+  received an explicit section marker in the `# History` section. The `export-manifest.yaml`
+  must include an exclusion or transformation for the history section before export.
 
-- **`AGENTS.md` at root** — mixes canonical Framework routing with payments-api
-  specific configuration. Requires separation before extraction.
+- **`AGENTS.md` at root** — **RESOLVED.** AGENTS.md was updated to include the area
+  map, the empirical upstream note, and an explicit prohibition on running the sync script.
+  AGENTS.md is a product-local artifact — it is not exported.

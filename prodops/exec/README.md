@@ -11,13 +11,18 @@ runtime e contratos de distribuição do Framework para este repositório.
 |---|---|
 | `manifest.yaml` | Configuração operacional do produto: skills ativos, paths locais, gates, vocabulário canônico, GitHub Projects |
 | `framework-lock.yaml` | Lock de distribuição do Framework: versão instalada, status de sync, estado de drift |
-| `export-manifest.yaml` | Contrato declarativo de extração: define o contorno exportável do Framework para o repositório `prodops-framework` *(apenas upstream empírico)* |
+| `export-manifest.yaml` | **Contrato declarativo de extração** — define o contorno exportável do Framework *(apenas upstream empírico, `status: self`)* |
 | `export-boundary.md` | Documentação do modelo de fronteira: propriedade, classificações, layout, transformações e invariantes do sync *(apenas upstream empírico)* |
+| `empirical-upstream.md` | Orientação sobre o papel de upstream empírico deste repositório e o significado de `status: self` |
 | `cards/` | Work cards de execução (contexto de fase ativo — efêmero) |
 
 > **Contratos distintos:** `manifest.yaml`, `framework-lock.yaml` e
 > `export-manifest.yaml` respondem a perguntas diferentes e não se substituem.
 > Ver seção abaixo.
+
+> **Mecanismo de sync desabilitado:** `scripts/sync-framework-docs.sh` está
+> desabilitado com guard explícito. Não deve ser executado até ser alinhado com
+> `export-manifest.yaml`. Ver `export-boundary.md` para o estado atual.
 
 ---
 

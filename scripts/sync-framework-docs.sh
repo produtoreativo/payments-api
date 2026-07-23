@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# ─── DISABLED ────────────────────────────────────────────────────────────────
+# sync-framework-docs.sh — DISABLED. See guard below.
+# ─────────────────────────────────────────────────────────────────────────────
 # sync-framework-docs.sh
 #
 # Copies ProdOps framework documentation from this product repository to
@@ -34,6 +37,32 @@
 #   1  — dependency missing
 #   2  — git/network error
 #   3  — nothing to sync (clean exit, informational)
+
+# ─── DISABLED ────────────────────────────────────────────────────────────────
+# This script is disabled because it is not aligned with the declarative
+# export boundary defined in prodops/exec/export-manifest.yaml.
+#
+# Critical issues:
+#   - References stale paths (prodops/journeys/, prodops/execution-model/)
+#   - Does not exclude skills/local/** (would export product-specific Skills)
+#   - Does not read .prodopsignore
+#   - Does not consult export-manifest.yaml
+#   - Uses rsync --delete (may remove Framework-independent content)
+#
+# Before any export or sync:
+#   1. Align this script with prodops/exec/export-manifest.yaml
+#   2. Add exclusions for skills/local/**, skills/references/local/**
+#   3. Remove stale path references
+#   4. Add framework-lock.yaml update step
+#   5. Review dry-run output with a human before live execution
+#
+# See: prodops/exec/export-boundary.md
+# ─────────────────────────────────────────────────────────────────────────────
+echo "ERROR: scripts/sync-framework-docs.sh is disabled pending alignment with prodops/exec/export-manifest.yaml." >&2
+echo "See prodops/exec/export-boundary.md for the current export contract." >&2
+exit 1
+
+# ── ORIGINAL SCRIPT (preserved for reference) ─────────────────────────────────
 
 set -euo pipefail
 
