@@ -248,6 +248,18 @@ Use this table as the primary navigation source before reading or writing any ar
 
 ---
 
+## Scripts
+
+| Script | Canonical path |
+|---|---|
+| Scripts portal | `prodops/scripts/README.en.md` |
+| Canonical structural validation | `prodops/scripts/doctor.sh` |
+| Manifest consistency validation | `prodops/scripts/validate-manifest.sh` |
+
+> **Product-local scripts:** Products may declare specific automations in `prodops/scripts/local/`. That directory is protected from sync by `.prodopsignore` and belongs to the product. Canonical scripts do not depend on local scripts. See `prodops/scripts/README.en.md`.
+
+---
+
 ## Legacy Paths
 
 These paths may appear in migrated historical entries. **Do not use for new artifacts.**

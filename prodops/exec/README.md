@@ -45,7 +45,7 @@ Declarado em `.prodopsignore`.
 - `prodops/skills/local/` — Skills locais desta API (ex: `payments-api-local-testing`)
 - `prodops/skills/references/local/engineering/clean-code/` — referência opcional do produto
 - `prodops/skills/references/local/engineering/ddd/` — referência opcional do produto
-- `prodops/scripts/delivery/` — scripts específicos do produto
+- `prodops/scripts/local/` — scripts específicos do produto (automações e adaptadores locais)
 
 **Protegido por `.prodopsignore`:** Nunca sobrescrito por sync do Framework.
 

@@ -248,6 +248,18 @@ Use esta tabela como fonte primária de navegação antes de ler ou escrever qua
 
 ---
 
+## Scripts
+
+| Script | Canonical path |
+|---|---|
+| Portal de scripts | `prodops/scripts/README.md` |
+| Validação estrutural canônica | `prodops/scripts/doctor.sh` |
+| Validação de consistência do manifest | `prodops/scripts/validate-manifest.sh` |
+
+> **Scripts locais do produto:** Produtos podem declarar automações específicas em `prodops/scripts/local/`. Esse diretório é protegido de sync por `.prodopsignore` e pertence ao produto. Scripts canônicos não dependem de scripts locais. Ver `prodops/scripts/README.md`.
+
+---
+
 ## Legacy Paths
 
 Estes caminhos podem aparecer em entradas históricas migradas. **Não usar para novos artefatos.**

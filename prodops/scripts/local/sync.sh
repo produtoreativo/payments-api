@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# prodops/scripts/delivery/sync.sh
+# prodops/scripts/local/sync.sh
 #
 # Executes the Sync phase of the ProdOps Delivery pipeline.
 #

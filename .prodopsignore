@@ -34,5 +34,6 @@ prodops/skills/local/
 prodops/skills/references/local/
 
 # ── Scripts específicos do produto ──────────────────────────────────────────
-# Scripts de entrega e automação locais, não portáveis para outros produtos.
-prodops/scripts/delivery/
+# Automações e adaptadores locais, não portáveis para outros produtos.
+# Scripts canônicos (doctor.sh, validate-manifest.sh) permanecem no root de scripts/.
+prodops/scripts/local/
