@@ -36,7 +36,13 @@ graph TB
         Consumer["Consumidor\nWebhook Callback"]
     end
 
-    subgraph ApiLambda["API Lambda — NestJS / Lambda (HTTP)"]
+    subgraph Entry["Ponto de entrada — AWS"]
+        FnUrl["Lambda Function URL\nAuthType: NONE\nCORS: AllowOrigins *\nHeaders: X-Api-Token · X-Correlation-Id\n        X-Tenant-Id · Idempotency-Key\n        asaas-access-token"]
+    end
+
+    subgraph ApiLambda["API Lambda — {env}-payments-api\nnodejs22.x · 512MB · timeout 15s"]
+        DDLayer["Datadog Extension Layer\narn:…:Datadog-Extension:97\n(staging + production)"]
+
         subgraph Auth["Autenticação"]
             Guard["ApiTokenGuard\nheader: X-Api-Token"]
         end
@@ -59,26 +65,38 @@ graph TB
         end
     end
 
-    subgraph WorkerLambda["Worker Lambda — SQS Trigger"]
-        WebhookWorker["WebhookWorker\nSQSHandler\n→ InvoiceService.processProviderWebhook"]
+    subgraph WorkerLambda["Worker Lambda — {env}-payments-webhook-worker\nnodejs22.x · 512MB · timeout 30s"]
+        WebhookWorker["WebhookWorker\nSQSHandler · BatchSize 5\nReportBatchItemFailures\n→ InvoiceService.processProviderWebhook"]
     end
 
-    subgraph Storage["Armazenamento — DynamoDB"]
-        DynPay[("PaymentsTable\n· GSI1: ProviderPaymentIndex\n  (PROVIDER# / PAYMENT#)\n· GSI2: StatusOrderIndex\n  (STATUS# / ORDER#)\nTransactionsTable\nCustomersTable\nTenantsTable\nProvidersTable")]
-        DynWk[("WebhooksTable\nGSI1: TenantWebhooksIndex")]
-        SQS[("SQS\nWebhookQueue\nDeadLetterQueue")]
+    subgraph Storage["Armazenamento — DynamoDB (PAY_PER_REQUEST · PITR)"]
+        DynPay[("PaymentsTable\n{env}-PaymentsTable\n· PK + SK\n· GSI1: ProviderPaymentIndex\n  GSI1PK: PROVIDER# / GSI1SK: PAYMENT#\n  Projection: ALL\n────────────────\nTransactionsTable · {env}-TransactionsTable\n· PK + SK\nCustomersTable · {env}-CustomersTable\n· PK + SK\nTenantsTable · {env}-TenantsTable\n· PK + SK")]
+        DynWk[("WebhooksTable\n{env}-WebhooksTable\n· PK + SK\n· GSI1: TenantWebhooksIndex\n  GSI1PK / GSI1SK · Projection: ALL")]
+        SQS[("SQS — {env}-payments-webhook-queue\nVisibilityTimeout: 60s · Retenção: 14d\nmaxReceiveCount: 5\n────────────────\nDLQ — {env}-payments-webhook-dlq\nRetenção: 14d")]
+    end
+
+    subgraph Logs["CloudWatch Logs (retenção 30 dias)"]
+        CWApi["/aws/lambda/{env}-payments-api"]
+        CWWorker["/aws/lambda/{env}-payments-webhook-worker"]
     end
 
     subgraph Obs["Observabilidade"]
-        DD["Datadog\nAPM · Métricas · Logs"]
+        DD["Datadog\nAPM · Métricas · Logs\nDD_SERVICE: payments-api\nDD_SITE: datadoghq.com"]
     end
 
-    %% Consumers → API
-    Checkout -->|"X-Api-Token"| Guard
+    %% Entry → API
+    Checkout -->|"X-Api-Token"| FnUrl
+    Admin -->|"X-Admin-Secret"| FnUrl
+    Asaas -->|"asaas-access-token"| FnUrl
+    FnUrl --> Guard
+    FnUrl -->|"sem guard"| HealthCtrl
+
+    %% Auth → Controllers
     Guard --> InvCtrl
     Guard --> WkCtrl
-    Asaas -->|"asaas-access-token"| AsaasWkCtrl
-    Admin -->|"X-Admin-Secret"| AdminCtrl
+    Guard --> AsaasWkCtrl
+    Guard --> SandboxCtrl
+    Guard --> AdminCtrl
 
     %% Controllers → Services
     InvCtrl --> InvSvc
@@ -106,8 +124,13 @@ graph TB
     SQS -->|"SQS trigger"| WebhookWorker
     WebhookWorker --> DynPay
 
+    %% Logs
+    ApiLambda -.->|"stdout → CloudWatch"| CWApi
+    WorkerLambda -.->|"stdout → CloudWatch"| CWWorker
+
     %% Observability
     ObsListener --> DD
+    DDLayer -.->|"APM traces · metrics"| DD
     WkDelivery -->|"emit payments.observability"| EventBus
 ```
 
@@ -133,4 +156,5 @@ de contrato.
 | 2026-07-03 | Criação inicial do diagrama. Módulos: `InvoicesModule`, `AuthModule`, `WebhooksModule`, `ObservabilityModule`. Tabelas: `PaymentsTable`, `CustomersTable`, `TenantsTable`, `ProvidersTable`, `WebhooksTable`. |
 | 2026-07-11 | Adicionados `AdminTokenController` (`POST /admin/tokens`, `GET /admin/tokens/:tenantId`, `DELETE /admin/tokens/:tenantId/:tokenId`, autenticação via header `X-Admin-Secret`, tokens persistidos em `TenantsTable`) e a rota `GET /invoices/:invoiceId` no `InvoiceController`. |
 | 2026-07-12 | Consolidada a fronteira Payments SOR ↔ PSP que antes estava duplicada em `docs/`; nenhum contrato de runtime foi alterado. |
-| 2026-07-17 | Retroativo: adicionados `HealthController` (`GET /health`, sem guard), `WebhookWorker` (Lambda SQS trigger separado), `TransactionsTable`, GSI1 (ProviderPaymentIndex) e GSI2 (StatusOrderIndex) em PaymentsTable. Corrigidos nomes de parâmetros de rota (`:webhookId`, `:providerPaymentId`). Adicionada aresta `WkDelivery → emit payments.observability`. |
+| 2026-07-17 | Retroativo: adicionados `HealthController` (`GET /health`, sem guard), `WebhookWorker` (Lambda SQS trigger separado), `TransactionsTable`, GSI1 (ProviderPaymentIndex) em PaymentsTable. Corrigidos nomes de parâmetros de rota (`:webhookId`, `:providerPaymentId`). Adicionada aresta `WkDelivery → emit payments.observability`. |
+| 2026-07-23 | Diagrama atualizado com dados reais da IaC: Lambda Function URL como ponto de entrada explícito (AuthType: NONE), Datadog Extension Layer (arn:…:Datadog-Extension:97), CloudWatch Log Groups com retenção 30d, parâmetros reais de SQS (VisibilityTimeout 60s, retenção 14d, maxReceiveCount 5), nomes reais de tabelas e GSIs com chaves de partição/range e ProjectionType. Removidos GSI2 (StatusOrderIndex) e ProvidersTable — não provisionados na IaC (`dynamodb.yaml`). |
