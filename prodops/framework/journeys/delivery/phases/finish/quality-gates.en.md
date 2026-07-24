@@ -12,9 +12,9 @@ Use this file to record release Quality Gates that apply to implementation, vali
 
 ## Static analysis gates (`validate`)
 
-Run locally by [`/finish validate`](../../../../skills/finish/steps/validate/SKILL.md),
+Run locally by [`/finish validate`](../../../../../skills/finish/steps/validate/SKILL.md),
 replicating what the remote pipeline (`.github/workflows/pr-gates.yml`) runs. The
-canonical commands live in [`prodops/exec/manifest.yaml`](../../../../exec/manifest.yaml)
+canonical commands live in [`prodops/exec/manifest.yaml`](../../../../../exec/manifest.yaml)
 (`gates:`) — this file references them, it does not rewrite them.
 
 - **lint** (`gates.lint`) — ESLint over the api sources, no errors (warnings do
@@ -31,12 +31,12 @@ no threshold. Tightening it to a blocking gate (e.g. coverage may not drop) is a
 later step, once there is a sufficient test base.
 
 **A failure in any static gate does not advance Finish:** the fix is a product
-change and returns to [`hack tdd`](../../../../skills/hack/steps/tdd/SKILL.md),
+change and returns to [`hack tdd`](../../../../../skills/hack/steps/tdd/SKILL.md),
 not to `validate` (which writes no code).
 
 ## Branch protection for auto-approval (`review`)
 
-Conditions that [`/finish review`](../../../../skills/finish/steps/review/SKILL.md)
+Conditions that [`/finish review`](../../../../../skills/finish/steps/review/SKILL.md)
 inspects **without running the pipeline**, before arming auto-merge. Each missing
 condition is a **blocker** to record in Finish before any auto-approval:
 

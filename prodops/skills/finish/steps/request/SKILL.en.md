@@ -29,7 +29,7 @@ these prerequisites can merge ungated code.
 
 ## Inputs
 
-- `prodops/journeys/delivery/capabilities/commit-workflow/templates/pull_request.md`
+- `prodops/framework/journeys/delivery/capabilities/commit-workflow/templates/pull_request.md`
   — the PR template to fill
 - The branch diff and the evidence from `validate` (lint/build/acceptance output
   and the acceptance-suite coverage)
@@ -40,7 +40,7 @@ these prerequisites can merge ungated code.
 
 ### 1. Fill the body from the template
 
-Fill the [PR template](../../../../journeys/delivery/capabilities/commit-workflow/templates/pull_request.md)
+Fill the [PR template](../../../../framework/journeys/delivery/capabilities/commit-workflow/templates/pull_request.md)
 with real evidence — objective, summary, changed contracts, tests run (with the
 `validate` output), updated ProdOps artifacts, and pending items. It is not a
 commit log; it is what the change delivers and how it was verified.
