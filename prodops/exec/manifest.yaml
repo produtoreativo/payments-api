@@ -62,6 +62,19 @@ gates:
     expect: exit0
     when: behavior_or_contract_changed
     note: "executa as 4 suítes de aceitação; requer LocalStack (CI: service container)"
+  # gate de AUTO-MERGE, não de merge: um resultado vermelho impede que
+  # `finish request` arme o `gh pr merge --auto`, mas o PR continua aberto e
+  # mergeável à mão por um humano. Não é required status check — por isso não
+  # aparece como job bloqueante em pr-gates.yml.
+  coverage:
+    cmd: "./scripts/check-coverage-threshold.sh"
+    expect: exit0
+    when: behavior_or_contract_changed
+    metric: branches
+    threshold_pct: 100
+    blocks: auto_merge_only
+    note: "consome o XML gerado pelo gate acceptance; cobertura atual 56.81% de branches — o auto-merge fica desarmado até atingir o limiar"
+
   build:
     cmd: "cd api && npm run build"
     expect: exit0
