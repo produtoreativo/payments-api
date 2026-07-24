@@ -44,10 +44,32 @@ com evidências reais — objetivo, resumo, contratos alterados, testes executad
 (com o output de `validate`), artefatos ProdOps atualizados e pendências. Não é
 um log de commits; é o que a mudança entrega e como foi verificada.
 
-### 2. Abrir o PR e configurar auto-merge
+### 2. Verificar o limiar de cobertura (gate de auto-merge)
+
+Antes de armar o auto-merge, verifique a cobertura contra o limiar canônico
+(`gates.coverage` no manifest — hoje **100% de branches**):
+
+```bash
+./scripts/check-coverage-threshold.sh
+```
+
+O script consome o XML gerado pelo gate `acceptance`, então rode-o depois de
+`validate`. Exit 0 libera o auto-merge; exit 1 o **bloqueia**.
+
+### 3. Abrir o PR
 
 ```bash
 gh pr create --base <branch-de-destino> --fill-first --body-file <arquivo>
+```
+
+O PR é aberto **sempre** — independente do resultado do passo 2. A cobertura
+não é condição para abrir o PR nem para mergear; é condição apenas para
+**automatizar** o merge.
+
+### 4. Armar o auto-merge — somente se a cobertura passou
+
+```bash
+# apenas quando ./scripts/check-coverage-threshold.sh saiu 0
 gh pr merge --auto --squash
 ```
 
@@ -55,7 +77,20 @@ gh pr merge --auto --squash
 ficam verdes. `--squash` mantém o histórico linear na branch de destino,
 coerente com o fluxo do repositório.
 
-### 3. Atualizar o Release Trail
+**Se a cobertura ficou abaixo do limiar**, não execute `gh pr merge --auto`.
+Em vez disso, registre no PR por que o auto-merge não foi armado:
+
+```bash
+gh pr comment <n> --body "Auto-merge não armado: cobertura de branches abaixo
+do limiar de 100% (gates.coverage). O merge manual segue disponível após review."
+```
+
+O PR fica aberto, verde e **mergeável à mão** por um humano. O limiar governa
+apenas a automação — nunca a capacidade de mergear. Por isso `gates.coverage`
+**não** é um required status check: como required check ele bloquearia também o
+merge manual, que é justamente o que se quer preservar.
+
+### 5. Atualizar o Release Trail
 
 Registre o link do PR no trail da sessão ativa
 (`prodops/artifacts/trails/sessions/`), fechando o loop do Finish.
@@ -64,13 +99,18 @@ Registre o link do PR no trail da sessão ativa
 
 Concluído quando: o PR está aberto contra a branch de destino correta, o body
 segue o template preenchido com evidências, o auto-merge está armado
-(`--auto --squash`), e o Release Trail tem o link do PR. Um único PR — não abrir
-duplicados.
+(`--auto --squash`) **quando o gate de cobertura passou** — ou deliberadamente
+não armado, com o motivo registrado no PR, quando não passou — e o Release Trail
+tem o link do PR. Um único PR — não abrir duplicados.
 
 ## Guardrails
 
 - Não abrir o PR sem `validate` limpo e `review` sem bloqueadores.
 - Não abrir PR com auto-merge quando a branch protection não está configurada
   (o `review` já teria sinalizado — respeite o bloqueador).
+- Não armar o auto-merge com a cobertura abaixo do limiar — e não deixar de
+  abrir o PR por causa disso: cobertura baixa desarma a automação, não o PR.
+- Não transformar `gates.coverage` em required status check: isso bloquearia o
+  merge manual, contrariando o propósito do gate.
 - Não fazer push, não commitar, não validar aqui — apenas abrir o PR.
 - Não abrir PRs duplicados; um Finish abre um PR.

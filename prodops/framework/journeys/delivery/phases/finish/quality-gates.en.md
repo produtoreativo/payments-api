@@ -24,11 +24,22 @@ canonical commands live in [`prodops/exec/manifest.yaml`](../../../../../exec/ma
   suite against LocalStack. It is `validate`'s **only dynamic exception**.
 - **no_mocks** (`gates.no_mocks`) — see Test Quality Gates below.
 
-**Coverage.** A byproduct of the acceptance suite: running acceptance emits the
-report as **Cobertura XML** (`api/coverage/cobertura-coverage.xml`), the format
-GitHub Code Quality consumes. **Informative — it does not block merge:** there is
-no threshold. Tightening it to a blocking gate (e.g. coverage may not drop) is a
-later step, once there is a sufficient test base.
+**Coverage** (`gates.coverage`). A byproduct of the acceptance suite: running
+acceptance emits the report as **Cobertura XML**
+(`api/coverage/cobertura-coverage.xml`), the format GitHub Code Quality consumes.
+The canonical threshold lives in the manifest (`gates.coverage.threshold_pct`)
+and is checked by `./scripts/check-coverage-threshold.sh`, over the **branches**
+metric.
+
+**What this gate blocks — and what it does not.** It blocks **auto-merge only**:
+below the threshold, [`request`](../../../../../skills/finish/steps/request/SKILL.md)
+does not arm `gh pr merge --auto` and records the reason on the PR. The PR stays
+open, green and **manually mergeable** by a human after review. Low coverage
+disarms the automation, never the ability to merge.
+
+That is why `gates.coverage` is **not** a required status check and does not
+appear as a blocking job in `pr-gates.yml`: a required check would block the
+manual merge too — precisely what this design preserves.
 
 **A failure in any static gate does not advance Finish:** the fix is a product
 change and returns to [`hack tdd`](../../../../../skills/hack/steps/tdd/SKILL.md),
