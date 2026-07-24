@@ -65,6 +65,11 @@ Experiment
 Evidence
 Risk Register
 Context Capsule
+# Diligence — entidades canônicas (adicionadas em 2026-07-24)
+Finding
+Remediation
+Waiver
+Check
 ```
 
 ### operation
@@ -93,6 +98,10 @@ Promote
 Implement
 Experiment
 Release
+Reconcile    # alinhar estado real ao estado canônico declarado (adicionado em 2026-07-24)
+             # uso primário: Workspace Reconciliation (Capability da Diligence)
+             # semântica: nenhuma operação existente cobre "detectar e corrigir
+             #            divergência entre estado declarado e estado observado"
 
 # Família: Encerramento
 Archive
@@ -100,6 +109,32 @@ Deprecate
 Discard
 Cancel
 ```
+
+#### Rationale — Adição de `Reconcile`
+
+A operação `Reconcile` foi adicionada em 2026-07-24 como resultado da análise de
+convergência de operações para a Jornada de Diligence (ver
+`prodops/framework/journeys/diligence/github-workspace-schema.yaml`).
+
+Nenhuma das operações existentes cobre a semântica de "alinhar estado real ao
+estado canônico declarado":
+- `Update` — atualiza conteúdo com nova informação; não implica detecção de drift
+- `Implement` — desenvolve código; não implica comparação com especificação
+- `Validate` — verifica contra critérios; é o step Verify do processo, não o Reconcile
+- `Repair` — nome de fase do Diligence Async; não é uma operação de Work Item
+
+`Reconcile` tem uso primário em Workspace Reconciliation (Capability da Diligence)
+e pode ser usado em outros contextos onde há necessidade de alinhar estado real a
+estado esperado de forma rastreável.
+
+**Operações NÃO adicionadas e seus rationales:**
+- `Approve Waiver` — redundante com `Approve + Artifact Type = Waiver`; operações
+  compostas criam inconsistência de vocabulário no enum
+- `Collect Evidence` — redundante com `Capture + Artifact Type = Evidence`;
+  Capture já existe e cobre a semântica de registrar/capturar
+- `Repair` — nome de fase do Diligence Async; `Implement` cobre a semântica
+  de implementar uma correção como Work Item
+- `Investigate` — sinônimo de `Review` no contexto operacional; minimizar vocabulário
 
 ### journey
 ```
@@ -145,15 +180,63 @@ Para o **Portfolio GitHub Project** e o **Product Repository GitHub Project**, o
 custom_fields:
   - name: Artifact Type
     type: single_select
-    options: [Business Signal, Business Intent, Global OBC, Local OBC, BDD Feature, Architecture, Iteration Plan, Reliability Plan, Release Trail, Experiment, Evidence, Risk Register]
+    options:
+      # Knowledge Space — artefatos de produto e portfólio
+      - Business Signal
+      - Business Intent
+      - Global OBC
+      - Local OBC
+      - BDD Feature
+      - Architecture
+      - Iteration Plan
+      - Reliability Plan
+      - Release Trail
+      - Experiment
+      - Evidence
+      - Risk Register
+      # Diligence — entidades canônicas (adicionadas em 2026-07-24)
+      - Finding       # FND-YYYY-NNNN
+      - Remediation   # RMD-YYYY-NNNN
+      - Waiver        # WVR-YYYY-NNNN
+      - Check         # DIL-CATEGORY-NNN
 
   - name: Artifact ID
     type: text
-    description: "Slug ou path relativo do artefato (ex: feature-name-v2)"
+    description: >
+      Slug ou path relativo do artefato (ex: feature-name-v2).
+      Para entidades Diligence: FND-YYYY-NNNN, RMD-YYYY-NNNN,
+      WVR-YYYY-NNNN, EVD-YYYY-NNNN, DIL-CAT-NNN.
+      IDs são imutáveis após criação e independentes de número de Issue.
 
   - name: Operation
     type: single_select
-    options: [Create, Capture, Define, Refine, Update, Prototype, Review, Approve, Validate, Split, Merge, Promote, Implement, Experiment, Release, Archive, Deprecate, Discard, Cancel]
+    options:
+      # Família: Criação
+      - Create
+      - Capture
+      - Define
+      # Família: Refinamento
+      - Refine
+      - Update
+      - Prototype
+      # Família: Revisão e Aprovação
+      - Review
+      - Approve
+      - Validate
+      # Família: Estrutura
+      - Split
+      - Merge
+      - Promote
+      # Família: Execução
+      - Implement
+      - Experiment
+      - Release
+      - Reconcile   # adicionado em 2026-07-24 — ver rationale na seção Enums
+      # Família: Encerramento
+      - Archive
+      - Deprecate
+      - Discard
+      - Cancel
 
   - name: Journey
     type: single_select
@@ -172,6 +255,80 @@ custom_fields:
 
   - name: Evidence Required
     type: checkbox
+```
+
+#### Campos adicionais para a Jornada Diligence
+
+Work Items da Jornada Diligence usam campos adicionais de rastreabilidade
+declarados no schema `prodops/framework/journeys/diligence/github-workspace-schema.yaml`:
+
+```yaml
+diligence_fields:
+  - name: Cycle
+    type: single_select
+    options: [diligence-sync, diligence-async, workspace-reconciliation]
+
+  - name: Phase
+    type: single_select
+    options: [Capture, Attach, Promote, Close, Scan, Flag, Repair, Inspect, Reconcile, Verify]
+
+  - name: Mode
+    type: single_select
+    options: [Sync, Async, Manual]
+```
+
+#### Exemplos — Jornada Diligence
+
+```yaml
+# Exemplo 1: Work Item de investigação de Finding
+artifact_type: Finding
+artifact_id: FND-2026-0007
+operation: Review
+journey: Diligence
+cycle: diligence-async
+phase: Scan
+mode: Async
+owner: Diligence Owner
+
+# Exemplo 2: Work Item de implementação de Remediation
+artifact_type: Remediation
+artifact_id: RMD-2026-0003
+operation: Implement
+journey: Diligence
+cycle: diligence-async
+phase: Repair
+mode: Async
+owner: Software Engineer
+
+# Exemplo 3: Work Item de verificação pós-Remediation
+artifact_type: Remediation
+artifact_id: RMD-2026-0003
+operation: Validate
+journey: Diligence
+cycle: diligence-async
+phase: Verify
+mode: Async
+owner: PRE  # verificador independente do implementador
+
+# Exemplo 4: Work Item de aprovação de Waiver
+artifact_type: Waiver
+artifact_id: WVR-2026-0001
+operation: Approve
+journey: Diligence
+cycle: diligence-async
+phase: Repair
+mode: Async
+owner: Product Owner  # aprovador com autoridade
+
+# Exemplo 5: Work Item de Workspace Reconciliation
+artifact_type: Check
+artifact_id: DIL-WSP-001
+operation: Reconcile
+journey: Diligence
+cycle: workspace-reconciliation
+phase: Reconcile
+mode: Manual
+owner: Platform Engineer
 ```
 
 Os campos nativos do GitHub Project (`Status`, `Priority`, `Assignees`, `Milestone`) complementam os campos customizados acima.
@@ -241,6 +398,32 @@ Um Work Item está corretamente estruturado quando:
 - [ ] `journey` está preenchida
 - [ ] O título segue o padrão `[Artifact ID]: descrição concisa`
 - [ ] Labels `operation:<valor>` e `artifact-type:<valor>` estão presentes no Issue
+
+---
+
+---
+
+## Ciclo de vida do Work Item em transições do OBC
+
+O estado do OBC e o estado do Work Item são **independentes**. Uma transição de estado do OBC não fecha nem reabre automaticamente um Work Item. Um Work Item rastreia uma operação específica — quando a operação termina, o Work Item fecha. O OBC pode continuar evoluindo após o fechamento do Work Item.
+
+### Matriz de transições
+
+| Transição do OBC | Operação Esperada | Ação no Work Item |
+|---|---|---|
+| Draft → Refining | Explore ou Refine | Criar Work Item se existe operação ativa; não criar se o OBC avança passivamente |
+| Refining → Committed | Commit ou Promote | Fechar Work Item de refinamento quando a operação termina; registrar promoção se necessário |
+| Committed → In Delivery | Implement | Criar Work Item de implementação quando a Delivery é iniciada |
+| In Delivery → Operational | Validate e Promote | Fechar Work Items de implementação concluídos; registrar evidências |
+| Operational → Archived | Archive | Criar Work Item somente para operação formal de arquivamento se necessário |
+
+### Princípios
+
+- **OBC state ≠ Work Item state.** Um OBC pode estar Operational e ainda ter Work Items abertos de atualizações pós-operação.
+- **Uma transição de OBC NÃO fecha ou reabre automaticamente um Work Item.** O Work Item fecha quando a operação que ele rastreia termina.
+- **Um Work Item rastreia uma operação específica.** Quando a operação termina, o Work Item fecha — independente do estado do OBC.
+- **Uma nova operação pode requerer um novo Work Item.** Work Items anteriores permanecem como histórico e NÃO são reabertos quando o OBC evolui.
+- **O OBC pode continuar evoluindo após Work Items fechados.** O histórico de Work Items acumula no OBC sem que novos Work Items precisem ser abertos para cada mudança menor.
 
 ---
 

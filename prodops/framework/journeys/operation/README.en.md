@@ -16,7 +16,7 @@ Operation begins after the delivery is promoted by the Promote phase of CI Async
 - operational metrics collection
 - postmortems and operational learning
 
-Operational learnings can originate new items for the **Repository Tracking List**. This is the mechanism by which Operation feeds the product evolution cycle.
+Operational learnings can originate new items for the **Product Tracking List**. This is the mechanism by which Operation feeds the product evolution cycle.
 
 ## Files
 
@@ -50,9 +50,9 @@ Operational Trail detects DORA metric deterioration
   ↓
 Continuous Assessment records signal in risks.md or opportunities.md
   ↓
-New item in Repository Tracking List with identified Origin Stream
+New item in Product Tracking List with identified Origin Stream
   ↓
-Premortem + Owner Approval → Product Intent Backlog (Inception)
+Premortem + Owner Approval → Product Backlog (Inception)
 ```
 
 **OBC events that feed each DORA metric:**
@@ -67,4 +67,4 @@ Premortem + Owner Approval → Product Intent Backlog (Inception)
 - **Delivery** feeds Operation with releases and deploy evidence — Operation begins after Promote.
 - **Assessment** receives signals from Operation to update risks and the Reliability Plan.
 - **Diligence** observes the operation and triggers verifications when anomalies are detected.
-- **Repository Tracking List** receives new items originating from operational learnings.
+- **Product Tracking List** receives new items originating from operational learnings.

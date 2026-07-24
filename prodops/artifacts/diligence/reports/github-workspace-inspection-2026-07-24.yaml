@@ -1,0 +1,751 @@
+schema_version: 1
+inspection:
+  id: INSPECT-2026-07-24-001
+  executed_at: "2026-07-24T00:00:00Z"
+  executed_by: "cmilfont"
+  mode: read-only
+  repository: "produtoreativo/payments-api"
+  project:
+    owner: "produtoreativo"
+    number: 24
+    id: "PVT_kwDOAT1J1c4BeILX"
+    title: "ProdOps — payments-api"
+    url: "https://github.com/orgs/produtoreativo/projects/24"
+  expected_schema: prodops/framework/journeys/diligence/github-workspace-schema.yaml
+  methods:
+    - "gh auth status (read-only)"
+    - "gh project list --format json (read-only)"
+    - "gh api graphql repository.projectsV2 (read-only)"
+    - "gh api graphql organization.projectsV2 (read-only)"
+    - "gh api graphql organization.projectV2.fields (read-only)"
+    - "gh api graphql organization.projectV2.views (read-only)"
+    - "gh label list (read-only)"
+    - "gh api GET repos/labels (read-only)"
+    - "filesystem read for .github/ (read-only)"
+  permissions:
+    authenticated: true
+    user: "cmilfont"
+    project_read: true
+    repo_read: true
+    scopes_confirmed: true
+    limitations:
+      - "GitHub Projects API (GraphQL) does not expose View filter, group_by, or sort_order configurations"
+      - "Built-in project fields (Assignees, Title, Labels, etc.) cannot be renamed via API or CLI"
+      - "Project automations (built-in GitHub automations) are not accessible via the available APIs"
+  limitations:
+    - "View filter/group_by/sort configurations are Unverifiable via GitHub GraphQL API — stored internally"
+    - "Built-in project fields cannot be renamed, so Owner=Assignees mapping is Unsupported for name alignment"
+    - "Project automations not accessible via API"
+    - "Issue and PR templates not accessible via GitHub API — inspected via filesystem only"
+
+summary:
+  compliant: 2
+  missing: 16
+  different: 5
+  unexpected: 10
+  unsupported: 1
+  unverifiable: 6
+
+project:
+  title: "ProdOps — payments-api"
+  number: 24
+  id: "PVT_kwDOAT1J1c4BeILX"
+  url: "https://github.com/orgs/produtoreativo/projects/24"
+  visibility: "public"
+  closed: false
+  item_count: 32
+  linked_repositories:
+    - "produtoreativo/payments-api"
+  drift: Compliant
+
+fields:
+  observed:
+    # === SYSTEM / BASE FIELDS ===
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr0g"
+      name: "Title"
+      type: "TITLE"
+      classification: "system"
+      expected_name: null
+      drift: Compliant
+      options: []
+      notes: "System field — always present in GitHub Projects; not in schema scope"
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr0k"
+      name: "Assignees"
+      type: "ASSIGNEES"
+      classification: "base_existing"
+      expected_name: "Owner"
+      drift: Unsupported
+      options: []
+      notes: "Schema expects Owner of type assignees. Built-in Assignees field matches the type but not the name. GitHub does not allow renaming built-in fields — rename is Unsupported."
+
+    - id: "PVTSSF_lADOAT1J1c4BeILXzhYkr0o"
+      name: "Status"
+      type: "SINGLE_SELECT"
+      classification: "base_existing"
+      expected_name: "Status"
+      drift: Different
+      options:
+        - name: "Todo"
+          color: "GREEN"
+        - name: "In Progress"
+          color: "YELLOW"
+        - name: "Done"
+          color: "PURPLE"
+      notes: "Field exists. Schema expects options: Todo, In Progress, Done, Blocked, Cancelled. Observed: Todo, In Progress, Done. Missing options: Blocked, Cancelled."
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr0s"
+      name: "Labels"
+      type: "LABELS"
+      classification: "system"
+      expected_name: null
+      drift: Compliant
+      options: []
+      notes: "System field — not in schema scope"
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr0w"
+      name: "Linked pull requests"
+      type: "LINKED_PULL_REQUESTS"
+      classification: "system"
+      expected_name: null
+      drift: Compliant
+      options: []
+      notes: "System field — not in schema scope"
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr00"
+      name: "Milestone"
+      type: "MILESTONE"
+      classification: "system"
+      expected_name: null
+      drift: Compliant
+      options: []
+      notes: "System field — not in schema scope"
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr04"
+      name: "Repository"
+      type: "REPOSITORY"
+      classification: "base_existing"
+      expected_name: "Repository"
+      drift: Compliant
+      options: []
+      notes: "Field exists with correct name and type. Compliant."
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr1A"
+      name: "Reviewers"
+      type: "REVIEWERS"
+      classification: "system"
+      expected_name: null
+      drift: Compliant
+      options: []
+      notes: "System field — not in schema scope"
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr1E"
+      name: "Parent issue"
+      type: "PARENT_ISSUE"
+      classification: "system"
+      expected_name: null
+      drift: Compliant
+      options: []
+      notes: "System field — not in schema scope"
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr1I"
+      name: "Sub-issues progress"
+      type: "SUB_ISSUES_PROGRESS"
+      classification: "system"
+      expected_name: null
+      drift: Compliant
+      options: []
+      notes: "System field — not in schema scope"
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr1M"
+      name: "Created"
+      type: "CREATED"
+      classification: "system"
+      expected_name: null
+      drift: Compliant
+      options: []
+      notes: "System field — not in schema scope"
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr1Q"
+      name: "Updated"
+      type: "UPDATED"
+      classification: "system"
+      expected_name: null
+      drift: Compliant
+      options: []
+      notes: "System field — not in schema scope"
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr1U"
+      name: "Closed"
+      type: "CLOSED"
+      classification: "system"
+      expected_name: null
+      drift: Compliant
+      options: []
+      notes: "System field — not in schema scope"
+
+    # === WORK ITEM CANONICAL FIELDS ===
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr1Y"
+      name: "Artifact ID"
+      type: "TEXT"
+      classification: "work_item_canonical"
+      expected_name: "Artifact ID"
+      drift: Compliant
+      options: []
+      notes: "Field exists with correct name and type (TEXT). Compliant."
+
+    - id: "PVTSSF_lADOAT1J1c4BeILXzhYkr1c"
+      name: "Artifact Type"
+      type: "SINGLE_SELECT"
+      classification: "work_item_canonical"
+      expected_name: "Artifact Type"
+      drift: Different
+      options:
+        - name: "business-signal"
+          color: "BLUE"
+        - name: "architecture"
+          color: "GREEN"
+        - name: "release-trail"
+          color: "ORANGE"
+        - name: "bdd-feature"
+          color: "PURPLE"
+      notes: "Field exists. Schema expects options including Finding, Remediation, Waiver, Evidence, Check (Diligence entities) plus OBC, Business Signal, Business Intent, BDD Feature, Architecture, Reliability Plan, Release Trail, Experiment, Risk Register. Observed options (4) are a small subset using kebab-case names. Missing all Diligence-specific options: Finding, Remediation, Waiver, Evidence, Check. Name casing Different (business-signal vs Business Signal)."
+
+    - id: "PVTSSF_lADOAT1J1c4BeILXzhYkr1g"
+      name: "Operation"
+      type: "SINGLE_SELECT"
+      classification: "work_item_canonical"
+      expected_name: "Operation"
+      drift: Different
+      options:
+        - name: "capture"
+        - name: "promote"
+        - name: "attach"
+        - name: "close"
+        - name: "provision"
+        - name: "scan"
+        - name: "flag"
+        - name: "repair"
+      notes: "Field exists. Schema expects: Review, Implement, Validate, Approve, Capture, Attach, Reconcile, Promote, Close, Create, Update. Observed: capture, promote, attach, close, provision, scan, flag, repair. Missing from schema: Review, Implement, Validate, Approve, Reconcile, Create, Update. Unexpected options (not in schema): provision, scan, flag. Casing: all lowercase vs Title Case in schema."
+
+    - id: "PVTSSF_lADOAT1J1c4BeILXzhYkr1k"
+      name: "Journey"
+      type: "SINGLE_SELECT"
+      classification: "work_item_canonical"
+      expected_name: "Journey"
+      drift: Different
+      options:
+        - name: "assessment"
+        - name: "delivery"
+        - name: "diligence"
+      notes: "Field exists. Schema expects options: Discovery, Assessment, Delivery, Operation, Diligence. Observed: assessment, delivery, diligence. Missing options: Discovery, Operation. Casing: all lowercase vs Title Case in schema. diligence option IS present (key for Diligence journey filtering)."
+
+    - id: "PVTSSF_lADOAT1J1c4BeILXzhYkr1o"
+      name: "Execution Mode"
+      type: "SINGLE_SELECT"
+      classification: "work_item_canonical"
+      expected_name: "Mode"
+      drift: Different
+      options:
+        - name: "sync"
+        - name: "async"
+        - name: "infra"
+      notes: "Schema expects field named 'Mode' with options: Sync, Async, Manual. Observed field named 'Execution Mode' with options: sync, async, infra. Name Different. Missing option: Manual. Unexpected option: infra. Casing: lowercase vs Title Case."
+
+    # === UNEXPECTED CUSTOM FIELDS ===
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr1s"
+      name: "Owner"
+      type: "TEXT"
+      classification: "unexpected"
+      expected_name: null
+      drift: Unexpected
+      options: []
+      notes: "Custom text field named Owner. Schema defines Owner as the built-in Assignees field (type: assignees). This custom TEXT field is not the expected Owner field and is not in the schema. May be used for other journey tracking. Do not remove without investigating usage."
+
+    - id: "PVTF_lADOAT1J1c4BeILXzhYkr1w"
+      name: "Release"
+      type: "TEXT"
+      classification: "unexpected"
+      expected_name: null
+      drift: Unexpected
+      options: []
+      notes: "Custom text field not defined in Diligence schema. Likely used for other ProdOps journey tracking. Investigate usage before any removal decision."
+
+    - id: "PVTSSF_lADOAT1J1c4BeILXzhYk2Vo"
+      name: "Evidence Required"
+      type: "SINGLE_SELECT"
+      classification: "unexpected"
+      expected_name: null
+      drift: Unexpected
+      options:
+        - name: "Required"
+          color: "RED"
+      notes: "Custom single_select field not in Diligence schema. Has one option: Required. Investigate usage in other journeys before any removal decision."
+
+  expected_missing:
+    - name: "Cycle"
+      classification: "work_item_canonical"
+      expected_type: "SINGLE_SELECT"
+      expected_options: ["diligence-sync", "diligence-async", "workspace-reconciliation"]
+      implementation_phase: C
+    - name: "Phase"
+      classification: "work_item_canonical"
+      expected_type: "SINGLE_SELECT"
+      expected_options: ["Capture", "Attach", "Promote", "Close", "Scan", "Flag", "Repair", "Inspect", "Reconcile", "Verify"]
+      implementation_phase: C
+    # Phase E fields — NOT Missing, explicitly Deferred
+    - name: "Blocking"
+      classification: "derived"
+      drift_classification: "Deferred"
+      implementation_phase: E
+      note: "Deferred — requires automation. NOT classified as Missing."
+    - name: "Waiver Expiration"
+      classification: "derived"
+      drift_classification: "Deferred"
+      implementation_phase: E
+      note: "Deferred — requires automation. NOT classified as Missing."
+    - name: "Finding Status"
+      classification: "derived"
+      drift_classification: "Deferred"
+      implementation_phase: E
+      note: "Deferred — requires automation. NOT classified as Missing."
+    - name: "Finding Severity"
+      classification: "derived"
+      drift_classification: "Deferred"
+      implementation_phase: E
+      note: "Deferred — requires automation. NOT classified as Missing."
+
+views:
+  observed:
+    - id: "PVTV_lADOAT1J1c4BeILXzgLDifk"
+      name: "View 1"
+      layout: "TABLE_LAYOUT"
+      drift: Unexpected
+      filter: Unverifiable
+      group_by: Unverifiable
+      notes: "Default unnamed view. Not in Diligence schema. Filter and group_by not accessible via API."
+
+    - id: "PVTV_lADOAT1J1c4BeILXzgLDjI4"
+      name: "All Work Items"
+      layout: "TABLE_LAYOUT"
+      drift: Unexpected
+      filter: Unverifiable
+      group_by: Unverifiable
+      notes: "Generic view not in Diligence schema. Likely a general project view for other journeys. Investigate usage before any removal."
+
+    - id: "PVTV_lADOAT1J1c4BeILXzgLDjI8"
+      name: "By Operation"
+      layout: "TABLE_LAYOUT"
+      drift: Unexpected
+      filter: Unverifiable
+      group_by: Unverifiable
+      notes: "Operation-grouped view not in Diligence schema. Investigate usage."
+
+    - id: "PVTV_lADOAT1J1c4BeILXzgLDjJA"
+      name: "Business Signals"
+      layout: "TABLE_LAYOUT"
+      drift: Unexpected
+      filter: Unverifiable
+      group_by: Unverifiable
+      notes: "Business Signals view not in Diligence schema. Likely serves Discovery/Assessment journeys. Do not remove without investigating usage."
+
+    - id: "PVTV_lADOAT1J1c4BeILXzgLDjJE"
+      name: "Delivery"
+      layout: "TABLE_LAYOUT"
+      drift: Unexpected
+      filter: Unverifiable
+      group_by: Unverifiable
+      notes: "Delivery journey view not in Diligence schema. Used for Delivery journey operations. Do not remove without investigating usage."
+
+    - id: "PVTV_lADOAT1J1c4BeILXzgLDjJI"
+      name: "Diligence"
+      layout: "TABLE_LAYOUT"
+      drift: Unexpected
+      filter: Unverifiable
+      group_by: Unverifiable
+      notes: "Named 'Diligence' — name is related to the Diligence journey but does not match any expected view name from schema (expected: 'Diligence Operations'). Filter config not verifiable via API. May be a partial/pre-existing implementation of 'Diligence Operations' but cannot confirm without filter inspection. Classify as Unexpected pending manual filter verification."
+
+  expected_missing:
+    - name: "Diligence Operations"
+      implementation_phase: C
+      depends_on: ["Journey", "Status"]
+    - name: "Active Remediations"
+      implementation_phase: C
+      depends_on: ["Artifact Type", "Status"]
+    - name: "Workspace Reconciliation"
+      implementation_phase: C
+      depends_on: ["Cycle", "Status"]
+    - name: "Verification Queue"
+      implementation_phase: C
+      depends_on: ["Operation", "Status"]
+    - name: "Diligence History"
+      implementation_phase: C
+      depends_on: ["Journey", "Status"]
+    - name: "Waiver Reviews"
+      implementation_phase: C
+      depends_on: ["Artifact Type", "Status"]
+    # Phase E — Deferred, NOT Missing
+    - name: "Blocking Findings"
+      drift_classification: "Deferred"
+      implementation_phase: E
+      note: "Deferred — depends on Blocking field (Phase E). NOT classified as Missing."
+
+labels:
+  observed:
+    # Expected diligence labels — ALL MISSING
+    # Explicitly rejected label present in repo
+    - name: "journey:diligence"
+      color: "d93f0b"
+      description: "ProdOps journey: Diligence"
+      expected_equivalent: null
+      drift: Unexpected
+      notes: "Explicitly REJECTED in github-workspace-schema.yaml. Schema rationale: redundant with Journey field and expected 'diligence' label; three ways to express same concept create inconsistency. Present in repo — likely used by existing workflows. Investigate usage before any removal decision."
+
+    # Notable artifact-type labels (schema rejects artifact-type:finding/remediation/waiver)
+    - name: "artifact-type:evidence"
+      color: "e4e669"
+      description: "ProdOps artifact type: Evidence"
+      expected_equivalent: null
+      drift: Unexpected
+      notes: "Artifact-type:* labels are in the REJECTED category in schema (redundant with Artifact Type field; Artifact ID prefix already indicates type). Present in repo for other journey use."
+
+    # All other observed labels (54 total) are out of scope of Diligence schema
+    # or belong to other journeys. Standard GitHub labels and other ProdOps
+    # operation/journey/phase labels are documented as Unexpected but out of scope.
+    - name: "[54 labels total observed]"
+      color: "various"
+      description: "See gh label list output for full details"
+      expected_equivalent: null
+      drift: Unexpected
+      notes: "54 labels total in repo. None are the 6 expected diligence labels. Labels belong to other ProdOps journeys (delivery, assessment, discovery, operation), standard GitHub defaults (bug, documentation, etc.), and other custom ProdOps classifications. Full label list in evidence. All are Unexpected from Diligence schema perspective but likely legitimate for other journeys."
+
+  expected_missing:
+    - name: "diligence"
+      implementation_phase: C
+      purpose: "Identifies all Work Items in the Diligence Journey"
+    - name: "diligence:investigation"
+      implementation_phase: C
+      purpose: "Operation: investigating a Finding"
+    - name: "diligence:remediation"
+      implementation_phase: C
+      purpose: "Operation: implementing a Remediation"
+    - name: "diligence:verification"
+      implementation_phase: C
+      purpose: "Operation: post-Remediation verification"
+    - name: "diligence:waiver-review"
+      implementation_phase: C
+      purpose: "Operation: Waiver review or approval"
+    - name: "diligence:reconciliation"
+      implementation_phase: C
+      purpose: "Operation: Workspace Reconciliation"
+
+issue_templates:
+  observed: []
+  drift: Missing
+  notes: "No .github/ISSUE_TEMPLATE/ directory found. Schema specifies an Issue body template (Work Item Issue Body) for Phase C. Template content is specified in github-workspace-schema.yaml but not yet created."
+
+pull_request_templates:
+  observed: []
+  drift: Missing
+  notes: "No .github/pull_request_template.md or .github/PULL_REQUEST_TEMPLATE/ directory found. Schema specifies PR templates for Remediation, Waiver, and Verification bodies. Templates are specified in github-workspace-schema.yaml but not yet created."
+
+workflows:
+  observed:
+    - name: "Deploy to Production"
+      file: "deploy-production.yml"
+      classification: "known"
+      notes: "Product CI/CD workflow. Not ProdOps Diligence-specific. No conflict with Diligence workspace."
+
+    - name: "Experiment Sandbox Deploy"
+      file: "experiment-deploy.yml"
+      classification: "known"
+      notes: "Product CI/CD workflow. Not ProdOps Diligence-specific."
+
+    - name: "PR Quality Gates"
+      file: "pr-gates.yml"
+      classification: "known"
+      notes: "Product quality gates. Mirrors manifest.yaml gates. Not ProdOps Diligence-specific."
+
+    - name: "Release"
+      file: "release.yml"
+      classification: "known"
+      notes: "Product release workflow. Not ProdOps Diligence-specific."
+
+    - name: "Deploy to Staging"
+      file: "staging-deploy.yml"
+      classification: "known"
+      notes: "Product CI/CD workflow. Not ProdOps Diligence-specific."
+
+automations:
+  project_automations: Unverifiable
+  notes: "Built-in GitHub Project automations are not accessible via the available GraphQL or REST API. Cannot determine whether any automations are configured for the project."
+
+drift:
+  - id: DRF-001
+    category: field
+    element: "Status"
+    classification: Different
+    expected_state: "SINGLE_SELECT with options: Todo, In Progress, Done, Blocked, Cancelled"
+    observed_state: "SINGLE_SELECT with options: Todo, In Progress, Done (Missing: Blocked, Cancelled)"
+    notes: "Field exists. Two options absent: Blocked and Cancelled. Low-priority drift as base Status field is functional for most operations."
+
+  - id: DRF-002
+    category: field
+    element: "Journey"
+    classification: Different
+    expected_state: "SINGLE_SELECT with options: Discovery, Assessment, Delivery, Operation, Diligence (Title Case)"
+    observed_state: "SINGLE_SELECT with options: assessment, delivery, diligence (lowercase; Missing: Discovery, Operation)"
+    notes: "Field exists. Key option 'diligence' is present (lowercase). Missing: Discovery, Operation. Casing inconsistency with schema. Diligence filtering is functional with current state."
+
+  - id: DRF-003
+    category: field
+    element: "Cycle"
+    classification: Missing
+    expected_state: "SINGLE_SELECT with options: diligence-sync, diligence-async, workspace-reconciliation"
+    observed_state: "NOT FOUND"
+    notes: "Required for Diligence Operations and Workspace Reconciliation views. Must be created in Phase C Reconcile."
+
+  - id: DRF-004
+    category: field
+    element: "Phase"
+    classification: Missing
+    expected_state: "SINGLE_SELECT with options: Capture, Attach, Promote, Close, Scan, Flag, Repair, Inspect, Reconcile, Verify"
+    observed_state: "NOT FOUND"
+    notes: "Required for phase-based filtering and grouping in Diligence views. Must be created in Phase C Reconcile."
+
+  - id: DRF-005
+    category: field
+    element: "Operation"
+    classification: Different
+    expected_state: "SINGLE_SELECT with options: Review, Implement, Validate, Approve, Capture, Attach, Reconcile, Promote, Close, Create, Update (Title Case)"
+    observed_state: "SINGLE_SELECT with options: capture, promote, attach, close, provision, scan, flag, repair (lowercase; missing: Review, Implement, Validate, Approve, Reconcile, Create, Update; unexpected: provision, scan, flag)"
+    notes: "Field exists but option set is significantly different. Missing critical Diligence operations: Review, Validate, Approve, Reconcile. Unexpected options (not in schema): provision, scan, flag. Needs update in Phase C Reconcile."
+
+  - id: DRF-006
+    category: field
+    element: "Mode"
+    classification: Different
+    expected_state: "Field named 'Mode', SINGLE_SELECT, options: Sync, Async, Manual"
+    observed_state: "Field named 'Execution Mode', SINGLE_SELECT, options: sync, async, infra"
+    notes: "Field exists with different name ('Execution Mode' vs 'Mode') and different option set (infra vs Manual). Name and options need alignment in Phase C Reconcile."
+
+  - id: DRF-007
+    category: field
+    element: "Artifact Type"
+    classification: Different
+    expected_state: "SINGLE_SELECT with options: Finding, Remediation, Waiver, Evidence, Check, OBC, Business Signal, Business Intent, BDD Feature, Architecture, Reliability Plan, Release Trail, Experiment, Risk Register"
+    observed_state: "SINGLE_SELECT with options: business-signal, architecture, release-trail, bdd-feature (4 options, kebab-case)"
+    notes: "Field exists. Missing all Diligence-specific options: Finding, Remediation, Waiver, Evidence, Check. Also missing: OBC, Business Intent, Reliability Plan, Experiment, Risk Register. Present options are a small subset with different casing/format. Critical gap for Diligence Work Items."
+
+  - id: DRF-008
+    category: field
+    element: "Owner (Assignees built-in)"
+    classification: Unsupported
+    expected_state: "Field named 'Owner' of type assignees"
+    observed_state: "Built-in field named 'Assignees' of type ASSIGNEES (cannot be renamed)"
+    notes: "GitHub Projects v2 built-in Assignees field cannot be renamed via API or UI. The semantic role matches (type assignees) but the name alignment is Unsupported. This is an API limitation, not a configuration error."
+
+  - id: DRF-009
+    category: field
+    element: "Owner (custom TEXT field)"
+    classification: Unexpected
+    expected_state: "Not in schema (schema defines Owner as the Assignees built-in field)"
+    observed_state: "Custom TEXT field named 'Owner' — likely added for text-based owner tracking"
+    notes: "Custom text Owner field not in schema. Investigate usage in existing Work Items before any removal. May serve legitimate tracking purpose for other journeys."
+
+  - id: DRF-010
+    category: field
+    element: "Release"
+    classification: Unexpected
+    expected_state: "Not in schema"
+    observed_state: "Custom TEXT field named 'Release'"
+    notes: "Not in Diligence schema. May be used for release tracking in Delivery journey. Investigate before removal."
+
+  - id: DRF-011
+    category: field
+    element: "Evidence Required"
+    classification: Unexpected
+    expected_state: "Not in schema"
+    observed_state: "Custom SINGLE_SELECT field with option: Required"
+    notes: "Not in Diligence schema. Investigate usage in existing Work Items. May serve a tracking purpose for other journeys."
+
+  - id: DRF-012
+    category: view
+    element: "Diligence Operations"
+    classification: Missing
+    expected_state: "View named 'Diligence Operations', filter: Journey = Diligence AND Status NOT IN [Done, Cancelled], group_by: Phase"
+    observed_state: "NOT FOUND"
+    notes: "Primary Diligence view not present. Must be created in Phase C Reconcile after Cycle and Phase fields are available."
+
+  - id: DRF-013
+    category: view
+    element: "Active Remediations"
+    classification: Missing
+    expected_state: "View named 'Active Remediations', filter: Artifact Type = Remediation AND Status IN [Todo, In Progress]"
+    observed_state: "NOT FOUND"
+    notes: "Must be created in Phase C Reconcile after Artifact Type includes Remediation option."
+
+  - id: DRF-014
+    category: view
+    element: "Workspace Reconciliation"
+    classification: Missing
+    expected_state: "View named 'Workspace Reconciliation', filter: Cycle = workspace-reconciliation AND Status NOT IN [Done, Cancelled]"
+    observed_state: "NOT FOUND"
+    notes: "Must be created in Phase C Reconcile after Cycle field is available."
+
+  - id: DRF-015
+    category: view
+    element: "Verification Queue"
+    classification: Missing
+    expected_state: "View named 'Verification Queue', filter: Operation = Validate AND Status = Todo"
+    observed_state: "NOT FOUND"
+    notes: "Must be created in Phase C Reconcile after Operation includes Validate option."
+
+  - id: DRF-016
+    category: view
+    element: "Diligence History"
+    classification: Missing
+    expected_state: "View named 'Diligence History', filter: Journey = Diligence AND Status = Done"
+    observed_state: "NOT FOUND"
+    notes: "Must be created in Phase C Reconcile."
+
+  - id: DRF-017
+    category: view
+    element: "Waiver Reviews"
+    classification: Missing
+    expected_state: "View named 'Waiver Reviews', filter: Artifact Type = Waiver AND Status NOT IN [Done, Cancelled]"
+    observed_state: "NOT FOUND"
+    notes: "Must be created in Phase C Reconcile after Artifact Type includes Waiver option."
+
+  - id: DRF-018
+    category: view
+    element: "View 1"
+    classification: Unexpected
+    expected_state: "Not in schema"
+    observed_state: "TABLE_LAYOUT view named 'View 1' (default unnamed view)"
+    notes: "Default placeholder view. Consider renaming or removing after Diligence views are created. Filter config not verifiable via API."
+
+  - id: DRF-019
+    category: view
+    element: "All Work Items"
+    classification: Unexpected
+    expected_state: "Not in schema"
+    observed_state: "TABLE_LAYOUT view named 'All Work Items'"
+    notes: "Generic project view. May serve as useful catch-all. Not conflicting with Diligence views. Investigate before removal decision."
+
+  - id: DRF-020
+    category: view
+    element: "By Operation"
+    classification: Unexpected
+    expected_state: "Not in schema"
+    observed_state: "TABLE_LAYOUT view named 'By Operation'"
+    notes: "Operation-grouped view. Not in Diligence schema. May overlap with planned 'Diligence Operations' view. Investigate before removal."
+
+  - id: DRF-021
+    category: view
+    element: "Business Signals"
+    classification: Unexpected
+    expected_state: "Not in schema"
+    observed_state: "TABLE_LAYOUT view named 'Business Signals'"
+    notes: "View for Discovery/Assessment journey Business Signals. Not in Diligence schema but likely legitimate for other journeys. Do not remove."
+
+  - id: DRF-022
+    category: view
+    element: "Delivery"
+    classification: Unexpected
+    expected_state: "Not in schema"
+    observed_state: "TABLE_LAYOUT view named 'Delivery'"
+    notes: "View for Delivery journey operations. Not in Diligence schema but likely legitimate. Do not remove."
+
+  - id: DRF-023
+    category: view
+    element: "Diligence"
+    classification: Unexpected
+    expected_state: "Not in schema (schema defines 'Diligence Operations', not 'Diligence')"
+    observed_state: "TABLE_LAYOUT view named 'Diligence' — filter config Unverifiable"
+    notes: "View name is Diligence-related but does not match expected 'Diligence Operations'. May be a partial/pre-existing implementation. Filter config cannot be verified via API. Recommend manual inspection to determine if this view can be repurposed as 'Diligence Operations' in Plan phase."
+
+  - id: DRF-024
+    category: label
+    element: "diligence"
+    classification: Missing
+    expected_state: "Label named 'diligence', approved for Phase C"
+    observed_state: "NOT FOUND"
+    notes: "Base Diligence journey label. Required for all Work Items in the Diligence journey. Must be created in Phase C Reconcile."
+
+  - id: DRF-025
+    category: label
+    element: "diligence:investigation"
+    classification: Missing
+    expected_state: "Label named 'diligence:investigation'"
+    observed_state: "NOT FOUND"
+    notes: "Must be created in Phase C Reconcile."
+
+  - id: DRF-026
+    category: label
+    element: "diligence:remediation"
+    classification: Missing
+    expected_state: "Label named 'diligence:remediation'"
+    observed_state: "NOT FOUND"
+    notes: "Must be created in Phase C Reconcile."
+
+  - id: DRF-027
+    category: label
+    element: "diligence:verification"
+    classification: Missing
+    expected_state: "Label named 'diligence:verification'"
+    observed_state: "NOT FOUND"
+    notes: "Must be created in Phase C Reconcile."
+
+  - id: DRF-028
+    category: label
+    element: "diligence:waiver-review"
+    classification: Missing
+    expected_state: "Label named 'diligence:waiver-review'"
+    observed_state: "NOT FOUND"
+    notes: "Must be created in Phase C Reconcile."
+
+  - id: DRF-029
+    category: label
+    element: "diligence:reconciliation"
+    classification: Missing
+    expected_state: "Label named 'diligence:reconciliation'"
+    observed_state: "NOT FOUND"
+    notes: "Must be created in Phase C Reconcile."
+
+  - id: DRF-030
+    category: label
+    element: "journey:diligence"
+    classification: Unexpected
+    expected_state: "NOT in schema (explicitly rejected)"
+    observed_state: "Label 'journey:diligence' present with color d93f0b"
+    notes: "Explicitly REJECTED in github-workspace-schema.yaml. Rationale: redundant with Journey field and expected 'diligence' label. Present in repo. Investigate usage in existing Issues and automations before any removal. Conservative policy: do not remove until impact assessed."
+
+  - id: DRF-031
+    category: template
+    element: "Issue template (Work Item body)"
+    classification: Missing
+    expected_state: "Issue body template with ProdOps References section"
+    observed_state: "No .github/ISSUE_TEMPLATE/ directory or files found"
+    notes: "Schema specifies Issue body template structure for Phase C. Must be created in Phase C Reconcile."
+
+  - id: DRF-032
+    category: template
+    element: "PR templates (Remediation, Waiver, Verification)"
+    classification: Missing
+    expected_state: "PR body templates with Diligence References section"
+    observed_state: "No .github/pull_request_template.md or PULL_REQUEST_TEMPLATE/ directory found"
+    notes: "Schema specifies three PR template types for Phase C. Must be created in Phase C Reconcile."
+
+evidence:
+  references:
+    - id: EVD-2026-0001
+      path: prodops/artifacts/diligence/evidence/EVD-2026-0001.md
+      status: Collected
+      type: Inspection Snapshot
+
+next_step:
+  allowed: Plan
+  reconcile_executed: false
+  verify_executed: false
+  notes: "Inspect complete. No mutations executed. Ready to produce Plan based on this Drift Summary. Authorization required before any Reconcile action."

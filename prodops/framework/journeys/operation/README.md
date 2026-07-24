@@ -16,7 +16,7 @@ A Operation inicia após a promoção da entrega pela fase Promote do CI Async.
 - coleta de métricas operacionais
 - postmortems e aprendizado operacional
 
-Os aprendizados operacionais podem originar novos itens para o **Repository Tracking List**. Esse é o mecanismo pelo qual a Operation alimenta o ciclo de evolução do produto.
+Os aprendizados operacionais podem originar novos itens para o **Product Tracking List**. Esse é o mecanismo pelo qual a Operation alimenta o ciclo de evolução do produto.
 
 ## Arquivos
 
@@ -50,9 +50,9 @@ Operational Trail detecta deterioração de métrica DORA
   ↓
 Continuous Assessment registra sinal em risks.md ou opportunities.md
   ↓
-Novo item na Repository Tracking List com Origin Stream identificado
+Novo item na Product Tracking List com Origin Stream identificado
   ↓
-Premortem + Owner Approval → Product Intent Backlog (Inception)
+Premortem + Owner Approval → Product Backlog (Inception)
 ```
 
 **Eventos de OBC que alimentam cada métrica DORA:**
@@ -67,4 +67,4 @@ Premortem + Owner Approval → Product Intent Backlog (Inception)
 - **Delivery** alimenta a Operation com releases e evidências de deploy — Operation inicia após Promote.
 - **Assessment** recebe sinais de operation para atualizar riscos e Reliability Plan.
 - **Diligence** observa a operação e dispara verificações quando anomalias são detectadas.
-- **Repository Tracking List** recebe novos itens originados de aprendizados operacionais.
+- **Product Tracking List** recebe novos itens originados de aprendizados operacionais.

@@ -1,6 +1,10 @@
 # Workspace Reconciliation
 
-Workspace Reconciliation é uma **capability** (não um ciclo) do ProdOps Diligence. Ela mantém o GitHub Workspace (Labels, Custom Fields, Views, projetos gerenciados) alinhado à **Canonical Specification** definida em `prodops/framework/github-workspace.md`.
+Workspace Reconciliation é uma **Capability** do ProdOps Diligence — não é um Cycle, não é uma Phase de nenhum Cycle, e não possui acionamento próprio independente.
+
+É invocada como sub-rotina pelos ciclos diligence-sync e diligence-async, e pelo Bootstrap. Qualquer ponto do Framework que necessite alinhar a infraestrutura do GitHub Workspace pode invocar esta Capability — ela retorna um Conformance Report ao chamador e não persiste estado de execução.
+
+Ela mantém o GitHub Workspace (Labels, Custom Fields, Views, projetos gerenciados) alinhado à **Canonical Specification** definida em `prodops/framework/github-workspace.md`.
 
 > **Princípio:** A Canonical Specification é a fonte de verdade. O Actual Workspace é o estado real do GitHub. Qualquer divergência entre os dois é chamada de **Workspace Drift** e deve ser detectada, corrigida e verificada antes de qualquer jornada que dependa da infraestrutura.
 
@@ -15,6 +19,16 @@ Workspace Reconciliation é uma **capability** (não um ciclo) do ProdOps Dilige
 | **Workspace Drift** | Qualquer divergência entre Canonical Specification e Actual Workspace — labels ausentes, campos faltando, views não criadas, projetos fora da spec. |
 
 ---
+
+## Steps internos: Inspect → Reconcile → Verify
+
+Os passos Inspect, Reconcile e Verify são **steps internos desta Capability** — não são Phases de nenhum Cycle da Diligence. Eles são executados exclusivamente dentro do escopo de uma invocação de Workspace Reconciliation.
+
+**Hierarquia de fontes de verdade (respeitada pelo Reconcile):**
+1. Canonical Specification (`prodops/framework/github-workspace.md`) — fonte normativa
+2. Actual Workspace (estado real do GitHub lido via API) — estado a ser corrigido
+
+O Reconcile nunca inverte essa hierarquia: quando há conflito, a Canonical Specification prevalece.
 
 ## Fluxo: Inspect → Reconcile → Verify
 
@@ -133,11 +147,11 @@ O ciclo Diligence Sync pode invocar Workspace Reconciliation quando o step Attac
 
 ## Steps
 
-| Step | Responsabilidade | Arquivo |
-|---|---|---|
-| **Inspect** | Lê Canonical Specification e Actual Workspace; produz Drift Report completo. Não cria nem atualiza nada. | [steps/inspect/SKILL.md](../../../skills/diligence/workspace-reconciliation/steps/inspect/SKILL.md) |
-| **Reconcile** | Executa criações e atualizações identificadas pelo Inspect. Para gaps não automatizáveis, abre Issue de rastreamento. Nunca remove sem confirmação. | [steps/reconcile/SKILL.md](../../../skills/diligence/workspace-reconciliation/steps/reconcile/SKILL.md) |
-| **Verify** | Confirma programaticamente o estado de todas as categorias após o Reconcile. Produz Conformance Report e atualiza o sync manifest. | [steps/verify/SKILL.md](../../../skills/diligence/workspace-reconciliation/steps/verify/SKILL.md) |
+| Step | Responsabilidade | Restrições | Arquivo |
+|---|---|---|---|
+| **Inspect** | Lê Canonical Specification e Actual Workspace; produz Drift Report completo. | **Não cria, não modifica, não remove nada** — leitura pura. | [steps/inspect/SKILL.md](../../../skills/diligence/workspace-reconciliation/steps/inspect/SKILL.md) |
+| **Reconcile** | Executa criações e atualizações identificadas pelo Inspect. Para gaps não automatizáveis, abre Issue de rastreamento. | Nunca remove sem confirmação; respeita a hierarquia de fontes de verdade; nunca altera conteúdo de artefatos do Knowledge Space. | [steps/reconcile/SKILL.md](../../../skills/diligence/workspace-reconciliation/steps/reconcile/SKILL.md) |
+| **Verify** | Confirma programaticamente o estado de todas as categorias após o Reconcile. Produz Conformance Report e atualiza o sync manifest. | Não aplica novas correções; apenas confirma o resultado do Reconcile. | [steps/verify/SKILL.md](../../../skills/diligence/workspace-reconciliation/steps/verify/SKILL.md) |
 
 ---
 
@@ -157,5 +171,5 @@ O ciclo Diligence Sync pode invocar Workspace Reconciliation quando o step Attac
 → [Canonical Specification — github-workspace.md](../../github-workspace.md)
 → [GitHub Sync Manifest](../../../artifacts/trails/github-sync-manifest.md)
 → [Diligence journey README](../../README.md)
-→ [Capabilities README](../../README.md)
+→ [Capabilities README](capabilities/README.md)
 → [Orchestrator SKILL.md](../../../skills/diligence/workspace-reconciliation/SKILL.md)

@@ -26,8 +26,10 @@ Se o OBC já existe em `prodops/artifacts/obcs/<obc-id>.md`:
 - Atualizar o campo de status e adicionar entrada no histórico de decisões
 
 Se o OBC não existe:
+- Verificar que existe um gatilho canônico documentado: experimento concluído, decisão de Assessment registrada, sinal de Operation que justifica o OBC, ou operação autorizada
 - Criar o arquivo seguindo o template disponível em `prodops/templates/` (se existir)
 - Preencher: identificador, Business Intent de origem, estado inicial, decisão registrada
+- **Não criar OBC sem gatilho canônico** — Capture registra decisões já tomadas, não inventa conteúdo ou comprometimentos de negócio
 
 ### 3. Registrar a decisão
 
@@ -51,11 +53,13 @@ git add prodops/artifacts/product/backlogs/tracking-list.md
 git commit -m "docs(diligence): capture business signal — <descrição curta>"
 ```
 
-### 5. Sinalizar Attach como obrigatório para Business Signals
+### 5. Avaliar necessidade de Attach para Business Signals
 
-Quando o artefato capturado for um **Business Signal** (entrada na tracking list), o step Attach é obrigatório imediatamente após Capture — não é opcional. Business Signals exigem um GitHub Issue correspondente (Business Signal Issue). O ciclo diligence-sync não está completo para um Business Signal sem o Issue criado.
+Quando o artefato capturado for um **Business Signal** (entrada na tracking list), avaliar se existe operação ativa em andamento sobre o Signal. Se houver operação ativa identificada (ex.: exploração, triagem, promoção para Business Intent) e não existir Work Item rastreável, sinalizar Attach como próximo step.
 
-Registrar explicitamente antes de encerrar: "Business Signal capturado — Attach obrigatório para criar o GitHub Issue."
+A ausência de Work Item não é automaticamente uma divergência. Work Items são criados quando há trabalho identificado sobre o Signal — não automaticamente ao registrar o Signal.
+
+Registrar explicitamente antes de encerrar: "Business Signal capturado — [há/não há] operação ativa identificada — [Attach necessário / Attach não necessário neste momento]."
 
 ## Post-conditions
 
@@ -63,14 +67,14 @@ Concluído quando **todos** os itens abaixo são verdadeiros:
 
 - Artefato committed com estado canônico atualizado
 - Decisão registrada com data, justificativa e referência ao artefato fonte
-- Se Business Signal: Attach sinalizado como próximo step obrigatório
+- Se Business Signal: avaliada a necessidade de Attach com base na existência de operação ativa
 - Nenhum Work Item criado neste step (responsabilidade de Attach)
 
 ## Guardrails
 
 - Não criar Work Items neste step — isso é Attach.
 - Não inventar decisões que não estão documentadas no artefato fonte.
-- Não encerrar o ciclo diligence-sync após Capture quando o artefato for um Business Signal — Attach é sempre o próximo step.
+- Não encerrar o ciclo diligence-sync após Capture quando o artefato for um Business Signal com operação ativa identificada — Attach é o próximo step nesse caso.
 - Não alterar BDD Features ou Reliability Plan — responsabilidade de Delivery ou Assessment.
 - Se o OBC exigir uma nova decisão de produto para ser atualizado, parar e surfacing como bloqueador.
 

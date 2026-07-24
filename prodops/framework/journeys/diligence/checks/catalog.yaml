@@ -1,0 +1,1559 @@
+schema_version: 1
+catalog_version: "1.0.0"
+last_updated: "2026-07-24"
+description: >
+  Catálogo canônico de Checks da Jornada de Diligence.
+  Este catálogo é declarativo — descreve regras, não implementações.
+  Checks não executam Checks. Checks não criam Findings diretamente.
+  → Modelo canônico: prodops/framework/journeys/diligence/model/check.md
+  → Instâncias: prodops/artifacts/diligence/
+  → Templates: prodops/templates/diligence/
+
+defaults:
+  finding_template: prodops/templates/diligence/finding.md
+  findings_dir: prodops/artifacts/diligence/findings/
+  evidence_template: prodops/templates/diligence/evidence.md
+  evidence_dir: prodops/artifacts/diligence/evidence/
+  registry: prodops/artifacts/diligence/registry.yaml
+  deduplication_key:
+    - check_id
+    - primary_subject
+    - condition
+    - scope
+
+checks:
+  - id: DIL-CON-001
+    version: 1
+    status: Active
+    name: "Normative Vocabulary Consistency"
+    description: >
+      Verifica que documentos normativos utilizam os termos canônicos definidos
+      no glossário e na ontologia do framework. Exemplos de termos incorretos que
+      devem ser detectados: "Business Signal Issue" como tipo de Issue canônica,
+      "Workspace Reconciliation" referenciado como Cycle (é uma Capability),
+      "Product Intent Backlog" (não é um backlog canônico), títulos de Work Item
+      no formato "[Operation] — [Type] [ID]: desc" (não é o padrão canônico).
+      Esta regra NÃO se aplica a trilhas históricas nem a conteúdo explicitamente
+      rotulado como legado — histórico preserva o vocabulário do momento original.
+    primary_dimension: Conceptual
+    secondary_dimensions: []
+    category: Documentation
+    type: Conformance
+    scope:
+      - Normative document
+    execution_modes:
+      - Async
+      - Manual
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+      - Normative document change
+    source_of_truth:
+      - prodops/framework/glossary.md
+      - prodops/framework/ontology.md
+      - prodops/framework/knowledge-vs-execution.md
+    expected_condition: >
+      Todos os termos presentes no documento normativo avaliado pertencem ao
+      vocabulário canônico do framework conforme definido no glossário e na
+      ontologia. Nenhuma denominação obsoleta, alternativa não aprovada ou
+      classificação incorreta de entidade é usada como instrução atual.
+    failure_condition: >
+      O documento normativo contém termo não canônico, denominação obsoleta ou
+      classificação incorreta de entidade (ex: Workspace Reconciliation tratada
+      como Cycle em vez de Capability; "Business Signal Issue" como tipo de Issue
+      canônica; título de Work Item no formato legado).
+    warning_condition: ""
+    not_applicable_condition: >
+      O documento avaliado é uma trilha histórica (trail), registro de sessão
+      histórico, ou foi explicitamente rotulado como conteúdo legado. Vocabulário
+      histórico em trilhas não é inconsistência — preserva o estado original.
+    indeterminate_condition: >
+      O termo encontrado não está nem no glossário canônico nem na lista de
+      termos proibidos — requer revisão humana para classificar.
+    error_condition: >
+      O documento não pôde ser lido ou o glossário/ontologia de referência não
+      está acessível no momento da avaliação.
+    severity_default: Medium
+    blocking: false
+    blocking_scope: []
+    waiver_allowed: true
+    auto_finding: false
+    human_review_required: true
+    evidence_required:
+      - Path do documento e seção onde o termo foi encontrado
+      - Termo observado (exato, com contexto de 1-2 frases)
+      - Termo canônico esperado conforme source_of_truth
+    subject_type:
+      - Document
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Atualizar o documento substituindo o termo não canônico pelo termo correto
+      conforme glossário e ontologia. Se o conteúdo é histórico, adicionar nota
+      de contexto sem alterar o registro original.
+    escalation_targets:
+      - Framework Owner
+    notes: ""
+
+  - id: DIL-CON-002
+    version: 1
+    status: Active
+    name: "Ontological Classification Consistency"
+    description: >
+      Verifica que os conceitos do framework — Journey, Cycle, Phase, Capability
+      e Skill — são classificados corretamente conforme a ontologia canônica em
+      contextos normativos. Exemplo crítico: workspace-reconciliation é uma
+      Capability invocada pelos ciclos, não um terceiro Cycle independente.
+      Atribuir a classificação errada a esses conceitos cria ambiguidade sobre
+      o modelo de execução da Diligence. Não se aplica a trilhas históricas.
+    primary_dimension: Conceptual
+    secondary_dimensions: []
+    category: Documentation
+    type: Consistency
+    scope:
+      - Normative document
+    execution_modes:
+      - Async
+      - Manual
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+      - Normative document change
+    source_of_truth:
+      - prodops/framework/ontology.md
+    expected_condition: >
+      Todos os conceitos do framework (Journey, Cycle, Phase, Capability, Skill)
+      são referenciados com a classificação correta em documentos normativos.
+      Workspace Reconciliation aparece exclusivamente como Capability, nunca
+      como Cycle.
+    failure_condition: >
+      Um conceito do framework é classificado de forma inconsistente com a
+      ontologia canônica (ex: Workspace Reconciliation referenciada como Cycle;
+      Phase referenciada como Cycle; Skill referenciada como Journey).
+    warning_condition: ""
+    not_applicable_condition: >
+      O documento avaliado é uma trilha histórica ou conteúdo explicitamente
+      rotulado como legado.
+    indeterminate_condition: >
+      O conceito encontrado não está coberto pela ontologia atual — requer
+      decisão do Framework Owner sobre classificação.
+    error_condition: >
+      A ontologia de referência não está acessível no momento da avaliação.
+    severity_default: High
+    blocking: false
+    blocking_scope: []
+    waiver_allowed: true
+    auto_finding: false
+    human_review_required: true
+    evidence_required:
+      - Path do documento e seção com a classificação incorreta
+      - "Classificação encontrada (ex: \"Cycle\")"
+      - "Classificação canônica esperada (ex: \"Capability\") conforme ontologia.md"
+    subject_type:
+      - Document
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Atualizar o documento com a classificação canônica correta. Documentar
+      a mudança no trail do artefato se relevante para contexto histórico.
+    escalation_targets:
+      - Framework Owner
+    notes: ""
+
+  - id: DIL-STR-001
+    version: 1
+    status: Active
+    name: "Entity File in Canonical Path"
+    description: >
+      Verifica que arquivos de entidade da Diligence (Finding, Evidence,
+      Remediation, Waiver) existem no diretório canônico declarado no manifest
+      e que o nome do arquivo é exatamente igual ao ID declarado no front matter.
+      Um arquivo FND-2026-0001.md deve residir em
+      prodops/artifacts/diligence/findings/ e seu front matter deve declarar
+      id: FND-2026-0001. Divergência nesta regra quebra rastreabilidade por ID.
+      waiver_allowed é false porque usar path incorreto é violação estrutural que
+      torna o ID não-rastreável por qualquer mecanismo automatizável.
+    primary_dimension: Structural
+    secondary_dimensions: []
+    category: Governance
+    type: Presence
+    scope:
+      - Finding file
+      - Evidence file
+      - Remediation file
+      - Waiver file
+    execution_modes:
+      - Async
+      - Manual
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+      - Entity file creation
+    source_of_truth:
+      - prodops/artifacts/diligence/README.md
+      - prodops/exec/manifest.yaml
+    expected_condition: >
+      Todos os arquivos de entidade da Diligence residem no diretório canônico
+      para seu tipo (findings/, evidence/, remediations/, waivers/) e o nome
+      do arquivo coincide exatamente com o ID declarado no front matter.
+    failure_condition: >
+      Um arquivo de entidade está em diretório incorreto (ex: Finding em
+      evidence/) ou o nome do arquivo difere do ID no front matter (ex: arquivo
+      chamado FND-2026-X.md mas front matter declara id: FND-2026-0001).
+    warning_condition: ""
+    not_applicable_condition: >
+      Nenhuma entidade da Diligence existe ainda no produto — diretórios vazios
+      não geram Finding.
+    indeterminate_condition: >
+      O arquivo não possui front matter legível ou o campo id está ausente.
+    error_condition: >
+      Os diretórios canônicos não existem no repositório ou o manifest não
+      está acessível.
+    severity_default: High
+    blocking: true
+    blocking_scope:
+      - Registry Update
+    waiver_allowed: false
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Path atual do arquivo de entidade
+      - Nome do arquivo (filename)
+      - Valor do campo id no front matter do arquivo
+      - Path canônico esperado conforme manifest.yaml
+    subject_type:
+      - Document
+      - Finding
+      - Evidence
+      - Remediation
+      - Waiver
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Mover o arquivo para o diretório canônico correto e/ou renomear o arquivo
+      para coincidir com o ID no front matter. Atualizar registry.yaml na mesma
+      operação. Nunca alterar o ID da entidade — apenas a localização do arquivo.
+    escalation_targets:
+      - Framework Owner
+    notes: >
+      waiver_allowed: false porque usar path incorreto torna o ID não-rastreável.
+      Nenhuma justificativa de negócio pode compensar a quebra de rastreabilidade
+      estrutural de entidades da Diligence.
+
+  - id: DIL-STR-002
+    version: 1
+    status: Active
+    name: "Registry Consistent with Entity Files"
+    description: >
+      Verifica a consistência bidirecional entre registry.yaml e os arquivos de
+      entidade: toda entidade no registry deve ter arquivo correspondente, e todo
+      arquivo de entidade deve ter entrada no registry. Quando há divergência,
+      o arquivo de entidade sempre prevalece — o registry é reconstruível a partir
+      dos arquivos. Drift entre registry e arquivos é Finding estrutural a ser
+      reparado pelo próximo ciclo Repair.
+    primary_dimension: Structural
+    secondary_dimensions: []
+    category: Governance
+    type: Consistency
+    scope:
+      - Registry file
+      - Entity files
+    execution_modes:
+      - Async
+      - Manual
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+      - Registry update
+    source_of_truth:
+      - prodops/artifacts/diligence/README.md
+    expected_condition: >
+      O registry.yaml contém exatamente as mesmas entidades que os arquivos
+      presentes nos diretórios findings/, evidence/, remediations/ e waivers/.
+      Nenhuma entrada orphã no registry; nenhum arquivo sem entrada no registry.
+    failure_condition: >
+      Existe entrada no registry sem arquivo correspondente no diretório, ou
+      existe arquivo de entidade sem entrada no registry. Qualquer divergência
+      entre o conjunto de IDs no registry e o conjunto de nomes de arquivo é
+      uma inconsistência estrutural.
+    warning_condition: ""
+    not_applicable_condition: >
+      Nenhuma entidade existe ainda — registry vazio e diretórios vazios são
+      estado consistente.
+    indeterminate_condition: >
+      O registry.yaml não pôde ser lido ou está malformado.
+    error_condition: >
+      O registry.yaml não existe ou os diretórios de entidades não existem.
+    severity_default: Medium
+    blocking: false
+    blocking_scope: []
+    waiver_allowed: true
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Lista de IDs no registry.yaml
+      - Lista de nomes de arquivo nos diretórios de entidade
+      - Diff entre as duas listas (entradas em apenas um dos lados)
+    subject_type:
+      - Document
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Reconstruir registry.yaml a partir dos arquivos de entidade (o arquivo
+      sempre prevalece). Se há entrada no registry sem arquivo, remover a entrada.
+      Se há arquivo sem entrada, adicionar a entrada ao registry.
+    escalation_targets:
+      - Framework Owner
+    notes: ""
+
+  - id: DIL-STR-003
+    version: 1
+    status: Active
+    name: "Entity ID Uniqueness"
+    description: >
+      Verifica que nenhum ID de entidade da Diligence aparece mais de uma vez
+      no conjunto de arquivos e registry. Colisão de ID é a falha estrutural
+      mais grave do sistema — torna impossível referenciar inequivocamente uma
+      entidade. waiver_allowed: false porque ID duplicado destrói rastreabilidade
+      de forma irreversível enquanto a colisão existir — não há modo seguro de
+      conviver com IDs duplicados.
+    primary_dimension: Structural
+    secondary_dimensions: []
+    category: Governance
+    type: Presence
+    scope:
+      - All entity files
+      - Registry file
+    execution_modes:
+      - Async
+      - Manual
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+      - Entity file creation
+    source_of_truth:
+      - prodops/artifacts/diligence/README.md
+    expected_condition: >
+      Cada ID de entidade (FND-YYYY-NNNN, EVD-YYYY-NNNN, RMD-YYYY-NNNN,
+      WVR-YYYY-NNNN) aparece no máximo uma vez no conjunto total de arquivos
+      e no registry. Não existe colisão entre entidades do mesmo tipo nem
+      entre tipos diferentes.
+    failure_condition: >
+      O mesmo ID aparece em dois ou mais arquivos, ou aparece mais de uma vez
+      no registry. Qualquer colisão de ID, independente do tipo de entidade.
+    warning_condition: ""
+    not_applicable_condition: >
+      Nenhuma entidade existe ainda — estado vazio não tem risco de colisão.
+    indeterminate_condition: >
+      Um arquivo não pôde ser lido ou o ID não está legível no front matter.
+    error_condition: >
+      Os diretórios ou o registry não puderam ser lidos.
+    severity_default: Critical
+    blocking: true
+    blocking_scope:
+      - Registry Update
+    waiver_allowed: false
+    auto_finding: true
+    human_review_required: true
+    evidence_required:
+      - Lista completa de IDs encontrados no registry
+      - Lista completa de IDs encontrados nos arquivos de entidade
+      - Resultado da detecção de colisão (IDs duplicados identificados)
+    subject_type:
+      - Document
+      - Finding
+      - Evidence
+      - Remediation
+      - Waiver
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Para resolver colisão: identificar qual dos arquivos com ID duplicado é
+      o original (verificar git log, datas de criação, contexto). O duplicado
+      deve receber novo ID gerado corretamente pelo protocolo de sequência.
+      Nunca excluir um dos arquivos sem preservar seu conteúdo. Atualizar todas
+      as referências ao ID duplicado após a resolução.
+    escalation_targets:
+      - Framework Owner
+    notes: >
+      waiver_allowed: false. ID duplicado torna rastreabilidade estruturalmente
+      impossível. Não há modo seguro de operar com IDs duplicados ativos.
+
+  - id: DIL-TRC-001
+    version: 1
+    status: Active
+    name: "Active Work Item Has Valid Artifact Reference"
+    description: >
+      Verifica que um Work Item representando uma operação ativa tem pelo menos
+      uma referência canônica válida a um artefato do Knowledge Space (campos
+      artifact_type e artifact_id preenchidos com valores canônicos). Esta regra
+      se aplica APENAS quando a operação registrada no Work Item requer
+      rastreabilidade por política — operações de Diligence que endereçam Findings
+      podem referenciar o Finding em vez de um OBC. Não se aplica quando o Work
+      Item já está fechado.
+    primary_dimension: Traceability
+    secondary_dimensions:
+      - Operational
+    category: Work Item
+    type: Traceability
+    scope:
+      - Active Work Item
+    execution_modes:
+      - Sync
+      - Async
+    cycles:
+      - diligence-sync
+      - diligence-async
+    phases:
+      - Attach
+      - Scan
+    capabilities:
+      - Divergence Detection
+      - Readiness Verification
+    triggers:
+      - Work Item creation
+      - Scheduled scan
+      - Promote gate
+    source_of_truth:
+      - prodops/framework/execution-mapping/work-item-schema.md
+      - prodops/framework/knowledge-vs-execution.md
+    expected_condition: >
+      O Work Item ativo possui campos artifact_type e artifact_id preenchidos
+      com valores canônicos que identificam inequivocamente o artefato afetado.
+      O artefato referenciado existe no Knowledge Space.
+    failure_condition: >
+      O Work Item está em estado ativo (Open, In Progress, Blocked, In Review)
+      e não possui artifact_type ou artifact_id preenchidos com valores válidos,
+      ou os valores não referenciam artefato existente.
+    warning_condition: ""
+    not_applicable_condition: >
+      O Work Item está fechado (Done, Cancelled) ou a operação não requer
+      rastreabilidade por política (ex: Work Item puramente administrativo
+      não governado pelo ProdOps). Também não se aplica quando o item não
+      é governado pelo ProdOps.
+    indeterminate_condition: >
+      Os campos existem mas os valores não pertencem aos enums canônicos —
+      requer análise humana para determinar se é divergência ou tipo não
+      catalogado ainda.
+    error_condition: >
+      A API do GitHub não pôde ser consultada ou o Work Item não pôde ser
+      acessado.
+    severity_default: High
+    blocking: true
+    blocking_scope:
+      - Promote
+      - Close
+    waiver_allowed: true
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - URL do Work Item
+      - Valor observado do campo artifact_id (ou sua ausência)
+      - Resultado da resolução do artifact_id (artefato existe/não existe)
+    subject_type:
+      - Work Item
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Preencher os campos artifact_type e artifact_id no Work Item com os valores
+      canônicos correspondentes ao artefato que a operação afeta. Consultar
+      prodops/framework/execution-mapping/work-item-schema.md para enums válidos.
+    escalation_targets:
+      - Framework Owner
+      - Artifact Owner
+    notes: ""
+
+  - id: DIL-TRC-002
+    version: 1
+    status: Active
+    name: "Artifact Reference Resolves to Existing Artifact"
+    description: >
+      Verifica que uma referência de artefato (artifact_id ou path) presente em
+      um Work Item ou Finding resolve para um artefato real e existente no
+      repositório. Referências quebradas (artifact_id apontando para arquivo
+      inexistente) rompem a cadeia de rastreabilidade e tornam o Work Item ou
+      Finding irresolvível. Não se aplica quando o Work Item está fechado ou
+      o artefato foi explicitamente arquivado.
+    primary_dimension: Traceability
+    secondary_dimensions: []
+    category: Artifact
+    type: Validity
+    scope:
+      - Work Item artifact reference
+      - Finding artifact reference
+    execution_modes:
+      - Sync
+      - Async
+    cycles:
+      - diligence-sync
+      - diligence-async
+    phases:
+      - Attach
+      - Scan
+      - Promote
+    capabilities:
+      - Divergence Detection
+      - Readiness Verification
+    triggers:
+      - Work Item creation or update
+      - Scheduled scan
+      - Promote gate
+    source_of_truth:
+      - prodops/framework/knowledge-vs-execution.md
+    expected_condition: >
+      O artifact_id ou path referenciado em um Work Item ou Finding corresponde
+      a um arquivo existente no repositório no path canônico esperado para o
+      artifact_type declarado.
+    failure_condition: >
+      O artifact_id ou path de artefato referenciado não corresponde a nenhum
+      arquivo existente no repositório. A referência é quebrada.
+    warning_condition: ""
+    not_applicable_condition: >
+      O Work Item está fechado (Done, Cancelled) ou o artefato foi
+      explicitamente movido para archive com registro formal de arquivamento.
+    indeterminate_condition: >
+      O artifact_type não pertence a nenhum enum canônico — path esperado
+      não pode ser determinado sem revisão humana.
+    error_condition: >
+      O repositório não pôde ser acessado para verificação de existência do
+      arquivo.
+    severity_default: High
+    blocking: true
+    blocking_scope:
+      - Promote
+      - Repair
+    waiver_allowed: true
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Valor do artifact_id referenciado
+      - Path esperado do artefato no repositório
+      - Resultado da verificação de existência do arquivo (exists: true/false)
+    subject_type:
+      - Work Item
+      - Finding
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Verificar se o artefato foi renomeado, movido ou ainda não foi criado.
+      Se renomeado/movido: atualizar a referência no Work Item ou Finding.
+      Se não criado: criar o artefato ou remover a referência prematura.
+    escalation_targets:
+      - Artifact Owner
+      - Framework Owner
+    notes: ""
+
+  - id: DIL-TRC-003
+    version: 1
+    status: Active
+    name: "Finding References Valid Check"
+    description: >
+      Verifica que o check_id declarado no front matter de um Finding referencia
+      um Check existente no catalog.yaml, e que a versão do Check usada está
+      registrada no Finding. Esta rastreabilidade garante que Findings podem ser
+      reavaliados quando a regra do Check muda. Não se aplica quando o Finding
+      foi criado manualmente por processo humano sem automação de Check
+      (auto_finding: false no Check correspondente, ou campo check_id ausente
+      por design).
+    primary_dimension: Traceability
+    secondary_dimensions: []
+    category: Evidence
+    type: Validity
+    scope:
+      - Finding file
+    execution_modes:
+      - Async
+      - Manual
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+      - Finding creation
+    source_of_truth:
+      - prodops/framework/journeys/diligence/checks/catalog.yaml
+    expected_condition: >
+      O campo check_id no front matter do Finding referencia um ID existente em
+      catalog.yaml e o campo check_version está preenchido com a versão do Check
+      usada no momento da criação do Finding.
+    failure_condition: >
+      O check_id no Finding não existe no catalog.yaml (ID inválido ou Check
+      removido), ou check_version está ausente quando check_id está presente.
+    warning_condition: ""
+    not_applicable_condition: >
+      O Finding não possui campo check_id — foi criado por processo manual
+      sem automação de Check. Isso é legítimo quando o Check é do tipo
+      human_review_required: true com auto_finding: false.
+    indeterminate_condition: >
+      O catalog.yaml não está acessível para verificação do ID.
+    error_condition: >
+      O catalog.yaml não pôde ser lido ou está malformado.
+    severity_default: Medium
+    blocking: false
+    blocking_scope: []
+    waiver_allowed: true
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Valor do campo check_id no front matter do Finding
+      - Resultado da busca do check_id no catalog.yaml (encontrado/não encontrado)
+    subject_type:
+      - Finding
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Se o Check foi removido do catálogo: atualizar o Finding para refletir
+      o status Invalid Rule. Se o Check foi renumerado: atualizar o check_id
+      para o ID correto. Se check_version está ausente: consultar o histórico
+      do catalog.yaml para determinar a versão vigente na data de criação.
+    escalation_targets:
+      - Framework Owner
+    notes: ""
+
+  - id: DIL-TRC-004
+    version: 1
+    status: Active
+    name: "Remediation References Existing Finding"
+    description: >
+      Verifica que todos os finding_ids declarados em um arquivo de Remediation
+      resolvem para arquivos de Finding reais existentes em
+      prodops/artifacts/diligence/findings/. Uma Remediation sem Finding válido
+      é uma referência dangling — não tem critério de conclusão verificável.
+      waiver_allowed: false porque Remediation sem Finding válido não tem
+      fundamento — sem Finding existente, não há critério de verificação possível.
+    primary_dimension: Traceability
+    secondary_dimensions: []
+    category: Governance
+    type: Validity
+    scope:
+      - Remediation file
+    execution_modes:
+      - Async
+      - Manual
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+      - Repair
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+      - Remediation creation
+    source_of_truth:
+      - prodops/artifacts/diligence/README.md
+      - prodops/framework/journeys/diligence/model/remediation.md
+    expected_condition: >
+      Todos os IDs listados no campo finding_ids do arquivo de Remediation
+      correspondem a arquivos FND-YYYY-NNNN.md existentes no diretório
+      prodops/artifacts/diligence/findings/.
+    failure_condition: >
+      Um ou mais finding_ids na Remediation não correspondem a arquivos de
+      Finding existentes. A referência está quebrada (dangling reference).
+    warning_condition: ""
+    not_applicable_condition: >
+      O arquivo de Remediation não possui campo finding_ids (edge case de
+      Remediation puramente documental sem Finding associado, quando
+      explicitamente justificado).
+    indeterminate_condition: >
+      O campo finding_ids existe mas está vazio ou malformado.
+    error_condition: >
+      O diretório de findings não pôde ser lido.
+    severity_default: High
+    blocking: true
+    blocking_scope:
+      - Repair
+    waiver_allowed: false
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Lista de finding_ids declarados na Remediation
+      - Resultado da verificação de existência de cada Finding referenciado
+    subject_type:
+      - Remediation
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Verificar se os Findings referenciados foram criados, renumerados ou
+      excluídos incorretamente. Criar os Findings ausentes se a condição existe,
+      ou remover as referências inválidas da Remediation se os Findings foram
+      descontinuados. IDs de Finding nunca são excluídos — verificar no registry.
+    escalation_targets:
+      - Framework Owner
+    notes: >
+      waiver_allowed: false. Remediation sem Finding válido não tem critério
+      de conclusão verificável — é operacionalmente vazia.
+
+  - id: DIL-TRC-005
+    version: 1
+    status: Active
+    name: "Waiver References Existing Finding"
+    description: >
+      Verifica que o finding_id declarado em um arquivo de Waiver resolve para
+      um arquivo de Finding real existente. Um Waiver sem Finding válido não tem
+      significado semântico — não há o que dispensar. waiver_allowed: false
+      porque um Waiver que não endereça um Finding existente não é um Waiver
+      válido por definição — não há mecanismo de autorização que possa torná-lo
+      válido sem o Finding correspondente.
+    primary_dimension: Traceability
+    secondary_dimensions: []
+    category: Governance
+    type: Validity
+    scope:
+      - Waiver file
+    execution_modes:
+      - Async
+      - Manual
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+      - Waiver activation
+    source_of_truth:
+      - prodops/framework/journeys/diligence/model/waiver.md
+    expected_condition: >
+      O campo finding_id no arquivo de Waiver corresponde a um arquivo
+      FND-YYYY-NNNN.md existente em prodops/artifacts/diligence/findings/.
+    failure_condition: >
+      O finding_id no Waiver não corresponde a nenhum arquivo de Finding
+      existente. Referência dangling.
+    warning_condition: ""
+    not_applicable_condition: ""
+    indeterminate_condition: >
+      O campo finding_id está ausente ou malformado no arquivo de Waiver.
+    error_condition: >
+      O diretório de findings não pôde ser lido.
+    severity_default: Critical
+    blocking: true
+    blocking_scope:
+      - Waiver Activation
+    waiver_allowed: false
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Valor do campo finding_id no Waiver
+      - Resultado da verificação de existência do arquivo Finding referenciado
+    subject_type:
+      - Waiver
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Verificar se o Finding referenciado existe sob o ID declarado. Se o
+      Finding foi criado com ID diferente, corrigir o finding_id no Waiver.
+      Se o Finding não existe, criar o Finding antes de ativar o Waiver.
+      Nunca ativar um Waiver sem Finding correspondente verificado.
+    escalation_targets:
+      - Framework Owner
+    notes: >
+      waiver_allowed: false. Um Waiver sem Finding válido não tem significado
+      semântico — não há entidade para dispensar.
+
+  - id: DIL-OPS-001
+    version: 1
+    status: Active
+    name: "Business Signal Without Active Operation Does Not Require Work Item"
+    description: >
+      Este Check PROVA o modelo N:M correto. Quando um Business Signal existe
+      mas não tem operação ativa em andamento, a ausência de Work Item é o
+      estado CORRETO — não é uma divergência. O resultado deste Check DEVE ser
+      Pass ou Not Applicable, NUNCA Fail. Se um avaliador tenta classificar a
+      ausência de Work Item para Signal passivo como Fail, essa classificação é
+      ela própria uma violação do modelo canônico knowledge-vs-execution.md.
+      Este Check pode ser executado para confirmar explicitamente que o estado
+      está correto (resultado Pass) e registrar o estado avaliado no trail.
+    primary_dimension: Operational
+    secondary_dimensions: []
+    category: Work Item
+    type: Absence
+    scope:
+      - Business Signal
+    execution_modes:
+      - Async
+      - Manual
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+    source_of_truth:
+      - prodops/framework/knowledge-vs-execution.md
+    expected_condition: >
+      Business Signal existe na tracking list sem marcação de operação ativa →
+      ausência de Work Item é o estado correto. Resultado: Pass.
+    failure_condition: >
+      ESTE CHECK NÃO PODE RETORNAR FAIL para Signal passivo. Se o avaliador
+      tenta registrar Fail pela ausência de Work Item para Signal sem operação
+      ativa, isso constitui violação do modelo N:M canônico — o próprio ato
+      de tentar falhar este check para Signal passivo é a divergência a reportar.
+    warning_condition: ""
+    not_applicable_condition: >
+      O Business Signal não existe na tracking list canônica ou não é rastreado
+      pelo ProdOps (Signal de sistema externo não governado).
+    indeterminate_condition: >
+      Não é possível determinar se o Signal tem operação ativa (tracking list
+      inacessível ou marcação ambígua).
+    error_condition: >
+      A tracking list não pôde ser lida.
+    severity_default: Info
+    blocking: false
+    blocking_scope: []
+    waiver_allowed: true
+    auto_finding: false
+    human_review_required: false
+    evidence_required:
+      - ID do Business Signal na tracking list
+      - Ausência de marcação de operação ativa (confirmação explícita)
+      - Ausência de Work Item referenciando o Signal (confirmada como estado correto)
+    subject_type:
+      - Document
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Nenhuma remediation necessária — ausência de Work Item para Signal passivo
+      é o estado correto. Registrar no trail que o estado foi avaliado e está
+      conforme o modelo N:M.
+    escalation_targets:
+      - Framework Owner
+    notes: >
+      Este Check documenta o estado correto, não uma divergência. Resultado
+      esperado sempre Pass ou Not Applicable. Nunca Fail para Signal passivo.
+
+  - id: DIL-OPS-002
+    version: 1
+    status: Active
+    name: "Active Operation Without Traceable Work Item"
+    description: >
+      Quando uma operação sobre um artefato é explicitamente marcada como ativa
+      (marcação na tracking list, em andamento, referenciada em decisão de
+      Assessment ou de qualquer jornada competente), e não existe Work Item
+      correspondente e rastreável, esta é uma divergência operacional. Diferente
+      do DIL-OPS-001 que confirma o estado correto de Signal passivo, este Check
+      detecta a situação em que há operação ativa SEM rastreamento.
+    primary_dimension: Operational
+    secondary_dimensions:
+      - Traceability
+    category: Work Item
+    type: Presence
+    scope:
+      - Active operation record
+    execution_modes:
+      - Async
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+    source_of_truth:
+      - prodops/framework/knowledge-vs-execution.md
+      - prodops/framework/execution-mapping/work-item-schema.md
+    expected_condition: >
+      Toda operação explicitamente marcada como ativa sobre um artefato possui
+      pelo menos um Work Item rastreável com os campos canônicos preenchidos
+      (artifact_type, artifact_id, operation, journey).
+    failure_condition: >
+      Uma operação está marcada como ativa na tracking list, em uma decisão de
+      jornada, ou em outro registro canônico, mas não existe Work Item com
+      referência ao artefato e à operação correspondente.
+    warning_condition: ""
+    not_applicable_condition: >
+      A operação é passiva/informacional (sem marcação de ativa), não há
+      operação registrada como ativa, ou o item é intencionalmente não
+      rastreado por política explícita documentada.
+    indeterminate_condition: >
+      A marcação de operação ativa é ambígua — requer revisão humana para
+      determinar se a operação está de fato ativa.
+    error_condition: >
+      A tracking list ou o sistema de Work Items não pôde ser consultado.
+    severity_default: Medium
+    blocking: false
+    blocking_scope: []
+    waiver_allowed: true
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Entrada na tracking list com marcação de operação ativa
+      - Resultado da busca de Work Item referenciando o artefato e operação (ausência confirmada)
+    subject_type:
+      - Document
+      - Work Item
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Criar Work Item com os campos canônicos preenchidos referenciando o artefato
+      e a operação ativa. Consultar prodops/framework/execution-mapping/
+      work-item-schema.md para campos obrigatórios e enums válidos.
+    escalation_targets:
+      - Framework Owner
+      - Artifact Owner
+    notes: ""
+
+  - id: DIL-OPS-003
+    version: 1
+    status: Active
+    name: "Work Item Closure Does Not Close Finding"
+    description: >
+      Verifica que quando um Work Item referenciado por um Finding é fechado,
+      o Finding NÃO é automaticamente transitado para Verified ou Closed sem
+      verificação independente. Fechar um Issue no GitHub não resolve a condição
+      que gerou o Finding — apenas indica que a operação associada ao Work Item
+      terminou. O Finding deve ser verificado independentemente. Este é um
+      meta-check de conformidade de processo, executado durante as fases Repair
+      ou Close.
+    primary_dimension: Operational
+    secondary_dimensions: []
+    category: Governance
+    type: Consistency
+    scope:
+      - Finding file
+      - Work Item
+    execution_modes:
+      - Sync
+      - Async
+    cycles:
+      - diligence-sync
+      - diligence-async
+    phases:
+      - Close
+      - Repair
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Work Item closure
+      - Scheduled scan
+    source_of_truth:
+      - prodops/framework/journeys/diligence/model/finding.md
+      - prodops/artifacts/diligence/README.md
+    expected_condition: >
+      Findings em estado Resolved, Verified ou Closed possuem Evidence de
+      verificação independente (verified_at preenchido com timestamp de
+      verificação) e Evidence de verificação registrada — não apenas o fechamento
+      do Work Item associado.
+    failure_condition: >
+      Um Finding transitou para Verified ou Closed sem campo verified_at
+      preenchido, sem Evidence de verificação independente, ou a única
+      justificativa para a transição é o fechamento de Work Item associado.
+    warning_condition: ""
+    not_applicable_condition: >
+      Nenhum Finding está associado ao Work Item fechado, ou o Finding foi
+      verificado independentemente antes do fechamento do Work Item.
+    indeterminate_condition: >
+      O Finding possui verified_at mas não há Evidence de verificação referenciada
+      — requer revisão humana para determinar se a verificação foi executada.
+    error_condition: >
+      O arquivo do Finding não pôde ser lido.
+    severity_default: High
+    blocking: true
+    blocking_scope:
+      - Close
+    waiver_allowed: true
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Status atual do Finding
+      - Status do Work Item associado
+      - Campo verified_at do Finding (presente/ausente)
+      - Evidence IDs de verificação referenciados no Finding (presentes/ausentes)
+    subject_type:
+      - Finding
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Executar verificação independente da condição descrita no Finding.
+      Coletar Evidence de que a condição foi de fato resolvida. Preencher
+      verified_at e referenciar a Evidence de verificação antes de transicionar
+      o Finding para Verified ou Closed.
+    escalation_targets:
+      - Framework Owner
+      - Diligence Owner
+    notes: ""
+
+  - id: DIL-OPS-004
+    version: 1
+    status: Active
+    name: "Remediation Implemented Requires Independent Verification"
+    description: >
+      Verifica que uma Remediation com status Implemented tem Evidence de
+      verificação independente coletada e um Check re-executado registrado antes
+      do Finding transicionar para Verified. Implemented ≠ Verified é um
+      princípio canônico: a implementação da correção não confirma que a
+      condição foi eliminada. waiver_allowed: false porque dispensar a
+      verificação independente elimina a integridade do ciclo de auditoria —
+      não há justificativa de negócio que compense a ausência de verificação.
+    primary_dimension: Operational
+    secondary_dimensions: []
+    category: Evidence
+    type: Outcome
+    scope:
+      - Remediation file
+      - Finding file
+    execution_modes:
+      - Sync
+      - Async
+    cycles:
+      - diligence-sync
+      - diligence-async
+    phases:
+      - Close
+      - Repair
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Remediation status change to Implemented
+      - Finding status change to Resolved
+    source_of_truth:
+      - prodops/framework/journeys/diligence/model/remediation.md
+      - prodops/artifacts/diligence/README.md
+    expected_condition: >
+      Toda Remediation com status Implemented possui: (1) verificação independente
+      por pessoa ou agente diferente de quem implementou, (2) Evidence de
+      verificação coletada após a implementação (EVD-YYYY-NNNN), (3) o Finding
+      associado foi reavaliado com re-execução do Check original ou equivalente.
+    failure_condition: >
+      A Remediation tem status Implemented mas o Finding associado transitou
+      para Verified sem Evidence de verificação independente, sem re-execução
+      do Check, ou a verificação foi feita pela mesma entidade que executou
+      a Remediation.
+    warning_condition: ""
+    not_applicable_condition: >
+      A Remediation ainda não atingiu o status Implemented ou o Finding associado
+      ainda está em estado anterior a Resolved.
+    indeterminate_condition: >
+      Evidence de verificação existe mas não é possível confirmar independência
+      do verificador.
+    error_condition: >
+      Os arquivos de Remediation ou Finding não puderam ser lidos.
+    severity_default: High
+    blocking: true
+    blocking_scope:
+      - Close
+    waiver_allowed: false
+    auto_finding: true
+    human_review_required: true
+    evidence_required:
+      - Status da Remediation
+      - Campo verification_check_id (se preenchido)
+      - Lista de Evidence IDs coletados após implementação
+      - Campo verified_at do Finding associado
+    subject_type:
+      - Remediation
+      - Finding
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Designar verificador independente (diferente de quem implementou).
+      Re-executar o Check original ou equivalente. Coletar Evidence do resultado
+      da re-execução. Atualizar o Finding apenas após confirmação de que a
+      condição foi eliminada.
+    escalation_targets:
+      - Framework Owner
+      - Diligence Owner
+    notes: >
+      waiver_allowed: false. Dispensar verificação independente destrói a
+      integridade do ciclo de auditoria da Diligence.
+
+  - id: DIL-OPS-005
+    version: 1
+    status: Active
+    name: "Active Waiver Has Required Fields"
+    description: >
+      Verifica que todo Waiver com status Active possui todos os campos
+      obrigatórios preenchidos: approved_by, approved_at, expires_at, scope,
+      reason, risk_accepted e evidence (pelo menos um EVD-YYYY-NNNN).
+      Um Waiver ativo com campos obrigatórios ausentes é inválido por definição
+      do schema canônico. waiver_allowed: false porque um Waiver impropriamente
+      documentado é violação de governança — não há modo de autorizar um Waiver
+      que não satisfaz seus próprios requisitos de validade.
+    primary_dimension: Operational
+    secondary_dimensions: []
+    category: Governance
+    type: Completeness
+    scope:
+      - Waiver file
+    execution_modes:
+      - Async
+      - Scheduled
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+      - Waiver activation
+    source_of_truth:
+      - prodops/framework/journeys/diligence/model/waiver.md
+    expected_condition: >
+      Todo Waiver com status Active possui: approved_by (não vazio), approved_at
+      (datetime válido), expires_at (data futura no momento da ativação), scope
+      (descrição explícita do que está sendo dispensado), reason (justificativa
+      documentada), risk_accepted (declaração explícita do risco), e pelo menos
+      um evidence ID referenciado.
+    failure_condition: >
+      Um ou mais campos obrigatórios estão ausentes ou vazios em um Waiver com
+      status Active: approved_by ausente, approved_at ausente, expires_at ausente
+      ou inválido, scope vazio, reason vazio, risk_accepted vazio, ou nenhum
+      evidence ID referenciado.
+    warning_condition: ""
+    not_applicable_condition: >
+      O Waiver não está em status Active (Proposed, Approved, Expired, Revoked,
+      Rejected ou Closed).
+    indeterminate_condition: >
+      Um campo está preenchido mas com valor placeholder ou template não
+      substituído — requer revisão humana.
+    error_condition: >
+      O arquivo do Waiver não pôde ser lido.
+    severity_default: Critical
+    blocking: true
+    blocking_scope:
+      - Waiver Activation
+    waiver_allowed: false
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Verificação de presença de cada campo obrigatório no front matter do Waiver
+      - Lista de campos ausentes ou inválidos identificados
+    subject_type:
+      - Waiver
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Preencher todos os campos obrigatórios ausentes. Garantir que approved_by
+      identifica o aprovador com autoridade. Verificar que evidence referencia
+      EVD-YYYY-NNNN existente (ex: PR de aprovação). O Waiver só pode ser
+      ativado após todos os campos estarem completos e válidos.
+    escalation_targets:
+      - Framework Owner
+    notes: >
+      waiver_allowed: false. Um Waiver mal documentado é violação de governança
+      por definição — não pode ser autorizado por outro Waiver.
+
+  - id: DIL-TMP-001
+    version: 1
+    status: Active
+    name: "Expired Waiver Not Marked Active"
+    description: >
+      Verifica que qualquer Waiver cujo campo expires_at é uma data no passado
+      (anterior à data atual) NÃO está com status Active. O status deve ser
+      Expired, Revoked ou Closed. Waivers não se renovam automaticamente —
+      expiração é automática por temporalidade mas o estado deve ser atualizado.
+      Este check deve ser executado em varredura periódica (diligence-async).
+      waiver_allowed: false porque renovação automática de Waiver viola a política
+      de expiração — o propósito do expires_at é forçar nova decisão consciente.
+    primary_dimension: Temporal
+    secondary_dimensions: []
+    category: Governance
+    type: Freshness
+    scope:
+      - Waiver file
+    execution_modes:
+      - Async
+      - Scheduled
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+    capabilities:
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+      - Periodic execution
+    source_of_truth:
+      - prodops/framework/journeys/diligence/model/waiver.md
+    expected_condition: >
+      Todo Waiver com expires_at no passado (expires_at < data atual) possui
+      status Expired, Revoked ou Closed — nunca Active.
+    failure_condition: >
+      Um Waiver possui expires_at anterior à data atual E ainda está com
+      status Active. O Waiver deveria ter transitado para Expired quando
+      expires_at foi atingido.
+    warning_condition: ""
+    not_applicable_condition: >
+      O Waiver possui expires_at no futuro (ainda válido) ou já está em
+      status Expired, Revoked ou Closed.
+    indeterminate_condition: >
+      O campo expires_at está ausente ou não é uma data válida.
+    error_condition: >
+      O arquivo do Waiver não pôde ser lido ou a data atual não está disponível.
+    severity_default: Critical
+    blocking: true
+    blocking_scope:
+      - Waiver Activation
+      - Promote
+    waiver_allowed: false
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Valor do campo expires_at do Waiver
+      - Data atual no momento da avaliação
+      - Status atual do Waiver
+    subject_type:
+      - Waiver
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Atualizar o status do Waiver para Expired. Notificar o owner do Finding
+      associado que o Waiver expirou e o Finding retorna ao fluxo normal
+      (status: Acknowledged). Uma nova decisão consciente é necessária:
+      nova Remediation ou novo Waiver com nova justificativa (novo ID).
+      Nunca editar expires_at retroativamente para estender a validade.
+    escalation_targets:
+      - Framework Owner
+      - Diligence Owner
+    notes: >
+      waiver_allowed: false. Tolerar Waiver expirado como Active viola a
+      política de expiração obrigatória — é renovação automática disfarçada.
+
+  - id: DIL-RDY-001
+    version: 1
+    status: Active
+    name: "Reliability Plan Present When Conditionally Required"
+    description: >
+      Verifica que quando um OBC ou item satisfaz pelo menos uma das condições
+      que tornam o Reliability Plan obrigatório — movimentação financeira,
+      integração externa, mudança de SLO, risco alto ou crítico, mudança de
+      persistência ou segurança — um Reliability Plan existe no path canônico.
+      ESTE CHECK É NOT APPLICABLE e NÃO DEVE FALHAR quando nenhuma das condições
+      de gatilho está presente. Não é gate universal para todos os OBCs.
+    primary_dimension: Operational
+    secondary_dimensions: []
+    category: Readiness
+    type: Readiness
+    scope:
+      - OBC file
+      - Reliability Plan path
+    execution_modes:
+      - Sync
+    cycles:
+      - diligence-sync
+    phases:
+      - Promote
+    capabilities:
+      - Readiness Verification
+    triggers:
+      - Promote gate
+      - Iteration Plan Entry gate
+    source_of_truth:
+      - prodops/framework/backlogs.md
+      - prodops/framework/journeys/delivery/README.md
+    expected_condition: >
+      Quando o OBC possui pelo menos um dos gatilhos de obrigatoriedade
+      (movimentação financeira, integração externa, mudança de SLO, risco
+      alto/crítico, mudança de persistência ou segurança), um arquivo de
+      Reliability Plan existe em prodops/artifacts/plans/reliability/ e
+      referencia o OBC correspondente.
+    failure_condition: >
+      O OBC possui um ou mais gatilhos de obrigatoriedade E o Reliability Plan
+      correspondente não existe no path canônico.
+    warning_condition: ""
+    not_applicable_condition: >
+      O OBC não satisfaz nenhum dos gatilhos de obrigatoriedade do Reliability
+      Plan. A ausência de Reliability Plan é o estado correto quando não há
+      gatilho. Este Check DEVE retornar Not Applicable neste caso.
+    indeterminate_condition: >
+      Não é possível determinar se os gatilhos estão presentes sem revisão
+      humana do OBC (ex: conteúdo ambíguo sobre movimentação financeira).
+    error_condition: >
+      O arquivo do OBC ou o diretório de Reliability Plans não pôde ser lido.
+    severity_default: High
+    blocking: true
+    blocking_scope:
+      - Promote
+      - Iteration Plan Entry
+    waiver_allowed: true
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Flags de risco ou gatilhos documentados no OBC
+      - Path do Reliability Plan esperado
+      - Resultado da verificação de existência do Reliability Plan
+      - Registro da decisão de Assessment se disponível
+    subject_type:
+      - Artifact
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on:
+      - DIL-TRC-002
+    remediation_hint: >
+      Criar o Reliability Plan para o OBC qualificado. O Reliability Plan requer
+      Assessment — não pode ser criado unilateralmente pela Diligence. Escalar
+      para o Assessment com a evidência dos gatilhos identificados no OBC.
+    escalation_targets:
+      - Framework Owner
+      - Assessment Owner
+    notes: >
+      Readiness e Workspace são categorias/escopos — não são dimensões canônicas
+      adicionais. primary_dimension permanece Operational para checks de Readiness.
+
+  - id: DIL-RDY-002
+    version: 1
+    status: Active
+    name: "Promote Criteria Satisfied"
+    description: >
+      Verifica que todos os critérios necessários para promover um OBC ou Work
+      Item para o próximo estado ou backlog são satisfeitos. O resultado DEVE
+      enumerar exatamente quais critérios falharam — não apenas "falhou". Critérios
+      incluem: OBC em estado correto, BDD Feature Committed quando necessário,
+      Reliability Plan presente quando obrigatório, Findings bloqueantes ausentes
+      ou com Waiver válido, campos obrigatórios preenchidos. Não se aplica quando
+      nenhuma promoção está sendo tentada.
+    primary_dimension: Operational
+    secondary_dimensions: []
+    category: Readiness
+    type: Readiness
+    scope:
+      - OBC file
+      - Work Item
+    execution_modes:
+      - Sync
+    cycles:
+      - diligence-sync
+    phases:
+      - Promote
+    capabilities:
+      - Readiness Verification
+    triggers:
+      - Promote gate
+    source_of_truth:
+      - prodops/framework/backlogs.md
+      - prodops/framework/artifact-governance.md
+    expected_condition: >
+      Todos os critérios de promoção para o estado/backlog alvo estão satisfeitos:
+      (1) OBC no estado pré-requisito correto, (2) BDD Feature Committed se
+      requerido pelo estado alvo, (3) Reliability Plan presente se DIL-RDY-001
+      resultou em Fail, (4) nenhum Finding bloqueante ativo sem Waiver válido,
+      (5) campos obrigatórios do Work Item preenchidos.
+    failure_condition: >
+      Um ou mais critérios de promoção não estão satisfeitos. O Finding DEVE
+      listar exatamente quais critérios falharam — não apenas "promoção bloqueada".
+    warning_condition: ""
+    not_applicable_condition: >
+      Nenhuma promoção está sendo tentada para este OBC ou Work Item no momento.
+    indeterminate_condition: >
+      Não é possível determinar o estado atual de um ou mais critérios sem
+      acesso a sistemas externos.
+    error_condition: >
+      Os arquivos ou sistemas necessários para avaliar os critérios não puderam
+      ser acessados.
+    severity_default: High
+    blocking: true
+    blocking_scope:
+      - Promote
+    waiver_allowed: true
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Estado atual do OBC
+      - Checklist de critérios de promoção com resultado pass/fail de cada critério
+      - Lista de Findings bloqueantes ativos e status de seus Waivers
+    subject_type:
+      - Artifact
+      - Work Item
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on:
+      - DIL-TRC-001
+      - DIL-RDY-001
+    remediation_hint: >
+      Resolver cada critério falhado individualmente antes de tentar nova
+      promoção. Se BDD está faltando: criar BDD Feature. Se Reliability Plan
+      está faltando: acionar Assessment. Se Findings bloqueantes existem: resolver
+      ou obter Waiver. Reportar critério específico no Finding — não usar mensagem
+      genérica de falha.
+    escalation_targets:
+      - Framework Owner
+      - Product Owner
+    notes: >
+      Este Check deve especificar quais critérios falharam — Finding genérico
+      de "promoção bloqueada" não é adequado.
+
+  - id: DIL-WSP-001
+    version: 1
+    status: Active
+    name: "Workspace Schema Conforms to Declared Configuration"
+    description: >
+      Verifica que a configuração do workspace GitHub (campos, labels, views)
+      conforme declarado em manifest.yaml e nos documentos do framework corresponde
+      ao estado real observado. Esta verificação é LIMITADA ao que já está
+      canonicamente declarado — não inventa campos ou configurações futuras.
+      Workspace Reconciliation é a Capability que executa a correção quando
+      divergência é encontrada.
+    primary_dimension: Structural
+    secondary_dimensions:
+      - Operational
+    category: Workspace
+    type: Conformance
+    scope:
+      - GitHub Project configuration
+      - Labels
+      - Fields
+    execution_modes:
+      - Async
+      - Manual
+    cycles:
+      - diligence-async
+    phases:
+      - Scan
+      - Inspect
+    capabilities:
+      - Workspace Reconciliation
+      - Divergence Detection
+    triggers:
+      - Scheduled scan
+      - Workspace change event
+    source_of_truth:
+      - prodops/exec/manifest.yaml
+      - prodops/framework/journeys/diligence/workspace-reconciliation.md
+    expected_condition: >
+      Os campos, labels e views do GitHub Project correspondem exatamente ao
+      que está declarado em manifest.yaml e na especificação canônica do
+      workspace. Nenhum campo obrigatório ausente; nenhum label canônica faltando.
+    failure_condition: >
+      Um ou mais campos obrigatórios (artifact_type, artifact_id, operation,
+      journey, execution_mode, owner) estão ausentes no GitHub Project, ou
+      labels canônicas declaradas no manifest estão ausentes no repositório.
+    warning_condition: ""
+    not_applicable_condition: >
+      O GitHub Project ainda não foi configurado para este produto (estado
+      inicial antes de qualquer setup).
+    indeterminate_condition: >
+      A API do GitHub não está acessível ou as permissões não permitem listar
+      campos e labels do projeto.
+    error_condition: >
+      A API do GitHub retornou erro ou as credenciais não estão disponíveis.
+    severity_default: Medium
+    blocking: false
+    blocking_scope: []
+    waiver_allowed: true
+    auto_finding: true
+    human_review_required: false
+    evidence_required:
+      - Configuração declarada no manifest.yaml (campos, labels esperados)
+      - Configuração observada no workspace GitHub (saída de gh project field-list e gh label list)
+    subject_type:
+      - Workspace
+    deduplication_key:
+      - check_id
+      - primary_subject
+      - condition
+      - scope
+    depends_on: []
+    remediation_hint: >
+      Invocar a Capability Workspace Reconciliation para restaurar a configuração
+      canônica. O ciclo Inspect → Reconcile → Verify deve ser executado conforme
+      workspace-reconciliation.md. Não modificar configuração de workspace
+      manualmente sem registrar o que foi alterado.
+    escalation_targets:
+      - Framework Owner
+    notes: >
+      Workspace é categoria/escopo — não é dimensão canônica adicional.
+      primary_dimension é Structural. workspace-reconciliation é Capability,
+      não Cycle.

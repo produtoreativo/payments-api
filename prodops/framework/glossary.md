@@ -133,7 +133,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Vive em:** Portfolio Tracking List (plataforma) ou Product Tracking List (produto).
 
-**Representação no GitHub:** Business Signal Issue.
+**Representação no Execution Space:** Um Business Signal não tem representação permanente como GitHub Issue. Work Items são criados quando há uma operação ativa sobre o Signal (ex.: exploração, triagem, promoção). Um mesmo Signal pode ter zero ou mais Work Items ao longo de sua vida. Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
 
 **Regra crítica:** Entidades nunca mudam de identidade. Um Business Signal nunca "se torna" uma Business Intent — ele **gera** novas entidades Business Intent.
 
@@ -155,7 +155,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Origem:** Pode ser criada diretamente no Business Intent Backlog sem origem em um Business Signal. Quando gerada a partir de um Business Signal, mantém referência opcional ao Signal de origem.
 
-**Representação no GitHub:** Business Intent Issue.
+**Representação no Execution Space:** Work Items são criados quando há operações ativas sobre a Intent (ex.: exploração, refinamento, promoção). Um mesmo Intent pode ter zero ou mais Work Items ao longo de sua vida. Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
 
 **Relação com outros conceitos:** Nasce de um Business Signal (ou criada diretamente no BIB). Possui um OBC como documento de contrato. Ver [`flow.md`](flow.md), [`origin-streams.md`](origin-streams.md) e [`backlogs.md`](backlogs.md).
 
@@ -404,7 +404,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 ## OBC Partitioning
 
-**Definição:** Capability responsável por transformar um Global OBC em Local OBCs — um por produto envolvido. Ocorre entre o Discovery no BIB e a criação de itens nos Product Backlogs dos produtos.
+**Definição:** Processo de governança responsável por particionar um Global OBC em Local OBCs — um por produto envolvido. Ocorre entre o Discovery no BIB e a criação de itens nos Product Backlogs dos produtos. Não é uma Framework Capability nem uma Product Capability — é uma atividade pontual de responsabilidade humana.
 
 **Responsabilidades:** identificar produtos envolvidos, identificar repositórios, identificar Bounded Contexts, decompor o Global OBC, criar os Local OBCs, manter rastreabilidade.
 
@@ -548,7 +548,7 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ## Product Backlog
 
-**Definição:** Backlog de produto que representa todo trabalho formalmente aceito pelo Product Owner. Contém exclusivamente **OBCs (Local OBCs)** — nunca Business Signals, nunca Business Intents, nunca Global OBCs. Ponto de entrada único do produto para o ciclo de Delivery. Views: **Icebox** (Refining), **Iteration Backlog** (Committed) e **Release** (agrupado por versão).
+**Definição:** Backlog de produto que representa todo trabalho formalmente aceito pelo Product Owner. Contém exclusivamente **Business Intents** — cada Intent possui um Local OBC como documento de contrato. Nunca contém Business Signals isolados nem Global OBCs. Ponto de entrada único do produto para o ciclo de Delivery. Views: **Icebox** (Refining), **Iteration Backlog** (Committed) e **Release** (agrupado por versão).
 
 **Pergunta:** O que foi oficialmente aceito pelo Product Owner?
 
@@ -644,7 +644,7 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ## Cycle (Ciclo)
 
-**Definição:** Agrupamento ordenado de Phases dentro de uma Journey, com propósito, acionamento e natureza distintos. Delivery tem CI Sync e CI Async; Diligence tem diligence-sync, diligence-async e workspace-reconciliation. Discovery, Operation e Assessment não têm Cycles formais.
+**Definição:** Agrupamento ordenado de Phases dentro de uma Journey, com propósito, acionamento e natureza distintos. Delivery tem CI Sync e CI Async; Diligence tem diligence-sync e diligence-async. Workspace Reconciliation é uma Capability do Diligence — não é um Cycle. Discovery, Operation e Assessment não têm Cycles formais.
 
 → Definição completa: [`ontology.md — Cycle`](ontology.md#cycle-ciclo)
 
@@ -830,20 +830,24 @@ Um mesmo Work Item pode afetar múltiplos artefatos.
 
 ---
 
-## Business Signal Issue
+## Business Signal Work Item
 
-**Definição:** GitHub Issue que representa um Business Signal. Pertence ao GitHub Project do Portfolio. Captura qualquer sinal que mereça investigação — oportunidade, hipótese, problema, benchmark, reclamação, ideia.
+**Definição:** Work Item (GitHub Issue) que rastreia uma operação ativa sobre um Business Signal. Representa trabalho SOBRE o Signal — não é o Signal em si. O Signal é um artefato do Knowledge Space (arquivo na tracking list); o Work Item é uma representação efêmera do trabalho de execução.
 
-**Pertence a:** Portfolio GitHub Project (view: Business Signals ou Discovery).
+**Exemplos de operações:** captura, triagem, exploração, promoção para Business Intent.
 
-**Não confundir com:** Business Intent Issue (representa decisão estratégica já reconhecida).
+**Cardinalidade:** Um Business Signal pode ter zero ou mais Work Items ao longo de sua vida. A ausência de Work Item não é uma divergência — só é divergência quando há operação ativa sem Work Item rastreável.
+
+**Não confundir com:** O Business Signal em si (artefato permanente). Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
 
 ---
 
-## Business Intent Issue
+## Business Intent Work Item
 
-**Definição:** GitHub Issue que representa uma Business Intent — decisão estratégica de perseguir valor. Pertence ao GitHub Project do Portfolio. Representa a Intent tanto no Business Intent Backlog quanto no Product Backlog (após OBC Partitioning).
+**Definição:** Work Item (GitHub Issue) que rastreia uma operação ativa sobre uma Business Intent. Representa trabalho SOBRE a Intent — não é a Intent em si. A Intent é um artefato do Knowledge Space; o Work Item é uma representação efêmera do trabalho de execução.
 
-**Pertence a:** Portfolio GitHub Project (view: Business Intent Backlog, Roadmap, ou Platform Releases conforme o estado).
+**Exemplos de operações:** exploração, refinamento, revisão, promoção, particionamento.
 
-**Não confundir com:** Business Signal Issue (sinal ainda não estruturado). O OBC é um documento Markdown — não tem representação como Issue.
+**Cardinalidade:** Uma Business Intent pode ter zero ou mais Work Items ao longo de sua vida. A ausência de Work Item não é uma divergência — só é divergência quando há operação ativa sem Work Item rastreável.
+
+**Não confundir com:** A Business Intent em si (artefato permanente). O OBC é um documento Markdown — não tem representação como Issue. Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).

@@ -13,13 +13,16 @@ Execute only the Scan step of the Diligence Async flow.
 
 ### 1. Verificar Business Signals na tracking list
 
-Ler `prodops/artifacts/product/backlogs/tracking-list.md` e inspecionar a coluna `Issue` de cada entrada:
+Ler `prodops/artifacts/product/backlogs/tracking-list.md` e inspecionar a coluna `Issue` e o status de cada entrada:
 
 ```
 Para cada linha da tabela:
-  - Se Issue == "—" ou ausente → divergência: Business Signal sem GitHub Issue
+  - Se Issue == "—" ou ausente E o status do Signal indica operação ativa (ex.: Capturando, Em triagem, Promovendo) → divergência: Business Signal com operação ativa sem Work Item rastreável
+  - Se Issue == "—" ou ausente E o Signal está passivo (sem operação ativa) → não é divergência
   - Se Issue == "#NNN" → verificar via gh se o Issue existe e está no estado correto
 ```
+
+> **Princípio N:M:** Um Business Signal pode ter zero ou mais Work Items ao longo de sua vida. A ausência de Issue NÃO é divergência por si só — só é divergência quando há operação ativa identificada sem Work Item rastreável.
 
 ```bash
 gh issue view <number> --repo produtoreativo/payments-api --json state,title
@@ -27,9 +30,10 @@ gh issue view <number> --repo produtoreativo/payments-api --json state,title
 
 | Sinal | Divergência |
 |---|---|
-| Coluna `Issue` vazia ou `—` | Business Signal sem Issue — Attach obrigatório |
-| Issue fechado com signal ainda `Aberto` | Estado do Issue diverge do status na tracking list |
-| Issue inexistente (404) | Issue referenciado não existe — Attach obrigatório |
+| Signal com operação ativa E coluna `Issue` vazia ou `—` | Business Signal com operação ativa sem Work Item — Attach obrigatório |
+| Signal sem operação ativa E coluna `Issue` vazia | Não é divergência — estado normal |
+| Issue fechado com operação ainda em andamento | Estado do Issue diverge da operação em curso |
+| Issue inexistente (404) com operação ativa | Issue referenciado não existe — Attach obrigatório |
 
 Registrar cada gap com a linha afetada da tracking list e a ação corretora.
 
@@ -105,7 +109,7 @@ Para cada OBC ativo, verificar os seguintes checks:
 
 | Check | Esperado | Sinal de divergência |
 |---|---|---|
-| Work Item ativo | Existe GitHub Issue aberto referenciando o OBC | OBC committed sem Issue correspondente |
+| Work Item ativo | Existe GitHub Issue aberto referenciando o OBC quando há operação ativa em andamento | OBC com operação ativa identificada sem Work Item rastreável |
 | BDD Feature | Existe `prodops/artifacts/bdd/<obc-id>.feature` quando OBC está em Iteration Plan | Item no Iteration Plan sem BDD Feature committed |
 | Iteration Plan | OBC committed aparece no Iteration Plan | OBC committed ausente do Iteration Plan |
 | Work Item fechado | Issue fechado quando OBC é Operational | OBC Operational com Issue ainda aberto |

@@ -102,6 +102,48 @@ execution_mapping:
   # Regra: ao criar Work Item, consultar a matriz para operações permitidas
   # e o schema para campos obrigatórios (artifact_type, artifact_id, operation, journey)
 
+# Diligence — Persistência de entidades operacionais
+# Convenções de armazenamento para Finding, Evidence, Remediation e Waiver.
+# NÃO lista instâncias individuais — aponta para convenções e localização.
+diligence:
+  schema_version: "1.0"
+  # Modelo canônico (schemas, estados, regras)
+  model: prodops/framework/journeys/diligence/model/
+  # Catálogo de Checks (definições normativas de regras)
+  checks_catalog: prodops/framework/journeys/diligence/checks/
+  checks_catalog_file: prodops/framework/journeys/diligence/checks/catalog.yaml
+  checks_catalog_schema_version: 1
+  checks_catalog_status: Active
+  # Instâncias de entidades (Findings, Evidence, Remediations, Waivers)
+  instances: prodops/artifacts/diligence/
+  # Índice estruturado de entidades (não é fonte de verdade — é índice)
+  registry: prodops/artifacts/diligence/registry.yaml
+  # Templates para criação de instâncias
+  templates: prodops/templates/diligence/
+  # Política de IDs
+  id_policy:
+    finding:   "FND-YYYY-NNNN"
+    evidence:  "EVD-YYYY-NNNN"
+    remediation: "RMD-YYYY-NNNN"
+    waiver:    "WVR-YYYY-NNNN"
+    check:     "DIL-CATEGORY-NNN"
+    immutable: true          # IDs nunca mudam após criação
+    tool_independent: true   # IDs não dependem de números de GitHub Issue
+  # Localização canônica por tipo de entidade
+  paths:
+    findings:     prodops/artifacts/diligence/findings/
+    evidence:     prodops/artifacts/diligence/evidence/
+    remediations: prodops/artifacts/diligence/remediations/
+    waivers:      prodops/artifacts/diligence/waivers/
+    reports:      prodops/artifacts/diligence/reports/
+  # Referência para protocolo completo de IDs, deduplicação e aprovação
+  # → prodops/artifacts/diligence/README.md
+  github_workspace:
+    specification: prodops/framework/journeys/diligence/github-workspace.md
+    readiness: prodops/framework/journeys/diligence/github-workspace-readiness.md
+    schema: prodops/framework/journeys/diligence/github-workspace-schema.yaml
+    implementation_status: planned
+
 # Vocabulário canônico (enums — corrige drift entre docs, skills e instâncias)
 vocabulary:
   # fonte de verdade: hook commit-msg.sh (11 tipos)

@@ -15,7 +15,7 @@ A entrada da Delivery **não é**:
 - Icebox
 - Iteration Backlog
 
-Um item só entra no Iteration Plan quando possui OBC committed + BDD Feature committed + riscos documentados + Reliability Plan.
+Um item só entra no Iteration Plan quando possui OBC committed + BDD Feature committed + riscos documentados. O Reliability Plan é gate adicional **quando houver** movimentação financeira, integração externa, mudança de SLO, risco alto/crítico, alteração de persistência ou segurança. Fora desses gatilhos, o Reliability Plan é opcional.
 
 ## Fluxo
 

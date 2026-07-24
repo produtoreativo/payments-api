@@ -106,9 +106,8 @@ flowchart TD
 | Delivery | CI Async | Assíncrono — trabalho conduzido pela plataforma |
 | Diligence | diligence-sync | Reativo — acionado por evento externo |
 | Diligence | diligence-async | Proativo — iniciado por varredura periódica |
-| Diligence | workspace-reconciliation | Por demanda — Inspect → Reconcile → Verify |
 
-**Nota:** Discovery, Operation e Assessment não têm Cycles formais — operam como sequências fluidas de Phases ou de atividades sem agrupamento explícito.
+**Nota:** Discovery, Operation e Assessment não têm Cycles formais — operam como sequências fluidas de Phases ou de atividades sem agrupamento explícito. Workspace Reconciliation é uma **Capability** do Diligence — não é um Cycle. É invocada por Bootstrap, Diligence Async e Diligence Sync como sub-rotina. Ver seção Capability abaixo.
 
 **Nunca representa:** A Journey que o contém, uma Phase individual, uma Capability.
 
@@ -128,7 +127,6 @@ flowchart TD
 | CI Async | Ship → Validate → Promote |
 | diligence-sync | Capture → Attach → Promote → Close |
 | diligence-async | Scan → Flag → Repair |
-| workspace-reconciliation | Inspect → Reconcile → Verify |
 
 **Nível de abstração:** A menor unidade estrutural do modelo conceitual. A implementação de uma Phase pertence à camada de agentes (Skill e Steps).
 
@@ -179,7 +177,7 @@ flowchart TD
 **Grupos de Framework Capabilities por área de origem** (não de propriedade exclusiva):
 
 - *Área Delivery:* Commit Workflow, Contract Management, Evidence Management, Observability, Reliability
-- *Área Diligence:* Backlog Synchronization, Work Item Management, Divergence Detection, Artifact Evolution, Workspace Reconciliation
+- *Área Diligence:* Backlog Synchronization, Work Item Management, Readiness Verification, Divergence Detection, Artifact Evolution, Workspace Reconciliation
 
 Esses grupos são organizados por onde as Capabilities foram originalmente definidas, não por uma restrição de uso. Uma Capability de Delivery pode ser consumida por outra Journey se ela for relevante.
 
