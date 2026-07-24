@@ -18,7 +18,7 @@ writing to artifacts; pushing. It is an **inspection** step, not a mutation one.
 
 - `prodops/exec/manifest.yaml` — canonical gate commands and criteria
   (`gates.lint`, `gates.acceptance`, `gates.build`, `gates.no_mocks`)
-- `prodops/journeys/delivery/phases/finish/quality-gates.md` — what blocks merge
+- `prodops/framework/journeys/delivery/phases/finish/quality-gates.md` — what blocks merge
 - Current diff — to decide whether the dynamic exception (acceptance) applies
 
 ## Action

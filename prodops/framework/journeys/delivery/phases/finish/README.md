@@ -69,14 +69,14 @@ sua responsabilidade. A mecânica de execução de cada um está no skill.
 
 | Sub-passo | Responsabilidade | **Não** é sua responsabilidade | Skill |
 |---|---|---|---|
-| `validate` | Análise estática (format, lint, build) + aceitação/cobertura como exceção dinâmica | Commitar, escrever/ler código, escrever em artefatos, fazer push | [steps/validate](../../../../skills/finish/steps/validate/SKILL.md) |
-| `review` | Confirmar que checks obrigatórios, branch protection e ausência de reviewer bloqueante permitem auto aprovação segura | Executar a pipeline, commitar, escrever/ler código, fazer push, abrir PR | [steps/review](../../../../skills/finish/steps/review/SKILL.md) |
+| `validate` | Análise estática (format, lint, build) + aceitação/cobertura como exceção dinâmica | Commitar, escrever/ler código, escrever em artefatos, fazer push | [steps/validate](../../../../../skills/finish/steps/validate/SKILL.md) |
+| `review` | Confirmar que checks obrigatórios, branch protection e ausência de reviewer bloqueante permitem auto aprovação segura | Executar a pipeline, commitar, escrever/ler código, fazer push, abrir PR | [steps/review](../../../../../skills/finish/steps/review/SKILL.md) |
 | push origin | Publicar os commits na branch de origem, sem force push | Validar, inspecionar pipeline, abrir PR | — (git direto, ver skill router) |
-| `request` | Abrir **um** PR com o template preenchido e auto-merge armado (`--auto --squash`) | Validar, fazer push, commitar, escrever/ler código | [steps/request](../../../../skills/finish/steps/request/SKILL.md) |
+| `request` | Abrir **um** PR com o template preenchido e auto-merge armado (`--auto --squash`) | Validar, fazer push, commitar, escrever/ler código | [steps/request](../../../../../skills/finish/steps/request/SKILL.md) |
 
 Ordem obrigatória: `validate` verde → `review` sem bloqueadores → push →
 `request`. Se `validate` falha, a correção volta ao
-[`hack tdd`](../../../../skills/hack/steps/tdd/SKILL.md) — o Finish não escreve
+[`hack tdd`](../../../../../skills/hack/steps/tdd/SKILL.md) — o Finish não escreve
 código de produto.
 
 Checklist completo: [capabilities/commit-workflow/README.md — Checklist do Finish](../../capabilities/commit-workflow/README.md#checklist-do-finish)

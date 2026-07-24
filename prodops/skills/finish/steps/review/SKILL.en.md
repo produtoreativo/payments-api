@@ -20,7 +20,7 @@ pushing; opening the PR (that is `request`).
 ## Inputs
 
 - `.github/workflows/pr-gates.yml` — the checks the pipeline exposes as gates
-- `prodops/journeys/delivery/phases/finish/quality-gates.md` — branch-protection
+- `prodops/framework/journeys/delivery/phases/finish/quality-gates.md` — branch-protection
   conditions for safe auto-approval
 - `prodops/exec/manifest.yaml` — the canonical gates the checks must mirror
 - The PR's target branch (the origin branch of the current branch)
