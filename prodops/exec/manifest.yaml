@@ -76,11 +76,25 @@ gates:
     expect: "201"
     when: bootstrap
 
-# GitHub — Execution Space (não Knowledge Space)
-# Representa trabalho executado sobre artefatos. Artefatos vivem em prodops/ como Markdown.
+# GitHub — Representação operacional canônica do Framework ProdOps
+# GitHub Projects e Issues são a representação operacional canônica do ProdOps.
+# Não existe abstração para outras ferramentas. Ferramentas externas são sync opcionais.
 # Agentes: ler prodops/framework/knowledge-vs-execution.md para o modelo completo.
 github:
   execution_space: true   # representa execução, não conhecimento
+  # Declaração canônica: GitHub é a representação operacional do Framework ProdOps.
+  canonical_operational_representation:
+    tool: GitHub
+    project_type: ProjectsV2
+    work_item_type: Issue
+    view_semantics: projeção canônica de Issues por Journey/Phase/Operation
+    field_semantics: estado operacional necessário para projetar corretamente cada Work Item
+    label_semantics: classificação auxiliar — nunca fonte de verdade para estado
+    note: >
+      GitHub Projects e Issues são a representação operacional canônica do
+      Framework ProdOps. Não existe camada de abstração para outras ferramentas
+      (Jira, Azure DevOps, Linear). Ferramentas externas são sincronizações
+      opcionais — nunca equivalentes ou substitutos.
   # Work Items devem referenciar artefatos explicitamente (tipo + ID + operação)
   work_item_fields: [artifact_type, artifact_id, operation, journey, execution_mode, owner]
   # Domínios de gestão do trabalho via GitHub Projects

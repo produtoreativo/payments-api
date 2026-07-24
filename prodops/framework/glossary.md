@@ -800,6 +800,38 @@ Ver [`prodops/framework/execution-model/downstream.md`](execution-model/downstre
 
 ---
 
+## Canonical Operational Representation
+
+**Definição:** A materialização operacional do modelo conceitual do ProdOps.
+
+No estágio atual do Framework, a Canonical Operational Representation é realizada através de **GitHub Projects** (escopo por Jornada ou domínio operacional) e **GitHub Issues** (Work Items individuais).
+
+**O que NÃO é:** A Canonical Operational Representation não é o modelo conceitual em si. OBCs, Business Intents, Business Signals e demais artefatos continuam vivendo como arquivos Markdown em `prodops/`. O GitHub é a expressão operacional desse conhecimento — não o conhecimento.
+
+**Responsabilidade de manutenção:** A jornada **Diligence** é a guardiã da sincronização entre o modelo conceitual (`prodops/`) e a Canonical Operational Representation (GitHub Projects e Issues).
+
+**Relação com outros conceitos:** Ver [GitHub Project](#github-project), [GitHub Issue](#github-issue), [knowledge-vs-execution.md](knowledge-vs-execution.md).
+
+---
+
+## GitHub Project
+
+**Definição:** A representação operacional canônica de uma Jornada ou domínio operacional do ProdOps. Organiza e projeta Work Items (GitHub Issues) de um escopo específico (por Journey, Phase e Operation). Não representa o Framework como um todo — o Framework pode ter múltiplos Projects canônicos, cada um cobrindo o escopo de sua Jornada. Não substitui artefatos do Knowledge Space.
+
+**Propósito:** Tornar visível o trabalho em andamento sobre artefatos ProdOps, agrupado e filtrado por dimensões operacionais (Journey, Artifact Type, Operation, Phase).
+
+**O que representa:** Um domínio de gestão do trabalho. Cada GitHub Project rastreia Work Items de um escopo (Portfolio ou Product Repository). Não contém artefatos — contém operações sobre artefatos.
+
+**O que NÃO representa:** Backlogs de artefatos. O GitHub Project não é um substituto para OBCs, Business Intents, Business Signals ou qualquer artefato do Knowledge Space. Views dentro de um Project são filtros sobre Work Items — nunca sobre artefatos.
+
+**Canonical status:** GitHub Projects constituem a Canonical Operational Representation do ProdOps — cada Project representa operacionalmente uma Jornada ou domínio operacional específico. Não existe abstração para outras ferramentas (Jira, Azure DevOps, Linear). Ferramentas externas são sincronizações opcionais — nunca equivalentes.
+
+→ Ver [Canonical Operational Representation](#canonical-operational-representation)
+
+**Relação com outros conceitos:** Contém Work Items (GitHub Issues). Organizado por Views. Estado representado por Fields. Classificado por Labels. Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
+
+---
+
 ## GitHub Issue
 
 **Definição:** Work Item que representa uma operação sendo executada sobre um ou mais artefatos do Knowledge Space (Business Signal, Business Intent, OBC, BDD, etc.).
@@ -827,6 +859,63 @@ Um mesmo Work Item pode afetar múltiplos artefatos.
 **Relação com outros conceitos:** Gerenciada pela Diligence. Ver [`backlogs.md`](backlogs.md) e [`journeys/diligence/README.md`](journeys/diligence/README.md).
 
 → [Knowledge vs Execution](knowledge-vs-execution.md)
+
+---
+
+## View (GitHub Project)
+
+**Definição:** Projeção canônica do estado de Work Items (GitHub Issues) dentro de um GitHub Project, filtrada e organizada por uma dimensão operacional específica — Journey, Phase, Operation, Artifact Type ou combinação delas.
+
+**Propósito:** Tornar visíveis as fatias operacionais relevantes do trabalho em andamento — ex.: "todos os Work Items da jornada Delivery em fase Hack" ou "Work Items bloqueados por Findings".
+
+**O que representa:** Um filtro persistente e nomeado sobre Work Items. A View não altera o estado dos Work Items — apenas os projeta. Diferentes Views podem mostrar os mesmos Work Items sob diferentes perspectivas.
+
+**O que NÃO representa:** Uma lista de artefatos. "A View do Icebox" mostra Work Items sobre artefatos em estado Refining — não os artefatos em si. Ausência de um artefato em uma View não significa ausência do artefato no sistema.
+
+**Distinção:** View no sentido desta entrada é a construção de interface do GitHub Projects. Não confundir com as Views conceituais de backlog (Icebox, Iteration Backlog, Release) — essas são construções do modelo ProdOps que podem ser _implementadas_ como Views do GitHub Project.
+
+**Relação com outros conceitos:** Deriva de Fields. Parte de um GitHub Project. Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
+
+---
+
+## Field (GitHub Project)
+
+**Definição:** Estado operacional de um Work Item (GitHub Issue) dentro de um GitHub Project. Campos representam dimensões do estado operacional necessárias para projetar corretamente cada Work Item nas Views.
+
+**Campos canônicos obrigatórios:** `Artifact Type`, `Artifact ID`, `Operation`, `Journey`. Ver schema completo em [`execution-mapping/work-item-schema.md`](execution-mapping/work-item-schema.md).
+
+**Dois tipos de campos:**
+- **Campos cujo dono é o Execution Space** (GitHub): `Status`, `Assignee`, `Priority` — podem ser editados diretamente no Project.
+- **Campos cujo dono é o Knowledge Space** (artefatos Markdown): `Artifact ID`, `Artifact Type`, `Finding Severity`, `Waiver Expiration` — não devem ser editados manualmente no Project; edição manual cria drift.
+
+**O que NÃO são:** Fonte de verdade de artefatos. O estado canônico de um artefato vive em seu arquivo Markdown. Campos que derivam do Knowledge Space são reflexos — não fontes de verdade.
+
+**Relação com outros conceitos:** Preenchidos pelo criador do Work Item (campos de identidade) ou pelo GitHub (campos operacionais). Lidos pelas Views. Auditados pela Diligence (Capability: Workspace Reconciliation). Ver [execution-mapping/work-item-schema.md](execution-mapping/work-item-schema.md).
+
+---
+
+## Label (GitHub)
+
+**Definição:** Mecanismo auxiliar de classificação de Work Items (GitHub Issues) — **nunca** fonte de verdade para estado de nenhum artefato ou entidade ProdOps.
+
+**Propósito:** Facilitar busca, filtro e categorização operacional de Work Items por `operation:<valor>` e `artifact-type:<valor>`.
+
+**Uso canônico no ProdOps:**
+- `operation:<valor>` — operação sendo executada (ex: `operation:refine`, `operation:promote`)
+- `artifact-type:<valor>` — tipo do artefato afetado (ex: `artifact-type:local-obc`, `artifact-type:finding`)
+- `journey:<valor>` — jornada ProdOps (recomendada)
+
+**O que Labels NÃO podem representar:**
+- ID canônico de nenhuma entidade (Finding, Remediation, Waiver, OBC, etc.)
+- Status canônico de Finding ou de qualquer artefato
+- Severidade de Finding
+- Aprovação de Waiver
+- Estado de expiração de Waiver
+- Qualquer estado que exija persistência e auditoria
+
+**Regra:** Se a informação precisa ser permanente, auditável ou autoritativa, ela pertence ao arquivo Markdown da entidade — não a uma Label. Labels são efêmeras e mutáveis; estados canônicos não são.
+
+**Relação com outros conceitos:** Usadas em GitHub Issues. Convenção de nomenclatura definida em [execution-mapping/work-item-schema.md](execution-mapping/work-item-schema.md). Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
 
 ---
 
