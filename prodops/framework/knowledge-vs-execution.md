@@ -8,6 +8,27 @@ Este documento estabelece o princípio arquitetural mais fundamental do Framewor
 
 Todo o restante da documentação deve ser lido e escrito à luz deste princípio.
 
+---
+
+## Representação operacional canônica
+
+> **O GitHub (Projects e Issues) é a Canonical Operational Representation do Framework ProdOps.**
+> Não existe camada de abstração para outras ferramentas. Jira, Azure DevOps, Linear e similares são sincronizações opcionais — nunca equivalentes ou substitutos.
+
+**Canonical Operational Representation** é a materialização operacional do modelo conceitual do ProdOps. No estágio atual do Framework, essa representação é realizada através de GitHub Projects e GitHub Issues.
+
+Cada **GitHub Project** representa operacionalmente uma **Jornada ou domínio operacional** específico — não o Framework como um todo. O Framework pode ter múltiplos Projects canônicos (ex.: Diligence, Product Lifecycle, Operations), cada um cobrindo o escopo de sua Jornada.
+
+| Elemento GitHub | Papel dentro do ProdOps |
+|---|---|
+| **GitHub Project** | Representação operacional canônica de uma Jornada ou domínio operacional — cada Project organiza e projeta Work Items de um escopo específico |
+| **GitHub Issue** | Work Item — representa uma operação ativa sobre artefatos do Knowledge Space |
+| **View** | Projeção canônica do estado de Issues dentro de um Project, por Journey, Phase ou Operation |
+| **Field** | Estado operacional necessário para projetar corretamente cada Work Item |
+| **Label** | Classificação auxiliar — **nunca** fonte de verdade para estado |
+
+A documentação em `prodops/` representa o **modelo conceitual**. O GitHub representa o **modelo operacional** (Canonical Operational Representation). A jornada **Diligence** é a guardiã que mantém os dois sincronizados e consistentes.
+
 → [Modelo operacional](operating-model.md)
 → [Hierarquia de backlogs](backlogs.md)
 → [Fluxo do framework](flow.md)

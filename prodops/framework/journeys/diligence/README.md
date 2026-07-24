@@ -290,19 +290,22 @@ A Diligence recebe sinais de incidentes, riscos e evidências operacionais; veri
 ## Knowledge Space ↔ Execution Space
 
 ```
-Knowledge Space
+Knowledge Space (prodops/)
     ↓ fornece intenção, contrato, decisão e contexto
-Diligence
+Diligence — guardiã da sincronização entre os dois modelos
     ↓ verifica, relaciona, sincroniza e reconcilia
-Execution Space
+Execution Space (GitHub Projects / Issues)
     ↓ executa operações e produz evidências
 Diligence
     ↓ verifica resultados e devolve aprendizado rastreável
-Knowledge Space
+Knowledge Space (prodops/)
 ```
+
+> **Diligence é a guardiã da sincronização entre a representação conceitual (prodops/) e a representação operacional canônica (GitHub Projects e Issues).**
 
 ### Princípios fundamentais
 
+- **GitHub Projects e Issues são a representação operacional canônica do ProdOps.** Não existe abstração para outras ferramentas.
 - **Sincronização não é necessariamente bidirecional campo a campo.** Cada dado tem uma única fonte de verdade — a sincronização move dados da fonte para a representação derivada.
 - **Cada ponto de dado tem fonte de verdade única.** O estado canônico de um OBC vive no arquivo Markdown. O estado operacional de um Work Item vive no GitHub Issue.
 - **GitHub Project PODE:** exibir, agrupar, filtrar, derivar e organizar trabalho.
