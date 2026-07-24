@@ -24,11 +24,22 @@ comandos canônicos vivem em [`prodops/exec/manifest.yaml`](../../../../../exec/
   suíte e2e contra LocalStack. É a **única exceção dinâmica** do `validate`.
 - **no_mocks** (`gates.no_mocks`) — ver Test Quality Gates abaixo.
 
-**Cobertura.** Subproduto da suíte de aceitação: rodar a aceitação emite o
-relatório em **Cobertura XML** (`api/coverage/cobertura-coverage.xml`), formato
-que o GitHub Code Quality consome. **Informativo — não bloqueia merge:** não há
-threshold. Endurecer para gate bloqueante (ex.: cobertura não pode cair) é um
-passo posterior, quando houver base de testes suficiente.
+**Cobertura** (`gates.coverage`). Subproduto da suíte de aceitação: rodar a
+aceitação emite o relatório em **Cobertura XML**
+(`api/coverage/cobertura-coverage.xml`), formato que o GitHub Code Quality
+consome. O limiar canônico está no manifest (`gates.coverage.threshold_pct`) e é
+verificado por `./scripts/check-coverage-threshold.sh`, sobre a métrica de
+**branches**.
+
+**O que este gate bloqueia — e o que não bloqueia.** Ele bloqueia **apenas o
+auto-merge**: abaixo do limiar, o [`request`](../../../../../skills/finish/steps/request/SKILL.md)
+não arma o `gh pr merge --auto` e registra o motivo no PR. O PR continua aberto,
+verde e **mergeável manualmente** por um humano após review. Cobertura baixa
+desarma a automação, nunca a capacidade de mergear.
+
+Por isso `gates.coverage` **não** é um required status check e não aparece como
+job bloqueante em `pr-gates.yml`: um required check bloquearia também o merge
+manual — exatamente o que este desenho preserva.
 
 **Falha em qualquer gate estático não avança o Finish:** a correção é mudança de
 produto e retorna ao [`hack tdd`](../../../../../skills/hack/steps/tdd/SKILL.md), não
