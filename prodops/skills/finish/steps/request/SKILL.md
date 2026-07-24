@@ -28,7 +28,7 @@ pré-requisitos pode mergear código sem gate.
 
 ## Inputs
 
-- `prodops/journeys/delivery/capabilities/commit-workflow/templates/pull_request.md`
+- `prodops/framework/journeys/delivery/capabilities/commit-workflow/templates/pull_request.md`
   — o template de PR a preencher
 - O diff da branch e as evidências de `validate` (output de lint/build/aceitação
   e a cobertura da suíte de aceitação)
@@ -39,7 +39,7 @@ pré-requisitos pode mergear código sem gate.
 
 ### 1. Preencher o body com o template
 
-Preencha o [template de PR](../../../../journeys/delivery/capabilities/commit-workflow/templates/pull_request.md)
+Preencha o [template de PR](../../../../framework/journeys/delivery/capabilities/commit-workflow/templates/pull_request.md)
 com evidências reais — objetivo, resumo, contratos alterados, testes executados
 (com o output de `validate`), artefatos ProdOps atualizados e pendências. Não é
 um log de commits; é o que a mudança entrega e como foi verificada.

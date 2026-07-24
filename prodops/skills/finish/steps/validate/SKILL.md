@@ -18,7 +18,7 @@ escrita em artefatos; fazer push. É um passo de **inspeção**, não de mutaç�
 
 - `prodops/exec/manifest.yaml` — comandos e critérios canônicos dos gates
   (`gates.lint`, `gates.acceptance`, `gates.build`, `gates.no_mocks`)
-- `prodops/journeys/delivery/phases/finish/quality-gates.md` — o que bloqueia merge
+- `prodops/framework/journeys/delivery/phases/finish/quality-gates.md` — o que bloqueia merge
 - Current diff — para decidir se a exceção dinâmica (aceitação) se aplica
 
 ## Action

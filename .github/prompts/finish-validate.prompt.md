@@ -12,4 +12,4 @@ Read `prodops/skills/finish/steps/validate/SKILL.md` and execute the Validate st
 
 **Fora do escopo:** não commita, não escreve/lê código, não escreve em artefatos, não faz push, não inspeciona a pipeline (`review`), não abre PR (`request`).
 
-Execute apenas o step `validate`. Importe o contexto de `AGENTS.md` e `prodops/journeys/delivery/phases/finish/README.md` quando houver dúvida sobre fronteira.
+Execute apenas o step `validate`. Importe o contexto de `AGENTS.md` e `prodops/framework/journeys/delivery/phases/finish/README.md` quando houver dúvida sobre fronteira.

@@ -14,4 +14,4 @@ Read `prodops/skills/finish/steps/review/SKILL.md` and execute the Review step.
 
 **Fora do escopo:** não executa pipelines, não commita, não escreve/lê código de produto, não faz push, não abre PR (`request`). Se as condições não puderem ser lidas (permissão) ou não estiverem configuradas, trate como bloqueador explícito, não como "provavelmente ok".
 
-Execute apenas o step `review`. Importe o contexto de `AGENTS.md`, `prodops/journeys/delivery/phases/finish/quality-gates.md` e `.github/workflows/pr-gates.yml` quando houver dúvida sobre fronteira.
+Execute apenas o step `review`. Importe o contexto de `AGENTS.md`, `prodops/framework/journeys/delivery/phases/finish/quality-gates.md` e `.github/workflows/pr-gates.yml` quando houver dúvida sobre fronteira.

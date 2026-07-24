@@ -82,14 +82,14 @@ responsible for. The execution mechanics of each live in the skill.
 
 | Sub-step | Responsibility | **Not** its responsibility | Skill |
 |---|---|---|---|
-| `validate` | Static analysis (format, lint, build) + acceptance/coverage as the dynamic exception | Committing, writing/reading code, writing to artifacts, pushing | [steps/validate](../../../../skills/finish/steps/validate/SKILL.md) |
-| `review` | Confirm required checks, branch protection, and absence of a blocking reviewer allow safe auto-approval | Running the pipeline, committing, writing/reading code, pushing, opening a PR | [steps/review](../../../../skills/finish/steps/review/SKILL.md) |
+| `validate` | Static analysis (format, lint, build) + acceptance/coverage as the dynamic exception | Committing, writing/reading code, writing to artifacts, pushing | [steps/validate](../../../../../skills/finish/steps/validate/SKILL.md) |
+| `review` | Confirm required checks, branch protection, and absence of a blocking reviewer allow safe auto-approval | Running the pipeline, committing, writing/reading code, pushing, opening a PR | [steps/review](../../../../../skills/finish/steps/review/SKILL.md) |
 | push origin | Publish the commits to the origin branch, no force push | Validating, inspecting the pipeline, opening a PR | — (plain git, see skill router) |
-| `request` | Open **one** PR with the template filled, auto-merge armed (`--auto --squash`), and auto-approval executed | Validating, pushing, committing, writing/reading code | [steps/request](../../../../skills/finish/steps/request/SKILL.md) |
+| `request` | Open **one** PR with the template filled, auto-merge armed (`--auto --squash`), and auto-approval executed | Validating, pushing, committing, writing/reading code | [steps/request](../../../../../skills/finish/steps/request/SKILL.md) |
 
 Mandatory order: green `validate` → blocker-free `review` → push → `request`. If
 `validate` fails, the fix goes back to
-[`hack tdd`](../../../../skills/hack/steps/tdd/SKILL.md) — Finish does not write
+[`hack tdd`](../../../../../skills/hack/steps/tdd/SKILL.md) — Finish does not write
 product code.
 
 At the end, mark the Task as complete with the template
