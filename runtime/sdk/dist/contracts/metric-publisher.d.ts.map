@@ -1,0 +1,1 @@
+{"version":3,"file":"metric-publisher.d.ts","sourceRoot":"","sources":["../../src/contracts/metric-publisher.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,gBAAgB,CAAC;AAElD;;;;GAIG;AACH,MAAM,WAAW,eAAe;IAC9B,OAAO,CAAC,MAAM,EAAE,WAAW,GAAG,OAAO,CAAC,IAAI,CAAC,CAAC;CAC7C"}

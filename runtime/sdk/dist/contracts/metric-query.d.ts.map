@@ -1,0 +1,1 @@
+{"version":3,"file":"metric-query.d.ts","sourceRoot":"","sources":["../../src/contracts/metric-query.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,iBAAiB,EAAE,YAAY,EAAE,MAAM,gBAAgB,CAAC;AAEtE,0EAA0E;AAC1E,MAAM,WAAW,WAAW;IAC1B,KAAK,CAAC,MAAM,EAAE,iBAAiB,GAAG,OAAO,CAAC,YAAY,CAAC,CAAC;IACxD,OAAO,IAAI,OAAO,CAAC,aAAa,CAAC,MAAM,CAAC,CAAC,CAAC;CAC3C"}
