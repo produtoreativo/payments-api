@@ -1,0 +1,448 @@
+metadata:
+  owner: "produtoreativo"
+  repository: "payments-api"
+  iteration: "IP-RUNTIME-001"
+  release: "v0.1.0-runtime-pilot"
+  obc: "EXP-013"
+
+project:
+  title: "ProdOps — payments-api"
+  description: >
+    Canonical Operational Representation do ProdOps Runtime no payments-api.
+    Espelho de Derived State calculado a partir da Operational Timeline — não é fonte de verdade.
+
+milestone:
+  title: "v0.1.0-runtime-pilot"
+  description: >
+    Runtime Validation Pilot — EXP-013.
+    Agrupa Features, Runtime Tasks e Findings da Iteration IP-RUNTIME-001.
+
+fields:
+  # ── Identity ─────────────────────────────────────────────────────────────
+  - name: "witem:type"
+    type: SINGLE_SELECT
+    options: ["Feature", "Runtime Task", "Finding"]
+    required: true
+    updatedBy: manual
+
+  - name: "witem:repository"
+    type: TEXT
+    required: true
+    updatedBy: manual
+
+  - name: "witem:feature"
+    type: TEXT
+    required: true
+    updatedBy: manual
+
+  - name: "witem:obc"
+    type: TEXT
+    required: true
+    updatedBy: manual
+
+  - name: "witem:release"
+    type: TEXT
+    required: true
+    updatedBy: manual
+
+  - name: "witem:iteration"
+    type: TEXT
+    required: true
+    updatedBy: manual
+
+  # ── Delivery ──────────────────────────────────────────────────────────────
+  - name: "oem:journey"
+    type: SINGLE_SELECT
+    options: ["Delivery", "Diligence", "Assessment"]
+    required: true
+    updatedBy: manual
+
+  - name: "oem:cycle"
+    type: SINGLE_SELECT
+    options: ["Bootstrap", "Hack", "Sync", "Finish", "Ship", "Validate", "Promote", "Rework"]
+    required: false
+    updatedBy: both
+
+  - name: "oem:phase"
+    type: SINGLE_SELECT
+    options: ["Started", "Completed"]
+    required: false
+    updatedBy: both
+
+  - name: "oem:state"
+    type: SINGLE_SELECT
+    options: ["BOOTSTRAPPING", "HACKING", "SYNCING", "FINISHING", "SHIPPING", "VALIDATING", "PROMOTING", "DONE", "BLOCKED", "REWORKING"]
+    required: true
+    updatedBy: runtime
+
+  - name: "oem:rework-count"
+    type: NUMBER
+    required: false
+    updatedBy: runtime
+
+  - name: "oem:blocked-since"
+    type: DATE
+    required: false
+    updatedBy: runtime
+
+  # ── Diligence ─────────────────────────────────────────────────────────────
+  - name: "diligence:status"
+    type: SINGLE_SELECT
+    options: ["Pending", "Sync In Progress", "Async In Progress", "Compliant", "Non-Compliant"]
+    required: true
+    updatedBy: runtime
+
+  - name: "diligence:evidence"
+    type: SINGLE_SELECT
+    options: ["Missing", "Partial", "Complete"]
+    required: true
+    updatedBy: manual
+
+  # ── Runtime ───────────────────────────────────────────────────────────────
+  - name: "runtime:sync"
+    type: SINGLE_SELECT
+    options: ["Pending", "In Sync", "Drift Detected", "Repair In Progress", "Reconciled"]
+    required: true
+    updatedBy: runtime
+
+  - name: "runtime:timeline-state"
+    type: SINGLE_SELECT
+    options: ["Empty", "In Progress", "Complete", "Replay Verified"]
+    required: true
+    updatedBy: manual
+
+  - name: "oem:last-event"
+    type: TEXT
+    required: true
+    updatedBy: runtime
+
+  - name: "runtime:last-sync"
+    type: DATE
+    required: false
+    updatedBy: runtime
+
+labels:
+  # ── Journey ───────────────────────────────────────────────────────────────
+  - name: "journey:delivery"
+    color: "0075ca"
+    description: "Delivery Journey"
+    category: journey
+
+  - name: "journey:diligence"
+    color: "e4e669"
+    description: "Diligence Journey"
+    category: journey
+
+  - name: "journey:assessment"
+    color: "d93f0b"
+    description: "Assessment Journey"
+    category: journey
+
+  # ── Phase ─────────────────────────────────────────────────────────────────
+  - name: "phase:bootstrap"
+    color: "bfd4f2"
+    description: "Fase Bootstrap"
+    category: phase
+
+  - name: "phase:hack"
+    color: "bfd4f2"
+    description: "Fase Hack"
+    category: phase
+
+  - name: "phase:sync"
+    color: "bfd4f2"
+    description: "Fase Sync"
+    category: phase
+
+  - name: "phase:finish"
+    color: "bfd4f2"
+    description: "Fase Finish"
+    category: phase
+
+  - name: "phase:ship"
+    color: "bfd4f2"
+    description: "Fase Ship"
+    category: phase
+
+  - name: "phase:validate"
+    color: "bfd4f2"
+    description: "Fase Validate"
+    category: phase
+
+  - name: "phase:promote"
+    color: "bfd4f2"
+    description: "Fase Promote"
+    category: phase
+
+  # ── Runtime ───────────────────────────────────────────────────────────────
+  - name: "runtime:pilot"
+    color: "5319e7"
+    description: "Piloto EXP-013"
+    category: runtime
+
+  - name: "runtime:task"
+    color: "8b5cf6"
+    description: "Runtime Task (RT-01..RT-06)"
+    category: runtime
+
+  - name: "runtime:blocked"
+    color: "b60205"
+    description: "BLOCKED — Impediment ativo"
+    category: runtime
+
+  - name: "runtime:rework"
+    color: "fbca04"
+    description: "Passou por ciclo de Rework"
+    category: runtime
+
+  # ── Severity ──────────────────────────────────────────────────────────────
+  - name: "severity:high"
+    color: "b60205"
+    description: "Severidade Alta — bloqueia fase ou critério de fracasso"
+    category: severity
+
+  - name: "severity:medium"
+    color: "fbca04"
+    description: "Severidade Média — reparável, não bloqueia automaticamente"
+    category: severity
+
+  - name: "severity:low"
+    color: "0e8a16"
+    description: "Severidade Baixa — observacional"
+    category: severity
+
+  # ── Finding ───────────────────────────────────────────────────────────────
+  - name: "finding:drift"
+    color: "e11d48"
+    description: "Drift entre COR e Derived State"
+    category: finding
+
+  - name: "finding:missing-evidence"
+    color: "dc2626"
+    description: "Evidência obrigatória ausente"
+    category: finding
+
+  - name: "finding:missing-event"
+    color: "ea580c"
+    description: "Evento esperado ausente na Timeline"
+    category: finding
+
+  - name: "finding:runtime-error"
+    color: "991b1b"
+    description: "Falha no mecanismo do Runtime"
+    category: finding
+
+  - name: "finding:manual-review"
+    color: "6b7280"
+    description: "Revisão manual necessária"
+    category: finding
+
+  # ── Evidence ──────────────────────────────────────────────────────────────
+  - name: "evidence:missing"
+    color: "b60205"
+    description: "Evidência obrigatória ainda não coletada"
+    category: evidence
+
+  - name: "evidence:partial"
+    color: "fbca04"
+    description: "Evidência coletada parcialmente"
+    category: evidence
+
+  - name: "evidence:complete"
+    color: "0e8a16"
+    description: "Evidência completa e verificada"
+    category: evidence
+
+views:
+  - name: "Iteration Plan"
+    layout: TABLE
+    description: "Todos os Work Items da Iteration, agrupados por tipo"
+    groupBy: "witem:type"
+
+  - name: "Delivery Flow"
+    layout: BOARD
+    description: "Features pela Delivery Journey, agrupadas por oem:state"
+    groupBy: "oem:state"
+
+  - name: "Diligence Flow"
+    layout: BOARD
+    description: "Features pela Diligence Journey, agrupadas por diligence:status"
+    groupBy: "diligence:status"
+
+  - name: "Runtime Reconciliation"
+    layout: TABLE
+    description: "Work Items com runtime:sync != In Sync"
+    groupBy: "runtime:sync"
+
+  - name: "Findings"
+    layout: TABLE
+    description: "Todos os Findings do piloto, agrupados por severidade"
+    groupBy: "witem:type"
+
+  - name: "Evidence Readiness"
+    layout: BOARD
+    description: "Readiness de evidências por Feature, agrupada por diligence:evidence"
+    groupBy: "diligence:evidence"
+
+  - name: "Release Scope"
+    layout: TABLE
+    description: "Todos os Work Items da Release v0.1.0-runtime-pilot"
+    groupBy: "witem:type"
+
+issues:
+  # ── Épica ──────────────────────────────────────────────────────────────────
+  - title: "EPIC: ProdOps Runtime MVP"
+    body: |
+      Executar o piloto completo de validação do Runtime do ProdOps Framework no payments-api.
+
+      **Experimento:** EXP-013
+      **Iteration:** IP-RUNTIME-001
+      **Release:** v0.1.0-runtime-pilot
+    labels: ["runtime:pilot", "journey:delivery"]
+    type: "Feature"
+    feature: "EPIC-RUNTIME-001"
+    initialFields:
+      oem:journey: "Delivery"
+      oem:state: "BOOTSTRAPPING"
+      diligence:evidence: "Missing"
+      runtime:sync: "Pending"
+      runtime:timeline-state: "Empty"
+
+  # ── Features ───────────────────────────────────────────────────────────────
+  - title: "FTR-RUNTIME-001: Split Payment Creation — Happy Path"
+    body: |
+      Executar o ciclo completo de Delivery para Split Payment Creation sem interrupções.
+
+      **Cenário:** Happy Path — Bootstrap → Promote sem Gate.Failed nem Impediment
+      **Responde:** Q1 (OEM), Q2 (Derived State), Q3 (Replay)
+
+      **Critérios de aceite:**
+      - Feature em estado DONE ao final
+      - 15 eventos registrados na Timeline
+      - Derived State correto em cada transição
+      - GitHub COR sincronizado (oem:state = DONE)
+    labels: ["runtime:pilot", "journey:delivery", "phase:bootstrap", "evidence:missing"]
+    type: "Feature"
+    feature: "FTR-RUNTIME-001"
+    initialFields:
+      oem:journey: "Delivery"
+      oem:state: "BOOTSTRAPPING"
+      diligence:evidence: "Missing"
+      runtime:sync: "Pending"
+      runtime:timeline-state: "Empty"
+
+  - title: "FTR-RUNTIME-002: Split Allocation Validation — Gate Failed + Rework"
+    body: |
+      Executar Delivery Journey com Gate.Failed durante VALIDATING e ciclo de Rework completo.
+
+      **Cenário:** Gate Failed → Rework.Declared → Rework.Completed → Gate.Passed
+      **Responde:** Q1 (Rework events), Q2 (REWORKING state)
+
+      **Critérios de aceite:**
+      - Shared.Gate.Failed registrado
+      - Delivery.Rework.Declared → REWORKING state
+      - Delivery.Rework.Completed → retorno a VALIDATING
+      - oem:rework-count = 1 ao final
+    labels: ["runtime:pilot", "journey:delivery", "runtime:rework", "evidence:missing"]
+    type: "Feature"
+    feature: "FTR-RUNTIME-002"
+    initialFields:
+      oem:journey: "Delivery"
+      oem:state: "BOOTSTRAPPING"
+      diligence:evidence: "Missing"
+      runtime:sync: "Pending"
+      runtime:timeline-state: "Empty"
+
+  - title: "FTR-RUNTIME-003: Settlement Webhook Notification — Blocking + Drift"
+    body: |
+      Executar Delivery com Blocking via Impediment.Declared + Lookback + Diligence Async com Drift.
+
+      **Cenário:** HACKING → BLOCKED → Lookback → HACKING → DONE + Drift detectado e reparado
+      **Responde:** Q2 (Lookback), Q4 (COR), Q5 (Diligence), Q7 (Shared Types)
+
+      **Critérios de aceite:**
+      - Impediment.Declared → BLOCKED
+      - Impediment.Resolved (alters_state: false) com Lookback → HACKING
+      - Drift introduzido e reparado pela Diligence Async
+    labels: ["runtime:pilot", "journey:delivery", "runtime:blocked", "journey:diligence", "evidence:missing"]
+    type: "Feature"
+    feature: "FTR-RUNTIME-003"
+    initialFields:
+      oem:journey: "Delivery"
+      oem:state: "BOOTSTRAPPING"
+      diligence:evidence: "Missing"
+      runtime:sync: "Pending"
+      runtime:timeline-state: "Empty"
+
+  # ── Runtime Tasks ──────────────────────────────────────────────────────────
+  - title: "RT-01: Event Producer"
+    body: |
+      Mecanismo de emissão de Event Instances em formato canônico (OEM).
+
+      **DoD:** Schema validado; primeiro evento emitido; arquivo em evidence/timelines/
+    labels: ["runtime:pilot", "runtime:task"]
+    type: "Runtime Task"
+    feature: "RT-01"
+    initialFields:
+      oem:journey: "Delivery"
+      runtime:sync: "Pending"
+
+  - title: "RT-02: Timeline Processor"
+    body: |
+      Consumer que calcula Derived State a partir da Timeline, incluindo algoritmo de Lookback.
+
+      **DoD:** Derived State correto para FTR-001; Replay idempotente; Lookback para FTR-003
+    labels: ["runtime:pilot", "runtime:task"]
+    type: "Runtime Task"
+    feature: "RT-02"
+    initialFields:
+      oem:journey: "Delivery"
+      runtime:sync: "Pending"
+
+  - title: "RT-03: GitHub Synchronizer"
+    body: |
+      Atualiza Custom Fields do GitHub Project com Derived State calculado pelo Timeline Processor.
+
+      **DoD:** oem:state sincronizado após cada transição; oem:rework-count e oem:blocked-since corretos
+    labels: ["runtime:pilot", "runtime:task"]
+    type: "Runtime Task"
+    feature: "RT-03"
+    initialFields:
+      oem:journey: "Delivery"
+      runtime:sync: "Pending"
+
+  - title: "RT-04: Datadog Integration"
+    body: |
+      Envia métricas derivadas da Timeline para Datadog via API.
+
+      **DoD:** Primeira métrica (events_emitted) visível no Datadog com trace até evento da Timeline
+    labels: ["runtime:pilot", "runtime:task"]
+    type: "Runtime Task"
+    feature: "RT-04"
+    initialFields:
+      oem:journey: "Delivery"
+      runtime:sync: "Pending"
+
+  - title: "RT-05: Delivery Dashboard"
+    body: |
+      Dashboard Datadog com Lead Time, Cycle Time, Block Time, Gate Failure Rate.
+
+      **DoD:** Dashboard com pelo menos Lead Time e Gate Failure Rate; screenshots em evidence/
+    labels: ["runtime:pilot", "runtime:task"]
+    type: "Runtime Task"
+    feature: "RT-05"
+    initialFields:
+      oem:journey: "Delivery"
+      runtime:sync: "Pending"
+
+  - title: "RT-06: Diligence Dashboard"
+    body: |
+      Dashboard Datadog com Drift Detection Rate e Repair Time.
+
+      **DoD:** Dashboard com pelo menos Drift Detection Rate; screenshots em evidence/
+    labels: ["runtime:pilot", "runtime:task"]
+    type: "Runtime Task"
+    feature: "RT-06"
+    initialFields:
+      oem:journey: "Diligence"
+      runtime:sync: "Pending"
