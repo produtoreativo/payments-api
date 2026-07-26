@@ -19,7 +19,13 @@ export { FindingType, FindingSeverity } from './models/finding.js';
 export type { Finding } from './models/finding.js';
 
 // Contracts — CloudEvents
-export type { CloudEventSource, CloudEventEnvelope, CloudEventEncoder, CloudEventDecoder } from './contracts/cloud-events.js';
+export type {
+  CloudEventSource,
+  CloudEventEncodingContext,
+  CloudEventEnvelope,
+  CloudEventEncoder,
+  CloudEventDecoder,
+} from './contracts/cloud-events.js';
 
 // Contracts — Event flow
 export type { EventProducer } from './contracts/event-producer.js';

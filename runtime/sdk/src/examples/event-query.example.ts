@@ -4,6 +4,9 @@
  * Shows how a Timeline Processor (RT-02) or any consumer would source events
  * for replay. EventQuery is an infrastructure port — this example uses a
  * typed stub that satisfies the contract without any real I/O.
+ *
+ * Event Type format: <Namespace>.<Subject>.<Action>[.<Qualifier>]
+ * Event Category is NOT part of the type string.
  */
 import type {
   EventQuery,
@@ -12,7 +15,7 @@ import type {
   OperationalEvent,
   EventId,
 } from '../index.js';
-import { ProducerType, Phase, EventCategory } from '../index.js';
+import { ProducerType, Phase } from '../index.js';
 
 // --- Stub EventQuery implementation ---
 
@@ -23,7 +26,7 @@ function makeEvent(id: string, eventType: string, workItemId: string): Operation
     work_item_id: workItemId,
     timestamp: new Date().toISOString(),
     producer_type: ProducerType.Agent,
-    producer_identity: 'urn:prodops:delivery:example-agent',
+    producer_identity: 'agent:example-agent',
     schema_version: '1.0',
   };
 }
@@ -31,17 +34,17 @@ function makeEvent(id: string, eventType: string, workItemId: string): Operation
 const stubEvents: ReadonlyArray<OperationalEvent> = [
   makeEvent(
     '018f7e9a-b5d0-7b4a-8b3e-9a2c1d4e5001',
-    `Delivery.${Phase.Bootstrap}.${EventCategory.PhaseLifecycle}.Started`,
+    `Delivery.${Phase.Bootstrap}.Started`,
     'wf-delivery-0042',
   ),
   makeEvent(
     '018f7e9a-b5d0-7b4a-8b3e-9a2c1d4e5002',
-    `Delivery.${Phase.Bootstrap}.${EventCategory.PhaseLifecycle}.Completed`,
+    `Delivery.${Phase.Bootstrap}.Completed`,
     'wf-delivery-0042',
   ),
   makeEvent(
     '018f7e9a-b5d0-7b4a-8b3e-9a2c1d4e5003',
-    `Delivery.${Phase.Hack}.${EventCategory.PhaseLifecycle}.Started`,
+    `Delivery.${Phase.Hack}.Started`,
     'wf-delivery-0042',
   ),
 ];

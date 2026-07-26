@@ -5,6 +5,9 @@
  * implementation against the full port contract to show the processing pipeline:
  *
  *   validate → deduplicate → order → applyCorrections → effectiveState / stateHistory
+ *
+ * Event Type format: <Namespace>.<Subject>.<Action>[.<Qualifier>]
+ * Event Category is NOT part of the type string — it is metadata for routing/classification.
  */
 import type {
   OperationalStateEngine,
@@ -15,7 +18,7 @@ import type {
   DerivedState,
   EventId,
 } from '../index.js';
-import { ProducerType, Phase, EventCategory, Journey, State } from '../index.js';
+import { ProducerType, Phase, Journey, State } from '../index.js';
 
 // --- Stub events ---
 
@@ -31,7 +34,7 @@ function makeEvent(
     work_item_id: 'wf-delivery-0042',
     timestamp,
     producer_type: ProducerType.Agent,
-    producer_identity: 'urn:prodops:delivery:example-agent',
+    producer_identity: 'agent:example-agent',
     schema_version: '1.0',
     sequence_number: seqNum,
   };
@@ -41,25 +44,25 @@ const rawEvents: ReadonlyArray<OperationalEvent> = [
   // Duplicate: same id as first event — dedup must remove it
   makeEvent(
     '018f7e9a-b5d0-7b4a-8b3e-9a2c1d4e5001',
-    `Delivery.${Phase.Bootstrap}.${EventCategory.PhaseLifecycle}.Started`,
+    `Delivery.${Phase.Bootstrap}.Started`,   // format: Namespace.Subject.Action
     '2026-07-26T08:00:00.000Z',
     1,
   ),
   makeEvent(
     '018f7e9a-b5d0-7b4a-8b3e-9a2c1d4e5001', // duplicate id
-    `Delivery.${Phase.Bootstrap}.${EventCategory.PhaseLifecycle}.Started`,
+    `Delivery.${Phase.Bootstrap}.Started`,
     '2026-07-26T08:00:00.000Z',
     1,
   ),
   makeEvent(
     '018f7e9a-b5d0-7b4a-8b3e-9a2c1d4e5002',
-    `Delivery.${Phase.Bootstrap}.${EventCategory.PhaseLifecycle}.Completed`,
+    `Delivery.${Phase.Bootstrap}.Completed`,
     '2026-07-26T09:00:00.000Z',
     2,
   ),
   makeEvent(
     '018f7e9a-b5d0-7b4a-8b3e-9a2c1d4e5003',
-    `Delivery.${Phase.Hack}.${EventCategory.PhaseLifecycle}.Started`,
+    `Delivery.${Phase.Hack}.Started`,
     '2026-07-26T10:00:00.000Z',
     3,
   ),

@@ -15,7 +15,14 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `OperationalEvent` type alias for `EventInstance` — domain conceptual name vs schema-level name; identical at runtime. (`src/models/event-instance.ts`)
 
 **CloudEvents**
-- `CloudEventSource` branded type — URI-reference string per CloudEvents 1.0 §3.1. Used as the `source` field of `CloudEventEnvelope`. (`src/contracts/cloud-events.ts`)
+- `CloudEventSource` branded type — URI-reference string per CloudEvents 1.0 §3.1. Represents the stable technical origin of an event, **not** `producer_identity`. (`src/contracts/cloud-events.ts`)
+- `CloudEventEncodingContext` interface — `{ source: CloudEventSource }`. Carries the technical source URI at encoding time, separate from `EventInstance`. `CloudEventEncoder.encode()` now requires this context as a second argument.
+
+### Fixed
+
+- `CloudEventEncoder.encode()` signature corrected: now takes `(event, context: CloudEventEncodingContext)`. Previously the signature had no explicit context, leading to incorrect derivation of `source` from `producer_identity` in example code.
+- OEM → CloudEvents field mapping corrected: `source` ← `context.source` (technical producer origin), not `producer_identity`. `producer_identity` is preserved inside `data`.
+- Event Type format corrected in all examples: `Delivery.Hack.Started` (correct) vs `Delivery.Hack.Phase Lifecycle.Started` (wrong). Event Category is metadata — it must not appear as a segment of `event_type`.
 
 **OperationalStateEngine**
 - `deduplicate(events)` — removes events with duplicate `id`; returns new array, input not mutated. Idempotent.

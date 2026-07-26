@@ -73,21 +73,49 @@ const event: OperationalEvent = { id, event_type, work_item_id, ... };
 
 | File | Interface / Type | Notes |
 |---|---|---|
-| `cloud-events.ts` | `CloudEventSource` | Branded URI-reference string (CloudEvents 1.0 §3.1) |
+| `cloud-events.ts` | `CloudEventSource` | Branded URI-reference string — stable technical origin (CloudEvents 1.0 §3.1) |
+| `cloud-events.ts` | `CloudEventEncodingContext` | Carries `source` at encoding time — separate from `EventInstance` |
 | `cloud-events.ts` | `CloudEventEnvelope<TData>` | Transport envelope — no external lib dependency |
-| `cloud-events.ts` | `CloudEventEncoder` | Encodes `OperationalEvent` → `CloudEventEnvelope` |
+| `cloud-events.ts` | `CloudEventEncoder` | Encodes `OperationalEvent + CloudEventEncodingContext` → `CloudEventEnvelope` |
 | `cloud-events.ts` | `CloudEventDecoder` | Decodes `CloudEventEnvelope` → `EventInstance` |
 
-OEM → CloudEvents field mapping:
+### Source vs producer_identity
 
-| EventInstance field | CloudEventEnvelope field |
+These are distinct concepts and must never be conflated:
+
+| Concept | Field | Meaning |
+|---|---|---|
+| `producer_identity` | `EventInstance.producer_identity` | Identity of the specific human, agent, or system that produced this event |
+| `source` | `CloudEventEnvelope.source` | Stable technical URI of the emitting context (deployment-time concern) |
+
+Examples of `source` values:
+- `prodops://payments-api/github-actions`
+- `prodops://payments-api/runtime`
+- `prodops://payments-api/human-cli`
+
+`source` is provided via `CloudEventEncodingContext` at encoding time. It is **never** derived from `producer_identity`.
+
+### OEM → CloudEvents field mapping
+
+| Source | CloudEventEnvelope field |
 |---|---|
-| `id` | `id` |
-| `event_type` | `type` |
-| `work_item_id` | `subject` |
-| `producer_identity` | `source` (as `CloudEventSource`) |
-| `timestamp` | `time` |
-| *(whole record)* | `data` |
+| `EventInstance.id` | `id` |
+| `EventInstance.event_type` | `type` |
+| `EventInstance.work_item_id` | `subject` |
+| `CloudEventEncodingContext.source` | `source` (technical producer origin) |
+| `EventInstance.timestamp` | `time` |
+| `EventInstance` (full record, retains `producer_identity`) | `data` |
+
+### Event Type format
+
+```
+<Namespace>.<Subject>.<Action>[.<Qualifier>]
+```
+
+- `Delivery.Hack.Started` — correct
+- `Delivery.Hack.Phase Lifecycle.Started` — **wrong**: Event Category must NOT appear in the type string
+
+Event Category is metadata for routing and classification — it is a field of `EventInstance`, not a segment of `event_type`.
 
 ## Contracts — Event flow
 
