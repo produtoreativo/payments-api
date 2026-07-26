@@ -9,7 +9,8 @@ export { ProducerType } from './enums/producer.js';
 export { ConsumerType } from './enums/consumer.js';
 
 // Models
-export type { EventInstance, EvidenceReference } from './models/event-instance.js';
+export type { EventId } from './models/event-id.js';
+export type { EventInstance, OperationalEvent, EvidenceReference } from './models/event-instance.js';
 export type { EventNamespace, EventTypeId } from './models/event-type.js';
 export type { DerivedState } from './models/derived-state.js';
 export type { TimelineState } from './models/timeline-state.js';
@@ -18,7 +19,7 @@ export { FindingType, FindingSeverity } from './models/finding.js';
 export type { Finding } from './models/finding.js';
 
 // Contracts — CloudEvents
-export type { CloudEventEnvelope, CloudEventEncoder, CloudEventDecoder } from './contracts/cloud-events.js';
+export type { CloudEventSource, CloudEventEnvelope, CloudEventEncoder, CloudEventDecoder } from './contracts/cloud-events.js';
 
 // Contracts — Event flow
 export type { EventProducer } from './contracts/event-producer.js';
@@ -28,7 +29,12 @@ export type { EventQuery, EventQueryOptions, EventQueryResult } from './contract
 
 // Contracts — Timeline & OSE
 export type { Timeline } from './contracts/timeline.js';
-export type { OperationalStateEngine, ValidationResult } from './contracts/operational-state-engine.js';
+export type {
+  OperationalStateEngine,
+  ValidationResult,
+  StateHistoryEntry,
+  StateHistory,
+} from './contracts/operational-state-engine.js';
 
 // Contracts — GitHub sync
 export type { GitHubSync } from './contracts/github-sync.js';

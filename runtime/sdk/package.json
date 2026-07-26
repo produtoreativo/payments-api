@@ -1,6 +1,6 @@
 {
   "name": "@prodops/runtime-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ProdOps Runtime SDK — contracts, models, and enums for all runtime components",
   "type": "module",
   "main": "./dist/index.js",
