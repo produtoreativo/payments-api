@@ -254,40 +254,54 @@ labels:
     category: evidence
 
 views:
-  - name: "Iteration Plan"
-    layout: TABLE
-    description: "Todos os Work Items da Iteration, agrupados por tipo"
-    groupBy: "witem:type"
+  # ── Delivery — IP-RUNTIME-001 ─────────────────────────────────────────────
+  # Source: prodops/scripts/diligence/ensure-delivery-views.sh
+  #
+  # Field name convention: workspace.yaml uses ':' as namespace separator.
+  # GitHub Projects v2 sanitizes ':' to space — filters reference sanitized names.
+  #   oem:journey     → "oem journey"     in filters: "oem journey":Delivery
+  #   oem:state       → "oem state"       in filters: "oem state":BLOCKED
+  #   witem:iteration → "witem iteration" in filters: "witem iteration":IP-RUNTIME-001
+  #
+  # Filter native qualifiers (GitHub issue fields — NOT our custom fields):
+  #   state:open / state:closed  → native issue state (open/closed)
+  #   label:name                 → label filter (unambiguous)
+  #
+  # groupBy is NOT settable via REST API or GraphQL mutation.
+  # Configure manually in GitHub UI after provisioning:
+  #   https://github.com/orgs/produtoreativo/projects/24
 
-  - name: "Delivery Flow"
-    layout: BOARD
-    description: "Features pela Delivery Journey, agrupadas por oem:state"
+  - name: "Iteration Backlog"
+    layout: TABLE
+    description: >
+      Work Items da Iteration IP-RUNTIME-001 em sequência de execução.
+      Agrupa por oem:state para visualizar progresso dentro da iteration.
+    filter: '"witem iteration":IP-RUNTIME-001'
     groupBy: "oem:state"
 
-  - name: "Diligence Flow"
+  - name: "Delivery Board"
     layout: BOARD
-    description: "Features pela Diligence Journey, agrupadas por diligence:status"
-    groupBy: "diligence:status"
+    description: >
+      Board de CI Sync — Features da Delivery Journey na Iteration IP-RUNTIME-001.
+      Colunas por oem:state: BOOTSTRAPPING → HACKING → SYNCING → FINISHING → SHIPPING → VALIDATING → PROMOTING → DONE.
+    filter: '"oem journey":Delivery "witem iteration":IP-RUNTIME-001'
+    groupBy: "oem:state"
 
-  - name: "Runtime Reconciliation"
+  - name: "Delivery Blocked"
     layout: TABLE
-    description: "Work Items com runtime:sync != In Sync"
-    groupBy: "runtime:sync"
+    description: >
+      Features com Impediment ativo (oem:state = BLOCKED).
+      Agrupa por witem:feature para identificar quais features estão bloqueadas.
+    filter: '"oem journey":Delivery "witem iteration":IP-RUNTIME-001 "oem state":BLOCKED'
+    groupBy: "witem:feature"
 
-  - name: "Findings"
+  - name: "Delivery Done"
     layout: TABLE
-    description: "Todos os Findings do piloto, agrupados por severidade"
-    groupBy: "witem:type"
-
-  - name: "Evidence Readiness"
-    layout: BOARD
-    description: "Readiness de evidências por Feature, agrupada por diligence:evidence"
-    groupBy: "diligence:evidence"
-
-  - name: "Release Scope"
-    layout: TABLE
-    description: "Todos os Work Items da Release v0.1.0-runtime-pilot"
-    groupBy: "witem:type"
+    description: >
+      Features concluídas (oem:state = DONE) — evidência de conclusão da iteration.
+      Agrupa por oem:state (todos DONE) como registro imutável.
+    filter: '"oem journey":Delivery "witem iteration":IP-RUNTIME-001 "oem state":DONE'
+    groupBy: "oem:state"
 
 issues:
   # ── Épica ──────────────────────────────────────────────────────────────────

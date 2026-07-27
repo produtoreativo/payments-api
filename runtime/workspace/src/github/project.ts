@@ -21,6 +21,7 @@ interface GhView {
   id: string;
   name: string;
   layout: string;
+  filter: string | null;
 }
 
 export function listProjects(owner: string): GhProject[] {
@@ -97,7 +98,7 @@ export function ensureField(
 
 export function listViews(projectId: string): GhView[] {
   const result = ghGraphql<{ data: { node: { views: { nodes: GhView[] } } } }>(
-    `query($id: ID!) { node(id: $id) { ... on ProjectV2 { views(first: 20) { nodes { id name layout } } } } }`,
+    `query($id: ID!) { node(id: $id) { ... on ProjectV2 { views(first: 30) { nodes { id name layout filter } } } } }`,
     { id: projectId }
   );
   return result.data.node.views.nodes;

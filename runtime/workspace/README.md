@@ -1,26 +1,82 @@
-# Workspace Provisioner
+# Workspace Management Capability
 
-Materializa automaticamente a Canonical Operational Representation (COR) do ProdOps Runtime no GitHub Projects.
+Materializa e reconcilia a Canonical Operational Representation (COR) do ProdOps Runtime no GitHub Projects.
 
 > Faz parte do módulo `runtime/workspace` — primeiro componente do ProdOps Runtime MVP (EXP-013).
 
 ---
 
-## Responsabilidade
+## Arquitetura
 
-O Workspace Provisioner lê `workspace.yaml` e garante que o GitHub Project `ProdOps — payments-api` esteja completamente provisionado:
+```
+src/
+├── capability.ts           WorkspaceManagementCapability — ponto de entrada único
+├── provisioner.ts          Orquestrador de 7 passos (usa Capability)
+├── doctor.ts               Detector de drifts (usa Capability; produz DriftItem enriquecido)
+├── cli.ts                  CLI: workspace provision | doctor
+├── types.ts                Tipos canônicos (WorkspaceConfig, DoctorReport, DriftItem, ProviderStrategy)
+├── providers/
+│   ├── strategy.ts         ProviderMeta — interface de metadados de estratégia
+│   ├── project.provider.ts  ProjectProvider   (gh-cli + graphql)
+│   ├── field.provider.ts    FieldProvider     (gh-cli)
+│   ├── view.provider.ts     ViewProvider      (manual-intervention — limitação da API)
+│   ├── label.provider.ts    LabelProvider     (gh-cli + rest)
+│   ├── milestone.provider.ts MilestoneProvider (rest)
+│   ├── iteration.provider.ts IterationProvider (manual-intervention — limitação da API)
+│   └── membership.provider.ts MembershipProvider (gh-cli + graphql)
+└── github/
+    ├── client.ts           gh / ghJson / ghGraphql — adaptadores de baixo nível
+    ├── project.ts          Operações de Project, Field, View (gh CLI + GraphQL)
+    ├── labels.ts           Operações de Label
+    ├── issues.ts           Operações de Issue
+    └── milestone.ts        Operações de Milestone
+```
 
-- Project criado
-- Milestone criada
-- 18 Custom Fields criados
-- 25 Labels criadas no repositório
-- 7 Views configuradas
-- Issues do Product Backlog criadas e adicionadas ao Project
-- Campos de identidade preenchidos em cada Issue
+### Hierarquia de responsabilidades
 
-O Workspace Doctor compara o estado declarado em `workspace.yaml` com o estado real no GitHub e produz um relatório de drifts com comandos de reparo.
+```
+WorkspaceManagementCapability  ← ponto de entrada (capability.ts)
+    └── Providers              ← seleção de estratégia (src/providers/)
+            └── github/        ← adaptadores GitHub (src/github/)
+```
 
-**O GitHub Project é superfície de visualização — não fonte de verdade.** A Operational Timeline em `evidence/timelines/` é a fonte de verdade.
+**Regra de dependência:** Journeys (Delivery, Diligence) nunca importam de `runtime/workspace`. Esta Capability materializa o COR; não origina estado.
+
+---
+
+## Providers e estratégias
+
+Cada Provider declara a estratégia que usa e se o drift pode ser corrigido automaticamente:
+
+| Provider | Estratégia primária | Alternativa | Auto-correct |
+|---|---|---|---|
+| ProjectProvider | gh-cli | graphql | sim |
+| FieldProvider | gh-cli | — | sim |
+| ViewProvider | manual-intervention | graphql (list only) | **não** |
+| LabelProvider | gh-cli | rest | sim |
+| MilestoneProvider | rest | gh-cli | sim |
+| IterationProvider | manual-intervention | — | **não** |
+| MembershipProvider | gh-cli | graphql | sim |
+
+**Hierarquia de estratégias (ordem de preferência):**
+```
+graphql → rest → gh-cli → browser-automation → manual-intervention
+```
+
+O consumidor (Doctor, Provisioner) não precisa conhecer qual estratégia foi usada — o Provider expõe essa informação através de `.meta`.
+
+---
+
+## Invariante: GitHub Project = COR
+
+> **O GitHub Project é representação operacional canônica — nunca fonte de verdade.**
+
+- O estado real reside na Operational Timeline (Event Instances imutáveis).
+- O GitHub Project projeta o Derived State calculado pelo RT-02.
+- Atualizar um Custom Field no GitHub não cria eventos na Timeline.
+- Esta Capability materializa e reconcilia a COR; não tem autoridade sobre estado.
+
+Se o campo `State` no GitHub diz HACKING mas RT-02 calcula BLOCKED: **RT-02 está correto**. O GitHub Project está com drift — use `workspace doctor`.
 
 ---
 
@@ -54,8 +110,6 @@ metadata:
   obc: "EXP-013"
 ```
 
-Todos os demais valores (fields, labels, views, issues) estão pré-configurados com a COR do piloto.
-
 ---
 
 ## Uso
@@ -66,15 +120,15 @@ Todos os demais valores (fields, labels, views, issues) estão pré-configurados
 npm run provision
 ```
 
-Executa os 7 passos:
+Executa os 7 passos via `WorkspaceManagementCapability`:
 
-1. Cria (ou verifica) o GitHub Project
-2. Cria (ou verifica) a Milestone
-3. Cria os 18 Custom Fields
-4. Cria as 25 Labels no repositório
-5. Cria as 7 Views
-6. Cria as Issues do backlog e adiciona ao Project
-7. Preenche campos de identidade (TEXT) nas Issues
+1. **ProjectProvider** — cria ou verifica o GitHub Project
+2. **MilestoneProvider** — cria ou verifica a Milestone
+3. **FieldProvider** — cria os Custom Fields declarados
+4. **LabelProvider** — cria as Labels no repositório
+5. **ViewProvider** — verifica Views (criação manual para missing — ver Limitações)
+6. **MembershipProvider** — cria Issues e adiciona ao Project
+7. Sumário do estado final
 
 **Idempotente:** executar duas vezes produz o mesmo estado. Recursos existentes são pulados.
 
@@ -84,12 +138,13 @@ Executa os 7 passos:
 npm run doctor
 ```
 
-Compara `workspace.yaml` com o estado real no GitHub e produz:
+Compara `workspace.yaml` com o estado real no GitHub. O relatório inclui, por drift:
 
-- Recursos ausentes (❌ missing)
-- Divergências em campos ou labels (⚠️ divergent)
-- Recursos extras não declarados no config (ℹ️ extra)
-- Recomendação de reparo para cada drift
+- Severidade: `missing` ❌ · `divergent` ⚠️ · `extra` ℹ️
+- Provider responsável (ex: `FieldProvider`)
+- Estratégia de correção (ex: `gh-cli`)
+- Estratégia alternativa (ex: `graphql`) ou `—`
+- Auto-correct: `yes` (workspace provision corrige) ou `no` (requer ação manual)
 
 Retorna exit code `0` se consistente, `1` se há drifts bloqueantes.
 
@@ -153,32 +208,37 @@ issues:                  # Work Items iniciais do backlog
 
 ## Limitações conhecidas
 
+### Views — sem API de criação
+
+A mutação `createProjectV2View` **não existe** na API pública do GitHub Projects v2. Confirmado:
+```
+{"errors":[{"message":"Field 'createProjectV2View' doesn't exist on type 'Mutation'"}]}
+```
+
+O ViewProvider declara `strategyUsed: 'manual-intervention'`. O Doctor reporta views faltantes com `auto-correct: no` e instrução de criação manual via UI.
+
 ### SINGLE_SELECT field values
 
-O GitHub Projects v2 usa option IDs (strings como `f75ad8...`) para campos Single Select — não os valores textuais. O `gh project item-edit --single-select-option-id` requer o ID da opção, que só é determinável após criar o campo via `gh project field-list --format json`.
+O GitHub Projects v2 usa option IDs internos para campos Single Select. O Provisioner cria os campos com as opções declaradas, mas não pode definir valores de SINGLE_SELECT em Issues automaticamente sem conhecer os option IDs gerados. Use `workspace doctor` para identificar divergências.
 
-**Workaround:** após `workspace provision`, configure os valores iniciais de `oem:state`, `diligence:evidence`, `runtime:sync` e `runtime:timeline-state` manualmente no GitHub UI, ou use `workspace doctor` para identificar divergências e os comandos de reparo correspondentes.
+### Iterations — sem API de criação
 
-### View filters e groupBy
-
-O GitHub Projects v2 API (GraphQL) suporta criação de Views com `layout` (TABLE ou BOARD), mas configuração de filtros, groupBy, e colunas de visualização requer interação via interface do GitHub ou mutations GraphQL específicas por campo. O provisioner cria as Views com o layout correto; os filtros e agrupamentos devem ser configurados manualmente no GitHub UI seguindo a especificação em `runtime-validation-cor.md`.
+O GitHub Projects v2 não expõe API para criação de Iteration cycles. O IterationProvider declara `strategyUsed: 'manual-intervention'`. Iterações devem ser criadas via UI no GitHub.
 
 ### Rate limiting
 
-Para workspaces com muitas Issues, o provisioner pode atingir rate limits da API do GitHub. Se isso ocorrer, re-execute `workspace provision` — a idempotência garante que apenas os itens faltantes serão criados.
+Para workspaces com muitas Issues, o provisioner pode atingir rate limits. Re-execute `workspace provision` — a idempotência garante que apenas itens faltantes serão criados.
 
 ---
 
 ## Reutilização em outros produtos
 
-Para usar o Workspace Provisioner em outro produto além do payments-api:
+Para usar em outro produto além do payments-api:
 
 1. Copie `workspace.yaml` para o diretório do novo produto
 2. Atualize `metadata.owner`, `metadata.repository`, `metadata.iteration`, e `metadata.release`
 3. Ajuste a lista de `issues` para os Work Items do novo backlog
 4. Execute `workspace provision --config /path/to/novo-workspace.yaml`
-
-Os campos, labels, e views são definidos genericamente — funcionam para qualquer produto que siga a COR do ProdOps Framework.
 
 ---
 
