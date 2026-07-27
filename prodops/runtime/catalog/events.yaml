@@ -1,0 +1,145 @@
+catalog-version: "1"
+
+events:
+  Delivery.Bootstrap.Started:
+    cloud-event-type: prodops.delivery.bootstrap.started
+    description: Marks the beginning of the Bootstrap cycle for a Feature in the Delivery Journey
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/bootstrap/started/v1.0.0
+    journey: Delivery
+    cycle: Bootstrap
+    phase: Started
+    alters-state: true
+    new-state: BOOTSTRAPPING
+
+  Delivery.Bootstrap.Completed:
+    cloud-event-type: prodops.delivery.bootstrap.completed
+    description: Marks successful completion of the Bootstrap cycle; environment is ready for Hack
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/bootstrap/completed/v1.0.0
+    journey: Delivery
+    cycle: Bootstrap
+    phase: Completed
+    alters-state: false
+
+  Delivery.Hack.Started:
+    cloud-event-type: prodops.delivery.hack.started
+    description: Marks the beginning of the Hack cycle; implementation work begins
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/hack/started/v1.0.0
+    journey: Delivery
+    cycle: Hack
+    phase: Started
+    alters-state: true
+    new-state: HACKING
+
+  Delivery.Hack.Completed:
+    cloud-event-type: prodops.delivery.hack.completed
+    description: Marks successful completion of the Hack cycle; implementation and tests are green
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/hack/completed/v1.0.0
+    journey: Delivery
+    cycle: Hack
+    phase: Completed
+    alters-state: false
+
+  Delivery.Sync.Started:
+    cloud-event-type: prodops.delivery.sync.started
+    description: Marks the beginning of the Sync cycle; code review and integration in progress
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/sync/started/v1.0.0
+    journey: Delivery
+    cycle: Sync
+    phase: Started
+    alters-state: true
+    new-state: SYNCING
+
+  Delivery.Sync.Completed:
+    cloud-event-type: prodops.delivery.sync.completed
+    description: Marks successful completion of the Sync cycle; PR approved and merged
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/sync/completed/v1.0.0
+    journey: Delivery
+    cycle: Sync
+    phase: Completed
+    alters-state: false
+
+  Delivery.Finish.Started:
+    cloud-event-type: prodops.delivery.finish.started
+    description: Marks the beginning of the Finish cycle; final quality gates being applied
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/finish/started/v1.0.0
+    journey: Delivery
+    cycle: Finish
+    phase: Started
+    alters-state: true
+    new-state: FINISHING
+
+  Delivery.Finish.Completed:
+    cloud-event-type: prodops.delivery.finish.completed
+    description: Marks successful completion of the Finish cycle; feature is release-ready
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/finish/completed/v1.0.0
+    journey: Delivery
+    cycle: Finish
+    phase: Completed
+    alters-state: false
+
+  Delivery.Ship.Started:
+    cloud-event-type: prodops.delivery.ship.started
+    description: Marks the beginning of the Ship cycle; artifact is being deployed
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/ship/started/v1.0.0
+    journey: Delivery
+    cycle: Ship
+    phase: Started
+    alters-state: true
+    new-state: SHIPPING
+
+  Delivery.Ship.Completed:
+    cloud-event-type: prodops.delivery.ship.completed
+    description: Marks successful completion of the Ship cycle; artifact is deployed to target environment
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/ship/completed/v1.0.0
+    journey: Delivery
+    cycle: Ship
+    phase: Completed
+    alters-state: false
+
+  Delivery.Validate.Started:
+    cloud-event-type: prodops.delivery.validate.started
+    description: Marks the beginning of the Validate cycle; acceptance and smoke tests in progress
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/validate/started/v1.0.0
+    journey: Delivery
+    cycle: Validate
+    phase: Started
+    alters-state: true
+    new-state: VALIDATING
+
+  Shared.Gate.Passed:
+    cloud-event-type: prodops.shared.gate.passed
+    description: A quality gate was evaluated and passed; does not alter the Feature state
+    data-schema: https://prodops.produtoreativo.io/schemas/events/shared/gate/passed/v1.0.0
+    journey: Shared
+    cycle: Gate
+    phase: Passed
+    alters-state: false
+
+  Delivery.Validate.Completed:
+    cloud-event-type: prodops.delivery.validate.completed
+    description: Marks successful completion of the Validate cycle; acceptance criteria confirmed
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/validate/completed/v1.0.0
+    journey: Delivery
+    cycle: Validate
+    phase: Completed
+    alters-state: false
+
+  Delivery.Promote.Started:
+    cloud-event-type: prodops.delivery.promote.started
+    description: Marks the beginning of the Promote cycle; feature is being promoted to production
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/promote/started/v1.0.0
+    journey: Delivery
+    cycle: Promote
+    phase: Started
+    alters-state: true
+    new-state: PROMOTING
+
+  Delivery.Promote.Completed:
+    cloud-event-type: prodops.delivery.promote.completed
+    description: Marks successful completion of the full Delivery Happy Path; feature is live in production
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/promote/completed/v1.0.0
+    journey: Delivery
+    cycle: Promote
+    phase: Completed
+    alters-state: true
+    new-state: DONE
