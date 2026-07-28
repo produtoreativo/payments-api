@@ -104,7 +104,7 @@ Emitir `Delivery.Bootstrap.Dependencies.Installed`:
 
 ### Etapa 3 — Subir infraestrutura local
 
-Preparar a infraestrutura local através dos scripts de setup do repositório (ex: Docker, LocalStack, banco local). Verificar que todos os serviços requeridos estão reachable.
+Preparar a infraestrutura local através dos scripts de setup do repositório (ex: Docker, LocalStack, banco local), que também ativam os Git hooks do Commit Workflow (`core.hooksPath`). Verificar que todos os serviços requeridos estão reachable.
 
 **Momento**: após todos os serviços estarem acessíveis.
 
@@ -194,6 +194,8 @@ Se o tool retornar `status: skipped` (exit 4): o evento já foi registrado. Acei
 
 - Dependencies are installed.
 - Required local services are available.
+- The Commit Workflow Git hooks are active (`core.hooksPath` set to the
+  capability's `hooks/` directory).
 - Environment configuration requirements are known without secrets being exposed.
 - The smoke gate passes, or the environment blocker is explicit.
 - Timeline for `work-item-id` contains `Delivery.Bootstrap.Started`, `Bootstrap.Dependencies.Installed`, `Bootstrap.Services.Ready`, `Bootstrap.Smoke.Passed`, and `Delivery.Bootstrap.Completed`.
