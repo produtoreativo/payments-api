@@ -7,8 +7,8 @@ O contexto de produto, os contratos e os riscos não são duplicados aqui:
 - Product Deck: `prodops/artifacts/product/product-deck.md`
 - OBCs committed: `prodops/artifacts/obcs/`
 - BDD Features committed: `prodops/artifacts/bdd/`
-- Arquitetura: `prodops/journeys/assessment/architecture/overview.md`
-- Reliability Plans: `prodops/journeys/assessment/reliability-plans/`
+- Arquitetura: `prodops/artifacts/architecture/overview.md`
+- Reliability Plans: `prodops/artifacts/plans/reliability/`
 
 ## Instalação
 
@@ -81,4 +81,4 @@ Para comportamentos e contratos:
 ../scripts/test-acceptance.sh
 ```
 
-As políticas canônicas de teste estão em `prodops/journeys/delivery/practices/`.
+As políticas canônicas de teste estão em `prodops/framework/journeys/delivery/practices/`.
