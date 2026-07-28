@@ -1,0 +1,298 @@
+catalog-version: "1"
+
+events:
+  Delivery.Bootstrap.Started:
+    cloud-event-type: prodops.delivery.bootstrap.started
+    description: Marks the beginning of the Bootstrap cycle for a Feature in the Delivery Journey
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/bootstrap/started/v1.0.0
+    journey: Delivery
+    cycle: Bootstrap
+    phase: Started
+    alters-state: true
+    new-state: BOOTSTRAPPING
+
+  Delivery.Bootstrap.Completed:
+    cloud-event-type: prodops.delivery.bootstrap.completed
+    description: Marks successful completion of the Bootstrap cycle; environment is ready for Hack
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/bootstrap/completed/v1.0.0
+    journey: Delivery
+    cycle: Bootstrap
+    phase: Completed
+    alters-state: false
+
+  Delivery.Hack.Started:
+    cloud-event-type: prodops.delivery.hack.started
+    description: Marks the beginning of the Hack cycle; implementation work begins
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/hack/started/v1.0.0
+    journey: Delivery
+    cycle: Hack
+    phase: Started
+    alters-state: true
+    new-state: HACKING
+
+  Delivery.Hack.Completed:
+    cloud-event-type: prodops.delivery.hack.completed
+    description: Marks successful completion of the Hack cycle; implementation and tests are green
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/hack/completed/v1.0.0
+    journey: Delivery
+    cycle: Hack
+    phase: Completed
+    alters-state: false
+
+  Delivery.Sync.Started:
+    cloud-event-type: prodops.delivery.sync.started
+    description: Marks the beginning of the Sync cycle; code review and integration in progress
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/sync/started/v1.0.0
+    journey: Delivery
+    cycle: Sync
+    phase: Started
+    alters-state: true
+    new-state: SYNCING
+
+  Delivery.Sync.Completed:
+    cloud-event-type: prodops.delivery.sync.completed
+    description: Marks successful completion of the Sync cycle; PR approved and merged
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/sync/completed/v1.0.0
+    journey: Delivery
+    cycle: Sync
+    phase: Completed
+    alters-state: false
+
+  Delivery.Finish.Started:
+    cloud-event-type: prodops.delivery.finish.started
+    description: Marks the beginning of the Finish cycle; final quality gates being applied
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/finish/started/v1.0.0
+    journey: Delivery
+    cycle: Finish
+    phase: Started
+    alters-state: true
+    new-state: FINISHING
+
+  Delivery.Finish.Completed:
+    cloud-event-type: prodops.delivery.finish.completed
+    description: Marks successful completion of the Finish cycle; feature is release-ready
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/finish/completed/v1.0.0
+    journey: Delivery
+    cycle: Finish
+    phase: Completed
+    alters-state: false
+
+  Delivery.Ship.Started:
+    cloud-event-type: prodops.delivery.ship.started
+    description: Marks the beginning of the Ship cycle; artifact is being deployed
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/ship/started/v1.0.0
+    journey: Delivery
+    cycle: Ship
+    phase: Started
+    alters-state: true
+    new-state: SHIPPING
+
+  Delivery.Ship.Completed:
+    cloud-event-type: prodops.delivery.ship.completed
+    description: Marks successful completion of the Ship cycle; artifact is deployed to target environment
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/ship/completed/v1.0.0
+    journey: Delivery
+    cycle: Ship
+    phase: Completed
+    alters-state: false
+
+  Delivery.Validate.Started:
+    cloud-event-type: prodops.delivery.validate.started
+    description: Marks the beginning of the Validate cycle; acceptance and smoke tests in progress
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/validate/started/v1.0.0
+    journey: Delivery
+    cycle: Validate
+    phase: Started
+    alters-state: true
+    new-state: VALIDATING
+
+  Shared.Gate.Passed:
+    cloud-event-type: prodops.shared.gate.passed
+    description: A quality gate was evaluated and passed; does not alter the Feature state
+    data-schema: https://prodops.produtoreativo.io/schemas/events/shared/gate/passed/v1.0.0
+    journey: Shared
+    cycle: Gate
+    phase: Passed
+    alters-state: false
+
+  Delivery.Validate.Completed:
+    cloud-event-type: prodops.delivery.validate.completed
+    description: Marks successful completion of the Validate cycle; acceptance criteria confirmed
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/validate/completed/v1.0.0
+    journey: Delivery
+    cycle: Validate
+    phase: Completed
+    alters-state: false
+
+  Delivery.Promote.Started:
+    cloud-event-type: prodops.delivery.promote.started
+    description: Marks the beginning of the Promote cycle; feature is being promoted to production
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/promote/started/v1.0.0
+    journey: Delivery
+    cycle: Promote
+    phase: Started
+    alters-state: true
+    new-state: PROMOTING
+
+  Delivery.Promote.Completed:
+    cloud-event-type: prodops.delivery.promote.completed
+    description: Marks successful completion of the full Delivery Happy Path; feature is live in production
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/promote/completed/v1.0.0
+    journey: Delivery
+    cycle: Promote
+    phase: Completed
+    alters-state: true
+    new-state: DONE
+
+  Diligence.Capture.Started:
+    cloud-event-type: prodops.diligence.capture.started
+    description: Marks the beginning of the Diligence Capture cycle; delivery state is being read and recorded
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/capture/started/v1.0.0
+    journey: Diligence
+    cycle: Capture
+    phase: Started
+    alters-state: false
+
+  Diligence.Capture.Completed:
+    cloud-event-type: prodops.diligence.capture.completed
+    description: Marks successful completion of the Diligence Capture cycle; delivery state has been recorded with cross-reference
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/capture/completed/v1.0.0
+    journey: Diligence
+    cycle: Capture
+    phase: Completed
+    alters-state: false
+
+  Diligence.Attach.Started:
+    cloud-event-type: prodops.diligence.attach.started
+    description: Marks the beginning of the Diligence Attach cycle; captured diligence is being attached to the GitHub Project
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/attach/started/v1.0.0
+    journey: Diligence
+    cycle: Attach
+    phase: Started
+    alters-state: false
+
+  Diligence.Attach.Completed:
+    cloud-event-type: prodops.diligence.attach.completed
+    description: Marks successful completion of the Diligence Attach cycle; diligence evidence is visible in the GitHub Project
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/attach/completed/v1.0.0
+    journey: Diligence
+    cycle: Attach
+    phase: Completed
+    alters-state: false
+
+  Diligence.Promote.Started:
+    cloud-event-type: prodops.diligence.promote.started
+    description: Marks the beginning of the Diligence Promote cycle; evidence is being advanced through the backlog hierarchy
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/promote/started/v1.0.0
+    journey: Diligence
+    cycle: Promote
+    phase: Started
+    alters-state: false
+
+  Diligence.Promote.Completed:
+    cloud-event-type: prodops.diligence.promote.completed
+    description: Marks successful completion of the Diligence Promote cycle; feature advanced through backlog hierarchy with evidence
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/promote/completed/v1.0.0
+    journey: Diligence
+    cycle: Promote
+    phase: Completed
+    alters-state: false
+
+  Diligence.Close.Started:
+    cloud-event-type: prodops.diligence.close.started
+    description: Marks the beginning of the Diligence Close cycle; work item closure in progress
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/close/started/v1.0.0
+    journey: Diligence
+    cycle: Close
+    phase: Started
+    alters-state: false
+
+  Diligence.Close.Completed:
+    cloud-event-type: prodops.diligence.close.completed
+    description: Marks successful completion of the full Diligence Sync cycle; work item closed with complete evidence
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/close/completed/v1.0.0
+    journey: Diligence
+    cycle: Close
+    phase: Completed
+    alters-state: false
+
+  Diligence.Block.Declared:
+    cloud-event-type: prodops.diligence.block.declared
+    description: A blocking condition was detected; Diligence cannot advance until evidence is restored
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/block/declared/v1.0.0
+    journey: Diligence
+    cycle: Block
+    phase: Declared
+    alters-state: false
+
+  Diligence.Block.Resolved:
+    cloud-event-type: prodops.diligence.block.resolved
+    description: The blocking condition was resolved; Diligence resumes from the last valid checkpoint
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/block/resolved/v1.0.0
+    journey: Diligence
+    cycle: Block
+    phase: Resolved
+    alters-state: false
+
+  Diligence.Scan.Started:
+    cloud-event-type: prodops.diligence.scan.started
+    description: Marks the beginning of the Diligence Async Scan; reading Delivery state and comparing with GitHub Project
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/scan/started/v1.0.0
+    journey: Diligence
+    cycle: Scan
+    phase: Started
+    alters-state: false
+
+  Diligence.Scan.Completed:
+    cloud-event-type: prodops.diligence.scan.completed
+    description: Marks successful completion of the Diligence Scan; divergence report produced
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/scan/completed/v1.0.0
+    journey: Diligence
+    cycle: Scan
+    phase: Completed
+    alters-state: false
+
+  Diligence.Divergence.Detected:
+    cloud-event-type: prodops.diligence.divergence.detected
+    description: A divergence between GitHub Project state and Derived State was detected during Scan
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/divergence/detected/v1.0.0
+    journey: Diligence
+    cycle: Scan
+    phase: Detected
+    alters-state: false
+
+  Diligence.Flag.Started:
+    cloud-event-type: prodops.diligence.flag.started
+    description: Marks the beginning of the Diligence Flag cycle; divergences are being classified with severity and corrective action
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/flag/started/v1.0.0
+    journey: Diligence
+    cycle: Flag
+    phase: Started
+    alters-state: false
+
+  Diligence.Flag.Completed:
+    cloud-event-type: prodops.diligence.flag.completed
+    description: Marks successful completion of the Diligence Flag cycle; finding registered with severity and corrective action
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/flag/completed/v1.0.0
+    journey: Diligence
+    cycle: Flag
+    phase: Completed
+    alters-state: false
+
+  Diligence.Repair.Started:
+    cloud-event-type: prodops.diligence.repair.started
+    description: Marks the beginning of the Diligence Repair cycle; GitHub Project is being restored from Derived State
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/repair/started/v1.0.0
+    journey: Diligence
+    cycle: Repair
+    phase: Started
+    alters-state: false
+
+  Diligence.Repair.Completed:
+    cloud-event-type: prodops.diligence.repair.completed
+    description: Marks successful completion of the Diligence Repair cycle; GitHub Project restored to match Derived State
+    data-schema: https://prodops.produtoreativo.io/schemas/events/diligence/repair/completed/v1.0.0
+    journey: Diligence
+    cycle: Repair
+    phase: Completed
+    alters-state: false

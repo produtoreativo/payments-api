@@ -1,0 +1,1 @@
+{"version":3,"file":"event-consumer.d.ts","sourceRoot":"","sources":["../../src/contracts/event-consumer.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,6BAA6B,CAAC;AACjE,OAAO,KAAK,EAAE,YAAY,EAAE,MAAM,sBAAsB,CAAC;AAEzD,MAAM,WAAW,aAAa;IAC5B,QAAQ,CAAC,YAAY,EAAE,YAAY,CAAC;IACpC,OAAO,CAAC,KAAK,EAAE,aAAa,GAAG,OAAO,CAAC,IAAI,CAAC,CAAC;CAC9C"}

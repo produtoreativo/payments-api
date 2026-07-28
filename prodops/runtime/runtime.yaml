@@ -1,0 +1,19 @@
+runtime-version: "0.3.0"
+framework-version: "1.0.0"
+schema-version: "1"
+catalog-version: "1"
+
+cloud-events:
+  specversion: "1.0"
+  source: https://github.com/produtoreativo/payments-api
+  datacontenttype: application/json
+
+github:
+  owner: produtoreativo
+  repository: payments-api
+  project-number: 25
+  pilot-issue: 76
+
+datadog:
+  service: payments-api
+  environment: development

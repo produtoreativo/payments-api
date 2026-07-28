@@ -1,0 +1,23 @@
+{
+  "demo-run-id": "exp-014-demo-2026-07-27-1945",
+  "runtime-version": "0.3.0",
+  "timestamp": "2026-07-27T19:50:41Z",
+  "demo-mode": "true",
+  "with-diligence": "true",
+  "delivery-events-total": 29,
+  "diligence-events-total": 12,
+  "correlation-ids": {
+    "76": {
+      "delivery": "48959340-de2d-4291-a831-c2d594f0d74a",
+      "diligence": "229db13b-5db2-4407-a4b8-7947f97396c7"
+    },
+    "77": {
+      "delivery": "df940e72-c6cd-46e3-b5df-2eab7c6f0ffc",
+      "diligence": "14d1382d-00d7-49eb-abf9-736cc61fd01a"
+    },
+    "78": {
+      "delivery": "7b7a20b6-70cc-40b8-b3d8-aa7be45ca35a",
+      "diligence": "f2ea4339-fcdc-4c9b-b202-f285370e8b54"
+    }
+  }
+}

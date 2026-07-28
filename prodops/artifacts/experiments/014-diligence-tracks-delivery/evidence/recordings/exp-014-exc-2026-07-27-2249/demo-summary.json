@@ -1,0 +1,29 @@
+{
+  "demo-run-id": "exp-014-exc-2026-07-27-2249",
+  "runtime-version": "0.3.0",
+  "timestamp": "2026-07-27T22:52:35Z",
+  "type": "exception-paths",
+  "diligence-events-total": 33,
+  "scenario-a": {
+    "issue": 76,
+    "events": 8,
+    "result": "Closed"
+  },
+  "scenario-b": {
+    "issue": 77,
+    "events": 10,
+    "result": "Closed",
+    "block-validated": true
+  },
+  "scenario-c": {
+    "issue": 78,
+    "events": 15,
+    "result": "Closed",
+    "drift-repaired": true
+  },
+  "diligence-correlation-ids": {
+    "76": "0b810d9f-a2fa-4476-9a59-5bba146cfb00",
+    "77": "b8246f1e-cebe-4079-99f5-dd5bb18843a1",
+    "78": "b8e514fb-e3ea-4318-94a9-41bc46137bec"
+  }
+}

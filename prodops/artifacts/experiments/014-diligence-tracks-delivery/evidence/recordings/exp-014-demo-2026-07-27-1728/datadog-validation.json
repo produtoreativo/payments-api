@@ -1,0 +1,23 @@
+{
+  "demo-run-id": "exp-014-demo-2026-07-27-1728",
+  "validated-at": "2026-07-27T18:25:36Z",
+  "dashboard": {
+    "id": "jhq-ztv-3pv",
+    "url": "https://app.datadoghq.com/dashboard/jhq-ztv-3pv"
+  },
+  "metrics": {
+    "runtime.event.received": {
+      "status": "ok",
+      "points": 29
+    },
+    "runtime.diligence.event.received": {
+      "status": "ok",
+      "points": 12
+    },
+    "runtime.diligence.features.tracked": {
+      "status": "ok",
+      "points": 3
+    }
+  },
+  "total-points": 44
+}

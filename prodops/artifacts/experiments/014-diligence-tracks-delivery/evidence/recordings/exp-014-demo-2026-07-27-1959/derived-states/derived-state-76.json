@@ -1,0 +1,10 @@
+{
+  "issue": "76",
+  "state": "DONE",
+  "last-event-type": "prodops.delivery.promote.completed",
+  "runtime-correlation-id": "a9ce71f0-f35a-4b83-b4bf-332fa20c00bb",
+  "runtime-version": "0.3.0",
+  "framework-version": "1.0.0",
+  "schema-version": "1",
+  "computed-at": "2026-07-27T20:03:11Z"
+}
