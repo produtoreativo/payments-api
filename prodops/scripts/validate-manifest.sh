@@ -5,8 +5,8 @@
 #   1. Todo path declarado em `skills:` e `paths:` existe
 #      (linhas marcadas com "# optional" geram WARN em vez de FAIL).
 #   2. `commit_types` bate com os tipos aceitos pelo hook commit-msg.sh.
-#   3. `commit_summary_max` bate com o limite do regex do hook
-#      (WARN — drift conhecido até fix/hook-doc-mismatches; ver PR série).
+#   3. `commit_summary_max` bate com o limite que o hook realmente aplica
+#      (o guard MAX_SUMMARY sobre o subject inteiro, não o quantificador do regex).
 #
 # Uso: ./prodops/scripts/validate-manifest.sh
 # Exit: 0 = consistente | 1 = inconsistência encontrada
@@ -75,16 +75,21 @@ else
   fail "commit_types divergem — manifest: [$MANIFEST_TYPES] hook: [$HOOK_TYPES]"
 fi
 
-# ── 3. commit_summary_max == limite do regex do hook ────────────────────────
-echo "3. Verificando commit_summary_max contra o regex do hook"
+# ── 3. commit_summary_max == limite realmente aplicado pelo hook ────────────
+# Confere o mecanismo de enforcement de fato (o guard MAX_SUMMARY que mede o
+# subject inteiro), não o quantificador do regex Conventional — este mede só o
+# texto após "type(scope): " e não é mais o limitador.
+echo "3. Verificando commit_summary_max contra o limite aplicado pelo hook"
 
 MANIFEST_MAX=$(grep -E '^\s+commit_summary_max:' "$MANIFEST" | grep -oE '[0-9]+')
-HOOK_MAX=$(grep -oE '\{1,[0-9]+\}' "$HOOK" | grep -oE '[0-9]+' | tail -1)
+HOOK_MAX=$(grep -oE '^MAX_SUMMARY=[0-9]+' "$HOOK" | grep -oE '[0-9]+' | tail -1)
 
-if [ "$MANIFEST_MAX" = "$HOOK_MAX" ]; then
-  ok "commit_summary_max consistente: $MANIFEST_MAX"
+if [ -z "$HOOK_MAX" ]; then
+  fail "commit_summary_max não é aplicado — MAX_SUMMARY ausente em $HOOK (o subject inteiro não é medido)"
+elif [ "$MANIFEST_MAX" = "$HOOK_MAX" ]; then
+  ok "commit_summary_max aplicado e consistente: $MANIFEST_MAX (subject inteiro)"
 else
-  warn "commit_summary_max diverge — manifest: $MANIFEST_MAX, hook regex: $HOOK_MAX (drift conhecido; corrigido em fix/hook-doc-mismatches)"
+  fail "commit_summary_max diverge — manifest: $MANIFEST_MAX, hook MAX_SUMMARY: $HOOK_MAX"
 fi
 
 # ── Resultado ────────────────────────────────────────────────────────────────

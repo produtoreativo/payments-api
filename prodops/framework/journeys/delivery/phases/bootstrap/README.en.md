@@ -4,7 +4,7 @@ Bootstrap prepares the environment for a ProdOps execution.
 
 ## Responsibility
 
-Bootstrap installs dependencies, prepares local services, verifies configuration requirements and runs the smoke gate. It does not assess product readiness or start Git flow.
+Bootstrap installs dependencies, prepares local services, activates the Commit Workflow Git hooks (`core.hooksPath`), verifies configuration requirements and runs the smoke gate. It does not assess product readiness or start Git flow.
 
 ```text
 Prepare tools → install dependencies → prepare local infrastructure
@@ -32,6 +32,7 @@ The `/downstream` orchestrator owns the readiness gate. `/hack start` owns branc
 
 - Dependencies installed.
 - Local services available.
+- Commit Workflow Git hooks active (`core.hooksPath` set to the capability's `hooks/` directory).
 - Configuration requirements identified without exposing secrets.
 - Green smoke gate or an explicit environment blocker.
 

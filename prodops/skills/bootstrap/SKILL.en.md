@@ -23,7 +23,8 @@ OBCs, BDD Features, risks, Reliability Plans and the Iteration Plan are not Boot
 1. Identify the packages and local services required by the repository.
 2. Verify required runtimes and command-line tools are available.
 3. Install dependencies using the repository's declared package manager.
-4. Prepare local infrastructure through the repository setup scripts.
+4. Prepare local infrastructure through the repository setup scripts, which
+   also activate the Commit Workflow Git hooks (`core.hooksPath`).
 5. Verify required environment variable names without reading or exposing secret values.
 6. Run the smoke gate defined in `prodops/exec/manifest.yaml`.
 7. Report the environment as ready or return a concrete blocker.
@@ -42,6 +43,8 @@ OBCs, BDD Features, risks, Reliability Plans and the Iteration Plan are not Boot
 
 - Dependencies are installed.
 - Required local services are available.
+- The Commit Workflow Git hooks are active (`core.hooksPath` set to the
+  capability's `hooks/` directory).
 - Environment configuration requirements are known without secrets being exposed.
 - The smoke gate passes, or the environment blocker is explicit.
 - `/hack start` can establish the Git flow after Downstream readiness is reached.
