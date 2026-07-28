@@ -52,4 +52,31 @@ if [ "${#MSG}" -gt "$MAX_SUMMARY" ]; then
   exit 1
 fi
 
+# Scope must be lowercase (subject-case) — the shape regex accepts A-Z inside
+# the scope for readability; enforce lowercase here.
+SCOPE=$(echo "$MSG" | sed -nE 's/^[a-z]+\(([^)]+)\)!?:.*/\1/p')
+if [ -n "$SCOPE" ] && echo "$SCOPE" | grep -q '[A-Z]'; then
+  echo ""
+  echo "  ✗ Commit scope must be lowercase: ($SCOPE)"
+  echo ""
+  echo "  Use lowercase for the scope, e.g. feat(invoices): ..."
+  echo "  Received:  $MSG"
+  echo ""
+  echo "  See: prodops/framework/journeys/delivery/capabilities/commit-workflow/README.md#conventional-commits"
+  echo ""
+  exit 1
+fi
+
+# Subject must not end with a period (subject-full-stop).
+if echo "$MSG" | grep -q '\.$'; then
+  echo ""
+  echo "  ✗ Commit subject must not end with a period."
+  echo ""
+  echo "  Received:  $MSG"
+  echo ""
+  echo "  See: prodops/framework/journeys/delivery/capabilities/commit-workflow/README.md#conventional-commits"
+  echo ""
+  exit 1
+fi
+
 exit 0
