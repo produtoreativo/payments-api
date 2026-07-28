@@ -4,7 +4,7 @@ Bootstrap é a fase de preparação do ambiente para uma execução ProdOps.
 
 ## Responsabilidade
 
-Bootstrap instala dependências, prepara serviços locais, verifica requisitos de configuração e executa o smoke gate. Não avalia readiness de produto e não inicia o Git flow.
+Bootstrap instala dependências, prepara serviços locais, ativa os Git hooks do Commit Workflow (`core.hooksPath`), verifica requisitos de configuração e executa o smoke gate. Não avalia readiness de produto e não inicia o Git flow.
 
 ```text
 Preparar ferramentas → instalar dependências → preparar infraestrutura local
@@ -32,6 +32,7 @@ O gate de readiness é responsabilidade do `/downstream`. Branch, base e demais 
 
 - Dependências instaladas.
 - Serviços locais disponíveis.
+- Git hooks do Commit Workflow ativos (`core.hooksPath` apontando para o diretório `hooks/` da capability).
 - Requisitos de configuração identificados sem exposição de segredos.
 - Smoke gate verde ou bloqueio de ambiente explícito.
 
