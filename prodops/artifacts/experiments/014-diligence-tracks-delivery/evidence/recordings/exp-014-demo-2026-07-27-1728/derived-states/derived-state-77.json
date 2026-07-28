@@ -1,0 +1,10 @@
+{
+  "issue": "77",
+  "state": "VALIDATING",
+  "last-event-type": "prodops.delivery.validate.started",
+  "runtime-correlation-id": "3cdef159-50cc-46cb-bdde-fa6703f84e21",
+  "runtime-version": "0.3.0",
+  "framework-version": "1.0.0",
+  "schema-version": "1",
+  "computed-at": "2026-07-27T17:32:13Z"
+}

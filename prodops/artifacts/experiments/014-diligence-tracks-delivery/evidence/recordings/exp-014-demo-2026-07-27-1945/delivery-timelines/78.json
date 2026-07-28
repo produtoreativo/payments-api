@@ -1,0 +1,68 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "609c5ec0-5999-4c71-b147-b0b62b5cd628",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.bootstrap.started",
+    "subject": "78",
+    "time": "2026-07-27T19:48:49Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/bootstrap/started/v1.0.0",
+    "data": {
+      "issue": "78",
+      "journey": "Delivery",
+      "cycle": "Bootstrap",
+      "phase": "Started",
+      "alters-state": true,
+      "new-state": "BOOTSTRAPPING",
+      "runtime-correlation-id": "7b7a20b6-70cc-40b8-b3d8-aa7be45ca35a",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "0470d9dd-27a3-4549-a089-40be987ebdf4",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.bootstrap.completed",
+    "subject": "78",
+    "time": "2026-07-27T19:48:58Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/bootstrap/completed/v1.0.0",
+    "data": {
+      "issue": "78",
+      "journey": "Delivery",
+      "cycle": "Bootstrap",
+      "phase": "Completed",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "7b7a20b6-70cc-40b8-b3d8-aa7be45ca35a",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "f7860640-9217-41b1-a9de-b08fb2f36e51",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.hack.started",
+    "subject": "78",
+    "time": "2026-07-27T19:49:05Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/hack/started/v1.0.0",
+    "data": {
+      "issue": "78",
+      "journey": "Delivery",
+      "cycle": "Hack",
+      "phase": "Started",
+      "alters-state": true,
+      "new-state": "HACKING",
+      "runtime-correlation-id": "7b7a20b6-70cc-40b8-b3d8-aa7be45ca35a",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  }
+]

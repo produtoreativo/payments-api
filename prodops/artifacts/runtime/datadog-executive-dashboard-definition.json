@@ -1,0 +1,1140 @@
+{
+  "title": "ProdOps Runtime \u2014 Delivery Tracked by Diligence",
+  "description": "EXECUTIVE COCKPIT \u2014 EXP-014 | 8+4b sections | Iteration 5: Exception Paths | Filtre por $demo_run_id para isolar uma execu\u00e7\u00e3o.",
+  "layout_type": "ordered",
+  "reflow_type": "fixed",
+  "tags": [
+    "team:prodops"
+  ],
+  "widgets": [
+    {
+      "definition": {
+        "type": "note",
+        "content": "## ProdOps Runtime \u2014 Delivery Tracked by Diligence\n### EXECUTIVE COCKPIT  |  EXP-014",
+        "background_color": "vivid_blue",
+        "font_size": "18",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**1. DELIVERY HEALTH \u2014 VIS\u00c3O GERAL**",
+        "background_color": "vivid_blue",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 0,
+        "y": 1,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Active\nem andamento",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "formulas": [
+              {
+                "formula": "total - done"
+              }
+            ],
+            "queries": [
+              {
+                "name": "total",
+                "data_source": "metrics",
+                "query": "sum:runtime.diligence.features.tracked{service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+                "aggregator": "sum"
+              },
+              {
+                "name": "done",
+                "data_source": "metrics",
+                "query": "sum:runtime.diligence.features.tracked{delivery-state:done,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+                "aggregator": "sum"
+              }
+            ],
+            "response_format": "scalar",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 2,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Done\nconclu\u00eddas",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{delivery-state:done,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 2,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Blocked\nbloqueadas",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{state:blocked,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_red"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 2,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Failed\nfalhas",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{state:blocked,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_red"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 2,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Lead Time\nm\u00e9dio (s)",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "avg:runtime.delivery.leadtime{service:$service.value,demo-run-id:$demo_run_id.value}",
+            "aggregator": "avg"
+          }
+        ]
+      },
+      "layout": {
+        "x": 8,
+        "y": 2,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Throughput\n\u00falt. execu\u00e7\u00e3o",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{delivery-state:done,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 10,
+        "y": 2,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**2. FEATURE FUNNEL \u2014 FUNIL DE ENTREGA**",
+        "background_color": "vivid_purple",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 0,
+        "y": 4,
+        "width": 3,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**3. DELIVERY JOURNEY \u2014 FLUXO DA JORNADA**",
+        "background_color": "vivid_orange",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 3,
+        "y": 4,
+        "width": 6,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**4. DILIGENCE STATUS \u2014 ACOMPANHAMENTO**",
+        "background_color": "vivid_green",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 9,
+        "y": 4,
+        "width": 3,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "toplist",
+        "title": "Funil de Entrega \u2014 Stages",
+        "requests": [
+          {
+            "q": "top(sum:runtime.delivery.funnel{service:$service.value,demo-run-id:$demo_run_id.value} by {stage}.as_count(), 5, 'sum', 'desc')",
+            "style": {
+              "palette": "dog_classic"
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 5,
+        "width": 3,
+        "height": 5
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Bootstrap",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{delivery-state:bootstrapping,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum"
+          }
+        ]
+      },
+      "layout": {
+        "x": 3,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Hack",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{delivery-state:hacking,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum"
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Sync",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{delivery-state:syncing,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum"
+          }
+        ]
+      },
+      "layout": {
+        "x": 5,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Finish",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{delivery-state:finishing,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum"
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Ship",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{delivery-state:shipping,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum"
+          }
+        ]
+      },
+      "layout": {
+        "x": 3,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Validate",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{delivery-state:validating,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum"
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Promote",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{delivery-state:promoting,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum"
+          }
+        ]
+      },
+      "layout": {
+        "x": 5,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Done",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{delivery-state:done,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum"
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Eventos por Estado \u2014 Timeline",
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{service:$service.value,demo-run-id:$demo_run_id.value} by {state}.as_count()",
+            "display_type": "bars",
+            "style": {
+              "palette": "dog_classic"
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 3,
+        "y": 7,
+        "width": 6,
+        "height": 3
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Pending",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{diligence-status:N/A,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum"
+          }
+        ]
+      },
+      "layout": {
+        "x": 9,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Captured**\n\u2014",
+        "background_color": "yellow",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 10,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Attached",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{diligence-status:attached,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 11,
+        "y": 5,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Drift**\n\u2014",
+        "background_color": "orange",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 9,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Repair**\n\u2014",
+        "background_color": "red",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 10,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "In Sync",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{diligence-status:attached,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 11,
+        "y": 6,
+        "width": 1,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "sunburst",
+        "title": "Dilig\u00eancia por Status",
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.tracked{service:$service.value,demo-run-id:$demo_run_id.value} by {diligence-status}.as_count()",
+            "style": {
+              "palette": "dog_classic"
+            }
+          }
+        ],
+        "legend": {
+          "type": "table"
+        }
+      },
+      "layout": {
+        "x": 9,
+        "y": 7,
+        "width": 3,
+        "height": 3
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**4b. EXCEPTION PATHS \u2014 BLOQUEIO \u00b7 DRIFT \u00b7 REPAIR \u00b7 CLOSED**",
+        "background_color": "vivid_red",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 0,
+        "y": 10,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Blocked\nbloqueios",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.blocked{service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_red"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 11,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Drift\ndetectados",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.drift.detected{service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_orange"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 11,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Findings Open\nfindings",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.findings.open{service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_orange"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 11,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Repairing\nreparando",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.repair.started,service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 11,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Repairs Done\nreparados",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.repairs.completed{service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 8,
+        "y": 11,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Closed\nencerradas",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.features.closed{service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 10,
+        "y": 11,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**5. LIVE EXECUTION \u2014 EXECU\u00c7\u00c3O ATUAL**",
+        "background_color": "vivid_blue",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 0,
+        "y": 13,
+        "width": 4,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**6. EVENT STREAM \u2014 FLUXO DE EVENTOS**",
+        "background_color": "vivid_yellow",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 4,
+        "y": 13,
+        "width": 4,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**7. CORRELATION \u2014 DELIVERY \u2194 DILIGENCE**",
+        "background_color": "vivid_pink",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 8,
+        "y": 13,
+        "width": 4,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_table",
+        "title": "Features \u2014 Issue \u00d7 Correla\u00e7\u00e3o \u00d7 Estado",
+        "requests": [
+          {
+            "q": "top(sum:runtime.diligence.features.tracked{service:$service.value,demo-run-id:$demo_run_id.value} by {issue,delivery-state,diligence-status,delivery-correlation-id,diligence-correlation-id}.as_count(), 25, 'sum', 'desc')",
+            "alias": "events",
+            "limit": 25,
+            "order": "desc",
+            "aggregator": "sum"
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 14,
+        "width": 4,
+        "height": 5
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Delivery Events (\u00falt. 2h)",
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{service:$service.value,demo-run-id:$demo_run_id.value} by {state}.as_count()",
+            "display_type": "bars",
+            "style": {
+              "palette": "dog_classic"
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 14,
+        "width": 4,
+        "height": 3
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Diligence Events (\u00falt. 2h)",
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{service:$service.value,demo-run-id:$demo_run_id.value}.as_count()",
+            "display_type": "bars",
+            "style": {
+              "palette": "dog_classic"
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 17,
+        "width": 4,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_table",
+        "title": "Correlation \u2014 Delivery \u00d7 Diligence por Issue",
+        "requests": [
+          {
+            "q": "top(sum:runtime.diligence.features.tracked{service:$service.value,demo-run-id:$demo_run_id.value} by {issue,delivery-state,diligence-status}.as_count(), 25, 'sum', 'desc')",
+            "alias": "tracked",
+            "limit": 25,
+            "order": "desc",
+            "aggregator": "sum"
+          },
+          {
+            "q": "top(sum:runtime.event.received{service:$service.value,demo-run-id:$demo_run_id.value} by {issue}.as_count(), 25, 'sum', 'desc')",
+            "alias": "delivery-events",
+            "limit": 25,
+            "order": "desc",
+            "aggregator": "sum"
+          },
+          {
+            "q": "top(sum:runtime.diligence.event.received{service:$service.value,demo-run-id:$demo_run_id.value} by {issue}.as_count(), 25, 'sum', 'desc')",
+            "alias": "diligence-events",
+            "limit": 25,
+            "order": "desc",
+            "aggregator": "sum"
+          }
+        ]
+      },
+      "layout": {
+        "x": 8,
+        "y": 14,
+        "width": 4,
+        "height": 5
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**8. SYSTEM HEALTH \u2014 SA\u00daDE DO SISTEMA**",
+        "background_color": "vivid_blue",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 0,
+        "y": 19,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Runtime**\n\nHealthy \u2705",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 0,
+        "y": 20,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**GitHub Sync**\n\nIn Sync \u2705",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 2,
+        "y": 20,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Datadog**\n\nHealthy \u2705",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 4,
+        "y": 20,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Timeline**\n\nPass \u2705",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 6,
+        "y": 20,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Events**\n\nPass \u2705",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 8,
+        "y": 20,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Demo Run ID**\n\n`$demo_run_id`\n\n`$env` | `$service`",
+        "background_color": "gray",
+        "font_size": "11",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false,
+        "tick_pos": "50%",
+        "tick_edge": "left"
+      },
+      "layout": {
+        "x": 10,
+        "y": 20,
+        "width": 2,
+        "height": 2
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "demo_run_id",
+      "prefix": "demo-run-id",
+      "default": "*"
+    },
+    {
+      "name": "issue",
+      "prefix": "issue",
+      "default": "*"
+    },
+    {
+      "name": "delivery_state",
+      "prefix": "delivery-state",
+      "default": "*"
+    },
+    {
+      "name": "diligence_status",
+      "prefix": "diligence-status",
+      "default": "*"
+    },
+    {
+      "name": "env",
+      "prefix": "env",
+      "default": "staging"
+    },
+    {
+      "name": "service",
+      "prefix": "service",
+      "default": "payments-api"
+    },
+    {
+      "name": "team",
+      "prefix": "team",
+      "default": "prodops"
+    }
+  ]
+}

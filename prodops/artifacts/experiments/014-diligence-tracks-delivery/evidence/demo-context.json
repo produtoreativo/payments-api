@@ -1,0 +1,21 @@
+{
+  "demo-run-id": "exp-014-demo-2026-07-27-1915",
+  "prepared-at": "2026-07-27T19:15:15Z",
+  "project-url": "https://github.com/orgs/produtoreativo/projects/25",
+  "demo-command": "bash prodops/runtime/scripts/demo-delivery-with-diligence.sh --demo --with-diligence --demo-run-id exp-014-demo-2026-07-27-1915",
+  "features": [
+    "#76 FTR-001 Invoice PIX",
+    "#77 FTR-002 Invoice Cartao",
+    "#78 FTR-003 Confirmacao Pagamento"
+  ],
+  "target-delivery-states": {
+    "76": "DONE",
+    "77": "VALIDATING",
+    "78": "HACKING"
+  },
+  "target-diligence-states": {
+    "diligence-status": "Attached",
+    "diligence-evidence": "Complete",
+    "runtime-sync": "In Sync"
+  }
+}
