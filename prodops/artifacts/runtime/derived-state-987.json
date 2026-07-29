@@ -1,0 +1,10 @@
+{
+  "issue": "987",
+  "state": "HACKING",
+  "last-event-type": "prodops.delivery.hack.started",
+  "runtime-correlation-id": "e8ad000e-7705-4838-8d89-9f5208c11ce5",
+  "runtime-version": "0.3.0",
+  "framework-version": "1.0.0",
+  "schema-version": "1",
+  "computed-at": "2026-07-28T19:40:29Z"
+}

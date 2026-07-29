@@ -1,0 +1,31 @@
+{
+  "_doc": "Expected canonical output for Delivery.Bootstrap.Started — all players must match (excluding allowed-differ fields)",
+  "status": "accepted",
+  "event-type": "prodops.delivery.bootstrap.started",
+  "derived-state": "BOOTSTRAPPING",
+  "github-sync": "success",
+  "datadog-sync": "success",
+  "errors": [],
+  "cloudevent-data": {
+    "journey": "Delivery",
+    "cycle": "Bootstrap",
+    "phase": "Started",
+    "alters-state": true,
+    "new-state": "BOOTSTRAPPING",
+    "runtime-version": "0.3.0",
+    "framework-version": "1.0.0",
+    "schema-version": "1"
+  },
+  "allowed-to-differ": [
+    "correlation-id",
+    "execution-id",
+    "event-id",
+    "time",
+    "cloudevent.id",
+    "cloudevent.time",
+    "cloudevent.data.runtime-correlation-id",
+    "derived-state.computed-at",
+    "derived-state.runtime-correlation-id",
+    "actor.player"
+  ]
+}

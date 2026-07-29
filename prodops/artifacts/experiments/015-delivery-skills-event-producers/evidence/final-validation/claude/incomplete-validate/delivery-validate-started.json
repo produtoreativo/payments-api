@@ -1,0 +1,82 @@
+{
+  "_meta": {
+    "experiment": "EXP-015",
+    "tool-version": "1.0.0",
+    "player": "claude",
+    "agent": "validate-agent",
+    "iteration-id": "IP-EXP015-I8",
+    "execution-id": "70d3d0d1-a53b-4d8b-bfee-ad05fcf61bc8",
+    "executed-at": "2026-07-28T19:49:24Z"
+  },
+  "input": {
+    "event": "Delivery.Validate.Started",
+    "work-item-id": "958",
+    "iteration-id": "IP-EXP015-I8",
+    "correlation-id": "9377d9e4-8717-4b3f-a766-57a14de0d4d6",
+    "execution-id": "70d3d0d1-a53b-4d8b-bfee-ad05fcf61bc8",
+    "actor": {
+      "player": "claude",
+      "agent": "validate-agent"
+    },
+    "payload": {}
+  },
+  "output": {
+    "status": "accepted",
+    "event-id": "9f1799e8-a157-4e45-aec3-e7b18505effc",
+    "event-type": "prodops.delivery.validate.started",
+    "correlation-id": "9377d9e4-8717-4b3f-a766-57a14de0d4d6",
+    "derived-state": "VALIDATING",
+    "github-sync": "error",
+    "datadog-sync": "success",
+    "dispatch": {
+      "status": "skipped",
+      "subscriptions": []
+    },
+    "cloudevent": null,
+    "errors": []
+  },
+  "cloudevent": {
+    "specversion": "1.0",
+    "id": "9f1799e8-a157-4e45-aec3-e7b18505effc",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.validate.started",
+    "subject": "958",
+    "time": "2026-07-28T19:49:17Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/validate/started/v1.0.0",
+    "data": {
+      "issue": "958",
+      "journey": "Delivery",
+      "cycle": "Validate",
+      "phase": "Started",
+      "alters-state": true,
+      "new-state": "VALIDATING",
+      "runtime-correlation-id": "9377d9e4-8717-4b3f-a766-57a14de0d4d6",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  "derived-state": {
+    "issue": "958",
+    "state": "VALIDATING",
+    "last-event-type": "prodops.delivery.validate.started",
+    "runtime-correlation-id": "9377d9e4-8717-4b3f-a766-57a14de0d4d6",
+    "runtime-version": "0.3.0",
+    "framework-version": "1.0.0",
+    "schema-version": "1",
+    "computed-at": "2026-07-28T19:49:20Z"
+  },
+  "pipeline-steps": {
+    "emit": "success",
+    "timeline": "success",
+    "derive-state": "success",
+    "datadog": "success",
+    "github": "error",
+    "dispatch": "skipped"
+  },
+  "dispatch": {
+    "status": "skipped",
+    "subscriptions": []
+  }
+}

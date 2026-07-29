@@ -1,0 +1,233 @@
+{
+  "players": [
+    "claude",
+    "codex",
+    "copilot"
+  ],
+  "total_checks": 22,
+  "semantic_failures": 0,
+  "conformance_failures": 0,
+  "gate_met": true,
+  "checks": [
+    {
+      "check": "both-events-same-corr",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "catalog-field-error-message",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "catalog-field-exit",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "completed-datadog",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "completed-event-type",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "completed-exit",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "completed-github",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "completed-status",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "idempotency-exit",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "idempotency-status",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "invalid-input-exit-code",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "invalid-input-status",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "secrets-sanitized",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "skill-discovery",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "started-count-in-timeline",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "started-datadog",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "started-derived",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "started-event-type",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "started-exit",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "started-github",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "started-status",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    },
+    {
+      "check": "tool-availability",
+      "players": {
+        "claude": "PASS",
+        "codex": "PASS",
+        "copilot": "PASS"
+      },
+      "all_pass": true,
+      "conformant": true
+    }
+  ]
+}

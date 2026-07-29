@@ -1,0 +1,10 @@
+{
+  "issue": "888",
+  "state": "UNKNOWN",
+  "last-event-type": null,
+  "runtime-correlation-id": null,
+  "runtime-version": "0.3.0",
+  "framework-version": "1.0.0",
+  "schema-version": "1",
+  "computed-at": "2026-07-28T19:25:33Z"
+}

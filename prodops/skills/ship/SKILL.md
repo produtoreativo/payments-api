@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Prepare deploy, pull request, or release readiness. Use when packaging completed work for review, release, deployment, handoff, final quality gates, TDD evidence review, security checks, or PR preparation.
+description: Prepare deploy, pull request, or release readiness. Emits Ship.Started and Ship.Completed via prodops_emit_event.
 ---
 
 # SHIP
@@ -8,6 +8,61 @@ description: Prepare deploy, pull request, or release readiness. Use when packag
 Use this skill to prepare completed work for delivery.
 
 For detailed Codex submission mechanics, read `references/workflow.md`.
+
+## Required input context
+
+Before starting, the agent must have:
+
+- `work-item-id` — the GitHub issue number of the Feature
+- `iteration-id` — the Iteration Plan identifier
+- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
+- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
+  invoked standalone, generate a new UUID.
+
+## Preconditions
+
+1. `prodops/skills/prodops-emit-event/SKILL.md` has been read.
+2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
+
+## Phase: Ship.Started
+
+**Moment**: after input context is verified, before any ship preparation work begins.
+
+Emit:
+
+```json
+{
+  "event": "Delivery.Ship.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "ship-agent" },
+  "payload": {}
+}
+```
+
+If the tool returns `status: error`: report the error, fix the input, do not proceed.
+
+## Phase: Ship.Completed
+
+**Moment**: after all ship steps complete and PR/deploy notes are prepared — before reporting success.
+
+Emit using the **same `correlation-id`** as Ship.Started:
+
+```json
+{
+  "event": "Delivery.Ship.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "ship-agent" },
+  "payload": {}
+}
+```
+
+Do not emit `Ship.Completed` if security checks, quality gates, or PR preparation is incomplete.
 
 ## Inputs
 
