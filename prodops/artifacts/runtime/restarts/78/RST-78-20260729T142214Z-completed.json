@@ -1,0 +1,84 @@
+{
+  "_meta": {
+    "experiment": "EXP-015",
+    "tool-version": "1.0.0",
+    "player": "claude",
+    "agent": "restart-feature",
+    "iteration-id": "IP-EXP016-F03-RESTART",
+    "execution-id": "RST-78-20260729T142214Z",
+    "executed-at": "2026-07-29T14:22:48Z"
+  },
+  "input": {
+    "event": "Delivery.Restart.Completed",
+    "work-item-id": "78",
+    "correlation-id": "7b670ccf-1c1f-47cb-a1de-b7c9a0ab653f",
+    "iteration-id": "IP-EXP016-F03-RESTART",
+    "execution-id": "RST-78-20260729T142214Z",
+    "actor": {
+      "player": "claude",
+      "agent": "restart-feature"
+    },
+    "previous-correlation-id": "ccd352e0-af94-4152-89eb-49cb147b898c",
+    "restart-reason": "F-03 ficou em HACKING sem Hack.Completed, Sync ou Finish — reinício controlado para completar a Journey canônica",
+    "restart-scope": "full"
+  },
+  "output": {
+    "status": "accepted",
+    "event-id": "cd813232-a328-495a-9aa7-5091cf260068",
+    "event-type": "prodops.delivery.restart.completed",
+    "correlation-id": "7b670ccf-1c1f-47cb-a1de-b7c9a0ab653f",
+    "derived-state": "HACKING",
+    "github-sync": "success",
+    "datadog-sync": "success",
+    "dispatch": {
+      "status": "skipped",
+      "subscriptions": []
+    },
+    "cloudevent": null,
+    "errors": []
+  },
+  "cloudevent": {
+    "specversion": "1.0",
+    "id": "cd813232-a328-495a-9aa7-5091cf260068",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.restart.completed",
+    "subject": "78",
+    "time": "2026-07-29T14:22:38Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/restart/completed/v1.0.0",
+    "data": {
+      "issue": "78",
+      "journey": "Delivery",
+      "cycle": "Restart",
+      "phase": "Completed",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "7b670ccf-1c1f-47cb-a1de-b7c9a0ab653f",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  "derived-state": {
+    "issue": "78",
+    "state": "HACKING",
+    "last-event-type": "prodops.delivery.hack.started",
+    "runtime-correlation-id": "912b411c-ee70-4cf2-896c-a110d5c052a4",
+    "runtime-version": "0.3.0",
+    "framework-version": "1.0.0",
+    "schema-version": "1",
+    "computed-at": "2026-07-29T14:22:41Z"
+  },
+  "pipeline-steps": {
+    "emit": "success",
+    "timeline": "success",
+    "derive-state": "success",
+    "datadog": "success",
+    "github": "success",
+    "dispatch": "skipped"
+  },
+  "dispatch": {
+    "status": "skipped",
+    "subscriptions": []
+  }
+}

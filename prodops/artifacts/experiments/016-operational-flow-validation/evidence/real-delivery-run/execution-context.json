@@ -1,0 +1,17 @@
+{
+  "work-item-id": "79",
+  "iteration-id": "IP-EXP016-REAL-DELIVERY",
+  "correlation-id": "9b17760f-e1f1-43b0-9f3d-08797f769531",
+  "execution-mode": "real",
+  "player": "claude",
+  "feature": "FTR-004: Split Payment — Conflito durante Sync",
+  "business-intent": "PI-PILOT-004",
+  "iteration-plan": "IP-001",
+  "branch": "release/operational-flow-validation",
+  "commit": "3cef1c0e44ace4d940a58fb55d92ed38afd0679c",
+  "started-at": "2026-07-29T00:00:00Z",
+  "status": "BLOCKED — precondição do Iteration Plan não satisfeita",
+  "tool": "prodops/runtime/tools/emit-event/scripts/emit-event",
+  "github-project": "https://github.com/orgs/produtoreativo/projects/25",
+  "datadog-dashboard": "https://app.datadoghq.com/dashboard/4rs-983-e35"
+}

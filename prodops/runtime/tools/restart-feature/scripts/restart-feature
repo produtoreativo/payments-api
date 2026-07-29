@@ -1,0 +1,417 @@
+#!/usr/bin/env bash
+# restart-feature — non-destructive controlled restart of a Delivery Journey
+#
+# Preserves the entire existing Timeline. Assigns a new correlation-id and
+# emits Delivery.Restart.Requested + Delivery.Restart.Started.
+# The caller is responsible for running Bootstrap (and subsequent Skills)
+# using the new correlation-id.
+#
+# Usage:
+#   restart-feature --work-item-id <id> --reason <text> [--scope <scope>] [--player <player>] [--dry-run]
+#   echo '{"work-item-id":"78","reason":"..."}' | restart-feature
+#
+# Exit codes:
+#   0  success
+#   1  invalid input
+#   2  no existing timeline found
+#   3  pipeline error
+#   4  idempotent skip (same work-item + prev-corr + reason + scope already recorded)
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+TOOL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+RUNTIME_DIR="$(cd "$TOOL_DIR/../.." && pwd)"
+PRODOPS_DIR="$(cd "$RUNTIME_DIR/.." && pwd)"
+
+EMIT_EVENT="$RUNTIME_DIR/tools/emit-event/scripts/emit-event"
+TIMELINES_DIR="$PRODOPS_DIR/artifacts/runtime/timelines"
+RESTARTS_DIR="$PRODOPS_DIR/artifacts/runtime/restarts"
+CATALOG="$RUNTIME_DIR/catalog/events.yaml"
+
+TOOL_VERSION="1.0.0"
+RUNTIME_VERSION="0.3.0"
+FRAMEWORK_VERSION="1.0.0"
+
+log()  { echo "[restart-feature] $*" >&2; }
+warn() { echo "[restart-feature] WARNING: $*" >&2; }
+
+error_output() {
+  local msg="$1"
+  printf '{"status":"error","restart-id":null,"new-correlation-id":null,"error":"%s"}\n' "$msg"
+}
+
+# ── Argument parsing ───────────────────────────────────────────────────────────
+WORK_ITEM_ID=""
+REASON=""
+SCOPE="full"
+PLAYER="claude"
+DRY_RUN="false"
+INPUT_FILE=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --work-item-id) WORK_ITEM_ID="$2"; shift 2 ;;
+    --reason)       REASON="$2"; shift 2 ;;
+    --scope)        SCOPE="$2"; shift 2 ;;
+    --player)       PLAYER="$2"; shift 2 ;;
+    --dry-run)      DRY_RUN="true"; shift ;;
+    --input)        INPUT_FILE="$2"; shift 2 ;;
+    --help|-h)
+      cat >&2 <<'HELP'
+restart-feature v1.0.0
+Non-destructive controlled restart of a Delivery Journey.
+
+Usage:
+  restart-feature --work-item-id <id> --reason <text> [options]
+  echo '{"work-item-id":"78","reason":"..."}' | restart-feature [options]
+
+Options:
+  --work-item-id <id>   GitHub Issue number (required)
+  --reason <text>       Human-readable reason for restart (required)
+  --scope <scope>       Restart scope: full | partial (default: full)
+  --player <player>     Actor: claude | codex | copilot (default: claude)
+  --dry-run             Validate without emitting events or writing artifacts
+  --input <file>        Read input from JSON file
+
+Exit codes:
+  0  success    1  invalid input    2  no existing timeline
+  3  pipeline error    4  idempotent skip
+HELP
+      exit 0
+      ;;
+    *) log "Unknown argument: $1"; exit 1 ;;
+  esac
+done
+
+# Support JSON stdin/file input
+if [[ -n "$INPUT_FILE" ]]; then
+  [[ ! -f "$INPUT_FILE" ]] && { error_output "input file not found: $INPUT_FILE"; exit 1; }
+  INPUT_JSON=$(cat "$INPUT_FILE")
+  WORK_ITEM_ID=$(echo "$INPUT_JSON" | jq -r '."work-item-id" // empty')
+  REASON=$(echo "$INPUT_JSON"       | jq -r '.reason           // empty')
+  SCOPE=$(echo "$INPUT_JSON"        | jq -r '.scope            // "full"')
+  PLAYER=$(echo "$INPUT_JSON"       | jq -r '.player           // "claude"')
+elif [[ ! -t 0 && -z "$WORK_ITEM_ID" ]]; then
+  INPUT_JSON=$(cat)
+  WORK_ITEM_ID=$(echo "$INPUT_JSON" | jq -r '."work-item-id" // empty')
+  REASON=$(echo "$INPUT_JSON"       | jq -r '.reason           // empty')
+  SCOPE=$(echo "$INPUT_JSON"        | jq -r '.scope            // "full"')
+  PLAYER=$(echo "$INPUT_JSON"       | jq -r '.player           // "claude"')
+fi
+
+# ── Validate required fields ──────────────────────────────────────────────────
+[[ -z "$WORK_ITEM_ID" ]] && { error_output "missing required: --work-item-id"; exit 1; }
+[[ -z "$REASON" ]]        && { error_output "missing required: --reason"; exit 1; }
+
+case "$PLAYER" in
+  claude|codex|copilot) ;;
+  *) error_output "invalid --player: $PLAYER — must be claude, codex, or copilot"; exit 1 ;;
+esac
+
+case "$SCOPE" in
+  full|partial) ;;
+  *) error_output "invalid --scope: $SCOPE — must be full or partial"; exit 1 ;;
+esac
+
+log "work-item-id=$WORK_ITEM_ID reason='$REASON' scope=$SCOPE player=$PLAYER${DRY_RUN:+ dry-run=true}"
+
+# ── Verify existing Timeline ──────────────────────────────────────────────────
+TIMELINE_FILE="$TIMELINES_DIR/${WORK_ITEM_ID}.json"
+if [[ ! -f "$TIMELINE_FILE" ]]; then
+  error_output "no Timeline found for issue $WORK_ITEM_ID — cannot restart a Journey that was never started"
+  exit 2
+fi
+
+TIMELINE_COUNT=$(jq 'length' "$TIMELINE_FILE")
+log "Timeline found: $TIMELINE_COUNT events preserved (immutable)"
+
+# ── Extract previous correlation-id (last one in Timeline) ───────────────────
+PREV_CORRELATION_ID=$(jq -r \
+  '[.[] | .data["runtime-correlation-id"]] | last' \
+  "$TIMELINE_FILE" 2>/dev/null)
+
+if [[ -z "$PREV_CORRELATION_ID" || "$PREV_CORRELATION_ID" == "null" ]]; then
+  error_output "could not extract runtime-correlation-id from Timeline"
+  exit 1
+fi
+
+log "Previous correlation-id: $PREV_CORRELATION_ID"
+
+# ── Extract current derived state ─────────────────────────────────────────────
+CURRENT_STATE=$(jq -r \
+  '[.[] | select(.data["alters-state"] == true)] | if length == 0 then "UNKNOWN" else last.data["new-state"] end' \
+  "$TIMELINE_FILE" 2>/dev/null)
+
+log "Current derived state: $CURRENT_STATE"
+
+# ── Generate restart identifiers ─────────────────────────────────────────────
+NEW_CORRELATION_ID=$(python3 -c "import uuid; print(str(uuid.uuid4()))")
+RESTART_TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
+RESTART_ID="RST-${WORK_ITEM_ID}-${RESTART_TIMESTAMP}"
+NOW_ISO=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+log "New correlation-id: $NEW_CORRELATION_ID"
+log "Restart-id: $RESTART_ID"
+
+# ── Idempotency check ─────────────────────────────────────────────────────────
+IDEMPOTENCY_KEY="${WORK_ITEM_ID}|${PREV_CORRELATION_ID}|${REASON}|${SCOPE}"
+RESTARTS_ISSUE_DIR="$RESTARTS_DIR/$WORK_ITEM_ID"
+
+if [[ -d "$RESTARTS_ISSUE_DIR" ]]; then
+  EXISTING_RESTART=$(python3 - "$RESTARTS_ISSUE_DIR" "$IDEMPOTENCY_KEY" <<'PYEOF' 2>/dev/null
+import sys, os, json
+
+restarts_dir = sys.argv[1]
+key = sys.argv[2]
+for fname in os.listdir(restarts_dir):
+    if not fname.endswith('.json'):
+        continue
+    fpath = os.path.join(restarts_dir, fname)
+    try:
+        data = json.load(open(fpath))
+        if data.get('idempotency-key') == key:
+            print(data.get('restart-id', fname))
+            break
+    except Exception:
+        pass
+PYEOF
+  )
+
+  if [[ -n "$EXISTING_RESTART" ]]; then
+    log "Idempotent skip — restart already recorded: $EXISTING_RESTART"
+    EXISTING_FILE="$RESTARTS_ISSUE_DIR/${EXISTING_RESTART}.json"
+    if [[ -f "$EXISTING_FILE" ]]; then
+      EXISTING_CORR=$(jq -r '."new-correlation-id"' "$EXISTING_FILE")
+      printf '{"status":"skipped","restart-id":"%s","new-correlation-id":"%s","previous-correlation-id":"%s","message":"idempotent — restart already recorded for same key"}\n' \
+        "$EXISTING_RESTART" "$EXISTING_CORR" "$PREV_CORRELATION_ID"
+    else
+      printf '{"status":"skipped","restart-id":"%s","new-correlation-id":null,"previous-correlation-id":"%s","message":"idempotent — restart already recorded"}\n' \
+        "$EXISTING_RESTART" "$PREV_CORRELATION_ID"
+    fi
+    exit 4
+  fi
+fi
+
+# ── Dry-run: report and exit ──────────────────────────────────────────────────
+if [[ "$DRY_RUN" == "true" ]]; then
+  jq -n \
+    --arg restart_id       "$RESTART_ID" \
+    --arg new_corr         "$NEW_CORRELATION_ID" \
+    --arg prev_corr        "$PREV_CORRELATION_ID" \
+    --arg current_state    "$CURRENT_STATE" \
+    --arg work_item_id     "$WORK_ITEM_ID" \
+    --arg reason           "$REASON" \
+    --arg scope            "$SCOPE" \
+    --arg player           "$PLAYER" \
+    --argjson timeline_count "$TIMELINE_COUNT" \
+    '{
+      "status": "dry-run",
+      "restart-id": $restart_id,
+      "new-correlation-id": $new_corr,
+      "previous-correlation-id": $prev_corr,
+      "current-state": $current_state,
+      "work-item-id": $work_item_id,
+      "reason": $reason,
+      "scope": $scope,
+      "player": $player,
+      "timeline-events-preserved": $timeline_count,
+      "events-to-emit": ["Delivery.Restart.Requested","Delivery.Restart.Started","Delivery.Restart.Completed"]
+    }'
+  exit 0
+fi
+
+# ── Create restart artifact ───────────────────────────────────────────────────
+mkdir -p "$RESTARTS_ISSUE_DIR"
+ARTIFACT_FILE="$RESTARTS_ISSUE_DIR/${RESTART_ID}.json"
+
+jq -n \
+  --arg restart_id       "$RESTART_ID" \
+  --arg work_item_id     "$WORK_ITEM_ID" \
+  --arg new_corr         "$NEW_CORRELATION_ID" \
+  --arg prev_corr        "$PREV_CORRELATION_ID" \
+  --arg current_state    "$CURRENT_STATE" \
+  --arg reason           "$REASON" \
+  --arg scope            "$SCOPE" \
+  --arg player           "$PLAYER" \
+  --arg requested_at     "$NOW_ISO" \
+  --arg idempotency_key  "$IDEMPOTENCY_KEY" \
+  --argjson timeline_count "$TIMELINE_COUNT" \
+  '{
+    "restart-id": $restart_id,
+    "work-item-id": $work_item_id,
+    "new-correlation-id": $new_corr,
+    "previous-correlation-id": $prev_corr,
+    "state-at-restart": $current_state,
+    "reason": $reason,
+    "scope": $scope,
+    "player": $player,
+    "requested-at": $requested_at,
+    "idempotency-key": $idempotency_key,
+    "timeline-events-preserved": $timeline_count,
+    "status": "initiated"
+  }' > "$ARTIFACT_FILE"
+
+log "Restart artifact created: $ARTIFACT_FILE"
+
+# ── Emit Delivery.Restart.Requested ──────────────────────────────────────────
+REQUESTED_INPUT=$(jq -n \
+  --arg event            "Delivery.Restart.Requested" \
+  --arg work_item_id     "$WORK_ITEM_ID" \
+  --arg new_corr         "$NEW_CORRELATION_ID" \
+  --arg iteration_id     "IP-EXP016-F03-RESTART" \
+  --arg execution_id     "$RESTART_ID" \
+  --arg player           "$PLAYER" \
+  --arg prev_corr        "$PREV_CORRELATION_ID" \
+  --arg reason           "$REASON" \
+  --arg scope            "$SCOPE" \
+  --arg current_state    "$CURRENT_STATE" \
+  '{
+    "event": $event,
+    "work-item-id": $work_item_id,
+    "correlation-id": $new_corr,
+    "iteration-id": $iteration_id,
+    "execution-id": $execution_id,
+    "actor": {"player": $player, "agent": "restart-feature"},
+    "previous-correlation-id": $prev_corr,
+    "restart-reason": $reason,
+    "restart-scope": $scope,
+    "state-at-restart": $current_state
+  }')
+
+log "Emitting Delivery.Restart.Requested..."
+REQUESTED_EVIDENCE="$RESTARTS_ISSUE_DIR/${RESTART_ID}-requested.json"
+REQUESTED_OUTPUT=$(echo "$REQUESTED_INPUT" | bash "$EMIT_EVENT" --evidence-file "$REQUESTED_EVIDENCE")
+REQUESTED_STATUS=$(echo "$REQUESTED_OUTPUT" | jq -r '.status // "error"')
+
+if [[ "$REQUESTED_STATUS" == "error" ]]; then
+  log "ERROR emitting Restart.Requested: $REQUESTED_OUTPUT"
+  error_output "failed to emit Delivery.Restart.Requested: $(echo "$REQUESTED_OUTPUT" | jq -r '.errors[0] // "unknown error"')"
+  exit 3
+fi
+
+log "Restart.Requested emitted: status=$REQUESTED_STATUS"
+
+# ── Emit Delivery.Restart.Started ────────────────────────────────────────────
+STARTED_INPUT=$(jq -n \
+  --arg event            "Delivery.Restart.Started" \
+  --arg work_item_id     "$WORK_ITEM_ID" \
+  --arg new_corr         "$NEW_CORRELATION_ID" \
+  --arg iteration_id     "IP-EXP016-F03-RESTART" \
+  --arg execution_id     "$RESTART_ID" \
+  --arg player           "$PLAYER" \
+  --arg prev_corr        "$PREV_CORRELATION_ID" \
+  --arg reason           "$REASON" \
+  --arg scope            "$SCOPE" \
+  '{
+    "event": $event,
+    "work-item-id": $work_item_id,
+    "correlation-id": $new_corr,
+    "iteration-id": $iteration_id,
+    "execution-id": $execution_id,
+    "actor": {"player": $player, "agent": "restart-feature"},
+    "previous-correlation-id": $prev_corr,
+    "restart-reason": $reason,
+    "restart-scope": $scope
+  }')
+
+log "Emitting Delivery.Restart.Started..."
+STARTED_EVIDENCE="$RESTARTS_ISSUE_DIR/${RESTART_ID}-started.json"
+STARTED_OUTPUT=$(echo "$STARTED_INPUT" | bash "$EMIT_EVENT" --evidence-file "$STARTED_EVIDENCE")
+STARTED_STATUS=$(echo "$STARTED_OUTPUT" | jq -r '.status // "error"')
+
+if [[ "$STARTED_STATUS" == "error" ]]; then
+  log "ERROR emitting Restart.Started: $STARTED_OUTPUT"
+  error_output "failed to emit Delivery.Restart.Started: $(echo "$STARTED_OUTPUT" | jq -r '.errors[0] // "unknown error"')"
+  exit 3
+fi
+
+log "Restart.Started emitted: status=$STARTED_STATUS"
+
+# ── Emit Delivery.Restart.Completed ──────────────────────────────────────────
+COMPLETED_INPUT=$(jq -n \
+  --arg event            "Delivery.Restart.Completed" \
+  --arg work_item_id     "$WORK_ITEM_ID" \
+  --arg new_corr         "$NEW_CORRELATION_ID" \
+  --arg iteration_id     "IP-EXP016-F03-RESTART" \
+  --arg execution_id     "$RESTART_ID" \
+  --arg player           "$PLAYER" \
+  --arg prev_corr        "$PREV_CORRELATION_ID" \
+  --arg reason           "$REASON" \
+  --arg scope            "$SCOPE" \
+  '{
+    "event": $event,
+    "work-item-id": $work_item_id,
+    "correlation-id": $new_corr,
+    "iteration-id": $iteration_id,
+    "execution-id": $execution_id,
+    "actor": {"player": $player, "agent": "restart-feature"},
+    "previous-correlation-id": $prev_corr,
+    "restart-reason": $reason,
+    "restart-scope": $scope
+  }')
+
+log "Emitting Delivery.Restart.Completed..."
+COMPLETED_EVIDENCE="$RESTARTS_ISSUE_DIR/${RESTART_ID}-completed.json"
+COMPLETED_OUTPUT=$(echo "$COMPLETED_INPUT" | bash "$EMIT_EVENT" --evidence-file "$COMPLETED_EVIDENCE")
+COMPLETED_STATUS=$(echo "$COMPLETED_OUTPUT" | jq -r '.status // "error"')
+
+if [[ "$COMPLETED_STATUS" == "error" ]]; then
+  log "ERROR emitting Restart.Completed: $COMPLETED_OUTPUT"
+  error_output "failed to emit Delivery.Restart.Completed: $(echo "$COMPLETED_OUTPUT" | jq -r '.errors[0] // "unknown error"')"
+  exit 3
+fi
+
+log "Restart.Completed emitted: status=$COMPLETED_STATUS"
+
+# ── Update restart artifact with completion ───────────────────────────────────
+COMPLETED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+python3 - "$ARTIFACT_FILE" "$COMPLETED_AT" <<'PYEOF'
+import sys, json
+fpath, completed_at = sys.argv[1], sys.argv[2]
+data = json.load(open(fpath))
+data['status'] = 'completed'
+data['completed-at'] = completed_at
+json.dump(data, open(fpath, 'w'), indent=2)
+PYEOF
+
+log "Restart artifact updated: status=completed"
+
+# ── Final output ──────────────────────────────────────────────────────────────
+REQUESTED_EVENT_ID=$(echo "$REQUESTED_OUTPUT" | jq -r '."event-id" // null')
+STARTED_EVENT_ID=$(echo "$STARTED_OUTPUT"   | jq -r '."event-id" // null')
+COMPLETED_EVENT_ID=$(echo "$COMPLETED_OUTPUT" | jq -r '."event-id" // null')
+
+jq -n \
+  --arg restart_id       "$RESTART_ID" \
+  --arg work_item_id     "$WORK_ITEM_ID" \
+  --arg new_corr         "$NEW_CORRELATION_ID" \
+  --arg prev_corr        "$PREV_CORRELATION_ID" \
+  --arg current_state    "$CURRENT_STATE" \
+  --arg reason           "$REASON" \
+  --arg scope            "$SCOPE" \
+  --arg player           "$PLAYER" \
+  --arg artifact         "$ARTIFACT_FILE" \
+  --arg req_id           "${REQUESTED_EVENT_ID:-null}" \
+  --arg sta_id           "${STARTED_EVENT_ID:-null}" \
+  --arg com_id           "${COMPLETED_EVENT_ID:-null}" \
+  --argjson timeline_count "$TIMELINE_COUNT" \
+  '{
+    "status": "success",
+    "restart-id": $restart_id,
+    "work-item-id": $work_item_id,
+    "new-correlation-id": $new_corr,
+    "previous-correlation-id": $prev_corr,
+    "state-at-restart": $current_state,
+    "reason": $reason,
+    "scope": $scope,
+    "player": $player,
+    "timeline-events-preserved": $timeline_count,
+    "events-emitted": {
+      "Delivery.Restart.Requested": $req_id,
+      "Delivery.Restart.Started": $sta_id,
+      "Delivery.Restart.Completed": $com_id
+    },
+    "artifact": $artifact,
+    "next-step": "Run Bootstrap Skill with new correlation-id to resume the Journey"
+  }'
