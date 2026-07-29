@@ -296,3 +296,30 @@ events:
     cycle: Repair
     phase: Completed
     alters-state: false
+
+  Delivery.Restart.Requested:
+    cloud-event-type: prodops.delivery.restart.requested
+    description: A controlled, non-destructive restart of the Delivery Journey was requested; Timeline preserved, new correlation-id assigned
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/restart/requested/v1.0.0
+    journey: Delivery
+    cycle: Restart
+    phase: Requested
+    alters-state: false
+
+  Delivery.Restart.Started:
+    cloud-event-type: prodops.delivery.restart.started
+    description: The controlled Delivery Journey restart has begun; new execution-id active, previous correlation-id recorded
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/restart/started/v1.0.0
+    journey: Delivery
+    cycle: Restart
+    phase: Started
+    alters-state: false
+
+  Delivery.Restart.Completed:
+    cloud-event-type: prodops.delivery.restart.completed
+    description: The controlled Delivery Journey restart is complete; Journey ready to resume from Bootstrap with new correlation-id
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/restart/completed/v1.0.0
+    journey: Delivery
+    cycle: Restart
+    phase: Completed
+    alters-state: false
