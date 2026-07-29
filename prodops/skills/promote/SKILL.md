@@ -1,11 +1,66 @@
 ---
 name: promote
-description: Approve and close a release stage. Use when moving a release forward after validation, quality gates, and operational readiness are complete.
+description: Approve and close a release stage. Emits Promote.Started and Promote.Completed via prodops_emit_event.
 ---
 
 # PROMOTE
 
 Use this skill to move a release to the next stage or close it.
+
+## Required input context
+
+Before starting, the agent must have:
+
+- `work-item-id` — the GitHub issue number of the Feature
+- `iteration-id` — the Iteration Plan identifier
+- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
+- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
+  invoked standalone, generate a new UUID.
+
+## Preconditions
+
+1. `prodops/skills/prodops-emit-event/SKILL.md` has been read.
+2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
+
+## Phase: Promote.Started
+
+**Moment**: after input context is verified, before any promotion work begins.
+
+Emit:
+
+```json
+{
+  "event": "Delivery.Promote.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "promote-agent" },
+  "payload": {}
+}
+```
+
+If the tool returns `status: error`: report the error, fix the input, do not proceed.
+
+## Phase: Promote.Completed
+
+**Moment**: after all promotion steps complete and Release Trail is updated — before reporting success.
+
+Emit using the **same `correlation-id`** as Promote.Started:
+
+```json
+{
+  "event": "Delivery.Promote.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "promote-agent" },
+  "payload": {}
+}
+```
+
+Do not emit `Promote.Completed` if evidence is missing, risks are unresolved, or operational readiness is not confirmed.
 
 ## Inputs
 

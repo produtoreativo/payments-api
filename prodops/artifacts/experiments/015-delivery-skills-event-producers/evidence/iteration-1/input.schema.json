@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prodops.produtoreativo.io/schemas/tools/emit-event/input/v1.0.0",
+  "title": "prodops_emit_event — Input",
+  "description": "Player-neutral input contract for the prodops_emit_event tool. Fields derived from the event catalog (specversion, source, type, dataschema, journey, cycle, phase, alters-state, new-state) MUST NOT be provided by the caller.",
+  "type": "object",
+  "required": ["event", "work-item-id", "correlation-id", "actor"],
+  "additionalProperties": false,
+  "properties": {
+    "event": {
+      "type": "string",
+      "description": "Logical event name as defined in events.yaml (e.g. 'Delivery.Bootstrap.Started').",
+      "pattern": "^[A-Za-z]+\\.[A-Za-z]+\\.[A-Za-z]+$",
+      "examples": [
+        "Delivery.Bootstrap.Started",
+        "Delivery.Hack.Started",
+        "Delivery.Promote.Completed"
+      ]
+    },
+    "work-item-id": {
+      "type": "string",
+      "description": "GitHub issue number of the Feature being tracked (maps to CloudEvent subject and data.issue).",
+      "pattern": "^[0-9]+$",
+      "examples": ["76", "77", "78"]
+    },
+    "iteration-id": {
+      "type": "string",
+      "description": "Optional. Iteration Plan identifier for contextual tracing (not forwarded to runtime).",
+      "examples": ["IP-RUNTIME-001", "IP-EXP-015-001"]
+    },
+    "correlation-id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "UUID that groups related events into a logical execution run. Caller-generated. Used for idempotency check."
+    },
+    "execution-id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Optional. Player-session-scoped execution identifier for cross-player tracing (not forwarded to runtime)."
+    },
+    "actor": {
+      "type": "object",
+      "description": "Identity of the player and agent invoking the tool.",
+      "required": ["player", "agent"],
+      "additionalProperties": false,
+      "properties": {
+        "player": {
+          "type": "string",
+          "enum": ["claude", "codex", "copilot"],
+          "description": "The AI player executing the skill."
+        },
+        "agent": {
+          "type": "string",
+          "description": "Agent name within the player (e.g. 'delivery-agent', 'bootstrap-agent').",
+          "examples": ["delivery-agent", "bootstrap-agent", "hack-agent"]
+        }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "description": "Optional extra key-value pairs to include in the CloudEvent data block. Must not override catalog-derived fields.",
+      "additionalProperties": true,
+      "default": {}
+    }
+  }
+}

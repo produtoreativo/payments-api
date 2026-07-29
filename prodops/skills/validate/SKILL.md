@@ -1,11 +1,84 @@
 ---
 name: validate
-description: Validate release behavior with evidence, metrics, SLOs, and operational signals. Use when proving that an OBC, BDD scenario, or Reliability Plan item is satisfied.
+description: Validate release behavior with evidence, metrics, SLOs, and operational signals. Emits Validate.Started, Shared.Gate.Passed, and Validate.Completed via prodops_emit_event.
 ---
 
 # VALIDATE
 
 Use this skill to prove release readiness with evidence.
+
+## Required input context
+
+Before starting, the agent must have:
+
+- `work-item-id` — the GitHub issue number of the Feature
+- `iteration-id` — the Iteration Plan identifier
+- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
+- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
+  invoked standalone, generate a new UUID.
+
+## Preconditions
+
+1. `prodops/skills/prodops-emit-event/SKILL.md` has been read.
+2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
+
+## Phase: Validate.Started
+
+**Moment**: after input context is verified, before any validation work begins.
+
+Emit:
+
+```json
+{
+  "event": "Delivery.Validate.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "validate-agent" },
+  "payload": {}
+}
+```
+
+If the tool returns `status: error`: report the error, fix the input, do not proceed.
+
+## Phase: Shared.Gate.Passed
+
+**Moment**: after acceptance evidence is collected and all quality gates pass — before emitting `Validate.Completed`.
+
+Emit using the **same `correlation-id`**:
+
+```json
+{
+  "event": "Shared.Gate.Passed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "validate-agent" },
+  "payload": {}
+}
+```
+
+## Phase: Validate.Completed
+
+**Moment**: after `Shared.Gate.Passed` is accepted, before reporting success.
+
+Emit using the **same `correlation-id`**:
+
+```json
+{
+  "event": "Delivery.Validate.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "validate-agent" },
+  "payload": {}
+}
+```
+
+Do not emit `Validate.Completed` if evidence is incomplete or any quality gate fails.
 
 ## Inputs
 

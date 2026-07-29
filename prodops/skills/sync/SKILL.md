@@ -1,6 +1,6 @@
 ---
 name: sync
-description: Synchronize a work branch with its base or align ProdOps artifacts with the current implementation. Use when fetching remote changes, resolving conflicts, updating from main, or when BDD Features, Event Storming, architecture, or the Release Trail are stale.
+description: Synchronize a work branch with its base or align ProdOps artifacts with the current implementation. Emits Sync.Started and Sync.Completed via prodops_emit_event.
 ---
 
 # SYNC
@@ -17,6 +17,41 @@ Os steps são complementares: nenhum substitui o outro. O Sync **não** abre PR
 (Finish), **não** roda a pipeline completa (Ship) e **não** reescreve decisões
 de produto upstream. Quando invocado com um argumento de step (`/sync <step>`),
 execute apenas aquele step. Caso contrário, execute ambos em sequência.
+
+## Required input context
+
+Before starting, the agent must have:
+
+- `work-item-id` — the GitHub issue number of the Feature
+- `iteration-id` — the Iteration Plan identifier
+- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
+- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
+  invoked standalone, generate a new UUID.
+
+## Preconditions
+
+1. `prodops/skills/prodops-emit-event/SKILL.md` has been read.
+2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
+
+## Phase: Sync.Started
+
+**Moment**: after input context is verified, before any Sync work begins.
+
+Emit:
+
+```json
+{
+  "event": "Delivery.Sync.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "sync-agent" },
+  "payload": {}
+}
+```
+
+If the tool returns `status: error`: report the error, fix the input, do not proceed.
 
 ## Steps
 
@@ -42,6 +77,26 @@ When invoked without a step argument, execute both steps in sequence:
 2. **[align](steps/align/SKILL.md)** — identify stale artifacts, trace source of truth in `prodops/`, update only impacted files, record in Release Trail
 
 For detailed branch synchronization mechanics, read `references/workflow.md`.
+
+## Phase: Sync.Completed
+
+**Moment**: after both steps (rebase and align) succeed — before reporting success to the caller.
+
+Emit using the **same `correlation-id`** as Sync.Started:
+
+```json
+{
+  "event": "Delivery.Sync.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "sync-agent" },
+  "payload": {}
+}
+```
+
+Do not emit `Sync.Completed` if either rebase or align step failed.
 
 ## Guardrails
 

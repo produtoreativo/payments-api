@@ -1,11 +1,66 @@
 ---
 name: finish
-description: Close technical work with quality gates. Use before considering a task complete, especially after implementation or artifact updates.
+description: Close technical work with quality gates. Emits Finish.Started and Finish.Completed via prodops_emit_event.
 ---
 
 # FINISH
 
 Use this skill to close a task with explicit quality evidence.
+
+## Required input context
+
+Before starting, the agent must have:
+
+- `work-item-id` — the GitHub issue number of the Feature
+- `iteration-id` — the Iteration Plan identifier
+- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
+- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
+  invoked standalone, generate a new UUID.
+
+## Preconditions
+
+1. `prodops/skills/prodops-emit-event/SKILL.md` has been read.
+2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
+
+## Phase: Finish.Started
+
+**Moment**: after input context is verified, before any quality gate work begins.
+
+Emit:
+
+```json
+{
+  "event": "Delivery.Finish.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "finish-agent" },
+  "payload": {}
+}
+```
+
+If the tool returns `status: error`: report the error, fix the input, do not proceed.
+
+## Phase: Finish.Completed
+
+**Moment**: after all quality gates pass and Release Trail evidence is appended — before reporting success.
+
+Emit using the **same `correlation-id`** as Finish.Started:
+
+```json
+{
+  "event": "Delivery.Finish.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "finish-agent" },
+  "payload": {}
+}
+```
+
+Do not emit `Finish.Completed` if any quality gate fails or evidence is incomplete.
 
 ## Inputs
 
