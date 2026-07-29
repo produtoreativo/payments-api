@@ -78,6 +78,21 @@ gates:
   build:
     cmd: "cd api && npm run build"
     expect: exit0
+  # SCA (Software Composition Analysis) — vulnerabilidades conhecidas nas
+  # dependências de terceiros (não é SAST: o SAST do código-fonte é coberto pelo
+  # GitHub Code Quality/CodeQL). Gate de AUTO-MERGE, não de merge — mesmo desenho
+  # do gate coverage: um resultado vermelho impede que `finish request` arme o
+  # `gh pr merge --auto`, mas o PR continua aberto e mergeável à mão por um
+  # humano. Não é required status check — por isso não aparece como job
+  # bloqueante em pr-gates.yml.
+  dependencies:
+    cmd: "./scripts/check-dependencies.sh"
+    expect: exit0
+    tool: snyk
+    severity_threshold: high
+    requires_secret: SNYK_TOKEN
+    blocks: auto_merge_only
+    note: "sem SNYK_TOKEN o gate não roda e o auto-merge fica desarmado (motivo registrado no PR); o merge manual segue livre. Criar o secret é ação de admin — como allow_auto_merge."
   no_mocks:
     # fonte: prodops/skills/hack/references/workflow.md (No Mocks Rule)
     # Aplica-se apenas a api/test/ (testes de aceitação devem usar implementações reais).
