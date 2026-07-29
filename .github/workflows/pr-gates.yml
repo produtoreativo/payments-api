@@ -6,6 +6,7 @@ name: PR Quality Gates
 #  lint ─┐
 #  acceptance ─┤
 #  build ─┼─► (all parallel — no needs: chains, fast feedback)
+#  dependencies ─┤
 #  no_mocks ─┤
 #  prodops_consistency ─┘
 #
@@ -18,6 +19,11 @@ name: PR Quality Gates
 #                                          LocalStack; the repo has no unit
 #                                          suites, so this is the test gate.
 #  build                gates.build      — NestJS production build compiles.
+#  dependencies         gates.dependencies — SCA (Snyk) over api deps. AUTO-MERGE
+#                                          gate, not a required check: advisory
+#                                          here (continue-on-error), enforced by
+#                                          `finish request`. Skips without
+#                                          SNYK_TOKEN.
 #  no_mocks             gates.no_mocks   — No Mocks Rule: forbidden jest mock
 #                                          patterns must not appear in api/src or
 #                                          api/test. Source of the rule:
@@ -207,6 +213,46 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # ── Gate: dependencies (SCA / Snyk) ─────────────────────────────────────────
+  # Manifest: gates.dependencies. SCA over api/ third-party deps — NOT SAST
+  # (source-code SAST is covered by GitHub Code Quality/CodeQL). This mirrors
+  # gates.coverage: it is an AUTO-MERGE gate, not a required status check, so it
+  # does not block manual merge. continue-on-error keeps a red scan from failing
+  # the workflow — the enforcement point is `finish request`, which does not arm
+  # auto-merge when ./scripts/check-dependencies.sh exits non-zero.
+  # Needs SNYK_TOKEN; without it the step skips (the script exits 2 = "gate could
+  # not run"), advisory here, and auto-merge stays disarmed with the reason on
+  # the PR. Creating the secret is an admin action, like allow_auto_merge.
+  dependencies:
+    name: dependencies
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: api
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The gate script reads the severity threshold from the manifest and
+      # translates snyk's exit codes into the auto-merge verdict. Run from the
+      # repo root so its REPO_ROOT/api resolution matches local execution.
+      - name: Dependency scan (SCA)
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: ../scripts/check-dependencies.sh
 
   # ── Gate: no_mocks ──────────────────────────────────────────────────────────
   # Manifest: gates.no_mocks (forbidden patterns in api/test only,
