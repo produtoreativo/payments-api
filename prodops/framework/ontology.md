@@ -234,7 +234,7 @@ Esses grupos são organizados por onde as Capabilities foram originalmente defin
 | Dimensão | O que descreve |
 |---|---|
 | **Team** | Dimensão organizacional: ownership, responsabilidades, capacidades, papéis, governança e modelo operacional |
-| **Flow** | Dimensão comportamental: jornadas, processos, eventos, regras de negócio, estados, fluxos e automações |
+| **Flow** | Dimensão temporal: como Team, Data e Components evoluem pelas jornadas do Framework (Discovery, Delivery, Operation, Diligence) |
 | **Data** | Dimensão informacional: entidades, contratos de dados, schemas, persistência, eventos de domínio e APIs |
 | **Components** | Dimensão física: serviços, bancos de dados, filas, pipelines, infraestrutura e repositórios |
 

@@ -27,7 +27,7 @@ These are two entirely different concepts:
 
 **Product Topology** (Team, Flow, Data, Components) describes the **permanent structure of the product** — the dimensions that any OBC can modify, regardless of where the intent originated.
 
-> **Separation example:** An OBC originating from the "Business" Origin Stream (a market need) can simultaneously impact the Flow dimension (new payment behavior), Data dimension (new invoice schema), and Components dimension (new invoice service). The origin does not determine the impact.
+> **Separation example:** An OBC originating from the "Business" Origin Stream (a market need) can simultaneously impact the Flow dimension (records the delivery lifecycle across journeys), Data dimension (new invoice schema), and Components dimension (new invoice service). The origin does not determine the impact.
 
 ---
 
@@ -78,17 +78,16 @@ The four dimensions coexist in any product. They are not hierarchical. They do n
 
 ### Flow
 
-**What it is:** The behavioral dimension of the product.
+**What it is:** The temporal dimension of the product.
 
-**Describes:** Journeys, processes, events, business rules, states, flows, and automations that define how the product behaves.
+**Describes:** How the other Product Dimensions (Team, Data, Components) evolve across Framework journeys — Discovery, Delivery, Operation, and Diligence. Flow records the passage of changes through the product lifecycle: when an OBC is born, traverses the Delivery Journey, enters Operation, and goes through Diligence.
 
 **Examples of OBC impact:**
-- New payment flow with additional validation steps
-- New state in a transaction state machine
-- Reconciliation automation replacing a manual process
-- New business rule on invoice expiration
+- An OBC modifies the Team dimension → Flow records how that change traversed Discovery, Delivery, Operation
+- A change to the Data dimension → Flow records its evolution through the Framework journeys
+- A new element in Components → Flow records when it was born, evolved, or ceased to exist in the product
 
-**Critical distinction:** Do not confuse with the Framework journeys (Discovery, Delivery, Operation…) — which are the team's *work process*. The "Flow" Product Dimension describes the *product behavior* that customers and systems experience.
+**Critical distinction:** Flow is not product functional behavior. It does not describe business journeys, processes, business rules, machine states, or automations. Flow is the temporal axis of Product Topology — it describes *when* and *how* dimensions evolve, not *what* the product does functionally.
 
 ---
 
@@ -129,7 +128,7 @@ An OBC does **not belong** to a single Product Dimension. An OBC can simultaneou
 | Product Dimension | Concrete impact |
 |---|---|
 | **Team** | New operational responsibility: the team now monitors invoice issuance failures |
-| **Flow** | New payment flow: Pix → Invoice issuance → Confirmation → Reconciliation |
+| **Flow** | Delivery lifecycle: born in Discovery, implemented in Delivery, entered Operation with monitoring, and validated through Diligence |
 | **Data** | New contracts: invoice schema, `invoice.created` event, status query API |
 | **Components** | New provider: Pix invoice issuance service integrated with the payment gateway |
 

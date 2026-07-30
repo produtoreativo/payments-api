@@ -27,7 +27,7 @@ Estes são dois conceitos completamente diferentes:
 
 **Product Topology** (Team, Flow, Data, Components) descreve a **estrutura permanente do produto** — as dimensões que qualquer OBC pode modificar, independente de onde a intenção nasceu.
 
-> **Exemplo de separação:** Um OBC com origem no Origin Stream "Business" (necessidade de mercado) pode impactar simultaneamente as dimensões Flow (novo comportamento de pagamento), Data (novo schema de invoice) e Components (novo serviço de emissão). A origem não determina o impacto.
+> **Exemplo de separação:** Um OBC com origem no Origin Stream "Business" (necessidade de mercado) pode impactar simultaneamente as dimensões Flow (registra o ciclo de vida da entrega pelas jornadas), Data (novo schema de invoice) e Components (novo serviço de emissão). A origem não determina o impacto.
 
 ---
 
@@ -78,17 +78,16 @@ As quatro dimensões coexistem em qualquer produto. Não são hierárquicas. Nã
 
 ### Flow
 
-**O que é:** A dimensão comportamental do produto.
+**O que é:** A dimensão temporal do produto.
 
-**Descreve:** Jornadas, processos, eventos, regras de negócio, estados, fluxos e automações que definem como o produto se comporta.
+**Descreve:** Como as demais Product Dimensions (Team, Data, Components) evoluem ao longo das jornadas do Framework — Discovery, Delivery, Operation e Diligence. Flow registra a passagem das mudanças pelo ciclo de vida do produto: quando um OBC nasce, traversa a Delivery Journey, entra em Operation e é submetido à Diligence.
 
 **Exemplos de impacto de OBC:**
-- Novo fluxo de pagamento com etapas de validação adicionais
-- Novo estado em uma máquina de estados de transações
-- Automação de reconciliação que substitui processo manual
-- Nova regra de negócio sobre expiração de invoice
+- Um OBC modifica a dimensão Team → Flow registra como essa mudança traversou Discovery, Delivery, Operation
+- Uma alteração na dimensão Data → Flow registra sua evolução pelas jornadas do Framework
+- Um novo elemento em Components → Flow registra quando nasceu, evoluiu ou deixou de existir no produto
 
-**Distinção crítica:** Não confundir com as jornadas do Framework (Discovery, Delivery, Operation…) — que são o *processo de trabalho* do time. A Product Dimension "Flow" descreve o *comportamento do produto* que o cliente e os sistemas experimentam.
+**Distinção crítica:** Flow não é comportamento funcional do produto. Não descreve jornadas de negócio, processos, regras de negócio, estados de máquina ou automações. Flow é o eixo temporal da Product Topology — descreve *quando* e *como* as dimensões evoluem, não *o que* o produto faz funcionalmente.
 
 ---
 
@@ -129,7 +128,7 @@ Um OBC **não pertence** a uma única Product Dimension. Um OBC pode modificar s
 | Product Dimension | Impacto concreto |
 |---|---|
 | **Team** | Nova responsabilidade operacional: o time passa a monitorar falhas de emissão de invoice |
-| **Flow** | Novo fluxo de pagamento: Pix → Emissão de invoice → Confirmação → Reconciliação |
+| **Flow** | Ciclo de vida desta entrega: nasceu no Discovery, foi implementada no Delivery, entrou em Operation com monitoramento e passou pela Diligence |
 | **Data** | Novos contratos: schema de invoice, evento `invoice.created`, API de consulta de status |
 | **Components** | Novo provider: serviço de emissão de invoice Pix integrado ao gateway de pagamentos |
 
