@@ -1398,6 +1398,60 @@
       "aggregation_key": "webhook_registrado"
     },
     {
+      "title": "payment.boleto.created",
+      "text": "Invoice Boleto created successfully on provider — bankSlipUrl available",
+      "tags": [
+        "event_key:payment.boleto.created",
+        "env:dev",
+        "stage:fatura_boleto_criada",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:criacao_boleto",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "success",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "boleto_criado"
+    },
+    {
+      "title": "payment.boleto.creation_failed",
+      "text": "Failed to create Boleto on provider — invoice marked FAILED",
+      "tags": [
+        "event_key:payment.boleto.creation_failed",
+        "env:dev",
+        "stage:fatura_boleto_criada",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:criacao_boleto",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "boleto_criado"
+    },
+    {
+      "title": "payment.boleto.idempotency_hit",
+      "text": "Retry with same Idempotency-Key returned existing Boleto invoice without new charge",
+      "tags": [
+        "event_key:payment.boleto.idempotency_hit",
+        "env:dev",
+        "stage:idempotencia_boleto",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:criacao_boleto",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "info",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "boleto_idempotencia"
+    },
+    {
       "title": "pagamento.webhook.configuracao.webhook.registrado_exception",
       "text": "Exception during webhook registration",
       "tags": [
@@ -1517,13 +1571,27 @@
         "flow:caminho-cancelamento:step:6:event:pagamento.webhook.entrega.pagamento.cancelado.entregue"
       ],
       "queryHint": "tags:(event_key:pagamento.webhook.entrega.pagamento.confirmado.entregue env:dev)"
+    },
+    {
+      "id": "boleto_criado_availability",
+      "name": "Boletos Criados com bankSlipUrl",
+      "objective": "Garantir que 99.9% dos boletos criados retornem bankSlipUrl presente antes de status OPEN.",
+      "sliType": "availability",
+      "target": "99.9%",
+      "rationale": "SLI crítico do fluxo Boleto: sem bankSlipUrl, o cliente não consegue pagar. Qualquer ausência deve ser observável imediatamente.",
+      "sourceEventKeys": ["payment.boleto.created"],
+      "sourceOccurrenceKeys": [
+        "flow:caminho-boleto:step:1:event:payment.boleto.created"
+      ],
+      "queryHint": "tags:(event_key:payment.boleto.created env:dev)"
     }
   ],
   "assumptions": [
     "Gerado em 2026-07-03 com base no estado atual do sistema: AuthModule (ApiTokenGuard), InvoicesModule, WebhooksModule.",
     "Eventos de domínio seguem a convenção: {dominio}.{subdominio}.{touchpoint}.{fato} em letras minúsculas separadas por ponto.",
     "Todo evento de negócio possui um contraparte _exception para observabilidade de falhas internas.",
-    "Fluxos cobertos: caminho-feliz (confirmação + webhook), alternativo-cliente-novo, cancelamento, token-rejeitado, webhook-configuracao.",
-    "Atualizar este arquivo sempre que um novo emit() de domínio for adicionado ao código ou um flow existente mudar de sequência."
+    "Fluxos cobertos: caminho-feliz (confirmação + webhook), alternativo-cliente-novo, cancelamento, token-rejeitado, webhook-configuracao, boleto.",
+    "Atualizar este arquivo sempre que um novo emit() de domínio for adicionado ao código ou um flow existente mudar de sequência.",
+    "2026-07-29: adicionados eventos do fluxo Boleto (payment.boleto.created, payment.boleto.creation_failed, payment.boleto.idempotency_hit) conforme OBC create-invoice-boleto."
   ]
 }

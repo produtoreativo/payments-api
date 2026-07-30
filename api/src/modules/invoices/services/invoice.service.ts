@@ -50,6 +50,14 @@ export class InvoiceService {
       this.logger.log(
         `Returning idempotent invoice ${existing.invoiceId} for order ${existing.orderId}`,
       );
+      if (existing.billingType === 'BOLETO') {
+        this.eventEmitter.emit('payment.boleto.idempotency_hit', {
+          invoiceId: existing.invoiceId,
+          orderId: existing.orderId,
+          tenantId: existing.tenantId,
+          correlationId: resolvedCorrelationId,
+        });
+      }
       return this.toResponse(existing);
     }
 
@@ -182,6 +190,18 @@ export class InvoiceService {
         status: openInvoice.status,
         timestamp: openInvoice.updatedAt,
       });
+
+      if (openInvoice.billingType === 'BOLETO') {
+        this.eventEmitter.emit('payment.boleto.created', {
+          invoiceId: openInvoice.invoiceId,
+          orderId: openInvoice.orderId,
+          tenantId: openInvoice.tenantId,
+          providerPaymentId: openInvoice.providerPaymentId,
+          billingType: openInvoice.billingType,
+          dueDate: openInvoice.dueDate,
+          correlationId: resolvedCorrelationId,
+        });
+      }
       this.emitObservable('pagamento.processamento.pagamentos.fatura.criada', {
         invoice: openInvoice,
         correlationId: resolvedCorrelationId,
@@ -215,6 +235,16 @@ export class InvoiceService {
         message,
         timestamp: new Date().toISOString(),
       });
+
+      if (pendingInvoice.billingType === 'BOLETO') {
+        this.eventEmitter.emit('payment.boleto.creation_failed', {
+          invoiceId: pendingInvoice.invoiceId,
+          orderId: pendingInvoice.orderId,
+          tenantId: pendingInvoice.tenantId,
+          reason: message,
+          correlationId: resolvedCorrelationId,
+        });
+      }
       this.emitObservable(
         'pagamento.processamento.pagamentos.pagamento.pendente_exception',
         {

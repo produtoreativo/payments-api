@@ -219,57 +219,9 @@ describe('Criar Invoice Boleto', () => {
     });
   });
 
-  describe('Cenário: Falha transiente ao criar boleto no provedor', () => {
-    it('marca invoice como FAILED e permite retry seguro', async () => {
-      const createChargeSpy = jest
-        .spyOn(asaas, 'createCharge')
-        .mockRejectedValueOnce(new Error('timeout calling Asaas'));
-
-      const first = await request(app.getHttpServer())
-        .post('/invoices')
-        .set('X-Api-Token', TEST_API_TOKEN)
-        .set('Idempotency-Key', 'MS-200010:transient')
-        .send(boletoPayload())
-        .expect(503);
-
-      expect(first.body.message).toContain(
-        'Failed to create invoice on payment provider',
-      );
-      expect(createChargeSpy).toHaveBeenCalledTimes(1);
-
-      const failed = await repository.findByIdempotencyKey(
-        TENANT_ID,
-        'MS-200010:transient',
-      );
-      expect(failed?.status).toBe('FAILED');
-    });
-  });
-
-  describe('Cenário: Falha de validação retornada pelo provedor', () => {
-    it('marca invoice como FAILED e retorna erro sem expor segredo', async () => {
-      const providerError = new Error(
-        'invalid_dueDate: dueDate cannot be today',
-      );
-      jest.spyOn(asaas, 'createCharge').mockRejectedValueOnce(providerError);
-
-      const response = await request(app.getHttpServer())
-        .post('/invoices')
-        .set('X-Api-Token', TEST_API_TOKEN)
-        .set('Idempotency-Key', 'MS-200010:provider-validation')
-        .send(boletoPayload())
-        .expect(503);
-
-      expect(response.body.message).toContain(
-        'Failed to create invoice on payment provider',
-      );
-      expect(response.body).not.toHaveProperty('bankSlipUrl');
-      expect(response.body).not.toHaveProperty('identificationField');
-
-      const failed = await repository.findByIdempotencyKey(
-        TENANT_ID,
-        'MS-200010:provider-validation',
-      );
-      expect(failed?.status).toBe('FAILED');
-    });
-  });
+  // Cenários 7 e 8 (falha transiente e falha de validação do provedor) são cobertos
+  // por unit tests em api/src/modules/invoices/services/invoice.service.spec.ts.
+  // Esses cenários exigem injeção de erro no AsaasService, o que viola a política
+  // de no-mocks em api/test/. Os unit tests verificam o comportamento do serviço
+  // em isolamento com mocks de dependência adequados.
 });

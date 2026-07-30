@@ -1,45 +1,33 @@
 {
-  "dashboard-id": "kij-n25-sui",
-  "dashboard-url": "https://app.datadoghq.com/dashboard/kij-n25-sui/prodops-runtime--delivery-tracked-by-diligence",
-  "title": "ProdOps Runtime \u2014 Delivery Tracked by Diligence",
-  "widget-count": 49,
-  "experiment": "EXP-014",
-  "iteration": "5",
-  "created-at": "2026-07-27T22:54:25.327001+00:00",
-  "site": "datadoghq.com",
-  "sections": 9,
+  "version": "3.4.0",
+  "dashboard-id": "iut-r7k-ehn",
+  "dashboard-url": "https://app.datadoghq.com/dashboard/iut-r7k-ehn/prodops-runtime--delivery--diligence-v3",
+  "title": "ProdOps Runtime \u2014 Delivery & Diligence v3.1",
+  "previous-dashboard-id": "84w-hbn-6pn",
+  "widget-count": 5,
+  "sections": 3,
+  "created-at": "2026-07-30T14:53:50Z",
+  "layout": {
+    "row1": "KPIs: Iteration Ativas, DONE, Falhas/Bloqueios, Lead Time (dias)",
+    "row2": "Funil de Entrega (timeseries bars) | Delivery Journey x8 | Diligence Status x4",
+    "row3": "Exception Paths: BLOQUEIO, DRIFT, REPAIR, CLOSED"
+  },
   "template-variables": [
-    "demo_run_id",
-    "issue",
-    "delivery_state",
-    "diligence_status",
-    "env",
     "service",
-    "team"
+    "env",
+    "issue"
   ],
   "metrics": [
     "runtime.event.received",
     "runtime.diligence.event.received",
-    "runtime.diligence.features.tracked",
-    "runtime.delivery.leadtime",
-    "runtime.delivery.funnel",
-    "runtime.diligence.blocked",
-    "runtime.diligence.drift.detected",
-    "runtime.diligence.findings.open",
-    "runtime.diligence.repairs.completed",
-    "runtime.diligence.features.closed"
-  ],
-  "new-metrics": [
-    "runtime.diligence.blocked (count, emitted on Block.Declared)",
-    "runtime.diligence.drift.detected (count, emitted on Divergence.Detected)",
-    "runtime.diligence.findings.open (count, emitted on Divergence.Detected)",
-    "runtime.diligence.repairs.completed (count, emitted on Repair.Completed)",
-    "runtime.diligence.features.closed (count, emitted on Close.Completed)"
+    "runtime.delivery.lead_time_days"
   ],
   "notes": [
-    "FF-13: Captured note placeholder (space in tag values); Blocked/Drift/Repair now use real metrics (no spaces)",
-    "FF-14: macOS bash 3.2 \u2014 no associative arrays",
-    "Dashboard tags: only team:prodops permitted (Datadog org constraint)",
-    "Iteration 5: Section 4b added for Exception Paths (Block, Drift, Repair, Closed)"
-  ]
+    "Removido widget de cabe\u00e7alho de texto (ProdOps Runtime header)",
+    "Removida depend\u00eancia de demo-run-id",
+    "Sem live_span fixo \u2014 widgets herdam seletor global da dashboard",
+    "Lead time via runtime.delivery.lead_time_days (gauge, emitido com send.sh --lead-time-days)",
+    "Funil usa timeseries bars agrupado por event tag (CE type)"
+  ],
+  "changelog": "prodops/runtime/datadog/dashboards/CHANGELOG.md"
 }

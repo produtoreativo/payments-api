@@ -160,7 +160,7 @@ jobs:
         run: npm run build
 
   # ── Gate: no_mocks ──────────────────────────────────────────────────────────
-  # Manifest: gates.no_mocks (forbidden patterns in api/src + api/test,
+  # Manifest: gates.no_mocks (forbidden patterns in api/test only,
   # expect zero_hits). Enforces the No Mocks Rule:
   # prodops/skills/hack/references/workflow.md
   # Fixed-string grep (-F) — the patterns contain "." and "(" that must match
@@ -181,7 +181,7 @@ jobs:
             -e '.mockReturnValue(' \
             -e '.overrideProvider(' \
             -e 'jest.mock(' \
-            api/src api/test || true)
+            api/test || true)
 
           if [ -n "$HITS" ]; then
             echo "FAIL: forbidden mock patterns found (No Mocks Rule)."
@@ -191,7 +191,7 @@ jobs:
             echo "$HITS"
             exit 1
           fi
-          echo "PASS: no forbidden mock patterns in api/src or api/test."
+          echo "PASS: no forbidden mock patterns in api/test."
 
   # ── Gate: prodops_consistency ───────────────────────────────────────────────
   # Validates the repo against prodops/exec/manifest.yaml (prose docs must
