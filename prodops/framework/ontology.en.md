@@ -236,9 +236,9 @@ These groups are organized by where Capabilities were originally defined, not by
 | Dimension | What it describes |
 |---|---|
 | **Team** | Organizational dimension: ownership, responsibilities, capabilities, roles, governance, and operational model |
-| **Flow** | Temporal dimension: how Team, Data, and Components evolve across the Framework journeys (Discovery, Delivery, Operation, Diligence) |
+| **Flow** | Temporal axis: records how Team, Data, and Components evolve across the Framework journeys (Discovery, Delivery, Operation, Diligence) — does not execute, only represents evolution |
 | **Data** | Informational dimension: entities, data contracts, schemas, persistence, domain events, and APIs |
-| **Components** | Physical dimension: services, databases, queues, pipelines, infrastructure, and repositories |
+| **Components** | Physical and behavioral dimension: services, APIs, databases, queues, infrastructure — implement the product's functional behavior |
 
 **Required ontological separation:**
 

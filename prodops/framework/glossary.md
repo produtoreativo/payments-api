@@ -526,13 +526,13 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ## Flow (Product Dimension)
 
-**Definição:** A dimensão temporal da Product Topology. Descreve como as demais Product Dimensions (Team, Data, Components) evoluem ao longo das jornadas do Framework — Discovery, Delivery, Operation e Diligence.
+**Definição:** O eixo temporal da Product Topology. Representa como as demais Product Dimensions (Team, Data, Components) evoluem ao longo das jornadas do Framework — Discovery, Delivery, Operation, Diligence e futuras jornadas. Flow não executa nada: registra a evolução, a transformação e o histórico das mudanças ao longo do tempo.
 
-**Quando um OBC impacta esta dimensão:** Sempre — todo OBC, ao ser entregue, transita pelas jornadas do Framework. Flow registra esse trânsito: quando o OBC nasceu (Discovery), foi implementado (Delivery), entrou em produção (Operation) e foi validado (Diligence).
+**Quando um OBC impacta esta dimensão:** Sempre — todo OBC, ao percorrer as jornadas do Framework, sempre deixa um rastro temporal. Flow registra esse trânsito: quando o OBC nasceu (Discovery), foi implementado (Delivery), entrou em produção (Operation) e foi validado (Diligence).
 
-**Distinção crítica:** Flow não é comportamento funcional do produto. Não descreve fluxos de negócio, processos, regras de negócio, estados de máquina ou automações. Flow é o eixo temporal da Product Topology — descreve *quando* e *como* as dimensões evoluem, não *o que* o produto faz.
+**Distinção crítica:** Flow não é comportamento funcional do produto. Processos de negócio, regras de negócio, máquinas de estado, automações e funcionalidades pertencem à dimensão **Components** — que implementa o comportamento do produto. Flow é exclusivamente o eixo temporal: responde *quando* e *como* as dimensões evoluem, nunca *o que* o produto faz.
 
-**Relação com outros conceitos:** Uma das quatro Product Dimensions. Ver [`product-topology.md`](product-topology.md).
+**Relação com outros conceitos:** Uma das quatro Product Dimensions; transversal às demais. Ver [`product-topology.md`](product-topology.md).
 
 ---
 
@@ -548,9 +548,9 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ## Components (Product Dimension)
 
-**Definição:** A dimensão física da Product Topology. Descreve as aplicações, os serviços, os microsserviços, os bancos de dados, as filas, os pipelines de dados, a infraestrutura e os repositórios que compõem a plataforma técnica do produto.
+**Definição:** A dimensão física e comportamental da Product Topology. Descreve as aplicações, os serviços, os microsserviços, os bancos de dados, as filas, os pipelines de dados, a infraestrutura e os repositórios que compõem a plataforma técnica do produto. **Os Components implementam o comportamento funcional do produto** — são eles que executam regras de negócio, funcionalidades, integrações, APIs e processos automatizados. O comportamento do produto emerge da colaboração entre seus Components.
 
-**Quando um OBC impacta esta dimensão:** Quando a entrega cria novos serviços, novas filas de mensagens, novos bancos de dados ou altera a infraestrutura existente do produto.
+**Quando um OBC impacta esta dimensão:** Quando a entrega cria novos serviços, novas APIs, novos workers, novas filas de mensagens, novos bancos de dados ou altera a infraestrutura existente do produto.
 
 **Relação com outros conceitos:** Uma das quatro Product Dimensions. Ver [`product-topology.md`](product-topology.md).
 

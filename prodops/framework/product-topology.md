@@ -43,10 +43,10 @@ Business Intent (+ Global OBC)
 Local OBC committed
        ↓  implementação via Delivery
 Product Topology     ← estrutura permanente do produto (não é fluxo)
-    ├── Team
-    ├── Flow
-    ├── Data
-    └── Components
+    ├── Team         ← quem: organização, papéis, ownership
+    ├── Data         ← o quê: contratos, entidades, schemas
+    ├── Components   ← como: serviços, APIs, infraestrutura (comportamento funcional)
+    └── Flow         ← quando/como evoluem: eixo temporal transversal às demais dimensões
 ```
 
 **Leitura do diagrama:**
@@ -60,6 +60,8 @@ Product Topology     ← estrutura permanente do produto (não é fluxo)
 ## As quatro Product Dimensions
 
 As quatro dimensões coexistem em qualquer produto. Não são hierárquicas. Não representam fases nem ciclos. Todo OBC pode impactar uma ou mais dimensões simultaneamente.
+
+A dimensão **Flow** é transversal às demais: qualquer OBC, ao percorrer as jornadas do Framework, sempre impacta Flow — pois sempre deixa um rastro temporal na estrutura do produto.
 
 ### Team
 
@@ -78,16 +80,19 @@ As quatro dimensões coexistem em qualquer produto. Não são hierárquicas. Nã
 
 ### Flow
 
-**O que é:** A dimensão temporal do produto.
+**O que é:** O eixo temporal da Product Topology.
 
-**Descreve:** Como as demais Product Dimensions (Team, Data, Components) evoluem ao longo das jornadas do Framework — Discovery, Delivery, Operation e Diligence. Flow registra a passagem das mudanças pelo ciclo de vida do produto: quando um OBC nasce, traversa a Delivery Journey, entra em Operation e é submetido à Diligence.
+**Descreve:** Como as demais Product Dimensions — Team, Data e Components — evoluem ao longo das jornadas do Framework. Flow não executa nada: ele permite observar, por meio das jornadas (Discovery, Delivery, Operation, Diligence e futuras jornadas do Framework), como as mudanças produzidas por um OBC atravessam o tempo e se tornam parte permanente do produto.
 
-**Exemplos de impacto de OBC:**
-- Um OBC modifica a dimensão Team → Flow registra como essa mudança traversou Discovery, Delivery, Operation
-- Uma alteração na dimensão Data → Flow registra sua evolução pelas jornadas do Framework
-- Um novo elemento em Components → Flow registra quando nasceu, evoluiu ou deixou de existir no produto
+Flow representa:
+- **evolução** — a progressão de uma mudança desde a intenção até a consolidação no produto
+- **transformação** — como as dimensões estruturais são alteradas por cada OBC ao longo do tempo
+- **histórico** — o registro de quando e como cada mudança traversou as jornadas do Framework
+- **lifecycle** — o ciclo de vida de uma entrega: nascimento (Discovery), implementação (Delivery), operação (Operation), validação (Diligence)
 
-**Distinção crítica:** Flow não é comportamento funcional do produto. Não descreve jornadas de negócio, processos, regras de negócio, estados de máquina ou automações. Flow é o eixo temporal da Product Topology — descreve *quando* e *como* as dimensões evoluem, não *o que* o produto faz funcionalmente.
+**Como Flow age na prática:** Um OBC que adiciona emissão de boleto cria responsabilidade em Team, contratos em Data, e serviços em Components. Flow registra como esse conjunto de mudanças percorre Discovery → Delivery → Operation → Diligence até se tornar parte permanente do produto. Flow não criou nada — ele representa o caminho temporal que as outras dimensões percorreram.
+
+**Distinção crítica:** Flow não é comportamento funcional do produto. Não descreve processos de negócio, regras de negócio, máquinas de estado, automações ou funcionalidades. Esses conceitos pertencem à dimensão **Components** — que implementa o comportamento do produto. Flow responde exclusivamente *quando* e *como* as dimensões evoluem, nunca *o que* o produto faz.
 
 ---
 
@@ -107,15 +112,15 @@ As quatro dimensões coexistem em qualquer produto. Não são hierárquicas. Nã
 
 ### Components
 
-**O que é:** A dimensão física do produto.
+**O que é:** A dimensão física e comportamental do produto.
 
-**Descreve:** Aplicações, serviços, microsserviços, bancos de dados, filas, pipelines de dados, infraestrutura e repositórios que compõem a plataforma técnica do produto.
+**Descreve:** Aplicações, serviços, microsserviços, bancos de dados, filas, pipelines de dados, infraestrutura e repositórios que compõem a plataforma técnica do produto. **Os Components implementam o comportamento funcional do produto** — são eles que executam regras de negócio, funcionalidades, integrações, APIs e processos automatizados. O comportamento do produto emerge da colaboração entre seus Components.
 
 **Exemplos de impacto de OBC:**
-- Novo provider de Pix como serviço independente dentro da plataforma
-- Nova fila de mensagens para processamento assíncrono de confirmações
-- Novo banco de dados para armazenar estados de reconciliação
-- Novo pipeline de dados para auditoria de transações
+- Novo serviço de emissão de boleto (Invoice Service) integrado ao provider Asaas
+- Nova API exposta para consulta de status de invoice
+- Novo worker para processamento assíncrono de confirmações de pagamento
+- Nova fila de mensagens para desacoplamento entre emissão e confirmação
 
 ---
 
@@ -123,14 +128,14 @@ As quatro dimensões coexistem em qualquer produto. Não são hierárquicas. Nã
 
 Um OBC **não pertence** a uma única Product Dimension. Um OBC pode modificar simultaneamente todas as quatro dimensões — o impacto depende do escopo da intenção, não da sua origem.
 
-**Exemplo: OBC "Criar invoice Pix"**
+**Exemplo: OBC "Adicionar emissão de boleto"**
 
 | Product Dimension | Impacto concreto |
 |---|---|
-| **Team** | Nova responsabilidade operacional: o time passa a monitorar falhas de emissão de invoice |
-| **Flow** | Ciclo de vida desta entrega: nasceu no Discovery, foi implementada no Delivery, entrou em Operation com monitoramento e passou pela Diligence |
-| **Data** | Novos contratos: schema de invoice, evento `invoice.created`, API de consulta de status |
-| **Components** | Novo provider: serviço de emissão de invoice Pix integrado ao gateway de pagamentos |
+| **Team** | Novo responsável operacional: o time passa a monitorar falhas de emissão no provider Asaas |
+| **Data** | Novo contrato de invoice (campos de boleto), novo evento de domínio `boleto.issued` |
+| **Components** | Invoice Service, Asaas Provider, API de consulta de status, Worker de confirmação |
+| **Flow** | Registra como essas mudanças percorreram Discovery → Delivery → Operation → Diligence até se tornarem parte permanente do produto |
 
 **Regra:** Ao escrever ou refinar um OBC, identificar quais Product Dimensions serão impactadas. Isso informa arquitetura, responsabilidades, riscos e a necessidade de um Reliability Plan — mas não altera a origem do OBC nem o fluxo de Delivery.
 
