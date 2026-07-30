@@ -1,10 +1,10 @@
 {
   "issue": "40",
-  "state": "BOOTSTRAPPING",
-  "last-event-type": "prodops.delivery.bootstrap.started",
-  "runtime-correlation-id": "9f88a799-254a-423c-b033-a6a122f57764",
+  "state": "HACKING",
+  "last-event-type": "prodops.delivery.hack.started",
+  "runtime-correlation-id": "ab3e0c6b-9f0f-4cd6-b579-7e70886fa807",
   "runtime-version": "0.3.0",
   "framework-version": "1.0.0",
   "schema-version": "1",
-  "computed-at": "2026-07-30T15:09:44Z"
+  "computed-at": "2026-07-30T15:18:22Z"
 }
