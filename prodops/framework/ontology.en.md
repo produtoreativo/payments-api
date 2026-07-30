@@ -223,6 +223,38 @@ These groups are organized by where Capabilities were originally defined, not by
 
 ---
 
+## Product concept: Product Topology
+
+### Product Topology
+
+**What it is:** The permanent structural organization of a product. Describes the four dimensions that coexist in any product and over which OBCs produce changes via Delivery.
+
+**Responsibility:** Identify which parts of the product structure are affected by an OBC — independent of where the intent originated (Origin Stream) and independent of the delivery process (Journeys, Cycles, Phases).
+
+**The four Product Dimensions:**
+
+| Dimension | What it describes |
+|---|---|
+| **Team** | Organizational dimension: ownership, responsibilities, capabilities, roles, governance, and operational model |
+| **Flow** | Behavioral dimension: journeys, processes, events, business rules, states, flows, and automations |
+| **Data** | Informational dimension: entities, data contracts, schemas, persistence, domain events, and APIs |
+| **Components** | Physical dimension: services, databases, queues, pipelines, infrastructure, and repositories |
+
+**Required ontological separation:**
+
+| Concept | Question it answers |
+|---|---|
+| **Origin Streams** | Where did this need come from? (origin of the intent) |
+| **Product Topology** | Which parts of the product will be impacted? (permanent structure) |
+
+Origin Streams and Product Topology are entirely distinct concepts. An OBC originating from any Origin Stream can impact any combination of Product Dimensions. The origin does not determine the impact.
+
+**Never represents:** Backlog, journey, pipeline, work flow, or process lifecycle. Product Topology describes the structure of the product — not the process of building the product.
+
+→ [product-topology.en.md](product-topology.en.md)
+
+---
+
 ## Relationships between all concepts
 
 | Relationship | Statement |
@@ -266,3 +298,4 @@ This document is the single source of truth for the ProdOps concept hierarchy.
 | [execution-model/README.en.md](execution-model/README.en.md) | Details Upstream and Downstream — is a specialization of this ontology |
 | [journeys/README.en.md](journeys/README.en.md) | Details each Journey — references Cycle and Phase from this ontology |
 | [skills/README.en.md](../skills/README.en.md) | Skills catalog — references this ontology for Skill and Step positioning |
+| [product-topology.en.md](product-topology.en.md) | Details the four Product Dimensions and the OBC → Product Topology relationship |

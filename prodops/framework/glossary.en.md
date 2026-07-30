@@ -529,6 +529,70 @@ See [`flow.en.md`](flow.en.md), [`journeys/discovery/README.en.md`](journeys/dis
 
 ---
 
+## Product Topology
+
+**Definition:** The permanent structural organization of a product. Describes the four dimensions that coexist in any product and over which OBCs produce changes via Delivery.
+
+**Purpose:** Identify which parts of the product structure are affected by an OBC — independent of where the intent originated (Origin Stream) and independent of the delivery process.
+
+**The four Product Dimensions:** Team · Flow · Data · Components
+
+**Required ontological separation:**
+- **Origin Streams** answer: "Where did this need come from?" (origin of the intent)
+- **Product Topology** answers: "Which parts of the product will be impacted?" (permanent structure)
+
+**Does not represent:** Backlog, journey, pipeline, work flow, or process lifecycle. Product Topology describes the structure of the product — not the process of building it.
+
+**Never use as a substitute:** Layers, Domains, Views, Perspectives, Streams.
+
+→ **Full definition with diagram and examples:** [`product-topology.en.md`](product-topology.en.md)
+
+---
+
+## Team (Product Dimension)
+
+**Definition:** The organizational dimension of Product Topology. Describes the ownership, responsibilities, capabilities, roles, collaboration, governance, and operational model of the team that builds and operates the product.
+
+**When an OBC impacts this dimension:** When delivery creates new operational responsibilities, redefines roles between teams, or changes the product's governance model.
+
+**Critical distinction:** Do not confuse with the "Team" Origin Stream — which classifies the *origin* of a need (the team identified the problem). The "Team" Product Dimension describes the *impact* on the product's organizational structure.
+
+**Relation to other concepts:** One of the four Product Dimensions. See [`product-topology.en.md`](product-topology.en.md).
+
+---
+
+## Flow (Product Dimension)
+
+**Definition:** The behavioral dimension of Product Topology. Describes the journeys, processes, events, business rules, states, flows, and automations that define how the product behaves.
+
+**When an OBC impacts this dimension:** When delivery creates new business flows, new transaction states, new validation rules, or new automations in the product.
+
+**Critical distinction:** Do not confuse with the Framework journeys (Discovery, Delivery, Operation…) — which are the team's *work process*. The "Flow" Product Dimension describes the *product behavior* that customers and systems experience.
+
+**Relation to other concepts:** One of the four Product Dimensions. See [`product-topology.en.md`](product-topology.en.md).
+
+---
+
+## Data (Product Dimension)
+
+**Definition:** The informational dimension of Product Topology. Describes the business entities, data contracts, schemas, persistence, integrations, domain events, and APIs that compose the product's informational model.
+
+**When an OBC impacts this dimension:** When delivery creates new schemas, new domain events, new API contracts, or modifies the existing persistence model.
+
+**Relation to other concepts:** One of the four Product Dimensions. See [`product-topology.en.md`](product-topology.en.md).
+
+---
+
+## Components (Product Dimension)
+
+**Definition:** The physical dimension of Product Topology. Describes the applications, services, microservices, databases, queues, data pipelines, infrastructure, and repositories that compose the product's technical platform.
+
+**When an OBC impacts this dimension:** When delivery creates new services, new message queues, new databases, or modifies the existing product infrastructure.
+
+**Relation to other concepts:** One of the four Product Dimensions. See [`product-topology.en.md`](product-topology.en.md).
+
+---
+
 ## BDD Feature
 
 **Definition:** Gherkin specification that describes the expected behavior of a Product Capability. Lives in `prodops/artifacts/bdd/` (committed) or `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratory — inside the experiment directory). Used as TDD input in Downstream.

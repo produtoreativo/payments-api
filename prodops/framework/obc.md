@@ -112,6 +112,24 @@ O OBC é o contrato que satisfaz simultaneamente as 4 dimensões de origem de um
 
 Essas dimensões correspondem aos 4 Origin Streams do Framework. O OBC não é uma perspectiva — é a síntese das 4.
 
+> **Nota de distinção:** As dimensões da tabela acima (Business, Enterprise, Team, Technology) descrevem as **perspectivas de origem** que o OBC satisfaz — correspondem aos 4 Origin Streams. Não confundir com as **Product Dimensions** da Product Topology (Team, Flow, Data, Components), que descrevem as partes estruturais do produto afetadas pela entrega do OBC. São dois conjuntos de dimensões com propósitos distintos: as primeiras respondem "de onde surgiu esta intenção?", as segundas respondem "o que no produto será modificado?". Ver [`product-topology.md`](product-topology.md).
+
+---
+
+## OBC e Product Topology
+
+Um OBC não pertence a uma única Product Dimension. Ele pode modificar simultaneamente Team, Flow, Data e Components — o impacto depende do escopo da intenção, não da sua origem no Origin Stream.
+
+**Ao refinar um OBC, identificar quais Product Dimensions serão afetadas.** Isso informa:
+- Quais times precisam estar envolvidos (Team)
+- Quais fluxos e regras serão alterados (Flow)
+- Quais schemas, eventos e contratos serão criados ou modificados (Data)
+- Quais serviços, bancos de dados ou infraestrutura serão criados ou modificados (Components)
+
+Essa análise complementa o OBC e alimenta o Reliability Plan com contexto de impacto estrutural.
+
+→ [Product Topology — definição canônica](product-topology.md)
+
 ---
 
 ## Estados

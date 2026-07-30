@@ -221,6 +221,38 @@ Esses grupos são organizados por onde as Capabilities foram originalmente defin
 
 ---
 
+## Conceito de produto: Product Topology
+
+### Product Topology
+
+**O que é:** A organização estrutural permanente de um produto. Descreve as quatro dimensões que coexistem em qualquer produto e sobre as quais os OBCs produzem mudanças via Delivery.
+
+**Responsabilidade:** Identificar quais partes da estrutura do produto são afetadas por um OBC — independente de onde a intenção nasceu (Origin Stream) e independente do processo de entrega (Journeys, Cycles, Phases).
+
+**As quatro Product Dimensions:**
+
+| Dimensão | O que descreve |
+|---|---|
+| **Team** | Dimensão organizacional: ownership, responsabilidades, capacidades, papéis, governança e modelo operacional |
+| **Flow** | Dimensão comportamental: jornadas, processos, eventos, regras de negócio, estados, fluxos e automações |
+| **Data** | Dimensão informacional: entidades, contratos de dados, schemas, persistência, eventos de domínio e APIs |
+| **Components** | Dimensão física: serviços, bancos de dados, filas, pipelines, infraestrutura e repositórios |
+
+**Separação ontológica obrigatória:**
+
+| Conceito | Pergunta que responde |
+|---|---|
+| **Origin Streams** | De onde surgiu esta necessidade? (origem da intenção) |
+| **Product Topology** | Quais partes do produto serão impactadas? (estrutura permanente) |
+
+Origin Streams e Product Topology são conceitos completamente distintos. Um OBC com origem em qualquer Origin Stream pode impactar qualquer combinação de Product Dimensions. A origem não determina o impacto.
+
+**Nunca representa:** Backlog, jornada, pipeline, fluxo de trabalho, ciclo de vida do processo. Product Topology descreve a estrutura do produto — não o processo de construção do produto.
+
+→ [product-topology.md](product-topology.md)
+
+---
+
 ## Relações entre todos os conceitos
 
 | Relação | Enunciado |
@@ -264,3 +296,4 @@ Este documento é a fonte única de verdade da hierarquia de conceitos ProdOps.
 | [execution-model/README.md](execution-model/README.md) | Detalha Upstream e Downstream — é uma especialização desta ontologia |
 | [journeys/README.md](journeys/README.md) | Detalha cada Journey — referencia Cycle e Phase desta ontologia |
 | [skills/README.md](../skills/README.md) | Catálogo de Skills — referencia esta ontologia para o posicionamento de Skill e Step |
+| [product-topology.md](product-topology.md) | Detalha as quatro Product Dimensions e o relacionamento OBC → Product Topology |

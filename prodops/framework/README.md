@@ -28,6 +28,7 @@ Este diretório contém a documentação canônica do ProdOps Framework. O conte
 | [obc.md](obc.md) | Observable Business Contract — Global OBC, Local OBC, OBC Partitioning |
 | [artifact-governance.md](artifact-governance.md) | Governança de artefatos |
 | [origin-streams.md](origin-streams.md) | As quatro origens de Intents |
+| [product-topology.md](product-topology.md) | Product Topology — as quatro dimensões estruturais permanentes do produto |
 | [product-stages.md](product-stages.md) | Estágios de produto (PoC→MLP) |
 | [dora-metrics.md](dora-metrics.md) | Métricas DORA estendidas |
 | [positioning.md](positioning.md) | **Como explicar ProdOps** — guia de comunicação canônico para agentes e humanos; inclui o diferencial Upstream/Downstream como modos, frases aprovadas e erros comuns |

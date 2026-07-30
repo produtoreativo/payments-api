@@ -492,6 +492,70 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ---
 
+## Product Topology
+
+**Definição:** A organização estrutural permanente de um produto. Descreve as quatro dimensões que coexistem em qualquer produto e sobre as quais os OBCs produzem mudanças via Delivery.
+
+**Propósito:** Identificar quais partes da estrutura do produto são afetadas por um OBC — independente de onde a intenção nasceu (Origin Stream) e independente do processo de entrega.
+
+**As quatro Product Dimensions:** Team · Flow · Data · Components
+
+**Separação ontológica obrigatória:**
+- **Origin Streams** respondem: "De onde surgiu esta necessidade?" (origem da intenção)
+- **Product Topology** responde: "Quais partes do produto serão impactadas?" (estrutura permanente)
+
+**Não representa:** Backlog, jornada, pipeline, fluxo de trabalho ou ciclo de vida do processo. Product Topology descreve a estrutura do produto — não o processo de construção.
+
+**Nunca usar como substituto:** Layers, Domains, Views, Perspectives, Streams.
+
+→ **Definição completa com diagrama e exemplos:** [`product-topology.md`](product-topology.md)
+
+---
+
+## Team (Product Dimension)
+
+**Definição:** A dimensão organizacional da Product Topology. Descreve o ownership, as responsabilidades, as capacidades, os papéis, a colaboração, a governança e o modelo operacional do time que constrói e opera o produto.
+
+**Quando um OBC impacta esta dimensão:** Quando a entrega cria novas responsabilidades operacionais, redefine papéis entre times ou altera o modelo de governança do produto.
+
+**Distinção crítica:** Não confundir com o Origin Stream "Team" — que classifica a *origem* de uma necessidade (o time identificou o problema). A Product Dimension "Team" descreve o *impacto* sobre a organização do produto.
+
+**Relação com outros conceitos:** Uma das quatro Product Dimensions. Ver [`product-topology.md`](product-topology.md).
+
+---
+
+## Flow (Product Dimension)
+
+**Definição:** A dimensão comportamental da Product Topology. Descreve as jornadas, os processos, os eventos, as regras de negócio, os estados, os fluxos e as automações que definem como o produto se comporta.
+
+**Quando um OBC impacta esta dimensão:** Quando a entrega cria novos fluxos de negócio, novos estados de transação, novas regras de validação ou novas automações no produto.
+
+**Distinção crítica:** Não confundir com as jornadas do Framework (Discovery, Delivery, Operation…) — que são o *processo de trabalho* do time. A Product Dimension "Flow" descreve o *comportamento do produto* que clientes e sistemas experimentam.
+
+**Relação com outros conceitos:** Uma das quatro Product Dimensions. Ver [`product-topology.md`](product-topology.md).
+
+---
+
+## Data (Product Dimension)
+
+**Definição:** A dimensão informacional da Product Topology. Descreve as entidades de negócio, os contratos de dados, os schemas, a persistência, as integrações, os eventos de domínio e as APIs que compõem o modelo informacional do produto.
+
+**Quando um OBC impacta esta dimensão:** Quando a entrega cria novos schemas, novos eventos de domínio, novos contratos de API ou altera o modelo de persistência existente.
+
+**Relação com outros conceitos:** Uma das quatro Product Dimensions. Ver [`product-topology.md`](product-topology.md).
+
+---
+
+## Components (Product Dimension)
+
+**Definição:** A dimensão física da Product Topology. Descreve as aplicações, os serviços, os microsserviços, os bancos de dados, as filas, os pipelines de dados, a infraestrutura e os repositórios que compõem a plataforma técnica do produto.
+
+**Quando um OBC impacta esta dimensão:** Quando a entrega cria novos serviços, novas filas de mensagens, novos bancos de dados ou altera a infraestrutura existente do produto.
+
+**Relação com outros conceitos:** Uma das quatro Product Dimensions. Ver [`product-topology.md`](product-topology.md).
+
+---
+
 ## BDD Feature
 
 **Definição:** Especificação Gherkin que descreve o comportamento esperado de uma Product Capability. Fica em `prodops/artifacts/bdd/` (comprometida) ou `prodops/artifacts/experiments/<NNN-slug>/features/` (exploratória — dentro do diretório do experimento). Usada como insumo de TDD no Downstream.
