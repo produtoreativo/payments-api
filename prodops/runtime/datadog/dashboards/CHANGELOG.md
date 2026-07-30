@@ -1,5 +1,25 @@
 # Dashboard Changelog — ProdOps Runtime
 
+## v3.4.0 — 2026-07-30
+
+**Dashboard ID:** `iut-r7k-ehn`
+
+**Arquivo:** `v3.4.0.json`
+
+**Layout:** `ordered` + `reflow_type: "fixed"` com **grupos** — formato confirmado via inspeção do dashboard `5zm-a3w-gjf` existente na org.
+
+**Estrutura:** 5 grupos top-level, cada um com `layout {x,y,width,height}` no grid de 12 colunas do dashboard. Sub-widgets dentro de cada grupo usam coordenadas internas relativas ao grupo (grid 12-col responsivo).
+
+| Grupo | y | h | Conteúdo |
+|---|---|---|---|
+| A — KPIs | 0 | 3 | 4 × qv (w=3, h=2) em linha |
+| B — Funil de Entrega | 3 | 7 | 1 × timeseries (w=12, h=6) |
+| C — Delivery Journey | 10 | 5 | 8 × qv (w=3, h=2), 4 por linha |
+| D — Diligence Status | 15 | 3 | 4 × qv (w=3, h=2) em linha |
+| E — Exception Paths | 18 | 3 | 4 × qv (w=3, h=2) em linha |
+
+---
+
 ## v3.2.0 — 2026-07-30
 
 **Dashboard ID:** `3x5-6dn-9k4`

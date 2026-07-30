@@ -1,12 +1,12 @@
 {
-  "version": "3.2.0",
-  "dashboard-id": "3x5-6dn-9k4",
-  "dashboard-url": "https://app.datadoghq.com/dashboard/3x5-6dn-9k4/prodops-runtime--delivery--diligence-v3",
+  "version": "3.4.0",
+  "dashboard-id": "iut-r7k-ehn",
+  "dashboard-url": "https://app.datadoghq.com/dashboard/iut-r7k-ehn/prodops-runtime--delivery--diligence-v3",
   "title": "ProdOps Runtime \u2014 Delivery & Diligence v3.1",
   "previous-dashboard-id": "84w-hbn-6pn",
-  "widget-count": 24,
+  "widget-count": 5,
   "sections": 3,
-  "created-at": "2026-07-30T14:41:59Z",
+  "created-at": "2026-07-30T14:53:50Z",
   "layout": {
     "row1": "KPIs: Iteration Ativas, DONE, Falhas/Bloqueios, Lead Time (dias)",
     "row2": "Funil de Entrega (timeseries bars) | Delivery Journey x8 | Diligence Status x4",
