@@ -39,13 +39,15 @@ ISSUE=""
 EVENT=""
 STATE=""
 CORRELATION_ID=""
+LEAD_TIME_DAYS=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --issue)          ISSUE="$2"; shift 2 ;;
-    --event)          EVENT="$2"; shift 2 ;;
-    --state)          STATE="$2"; shift 2 ;;
-    --correlation-id) CORRELATION_ID="$2"; shift 2 ;;
+    --issue)            ISSUE="$2"; shift 2 ;;
+    --event)            EVENT="$2"; shift 2 ;;
+    --state)            STATE="$2"; shift 2 ;;
+    --correlation-id)   CORRELATION_ID="$2"; shift 2 ;;
+    --lead-time-days)   LEAD_TIME_DAYS="$2"; shift 2 ;;
     *) echo "Unknown arg: $1" >&2; exit 1 ;;
   esac
 done
@@ -104,4 +106,39 @@ else
   log "ERROR: Datadog returned HTTP ${HTTP_STATUS}"
   log "Payload: $PAYLOAD"
   exit 1
+fi
+
+if [[ -n "${LEAD_TIME_DAYS:-}" ]]; then
+  LEAD_PAYLOAD=$(jq -n \
+    --argjson now   "$NOW" \
+    --argjson days  "$LEAD_TIME_DAYS" \
+    --arg issue     "$ISSUE" \
+    --arg service   "$DD_SERVICE" \
+    --arg env       "$DD_ENV_VALUE" \
+    '{
+      series: [{
+        metric: "runtime.delivery.lead_time_days",
+        type: 0,
+        points: [{ timestamp: $now, value: $days }],
+        tags: [
+          ("issue:" + $issue),
+          ("service:" + $service),
+          ("env:" + $env),
+          "runtime:prodops"
+        ]
+      }]
+    }')
+
+  HTTP_STATUS2=$(curl -s -o /dev/null -w "%{http_code}" \
+    -X POST "https://api.${DD_SITE}/api/v2/series" \
+    -H "Content-Type: application/json" \
+    -H "DD-API-KEY: ${DD_API_KEY}" \
+    -d "$LEAD_PAYLOAD")
+
+  if [[ "$HTTP_STATUS2" == "202" ]]; then
+    log "Lead time metric accepted — ${LEAD_TIME_DAYS} days | HTTP ${HTTP_STATUS2}"
+  else
+    log "ERROR: Lead time metric returned HTTP ${HTTP_STATUS2}"
+    exit 1
+  fi
 fi

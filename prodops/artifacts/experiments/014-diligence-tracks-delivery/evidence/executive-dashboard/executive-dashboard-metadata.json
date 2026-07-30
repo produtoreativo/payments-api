@@ -1,23 +1,33 @@
 {
-  "dashboard-id": "d73-8be-pds",
-  "dashboard-url": "https://app.datadoghq.com/dashboard/d73-8be-pds/prodops-runtime--delivery--diligence",
-  "title": "ProdOps Runtime — Delivery & Diligence",
-  "previous-dashboard-id": "kij-n25-sui",
-  "widget-count": 19,
-  "sections": 4,
-  "created-at": "2026-07-30",
-  "notes": [
-    "Substituiu kij-n25-sui (EXP-014 demo dashboard)",
-    "Removida dependencia de demo-run-id — filtra por issue, service, env",
-    "Removido live_span fixo — widgets herdam seletor global da dashboard",
-    "Tags corrigidas: delivery-state, delivery-correlation-id (alinhadas ao send.sh atualizado)",
-    "Queries alinhadas ao catalogo de eventos atual (35 eventos, 8 state-altering)",
-    "Template variables: issue (40), delivery_state, diligence_status, service, env"
+  "version": "3.0.0",
+  "dashboard-id": "84w-hbn-6pn",
+  "dashboard-url": "https://app.datadoghq.com/dashboard/84w-hbn-6pn/prodops-runtime--delivery--diligence-v3",
+  "title": "ProdOps Runtime \u2014 Delivery & Diligence v3",
+  "previous-dashboard-id": "d73-8be-pds",
+  "widget-count": 23,
+  "sections": 3,
+  "created-at": "2026-07-30T14:15:59Z",
+  "layout": {
+    "row1": "KPIs: Iteration Ativas, DONE, Falhas/Bloqueios, Lead Time (dias)",
+    "row2": "Funil de Entrega (timeseries bars) | Delivery Journey x8 | Diligence Status x4",
+    "row3": "Exception Paths: BLOQUEIO, DRIFT, REPAIR, CLOSED"
+  },
+  "template-variables": [
+    "service",
+    "env",
+    "issue"
   ],
-  "template-variables": ["issue", "delivery_state", "diligence_status", "service", "env"],
   "metrics": [
     "runtime.event.received",
     "runtime.diligence.event.received",
-    "runtime.diligence.features.tracked"
-  ]
+    "runtime.delivery.lead_time_days"
+  ],
+  "notes": [
+    "Removido widget de cabe\u00e7alho de texto (ProdOps Runtime header)",
+    "Removida depend\u00eancia de demo-run-id",
+    "Sem live_span fixo \u2014 widgets herdam seletor global da dashboard",
+    "Lead time via runtime.delivery.lead_time_days (gauge, emitido com send.sh --lead-time-days)",
+    "Funil usa timeseries bars agrupado por event tag (CE type)"
+  ],
+  "changelog": "prodops/runtime/datadog/dashboards/CHANGELOG.md"
 }
