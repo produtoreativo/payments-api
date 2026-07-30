@@ -12,7 +12,7 @@ Supported scopes:
 - `ci-async`
 - `full`
 
-When scope is omitted, use `ci-sync` temporarily and report the default explicitly.
+When scope is omitted, use `full`.
 
 Use the Agent tool to delegate to the downstream-agent:
 
