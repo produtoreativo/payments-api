@@ -1,36 +1,40 @@
 ---
 name: finish
-description: Close technical work with quality gates. Emits Finish.Started and Finish.Completed via prodops_emit_event.
+description: Close technical work by delivering a fully autonomous Pull Request. Emits Finish.Started and Finish.Completed via prodops_emit_event.
 ---
 
 # FINISH
 
-Use this skill to close a task with explicit quality evidence.
+Use this skill to close a task by delivering a fully autonomous Pull Request with explicit quality evidence.
+
+## O que Finish é e NÃO é
+
+**Finish NÃO entrega software.**
+
+Finish entrega um Pull Request completamente autônomo — um PR que percorre todo o restante do fluxo (Ship → Validate → Promote) **sem intervenção humana**.
+
+Para isso, Finish garante:
+
+- commits finais organizados e válidos
+- evidências de qualidade registradas
+- gates de qualidade satisfeitos (lint, build, testes, contratos)
+- PR criado com narrativa completa
+- auto-approval configurado e executado (quando o repositório suportar)
+- auto-merge habilitado (quando o repositório suportar)
+- workflows existentes verificados e válidos
+- repositório apto para execução automática confirmado
+
+**Se qualquer requisito não puder ser satisfeito: Finish NÃO conclui. Interrompe para investigação.**
 
 ## Required input context
 
-Ler a context capsule em `prodops/artifacts/iterations/<iteration-id>/cards/<slug>/context.md`.
-Campos obrigatórios:
+Before starting, the agent must have:
 
-- `work-item-id` — campo `work-item-id` da capsule
-- `iteration-id` — campo `iteration-id`
-- `correlation-id` — campo `correlation-id`
-- `actor-player` — campo `actor-player`
-- `feature-branch` — campo `feature-branch` (branch a fazer push/PR)
-- `base-branch` — campo `base-branch`
-- `session-trail-dir` — campo `session-trail-dir` (onde gravar o trail)
-
-Se invocado standalone (sem capsule), gerar novo `correlation-id`.
-
-## Capsule update — após PR criado
-
-Após abrir o PR com sucesso, atualizar o campo `pr-number` na capsule:
-
-```
-pr-number: <número do PR criado>
-```
-
-Isso elimina a necessidade de Ship e Promote buscarem o PR via `gh pr list`.
+- `work-item-id` — the GitHub issue number of the Feature
+- `iteration-id` — the Iteration Plan identifier
+- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
+- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
+  invoked standalone, generate a new UUID.
 
 ## Preconditions
 
@@ -86,37 +90,28 @@ Do not emit `Finish.Completed` if any quality gate fails or evidence is incomple
 
 ## Flow
 
-1. Review changed files and confirm scope.
-2. Check quality gates relevant to the task.
-3. Run targeted validation and broader validation when risk warrants it.
-4. Confirm ProdOps artifacts were updated only where impacted.
-5. Confirm Release Trail evidence exists.
-6. Push the feature branch and open the PR:
-   ```bash
-   git push origin <branch>
-   gh pr create --title "[DS-<id>]: <slug>" \
-     --body "<description>\n\nRelated to #<work-item-id>" \
-     --base master
-   ```
-   Use `Related to #<n>` — **never** `Closes #<n>`. The issue must remain open
-   until `Promote.Completed`: Ship, Validate, and Promote still need to run.
-7. Enable auto-merge on the PR immediately after creation:
-   ```bash
-   gh pr merge <number> --auto --squash
-   ```
-   This queues the squash merge to execute automatically once all required
-   CI checks pass. The agent does **not** wait idle — it emits `Finish.Completed`
-   as soon as auto-merge is enabled and the PR is confirmed open.
-8. Record the PR number and auto-merge status in the Release Trail.
-9. Leave explicit next steps for any incomplete item.
+1. Verificar contexto de entrada (work-item-id, iteration-id, actor, correlation-id).
+2. Emitir Finish.Started.
+3. Revisar arquivos alterados e confirmar escopo.
+4. Verificar gates de qualidade relevantes à tarefa (lint, build, testes, contratos).
+5. Executar validação focada e, quando o risco justificar, validação mais ampla.
+6. Confirmar que artefatos ProdOps foram atualizados apenas onde impactados.
+7. Confirmar que evidência existe no Release Trail.
+8. Criar o Pull Request preenchendo o template com evidências.
+9. Executar auto-approval no PR (quando o repositório suportar; registrar resultado).
+10. Habilitar auto-merge no PR (quando o repositório suportar; registrar resultado).
+11. Verificar que workflows existentes estão válidos e que o repositório está apto para execução automática.
+12. Registrar explicitamente qualquer item incompleto — Finish NÃO conclui com itens abertos.
+13. Emitir Finish.Completed após todos os requisitos satisfeitos.
 
 ## Guardrails
 
 - Do not mark work complete without evidence.
 - Do not hide skipped tests; record why they were skipped.
 - Do not expand scope during finish work.
-- Do not merge manually. Auto-merge is the only authorized merge path from Finish.
-- Do not emit `Finish.Completed` before auto-merge is successfully enabled on the PR.
+- If any requirement cannot be satisfied, Finish does NOT complete. Stop and investigate.
+- Do not emit Finish.Completed before the PR is created and all quality gates pass.
+- Auto-approval and auto-merge failures are blockers — investigate before proceeding.
 
 ## Engineering References
 

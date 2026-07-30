@@ -1,81 +1,30 @@
 ---
 name: finish
-description: Close technical work with quality gates. Emits Finish.Started and Finish.Completed via prodops_emit_event.
+description: Close technical work by delivering a fully autonomous Pull Request. Use before considering a task complete, especially after implementation or artifact updates.
 ---
 
 # FINISH
 
-Use this skill to close a task with explicit quality evidence.
+Use this skill to close a task by delivering a fully autonomous Pull Request with explicit quality evidence.
 
-## Required input context
+## What Finish Is and Is NOT
 
-Read the context capsule at `prodops/artifacts/iterations/<iteration-id>/cards/<slug>/context.md`.
-Required fields:
+**Finish does NOT deliver software.**
 
-- `work-item-id` — capsule field `work-item-id`
-- `iteration-id` — capsule field `iteration-id`
-- `correlation-id` — capsule field `correlation-id`
-- `actor-player` — capsule field `actor-player`
-- `feature-branch` — capsule field `feature-branch` (branch to push/PR)
-- `base-branch` — capsule field `base-branch`
-- `session-trail-dir` — capsule field `session-trail-dir` (where to write the trail)
+Finish delivers a fully autonomous Pull Request — a PR that traverses the entire remaining flow (Ship → Validate → Promote) **without human intervention**.
 
-If invoked standalone (without a capsule), generate a new `correlation-id`.
+To achieve that, Finish ensures:
 
-## Capsule update — after PR is created
+- final commits organized and valid
+- quality evidence recorded
+- quality gates satisfied (lint, build, tests, contracts)
+- PR created with complete narrative
+- auto-approval configured and executed (when the repository supports it)
+- auto-merge enabled (when the repository supports it)
+- existing workflows verified and valid
+- repository confirmed ready for automated execution
 
-After successfully opening the PR, update the `pr-number` field in the capsule:
-
-```
-pr-number: <created PR number>
-```
-
-This eliminates the need for Ship and Promote to look up the PR via `gh pr list`.
-
-## Preconditions
-
-1. `prodops/skills/prodops-emit-event/SKILL.md` has been read.
-2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
-
-## Phase: Finish.Started
-
-**Moment**: after input context is verified, before any quality gate work begins.
-
-Emit:
-
-```json
-{
-  "event": "Delivery.Finish.Started",
-  "work-item-id": "<work-item-id>",
-  "iteration-id": "<iteration-id>",
-  "correlation-id": "<correlation-id>",
-  "execution-id": "<new-uuid>",
-  "actor": { "player": "<player>", "agent": "finish-agent" },
-  "payload": {}
-}
-```
-
-If the tool returns `status: error`: report the error, fix the input, do not proceed.
-
-## Phase: Finish.Completed
-
-**Moment**: after all quality gates pass and Release Trail evidence is appended — before reporting success.
-
-Emit using the **same `correlation-id`** as Finish.Started:
-
-```json
-{
-  "event": "Delivery.Finish.Completed",
-  "work-item-id": "<work-item-id>",
-  "iteration-id": "<iteration-id>",
-  "correlation-id": "<same-uuid-as-started>",
-  "execution-id": "<new-uuid>",
-  "actor": { "player": "<player>", "agent": "finish-agent" },
-  "payload": {}
-}
-```
-
-Do not emit `Finish.Completed` if any quality gate fails or evidence is incomplete.
+**If any requirement cannot be satisfied: Finish does NOT complete. Stop and investigate.**
 
 ## Inputs
 
@@ -86,37 +35,28 @@ Do not emit `Finish.Completed` if any quality gate fails or evidence is incomple
 
 ## Flow
 
-1. Review changed files and confirm scope.
-2. Check quality gates relevant to the task.
-3. Run targeted validation and broader validation when risk warrants it.
-4. Confirm ProdOps artifacts were updated only where impacted.
-5. Confirm Release Trail evidence exists.
-6. Push the feature branch and open the PR:
-   ```bash
-   git push origin <branch>
-   gh pr create --title "[DS-<id>]: <slug>" \
-     --body "<description>\n\nRelated to #<work-item-id>" \
-     --base master
-   ```
-   Use `Related to #<n>` — **never** `Closes #<n>`. The issue must remain open
-   until `Promote.Completed`: Ship, Validate, and Promote still need to run.
-7. Enable auto-merge on the PR immediately after creation:
-   ```bash
-   gh pr merge <number> --auto --squash
-   ```
-   This queues the squash merge to execute automatically once all required
-   CI checks pass. The agent does **not** wait idle — it emits `Finish.Completed`
-   as soon as auto-merge is enabled and the PR is confirmed open.
-8. Record the PR number and auto-merge status in the Release Trail.
-9. Leave explicit next steps for any incomplete item.
+1. Verify input context (work-item-id, iteration-id, actor, correlation-id).
+2. Emit Finish.Started.
+3. Review changed files and confirm scope.
+4. Check quality gates relevant to the task (lint, build, tests, contracts).
+5. Run targeted validation and broader validation when risk warrants it.
+6. Confirm ProdOps artifacts were updated only where impacted.
+7. Confirm Release Trail evidence exists.
+8. Create the Pull Request filling the template with evidence.
+9. Execute auto-approval on the PR (when the repository supports it; record result).
+10. Enable auto-merge on the PR (when the repository supports it; record result).
+11. Verify that existing workflows are valid and the repository is ready for automated execution.
+12. Record any incomplete item explicitly — Finish does NOT complete with open items.
+13. Emit Finish.Completed after all requirements are satisfied.
 
 ## Guardrails
 
 - Do not mark work complete without evidence.
 - Do not hide skipped tests; record why they were skipped.
 - Do not expand scope during finish work.
-- Do not merge manually. Auto-merge is the only authorized merge path from Finish.
-- Do not emit `Finish.Completed` before auto-merge is successfully enabled on the PR.
+- If any requirement cannot be satisfied, Finish does NOT complete. Stop and investigate.
+- Do not emit Finish.Completed before the PR is created and all quality gates pass.
+- Auto-approval and auto-merge failures are blockers — investigate before proceeding.
 
 ## Engineering References
 

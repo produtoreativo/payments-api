@@ -1,106 +1,85 @@
 # SHIP Workflow
 
-SHIP is the submission phase. The agent repeats the work engineers did manually: final checks, TDD evidence review, security review, quality review, change summary, PR.
+SHIP is the observation and orchestration phase. The agent observes the execution of the autonomous Pull Request created by Finish — checks, approval, merge, Staging deploy — without executing any of these steps directly.
 
-## Inspect Scope
+**Who executes approval, merge, and workflows:** GitHub
+**Who executes pipelines and deploy:** GitHub Actions
+**Ship:** observes, emits events, reacts to failures
 
-```sh
-git status --short --branch
-git branch --show-current
-git diff --stat <base>...HEAD
-git diff --name-only <base>...HEAD
-```
+## Environments
 
-Use the correct base branch from the task, upstream, `origin/HEAD`, `origin/main`, or `origin/master`.
+| Environment | Type | Ship observes? |
+|---|---|---|
+| Staging | Ephemeral per Feature/OBC | Yes — target of the observed deploy |
+| Sandbox | Shared (Release Candidate) | No — Promote's responsibility |
+| Production | Operational | No — outside the Delivery Journey |
 
-## Quality Checks
-
-Run commands based on changed files and repo scripts. Prefer existing package scripts.
-
-For this payments-api repository:
+## Detect the PR Created by Finish
 
 ```sh
-cd api && npm run build
-cd api && npm run test:acceptance
-cd validation-workbench && npm run build
+gh pr list --head <branch> --state open --json number,url,title,statusCheckRollup
+gh pr view <pr-number> --json number,url,title,state,mergeable,statusCheckRollup,autoMergeRequest
 ```
 
-Also run focused tests for modified modules when available.
+Confirm the PR was created by Finish for the correct work-item before emitting Ship.Started.
 
-## TDD Evidence
-
-Confirm behavior changes followed traditional TDD:
-
-- Red: identify the test that was added or changed first.
-- Red: confirm the test initially failed for the expected behavior gap.
-- Green: confirm production code was added to make that test pass.
-- Refactor: confirm tests stayed green after cleanup.
-
-If the branch history does not expose the red phase, inspect commits, test files, and final diff. In the PR, report available evidence honestly:
-
-- `TDD: followed` when commit history or notes show red/green/refactor.
-- `TDD: partially observable` when final tests exist but red-phase output is not available.
-- `TDD: not applicable` for docs-only, mechanical, config-only, or explicitly untestable changes.
-- `TDD: missing` when behavior changed without tests; block shipping unless the user accepts the risk.
-
-## Security Checks
-
-Inspect for secrets and unsafe local leakage:
+## Observe Checks and Workflows
 
 ```sh
-git diff <base>...HEAD -- . ':(exclude)package-lock.json'
-rg -n "aact_|AKIA|BEGIN (RSA|OPENSSH|PRIVATE) KEY|SECRET|TOKEN|PASSWORD|api[_-]?key" .
+gh pr checks <pr-number> --watch
+gh run list --branch <branch>
+gh run view <run-id>
 ```
 
-Check:
+If any check fails: record the run-id and failure reason. **Stop progression.** Do not proceed to merge or deploy. Report — Finish must be reopened.
 
-- No real provider tokens.
-- No `.env` files or local credentials.
-- No production endpoint switched to mock behavior by default.
-- No broad CORS/auth relaxation unless intentionally scoped.
-- No dependency changes without lockfile consistency.
-- No generated build outputs accidentally included.
+## Observe Automatic Approval
 
-## Review
-
-Review the patch for:
-
-- Correct behavior against the requested requirement.
-- Compatibility with existing DTOs, services, events, and runtime scripts.
-- Error handling and idempotency.
-- Test coverage for success and failure paths.
-- Migration, deployment, or rollback concerns.
-
-## PR Description
-
-Use this structure:
-
-```markdown
-## Summary
-- 
-
-## TDD Evidence
-- 
-
-## Validation
-- 
-
-## Security and Quality
-- 
-
-## Risks / Notes
-- 
-```
-
-Include exact commands and outcomes. Mention skipped checks with a concrete reason.
-
-## Submit
-
-If asked to submit the PR:
+Verify whether the repository has auto-approval configured (via GitHub Apps or CODEOWNERS with auto-approve):
 
 ```sh
-git push -u origin <branch>
-gh pr create --base <base> --head <branch> --title "<title>" --body-file <body-file>
+gh pr view <pr-number> --json reviews,autoMergeRequest
 ```
 
-If `gh` is unavailable or authentication fails, leave the PR body ready and report the blocker.
+If auto-approval does not occur within a reasonable time after checks pass: report as a blocker and wait for investigation.
+
+## Observe Automatic Merge
+
+```sh
+gh pr view <pr-number> --json state,mergedAt,mergeCommit
+```
+
+Wait for `state: MERGED`. If merge does not occur after approval and checks pass: report as a blocker.
+
+## Observe Staging Deploy
+
+After merge, observe triggering of the Staging deploy pipeline:
+
+```sh
+gh run list --branch main --workflow <staging-deploy-workflow>
+gh run view <run-id> --log
+```
+
+Wait for the pipeline to complete successfully. If the pipeline fails: record run-id and reason. **Stop progression.**
+
+## Record Evidence and Emit Ship.Completed
+
+After merge is confirmed **AND** Staging deploy completes successfully:
+
+1. Record in the Release Trail:
+   - Merged PR: number, commit, date
+   - Staging deploy: run-id, version, environment
+   - Result: success
+
+2. Emit `Delivery.Ship.Completed` using the same `correlation-id` as Ship.Started.
+
+## Failure Response
+
+| Failure | Ship Action |
+|---|---|
+| CI check fails | Stop. Report run-id and reason. Finish must be reopened. |
+| Auto-approval does not occur | Report as blocker. Wait for investigation. |
+| Merge does not occur | Report as blocker. Wait for investigation. |
+| Staging deploy fails | Stop. Report run-id and reason. Finish must be reopened. |
+
+**Ship does NOT emit Ship.Completed in failure scenarios.**

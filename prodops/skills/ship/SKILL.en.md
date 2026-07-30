@@ -1,169 +1,74 @@
 ---
 name: ship
-description: Prepare deploy, pull request, or release readiness. Emits Ship.Started and Ship.Completed via prodops_emit_event.
+description: Observe and orchestrate the autonomous PR flow — merge, CI, and Staging deploy. Use when observing the PR created by Finish traversing checks, approval, merge, and Staging deployment.
 ---
 
 # SHIP
 
-Use this skill to prepare completed work for delivery.
+Use this skill to observe and orchestrate the autonomous Pull Request flow created by Finish.
 
-For detailed Codex submission mechanics, read `references/workflow.md`.
+For detailed Ship observation mechanics, read `references/workflow.md`.
 
-## Required input context
+## What Ship Is and Is NOT
 
-Read the context capsule at `prodops/artifacts/iterations/<iteration-id>/cards/<slug>/context.md`.
-Required fields:
+**Ship does NOT perform deploy. Ship does NOT execute CI. Ship does NOT approve the PR.**
 
-- `work-item-id` — capsule field `work-item-id`
-- `iteration-id` — capsule field `iteration-id`
-- `correlation-id` — capsule field `correlation-id`
-- `actor-player` — capsule field `actor-player`
-- `pr-number` — capsule field `pr-number` (filled by Finish); if absent, look up via `gh pr list`
-- `session-trail-dir` — capsule field `session-trail-dir`
-- `reliability-path` — capsule field `reliability-path` (optional; use SLOs to verify changeset if `!= "none"`)
+Ship is an **orchestrator and observer**.
 
-If invoked standalone (without a capsule), generate a new `correlation-id`.
+- Who executes approval, merge, and workflows: **GitHub**
+- Who executes pipelines and deploy: **GitHub Actions**
+- Ship: **observes execution, emits events, reacts to failures**
 
-## Capsule update — after deploy
+**Trigger:** Pull Request created by Finish.
+**Ship.Started:** emitted upon detecting the created PR — before observing any execution.
+**Ship.Completed:** emitted only after merge is confirmed AND Staging deploy completes successfully.
+**Ship.Completed means:** Feature available in its Staging environment (ephemeral per Feature/OBC).
 
-After confirming the `infra-scope` of the PR (dynamo/lambda/both/none via diff), update the field in the capsule:
+If any CI step fails: Ship detects it, stops progression, and reports. Finish must be reopened for investigation.
 
-```
-infra-scope: <dynamo|lambda|both|none>
-```
+## Environments
 
-## Preconditions
+| Environment | Type | Purpose |
+|---|---|---|
+| Staging | Ephemeral per Feature/OBC | Validate exclusively the Feature in question. Destroyed after promotion. |
+| Sandbox | Shared | Release Candidate. Receives only Ship-promoted Features via Promote. |
+| Production | Operational | Outside the Delivery Journey. |
 
-1. `prodops/skills/prodops-emit-event/SKILL.md` has been read.
-2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
-
-## Phase: Ship.Started
-
-**Moment**: after input context is verified, before any ship preparation work begins.
-
-Emit:
-
-```json
-{
-  "event": "Delivery.Ship.Started",
-  "work-item-id": "<work-item-id>",
-  "iteration-id": "<iteration-id>",
-  "correlation-id": "<correlation-id>",
-  "execution-id": "<new-uuid>",
-  "actor": { "player": "<player>", "agent": "ship-agent" },
-  "payload": {}
-}
-```
-
-If the tool returns `status: error`: report the error, fix the input, do not proceed.
-
-## Phase: Ship.Completed
-
-**Moment**: after all ship steps complete and PR/deploy notes are prepared — before reporting success.
-
-Emit using the **same `correlation-id`** as Ship.Started:
-
-```json
-{
-  "event": "Delivery.Ship.Completed",
-  "work-item-id": "<work-item-id>",
-  "iteration-id": "<iteration-id>",
-  "correlation-id": "<same-uuid-as-started>",
-  "execution-id": "<new-uuid>",
-  "actor": { "player": "<player>", "agent": "ship-agent" },
-  "payload": {}
-}
-```
-
-Do not emit `Ship.Completed` if security checks, quality gates, or PR preparation is incomplete.
+Ship observes the deploy to **Staging**. Sandbox and Production are outside Ship's scope.
 
 ## Inputs
 
 - `AGENTS.md`
 - `prodops/artifacts/plans/reliability/`
 - `prodops/artifacts/trails/sessions/` (active session trail)
-- `prodops/framework/journeys/delivery/phases/finish/quality-gates.md`
-- Current branch diff and validation evidence
-
-## Infra scope declaration
-
-Before waiting for the merge, declare which infrastructure stacks the issue touches. Read the PR diff:
-
-```bash
-gh pr diff <number> --name-only
-```
-
-Map changed paths to stacks:
-
-| Changed path | Stack affected |
-|---|---|
-| `api/infra/dynamodb.yaml` | `dynamo` |
-| `api/infra/lambda.yaml` | `lambda` |
-| `api/src/**` | `lambda` |
-| None of the above | `none` |
-
-Record the declared scope in the Ship.Started payload under `"infra-scope"`: one of `dynamo`, `lambda`, `both`, or `none`. This is used in step 5 to verify that only expected stacks were deployed.
+- PR created by Finish (number, URL, check status)
 
 ## Flow
 
-Ship observes — it does not execute the merge. The merge is performed
-automatically by GitHub once all CI checks pass (auto-merge was enabled during
-Finish). Ship's job is to confirm the merge happened and the staging deploy
-succeeded.
-
-1. Confirm `Finish.Completed` was emitted for this work item (check timeline).
-2. Confirm the PR has auto-merge enabled:
-   ```bash
-   gh pr view <number> --json autoMergeRequest
-   ```
-   If auto-merge is not enabled, re-enable it:
-   ```bash
-   gh pr merge <number> --auto --squash
-   ```
-3. Poll until the PR is merged:
-   ```bash
-   gh pr view <number> --json state,mergedAt
-   ```
-   Check every 30 seconds; timeout after 20 minutes. If CI fails, surface the
-   failing check and stop — do not force-merge.
-4. Once the PR is merged, confirm the staging deploy workflow started:
-   ```bash
-   gh run list --workflow staging-deploy.yml --limit 3
-   ```
-5. Wait for the staging deploy to complete:
-   ```bash
-   gh run watch <run-id>
-   ```
-5a. After deploy completes, verify the changeset matches the declared infra-scope:
-   ```bash
-   # For the DynamoDB stack (if dynamo scope):
-   aws cloudformation describe-stack-events \
-     --stack-name payments-api-dynamo-staging \
-     --query "StackEvents[?ResourceStatus=='UPDATE_COMPLETE'].[LogicalResourceId,ResourceType]" \
-     --output table
-   # For the Lambda stack (if lambda scope):
-   aws cloudformation describe-stack-events \
-     --stack-name payments-api-staging \
-     --query "StackEvents[?ResourceStatus=='UPDATE_COMPLETE'].[LogicalResourceId,ResourceType]" \
-     --output table
-   ```
-   If the declared scope is `none` but a stack was deployed, or if unexpected resources changed (e.g., SQS queue updated when the issue didn't modify queue configuration), flag it as a drift finding before emitting `Ship.Completed`.
-6. Confirm the staging environment is responsive after deploy.
-7. Record the merge SHA, deploy run ID, infra-scope declared, and actual changed resources in the Release Trail.
-8. Append shipping evidence to the Release Trail.
+1. Verify input context (work-item-id, iteration-id, actor, correlation-id).
+2. Detect the PR created by Finish for the correct work-item.
+3. Emit Ship.Started.
+4. Observe execution of GitHub checks and workflows on the PR.
+5. Observe automatic approval on the PR (executed by GitHub per repository rules).
+6. Observe automatic merge of the PR (executed by GitHub per repository rules).
+7. If any check or workflow fails: detect, stop progression, report failure. Finish must be reopened.
+8. After merge is confirmed: observe triggering of the Staging deploy pipeline.
+9. Observe the Staging deploy result.
+10. If Staging deploy fails: detect, stop progression, report failure.
+11. After Staging deploy completes successfully: record evidence in the Release Trail.
+12. Emit Ship.Completed.
 
 ## Guardrails
 
-- Do not merge manually. The only authorized merge path is GitHub auto-merge
-  triggered by CI passing.
-- Do not emit `Ship.Completed` if CI checks failed or the staging deploy failed.
-- Do not force-push or bypass branch protection to unblock a failing CI check.
-- Do not change business scope during ship observation.
-- Do not commit secrets, real tokens, personal credentials or local-only paths.
+- Do not perform deploy. Deploy is executed by GitHub Actions.
+- Do not approve the PR. Approval is executed by GitHub.
+- Do not merge the PR. Merge is executed by GitHub.
+- Do not emit Ship.Completed before merge AND Staging deploy succeed.
+- If any CI step fails: stop progression. Do not proceed to Promote. Report for investigation.
+- Staging is ephemeral per Feature. Do not conflate Staging with Sandbox or Production.
 
 ## Engineering References
 
 | Reference | When to read |
 |---|---|
-| [`../references/engineering/tdd-prodops/workflow.md`](../references/engineering/tdd-prodops/workflow.md) | TDD evidence standards (what counts as red/green/refactor proof) |
-| [`../references/engineering/tdd-prodops/quality-gates.md`](../references/engineering/tdd-prodops/quality-gates.md) | Delivery gates checklist before creating a PR |
+| [`references/workflow.md`](references/workflow.md) | Ship observation mechanics — how to detect PR, observe checks, merge and deploy |
