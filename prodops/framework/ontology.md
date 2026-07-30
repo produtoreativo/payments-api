@@ -234,9 +234,9 @@ Esses grupos são organizados por onde as Capabilities foram originalmente defin
 | Dimensão | O que descreve |
 |---|---|
 | **Team** | Dimensão organizacional: ownership, responsabilidades, capacidades, papéis, governança e modelo operacional |
-| **Flow** | Dimensão temporal: como Team, Data e Components evoluem pelas jornadas do Framework (Discovery, Delivery, Operation, Diligence) |
+| **Flow** | Eixo temporal: registra como Team, Data e Components evoluem pelas jornadas do Framework (Discovery, Delivery, Operation, Diligence) — não executa, apenas representa a evolução |
 | **Data** | Dimensão informacional: entidades, contratos de dados, schemas, persistência, eventos de domínio e APIs |
-| **Components** | Dimensão física: serviços, bancos de dados, filas, pipelines, infraestrutura e repositórios |
+| **Components** | Dimensão física e comportamental: serviços, APIs, bancos de dados, filas, infraestrutura — implementam o comportamento funcional do produto |
 
 **Separação ontológica obrigatória:**
 
