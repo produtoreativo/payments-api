@@ -144,6 +144,48 @@
 
 ---
 
+## GAP-016 — Não existe Event Type para falha durante o Ship (Ship.Failed ausente no catálogo)
+
+**Contexto:** O modelo operacional consolidado define que Ship detecta falhas durante a observação do fluxo autônomo do PR (check de CI, merge, deploy em Staging) e interrompe a progressão. No entanto, o catálogo de eventos da Delivery Journey (`prodops/framework/journeys/delivery/events/catalog.md`) e o catálogo de eventos do runtime (`prodops/runtime/catalog/events.yaml`) não definem nenhum `Ship.Failed` ou equivalente.
+
+**O que o Framework não diz:** Como sinalizar via evento que o Ship detectou uma falha durante a observação — CI falhou, merge não ocorreu, ou deploy em Staging falhou.
+
+**O que deveria dizer:** Um Event Type `Ship.Failed` (ou `Shared.Gate.Failed` com contexto Ship) deveria ser emitido quando Ship detecta falha, permitindo que a Diligence Journey detecte o estado BLOCKED e inicie ciclo de reconciliação.
+
+**Impacto se omitido:** Falhas durante Ship são registradas apenas em texto no Release Trail, sem event-driven propagation. A Diligence Journey não pode reagir automaticamente ao estado de falha do Ship. O estado do Work Item permanece SHIPPING indefinidamente sem sinal canônico de falha.
+
+**Status:** Lacuna aberta. Não criar eventos — documentar apenas. Candidato a próxima evolução do catálogo de eventos da Delivery Journey.
+
+---
+
+## GAP-017 — Ship.Started e Finish.Started emitidos pelos skills mas ausentes do catálogo de Event Types
+
+**Contexto:** Os skills `prodops/skills/finish/SKILL.md` e `prodops/skills/ship/SKILL.md` emitem `Delivery.Finish.Started` e `Delivery.Ship.Started` respectivamente. No entanto, o catálogo de eventos da Delivery Journey (`prodops/framework/journeys/delivery/events/catalog.md`) lista apenas `Finish.Completed` e `Ship.Completed` — não há definição formal de `Finish.Started` nem `Ship.Started` como Event Types.
+
+**O que o Framework não diz:** O catálogo não define as preconditions, postconditions, payload_shape ou alters_state dos eventos Started para Finish e Ship. Apenas os eventos Completed têm definição formal.
+
+**O que deveria dizer:** Todos os eventos emitidos pelos skills devem ter uma entrada correspondente no catálogo de Event Types com schema completo.
+
+**Impacto se omitido:** Consumers que processam eventos da Delivery Journey não têm schema formal para `Finish.Started` e `Ship.Started`. Validação de evento fica incompleta. A Timeline pode conter eventos não catalogados.
+
+**Status:** Lacuna aberta. Não criar eventos — documentar apenas. Candidato a próxima versão do catálogo (v2.1.0 ou v3.0.0).
+
+---
+
+## GAP-018 — O catálogo de eventos usa "homologação" e "produção" — ambíguos com o modelo de ambientes consolidado
+
+**Contexto:** O catálogo de eventos da Delivery Journey (`catalog.md`) usa os termos "ambiente de homologação" (Ship.Completed) e "produção" (Promote.Completed, Promote.Approved). O modelo operacional consolidado define: Staging (efêmero por Feature), Sandbox (compartilhado, Release Candidate) e Production (fora da Journey).
+
+**O que o Framework não diz:** Se "homologação" no catálogo equivale a Staging ou Sandbox. Se "produção" no Promote.Completed significa que Promote leva a Production (errado no novo modelo) ou Sandbox.
+
+**O que deveria dizer:** Os descritivos dos eventos do catálogo devem usar os termos canônicos: Staging, Sandbox, Production — não "homologação" e "produção" de forma genérica.
+
+**Impacto se omitido:** Ambiguidade entre o catálogo de eventos e o modelo operacional. Agentes que leem o catálogo podem inferir que Promote leva para Production, contradizendo o modelo operacional consolidado que coloca Production fora da Delivery Journey.
+
+**Status:** Lacuna aberta. Não alterar o catálogo de eventos neste ciclo — documentar apenas. Candidato a próxima versão do catálogo.
+
+---
+
 ## GAP-015 — hack-start stasha mudanças não commitadas, descartando alterações de skills e framework feitas durante o readiness
 
 **Contexto:** Durante a preparação do DS-40, foram feitas alterações em `prodops/skills/downstream/SKILL.md` (Downstream ID, modo sem argumentos, tabela de comandos) e `prodops/skills/readiness/SKILL.md` (novo skill). Essas mudanças ficaram no working tree sem commit. Quando o `hack-start` agent executou, fez `git stash` das mudanças não commitadas antes de criar o branch `feat/40-create-invoice-boleto`, preservando-as no stash mas tornando-as invisíveis no branch de feature. O arquivo `framework-gaps.md` também foi perdido (não estava no stash).

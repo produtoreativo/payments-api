@@ -6,21 +6,32 @@
 
 ## Overview
 
-**What it's for:** Transforms the implementation approved by Finish into an executable, versioned, and published artifact, and conducts its delivery to the target environment via deployment.
+**What it's for:** Observes and orchestrates the autonomous Pull Request flow created by Finish — checks, approval, merge, and deploy to the Feature's Staging environment.
+
+**What Ship is NOT:** Ship does NOT perform deploy. Ship does NOT execute CI. Ship does NOT approve the PR.
+
+**Who executes:** GitHub (approval, merge, workflows) and GitHub Actions (pipelines, deploy).
+
+**Ship:** observes execution, emits events, reacts to failures.
 
 **How it works:**
 
 ```
-Preparation: Build → Package → Version → Sign → SBOM → Publish Artifact
-Deployment:  Deploy → Progressive Delivery → Rollout
+Detect PR created by Finish
+→ Observe checks and workflows
+→ Observe automatic approval
+→ Observe automatic merge
+→ Observe deploy to Staging
+→ Ship.Completed (only after merge + successful deploy)
 ```
 
 **Main guardrails:**
 
-- Do not ship undocumented behavior changes
-- Do not include secrets, real tokens, or local paths in the diff
-- TDD evidence is mandatory for behavior changes — absence must be justified
-- Do not change business scope during ship
+- Do not perform deploy — GitHub Actions executes it
+- Do not approve the PR — GitHub executes it
+- Do not merge the PR — GitHub executes it
+- Do not emit Ship.Completed without confirmed merge AND completed Staging deploy
+- If any CI step fails: stop progression, report. Finish must be reopened.
 
 **Position in the flow:**
 
@@ -32,62 +43,63 @@ CI Async  →  [Ship] → Validate → Promote
 
 ---
 
-**Objective:** transform the finalized implementation into an executable, publishable, and deployable artifact, conducting its delivery to the target environment.
+**Objective:** observe the autonomous PR execution and confirm the Feature is available in its Staging environment.
 
-Ship is organized into two families of capabilities:
+## Environments
 
-## Preparation
+| Environment | Type | Ship observes? |
+|---|---|---|
+| Staging | Ephemeral per Feature/OBC | Yes — target of the observed deploy |
+| Sandbox | Shared (Release Candidate) | No — Promote's responsibility |
+| Production | Operational | No — outside the Delivery Journey |
 
-Capabilities responsible for producing the artifact:
+Ship.Completed means: Feature available in its Staging environment (ephemeral per Feature/OBC).
 
-| Capability | Description |
+## Responsibilities by Actor
+
+| Actor | Responsibility |
 |---|---|
-| **Build** | Compile, transpile, and package the code |
-| **Package** | Create the distributable artifact (container, ZIP, layer) |
-| **Version** | Apply semantic versioning to the artifact |
-| **Sign** | Sign the artifact to ensure integrity and provenance |
-| **Generate SBOM** | Produce the Software Bill of Materials |
-| **Publish Artifact** | Publish the artifact to the registry (ECR, S3, npm) |
-
-Build, Package, and Publish are internal capabilities of Ship. They are not independent steps of the main flow.
-
-## Deployment
-
-Capabilities responsible for delivering the artifact to the environment:
-
-| Capability | Description |
-|---|---|
-| **Deploy** | Execute the deployment of the artifact to the target environment |
-| **Progressive Delivery** | Gradual delivery strategies (canary, blue-green) |
-| **Feature Flags** | Runtime feature activation control |
-| **Rollout** | Progressive expansion of traffic to the new version |
-| **Rollback** | Revert to the previous version in case of failure |
-| **Infrastructure Validation** | Verify that the infrastructure is correct after deploy |
+| **Finish** | Creates the autonomous PR (before Ship) |
+| **GitHub** | Executes approval, merge, and branch protection validations |
+| **GitHub Actions** | Executes CI pipelines and Staging deploy |
+| **Ship** | Observes execution, emits Ship.Started and Ship.Completed, reacts to failures |
+| **Promote** | Promotes the Feature from Staging to Sandbox after Ship.Completed |
 
 ## Pre-condition
 
-The Finish phase was completed: lint, build, tests, and Definition of Done satisfied. See [finish/README.md](../finish/README.md).
+Finish.Completed emitted: PR created, quality gates satisfied, auto-approval and auto-merge configured.
 
 ## Sequence in Ship
 
-1. Confirm that the change is mapped to the Reliability Plan or a documented follow-up.
-2. Review the final diff as if it were an external code review.
-3. Verify TDD evidence: every behavior change needs a confirmed Red Bar or documented justification.
-4. Run security checks: no secrets, real tokens, personal credentials, or local paths.
-5. Fill the PR template with evidence. See [`commit-workflow/templates/pull_request.md`](../../capabilities/commit-workflow/templates/pull_request.md).
-6. Publish the Pull Request.
-7. Execute Preparation (Build → Package → Version → Publish Artifact).
-8. Execute Deployment (Deploy → Progressive Delivery per strategy).
-9. Record ship evidence in the Release Trail.
+1. Detect the PR created by Finish for the correct work-item.
+2. Emit Ship.Started.
+3. Observe execution of GitHub checks and workflows on the PR.
+4. Observe automatic approval on the PR.
+5. Observe automatic merge of the PR.
+6. If any check or workflow fails: stop progression and report.
+7. After merge: observe triggering of the Staging deploy pipeline.
+8. Observe the Staging deploy result.
+9. If deploy fails: stop progression and report.
+10. After successful deploy: record evidence in the Release Trail.
+11. Emit Ship.Completed.
 
 ## Ship Checklist
 
-- [ ] Diff reviewed — no unintentional changes included.
-- [ ] TDD evidence present or absence justified.
-- [ ] No secrets, credentials, or local paths in the diff.
-- [ ] PR filled with: behavior, validation, risk, and rollback.
-- [ ] Artifact produced and published.
-- [ ] Deploy performed in the target environment.
+- [ ] PR created by Finish detected and confirmed.
+- [ ] GitHub checks and workflows observed — all passed.
+- [ ] Automatic approval observed.
+- [ ] Automatic merge observed and confirmed.
+- [ ] Staging deploy pipeline observed and completed successfully.
 - [ ] Release Trail updated with ship entry.
+- [ ] Ship.Completed emitted.
+
+## Failure Response
+
+| Failure | Action |
+|---|---|
+| CI check fails | Stop. Report. Finish must be reopened. |
+| Auto-approval does not occur | Report as blocker. Wait for investigation. |
+| Merge does not occur | Report as blocker. Wait for investigation. |
+| Staging deploy fails | Stop. Report. Finish must be reopened. |
 
 For execution mechanics, see [`prodops/skills/ship/`](../../../../../skills/ship/).

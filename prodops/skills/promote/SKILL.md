@@ -1,11 +1,34 @@
 ---
 name: promote
-description: Approve and close a release stage. Emits Promote.Started and Promote.Completed via prodops_emit_event.
+description: Promote the Feature from Staging to Sandbox (Release Candidate). Emits Promote.Started and Promote.Completed via prodops_emit_event.
 ---
 
 # PROMOTE
 
-Use this skill to move a release to the next stage or close it.
+Use this skill to promote a Feature from its ephemeral Staging environment to the shared Sandbox environment (Release Candidate).
+
+## O que Promote é e NÃO é
+
+**Promote NÃO publica em Production.**
+
+**Promote inicia somente após Ship.Completed.**
+
+Responsabilidades do Promote:
+
+- Confirmar que Ship.Completed foi emitido antes de iniciar
+- Promover a Feature do ambiente de Staging para o ambiente de Sandbox
+- Sandbox representa o **Release Candidate** — é compartilhado e recebe apenas Features promovidas pelo Ship
+- Registrar evidência da promoção no Release Trail
+
+**Production permanece fora da Delivery Journey.** Production pertence ao processo operacional posterior.
+
+## Ambientes
+
+| Ambiente | Tipo | Propósito |
+|---|---|---|
+| Staging | Efêmero por Feature/OBC | Validação exclusiva da Feature. Destruído após promoção. |
+| Sandbox | Compartilhado | Release Candidate. Origem da promoção para Production. |
+| Production | Operacional | Fora da Delivery Journey. |
 
 ## Required input context
 
@@ -24,7 +47,7 @@ Before starting, the agent must have:
 
 ## Phase: Promote.Started
 
-**Moment**: after input context is verified, before any promotion work begins.
+**Moment**: after input context is verified and Ship.Completed is confirmed — before any promotion work begins.
 
 Emit:
 
@@ -60,7 +83,7 @@ Emit using the **same `correlation-id`** as Promote.Started:
 }
 ```
 
-Do not emit `Promote.Completed` if evidence is missing, risks are unresolved, or operational readiness is not confirmed.
+Do not emit `Promote.Completed` if evidence is missing, risks are unresolved, or Staging→Sandbox promotion has not executed.
 
 ## Inputs
 
@@ -68,19 +91,22 @@ Do not emit `Promote.Completed` if evidence is missing, risks are unresolved, or
 - `prodops/artifacts/plans/reliability/`
 - `prodops/artifacts/trails/sessions/` (active session trail)
 - `prodops/framework/journeys/delivery/phases/finish/done-criteria.md`
-- `prodops/framework/journeys/operation/`
+- Evidência de Ship.Completed para o work-item
 
 ## Flow
 
-1. Confirm required validation and quality gates are complete.
-2. Confirm unresolved risks are accepted, mitigated, or moved to follow-up.
-3. Check operational readiness: incidents, runbooks, postmortems, and
-   operational trail.
-4. Record approval, evidence, and remaining next steps.
-5. Append promotion or closure notes to the Release Trail.
+1. Confirmar que Ship.Completed foi emitido para o work-item correto.
+2. Confirmar que validation e quality gates estão completos.
+3. Confirmar que riscos não resolvidos estão aceitos, mitigados, ou movidos para follow-up.
+4. Executar promoção da Feature de Staging para Sandbox.
+5. Registrar aprovação, evidência e próximos passos.
+6. Adicionar entrada de promoção ao Release Trail.
 
 ## Guardrails
 
 - Do not promote when required evidence is missing.
+- Do not promote before Ship.Completed is confirmed.
 - Do not silently accept unresolved high-risk items.
 - Do not replace Release Trail history; append a new entry.
+- Do not promote to Production. Promote targets Sandbox only. Production is outside the Delivery Journey.
+- Sandbox is the Release Candidate. It receives only Ship-promoted Features.

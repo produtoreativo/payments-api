@@ -9,28 +9,44 @@ CI Async: Ship → Validate → Promote
 ## Purpose
 
 CI Async produces:
-- Artifact produced and published
-- Deploy performed in the target environment
-- Runtime validation executed
-- Controlled promotion with recorded evidence
+- Autonomous PR observed: merge confirmed and Staging deploy successful (Ship)
+- Runtime validation executed in the Staging environment (Validate)
+- Feature promoted to Sandbox (Release Candidate) with recorded evidence (Promote)
+
+## Environments
+
+| Environment | Type | Responsible phase |
+|---|---|---|
+| Staging | Ephemeral per Feature/OBC | Ship (observes deploy) and Validate (validates Feature) |
+| Sandbox | Shared (Release Candidate) | Promote (promotion target) |
+| Production | Operational | Outside the Delivery Journey |
+
+## Responsibilities by Actor
+
+| Actor | Responsibility |
+|---|---|
+| **Finish** | Creates the autonomous PR (final step of CI Sync) |
+| **GitHub** | Executes approval, merge, and branch protection validations |
+| **GitHub Actions** | Executes CI pipelines and Staging deploy |
+| **Ship** | Observes execution, emits Ship.Started and Ship.Completed, reacts to failures |
+| **Validate** | Validates the Feature running in the Staging environment |
+| **Promote** | Promotes the Feature from Staging to Sandbox after Ship.Completed |
 
 ## Stages
 
 ### Ship
 
-Transforms the implementation into an executable artifact and conducts the deploy.
+Observes and orchestrates the autonomous PR flow created by Finish — checks, approval, merge, and Staging deploy.
 
-Two families:
-- **Preparation:** Build, Package, Version, Sign, SBOM, Publish Artifact
-- **Deployment:** Deploy, Progressive Delivery, Feature Flags, Rollout, Rollback, Infrastructure Validation
+**Ship does NOT perform deploy. Ship does NOT execute CI. Ship does NOT approve the PR.**
 
-Build, Package, and Publish are internal capabilities of Ship — they are not independent stages.
+Ship.Completed is emitted only after merge is confirmed AND Staging deploy completes successfully.
 
 → [phases/ship/README.md](phases/ship/README.md)
 
 ### Validate
 
-Verifies the delivery running in the target environment.
+Verifies the Feature running in the Staging environment.
 
 Capabilities: Smoke Tests, Runtime Contract Validation, Synthetic Monitoring, Health Checks, Observability Validation, SLO Validation, Business Validation, Incident Signals.
 
@@ -38,9 +54,11 @@ Capabilities: Smoke Tests, Runtime Contract Validation, Synthetic Monitoring, He
 
 ### Promote
 
-Officially records the version's evolution with formal approval and registered evidence.
+Promotes the Feature from the Staging environment to the Sandbox environment (Release Candidate). Starts only after Ship.Completed.
 
-Capabilities: Promotion Gates, Environment Promotion, Release Approval, Release Trail, Operational Evidence, Release Documentation, Rollback Readiness.
+**Promote does NOT publish to Production. Production is outside the Delivery Journey.**
+
+Capabilities: Promotion Gates, Environment Promotion (Staging → Sandbox), Release Trail, Rollback Readiness.
 
 → [phases/promote/README.md](phases/promote/README.md)
 

@@ -1,52 +1,74 @@
 ---
 name: ship
-description: Prepare deploy, pull request, or release readiness. Use when packaging completed work for review, release, deployment, handoff, final quality gates, TDD evidence review, security checks, or PR preparation.
+description: Observe and orchestrate the autonomous PR flow — merge, CI, and Staging deploy. Use when observing the PR created by Finish traversing checks, approval, merge, and Staging deployment.
 ---
 
 # SHIP
 
-Use this skill to prepare completed work for delivery.
+Use this skill to observe and orchestrate the autonomous Pull Request flow created by Finish.
 
-For detailed Codex submission mechanics, read `references/workflow.md`.
+For detailed Ship observation mechanics, read `references/workflow.md`.
+
+## What Ship Is and Is NOT
+
+**Ship does NOT perform deploy. Ship does NOT execute CI. Ship does NOT approve the PR.**
+
+Ship is an **orchestrator and observer**.
+
+- Who executes approval, merge, and workflows: **GitHub**
+- Who executes pipelines and deploy: **GitHub Actions**
+- Ship: **observes execution, emits events, reacts to failures**
+
+**Trigger:** Pull Request created by Finish.
+**Ship.Started:** emitted upon detecting the created PR — before observing any execution.
+**Ship.Completed:** emitted only after merge is confirmed AND Staging deploy completes successfully.
+**Ship.Completed means:** Feature available in its Staging environment (ephemeral per Feature/OBC).
+
+If any CI step fails: Ship detects it, stops progression, and reports. Finish must be reopened for investigation.
+
+## Environments
+
+| Environment | Type | Purpose |
+|---|---|---|
+| Staging | Ephemeral per Feature/OBC | Validate exclusively the Feature in question. Destroyed after promotion. |
+| Sandbox | Shared | Release Candidate. Receives only Ship-promoted Features via Promote. |
+| Production | Operational | Outside the Delivery Journey. |
+
+Ship observes the deploy to **Staging**. Sandbox and Production are outside Ship's scope.
 
 ## Inputs
 
 - `AGENTS.md`
 - `prodops/artifacts/plans/reliability/`
 - `prodops/artifacts/trails/sessions/` (active session trail)
-- `prodops/framework/journeys/delivery/phases/finish/quality-gates.md`
-- Current branch diff and validation evidence
+- PR created by Finish (number, URL, check status)
 
 ## Flow
 
-1. Confirm the change maps to the current Reliability Plan or documented
-   follow-up.
-2. Confirm the branch and diff against the intended base.
-3. Verify TDD evidence for behavior changes.
-4. Run final quality gates: format, lint, build and tests appropriate to the
-   changed files.
-5. Run security checks for secrets, unsafe config, dependency changes and
-   accidental environment leakage.
-6. Review the diff as if doing code review.
-7. Summarize changed behavior, impacted artifacts and deployment risk.
-8. Identify rollback, monitoring and operational notes when applicable.
-9. Prepare PR or deploy notes.
-10. Append shipping evidence to the Release Trail.
+1. Verify input context (work-item-id, iteration-id, actor, correlation-id).
+2. Detect the PR created by Finish for the correct work-item.
+3. Emit Ship.Started.
+4. Observe execution of GitHub checks and workflows on the PR.
+5. Observe automatic approval on the PR (executed by GitHub per repository rules).
+6. Observe automatic merge of the PR (executed by GitHub per repository rules).
+7. If any check or workflow fails: detect, stop progression, report failure. Finish must be reopened.
+8. After merge is confirmed: observe triggering of the Staging deploy pipeline.
+9. Observe the Staging deploy result.
+10. If Staging deploy fails: detect, stop progression, report failure.
+11. After Staging deploy completes successfully: record evidence in the Release Trail.
+12. Emit Ship.Completed.
 
 ## Guardrails
 
-- Do not ship undocumented behavior changes.
-- Do not present missing evidence as complete.
-- Do not change business scope during ship preparation.
-- Do not include unrelated changes in the PR or deployment package.
-- Do not commit secrets, real tokens, personal credentials or local-only paths.
-- Tests must cover changed behavior or the residual test gap must be explicit.
-- Behavior changes must show TDD evidence or explain why TDD was not applicable.
-- PR or deploy notes must explain behavior, validation and risk.
+- Do not perform deploy. Deploy is executed by GitHub Actions.
+- Do not approve the PR. Approval is executed by GitHub.
+- Do not merge the PR. Merge is executed by GitHub.
+- Do not emit Ship.Completed before merge AND Staging deploy succeed.
+- If any CI step fails: stop progression. Do not proceed to Promote. Report for investigation.
+- Staging is ephemeral per Feature. Do not conflate Staging with Sandbox or Production.
 
 ## Engineering References
 
 | Reference | When to read |
 |---|---|
-| [`../references/engineering/tdd-prodops/workflow.md`](../references/engineering/tdd-prodops/workflow.md) | TDD evidence standards (what counts as red/green/refactor proof) |
-| [`../references/engineering/tdd-prodops/quality-gates.md`](../references/engineering/tdd-prodops/quality-gates.md) | Delivery gates checklist before creating a PR |
+| [`references/workflow.md`](references/workflow.md) | Ship observation mechanics — how to detect PR, observe checks, merge and deploy |

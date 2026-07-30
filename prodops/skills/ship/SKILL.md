@@ -1,13 +1,30 @@
 ---
 name: ship
-description: Prepare deploy, pull request, or release readiness. Emits Ship.Started and Ship.Completed via prodops_emit_event.
+description: Observe and orchestrate the autonomous PR flow — merge, CI, and Staging deploy. Emits Ship.Started and Ship.Completed via prodops_emit_event.
 ---
 
 # SHIP
 
-Use this skill to prepare completed work for delivery.
+Use this skill to observe and orchestrate the autonomous Pull Request flow created by Finish.
 
-For detailed Codex submission mechanics, read `references/workflow.md`.
+For detailed Ship observation mechanics, read `references/workflow.md`.
+
+## O que Ship é e NÃO é
+
+**Ship NÃO realiza deploy. Ship NÃO executa CI. Ship NÃO aprova o PR.**
+
+Ship é **orquestrador e observador**.
+
+- Quem executa aprovação, merge e workflows: **GitHub**
+- Quem executa pipelines e deploy: **GitHub Actions**
+- Ship: **observa a execução, emite eventos, reage a falhas**
+
+**Gatilho:** Pull Request criado pelo Finish.
+**Ship.Started:** emitido ao detectar o PR criado — antes de observar qualquer execução.
+**Ship.Completed:** emitido somente após merge realizado **E** deploy em Staging concluído com sucesso.
+**Ship.Completed representa:** Feature disponível em seu ambiente de Staging (efêmero por Feature/OBC).
+
+Se qualquer etapa do CI falhar: Ship detecta, interrompe progressão e reporta. Finish deve ser reaberto para investigação.
 
 ## Required input context
 
@@ -26,7 +43,7 @@ Before starting, the agent must have:
 
 ## Phase: Ship.Started
 
-**Moment**: after input context is verified, before any ship preparation work begins.
+**Moment**: after input context is verified and the PR created by Finish is detected — before observing any CI execution.
 
 Emit:
 
@@ -46,7 +63,7 @@ If the tool returns `status: error`: report the error, fix the input, do not pro
 
 ## Phase: Ship.Completed
 
-**Moment**: after all ship steps complete and PR/deploy notes are prepared — before reporting success.
+**Moment**: after PR merge is confirmed AND Staging deploy completes successfully — before reporting success.
 
 Emit using the **same `correlation-id`** as Ship.Started:
 
@@ -62,46 +79,51 @@ Emit using the **same `correlation-id`** as Ship.Started:
 }
 ```
 
-Do not emit `Ship.Completed` if security checks, quality gates, or PR preparation is incomplete.
+Do not emit `Ship.Completed` if PR merge has not occurred or Staging deploy has not completed successfully.
 
 ## Inputs
 
 - `AGENTS.md`
 - `prodops/artifacts/plans/reliability/`
 - `prodops/artifacts/trails/sessions/` (active session trail)
-- `prodops/framework/journeys/delivery/phases/finish/quality-gates.md`
-- Current branch diff and validation evidence
+- PR criado pelo Finish (número, URL, status de checks)
+
+## Ambientes
+
+| Ambiente | Tipo | Propósito |
+|---|---|---|
+| Staging | Efêmero por Feature/OBC | Validar exclusivamente a Feature em questão. Destruído após promoção. |
+| Sandbox | Compartilhado | Release Candidate. Recebe Features promovidas pelo Ship via Promote. |
+| Production | Operacional | Fora da Delivery Journey. |
+
+Ship observa o deploy para **Staging**. Sandbox e Production estão fora do escopo do Ship.
 
 ## Flow
 
-1. Confirm the change maps to the current Reliability Plan or documented
-   follow-up.
-2. Confirm the branch and diff against the intended base.
-3. Verify TDD evidence for behavior changes.
-4. Run final quality gates: format, lint, build and tests appropriate to the
-   changed files.
-5. Run security checks for secrets, unsafe config, dependency changes and
-   accidental environment leakage.
-6. Review the diff as if doing code review.
-7. Summarize changed behavior, impacted artifacts and deployment risk.
-8. Identify rollback, monitoring and operational notes when applicable.
-9. Prepare PR or deploy notes.
-10. Append shipping evidence to the Release Trail.
+1. Verificar contexto de entrada (work-item-id, iteration-id, actor, correlation-id).
+2. Detectar o PR criado pelo Finish para o work-item correto.
+3. Emitir Ship.Started.
+4. Observar execução de checks e workflows do GitHub no PR.
+5. Observar aprovação automática no PR (executada pelo GitHub conforme regras do repositório).
+6. Observar merge automático do PR (executado pelo GitHub conforme regras do repositório).
+7. Se qualquer check ou workflow falhar: detectar, interromper progressão, reportar falha. Finish deve ser reaberto.
+8. Após merge confirmado: observar acionamento do pipeline de deploy para Staging.
+9. Observar resultado do deploy em Staging.
+10. Se deploy em Staging falhar: detectar, interromper progressão, reportar falha.
+11. Após deploy em Staging concluído com sucesso: registrar evidência no Release Trail.
+12. Emitir Ship.Completed.
 
 ## Guardrails
 
-- Do not ship undocumented behavior changes.
-- Do not present missing evidence as complete.
-- Do not change business scope during ship preparation.
-- Do not include unrelated changes in the PR or deployment package.
-- Do not commit secrets, real tokens, personal credentials or local-only paths.
-- Tests must cover changed behavior or the residual test gap must be explicit.
-- Behavior changes must show TDD evidence or explain why TDD was not applicable.
-- PR or deploy notes must explain behavior, validation and risk.
+- Do not perform deploy. Deploy is executed by GitHub Actions.
+- Do not approve the PR. Approval is executed by GitHub.
+- Do not merge the PR. Merge is executed by GitHub.
+- Do not emit Ship.Completed before merge AND Staging deploy succeed.
+- If any CI step fails: stop progression. Do not proceed to Promote. Report for investigation.
+- Staging is ephemeral per Feature. Do not conflate Staging with Sandbox or Production.
 
 ## Engineering References
 
 | Reference | When to read |
 |---|---|
-| [`../references/engineering/tdd-prodops/workflow.md`](../references/engineering/tdd-prodops/workflow.md) | TDD evidence standards (what counts as red/green/refactor proof) |
-| [`../references/engineering/tdd-prodops/quality-gates.md`](../references/engineering/tdd-prodops/quality-gates.md) | Delivery gates checklist before creating a PR |
+| [`references/workflow.md`](references/workflow.md) | Ship observation mechanics — como detectar PR, observar checks, merge e deploy |
