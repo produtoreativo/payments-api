@@ -22,7 +22,7 @@ DASHBOARDS_DIR="${SCRIPT_DIR}/dashboards"
 EVIDENCE_DIR="${REPO_ROOT}/prodops/artifacts/experiments/014-diligence-tracks-delivery/evidence/executive-dashboard"
 ARTIFACTS_DIR="${REPO_ROOT}/prodops/artifacts/runtime"
 DD_SITE="${DD_SITE:-datadoghq.com}"
-VERSION="3.0.0"
+VERSION="3.1.0"
 
 # ─── credentials ────────────────────────────────────────────────────────────
 if [[ ! -f "$ENV_FILE" ]]; then
@@ -40,6 +40,16 @@ echo "site: ${DD_SITE}"
 echo ""
 
 # ─── generate dashboard JSON ─────────────────────────────────────────────────
+# Layout: free (explicit x,y,w,h)
+#
+# LINHA 1 (y=0, h=3): 4 KPIs × w=3
+# LINHA 2 (y=3, h=9): Funil(x=0,w=4) | Delivery Journey 2×4 phases w=2 each (x=4..11)
+# LINHA 3 (y=12, h=3): Diligence Status 4 phases × w=3 (x=0..11)
+# LINHA 4 (y=15, h=3): Exception Paths 4 × w=3 (x=0..11)
+#
+# Delivery phases use w=2 → readable titles (Bootstrap, Hack, etc.)
+# Diligence phases use w=3 → very readable
+# Exception paths use w=3 → very readable
 DASHBOARD_JSON=$(python3 - <<'PYEOF'
 import json
 
@@ -47,127 +57,70 @@ SVC = "$service.value"
 ENV = "$env.value"
 BASE = f"service:{SVC},env:{ENV}"
 
-# ── helpers ────────────────────────────────────────────────────────────────
-
 def qv(title, query, x, y, w, h, aggregator="sum", palette=None, unit=None, precision=0):
     req = {"q": query, "aggregator": aggregator}
     if palette:
         req["conditional_formats"] = [{"comparator": ">=", "value": 0, "palette": palette}]
-    d = {
-        "type": "query_value",
-        "title": title,
-        "precision": precision,
-        "autoscale": True,
-        "requests": [req]
-    }
+    d = {"type": "query_value", "title": title, "precision": precision,
+         "autoscale": True, "requests": [req]}
     if unit:
         d["custom_unit"] = unit
     return {"definition": d, "layout": {"x": x, "y": y, "width": w, "height": h}}
 
-def note(content, color, x, y, w, h, size="12", align="center"):
-    return {
-        "definition": {
-            "type": "note",
-            "content": content,
-            "background_color": color,
-            "font_size": size,
-            "text_align": align,
-            "vertical_align": "center",
-            "show_tick": False,
-            "tick_pos": "50%",
-            "tick_edge": "bottom"
-        },
-        "layout": {"x": x, "y": y, "width": w, "height": h}
-    }
-
 def timeseries_multi(title, series_list, x, y, w, h, display="bars"):
-    """series_list: [(query_str, display_name_or_None), ...]"""
-    requests = []
-    for q, name in series_list:
-        r = {"q": q, "display_type": display, "style": {"palette": "dog_classic", "line_type": "solid", "line_width": "normal"}}
-        requests.append(r)
-    return {
-        "definition": {
-            "type": "timeseries",
-            "title": title,
-            "requests": requests,
-            "show_legend": True,
-            "legend_layout": "vertical",
-            "legend_columns": ["avg", "sum"]
-        },
-        "layout": {"x": x, "y": y, "width": w, "height": h}
-    }
+    reqs = [{"q": q, "display_type": display,
+             "style": {"palette": "dog_classic", "line_type": "solid", "line_width": "normal"}}
+            for q, _ in series_list]
+    return {"definition": {"type": "timeseries", "title": title, "requests": reqs,
+                            "show_legend": True, "legend_layout": "vertical",
+                            "legend_columns": ["sum"]},
+            "layout": {"x": x, "y": y, "width": w, "height": h}}
+
+def note(content, color, x, y, w, h, size="12"):
+    return {"definition": {"type": "note", "content": content, "background_color": color,
+                            "font_size": size, "text_align": "center",
+                            "vertical_align": "center", "show_tick": False},
+            "layout": {"x": x, "y": y, "width": w, "height": h}}
 
 widgets = []
 
-# ═══════════════════════════════════════════════════════════════════════════
-# LINHA 1 — KPIs (y=0, h=3)
-# ═══════════════════════════════════════════════════════════════════════════
+# ═══ LINHA 1 — KPIs (y=0, h=3) ═══════════════════════════════════════════
+widgets += [
+    qv("Iteration Ativas",
+       f"sum:runtime.event.received{{event:prodops.delivery.bootstrap.started,{BASE}}}.as_count()",
+       x=0, y=0, w=3, h=3, palette="white_on_green"),
+    qv("DONE — Concluídas",
+       f"sum:runtime.event.received{{event:prodops.delivery.promote.completed,{BASE}}}.as_count()",
+       x=3, y=0, w=3, h=3, palette="white_on_green"),
+    qv("Falhas — Bloqueios",
+       f"sum:runtime.diligence.event.received{{event:prodops.diligence.block.declared,{BASE}}}.as_count()",
+       x=6, y=0, w=3, h=3, palette="white_on_red"),
+    qv("Lead Time (dias)",
+       f"avg:runtime.delivery.lead_time_days{{{BASE}}}",
+       x=9, y=0, w=3, h=3, aggregator="avg", precision=1, unit="d"),
+]
 
-widgets.append(qv(
-    "Iteration Ativas",
-    f"sum:runtime.event.received{{event:prodops.delivery.bootstrap.started,{BASE}}}.as_count()",
-    x=0, y=0, w=3, h=3,
-    aggregator="sum",
-    palette="white_on_green"
-))
+# ═══ LINHA 2 — Funil(w=4) + Delivery Journey 2×4 phases w=2 (y=3, h=9) ══
+# Funil ocupa x=0..3, h=9 (alinhado com as 2 linhas de phases + label)
+funil_series = [
+    (f"sum:runtime.event.received{{event:prodops.delivery.bootstrap.started,{BASE}}}.as_count()", "Bootstrap"),
+    (f"sum:runtime.event.received{{event:prodops.delivery.hack.started,{BASE}}}.as_count()", "Hack"),
+    (f"sum:runtime.event.received{{event:prodops.delivery.sync.started,{BASE}}}.as_count()", "Sync"),
+    (f"sum:runtime.event.received{{event:prodops.delivery.finish.started,{BASE}}}.as_count()", "Finish"),
+    (f"sum:runtime.event.received{{event:prodops.delivery.ship.started,{BASE}}}.as_count()", "Ship"),
+    (f"sum:runtime.event.received{{event:prodops.delivery.validate.started,{BASE}}}.as_count()", "Validate"),
+    (f"sum:runtime.event.received{{event:prodops.delivery.promote.started,{BASE}}}.as_count()", "Promote"),
+    (f"sum:runtime.event.received{{event:prodops.delivery.promote.completed,{BASE}}}.as_count()", "DONE"),
+]
+widgets.append(timeseries_multi("Funil de Entrega — Eventos por Stage",
+                                funil_series, x=0, y=3, w=4, h=9, display="bars"))
 
-widgets.append(qv(
-    "DONE — Concluídas",
-    f"sum:runtime.event.received{{event:prodops.delivery.promote.completed,{BASE}}}.as_count()",
-    x=3, y=0, w=3, h=3,
-    aggregator="sum",
-    palette="white_on_green"
-))
+# Label "DELIVERY JOURNEY" (x=4, w=8, h=1, y=3)
+widgets.append(note("**C — DELIVERY JOURNEY**", "vivid_orange", x=4, y=3, w=8, h=1, size="14"))
 
-widgets.append(qv(
-    "Falhas — Bloqueios",
-    f"sum:runtime.diligence.event.received{{event:prodops.diligence.block.declared,{BASE}}}.as_count()",
-    x=6, y=0, w=3, h=3,
-    aggregator="sum",
-    palette="white_on_red"
-))
-
-widgets.append(qv(
-    "Lead Time (dias)",
-    f"avg:runtime.delivery.lead_time_days{{{BASE}}}",
-    x=9, y=0, w=3, h=3,
-    aggregator="avg",
-    precision=1,
-    unit="d"
-))
-
-# ═══════════════════════════════════════════════════════════════════════════
-# LINHA 2 — FUNIL + DELIVERY JOURNEY + DILIGENCE STATUS (y=3)
-# x=0..3: Funil (w=4, h=8)
-# x=4..7: Delivery Journey label + 8 phase counters
-# x=8..11: Diligence Status label + 4 phase counters
-# ═══════════════════════════════════════════════════════════════════════════
-
-# ── Funil de Entrega (timeseries bars por event, todos os delivery events) ──
-widgets.append(timeseries_multi(
-    "Funil de Entrega — Eventos por Stage",
-    [
-        (f"sum:runtime.event.received{{event:prodops.delivery.bootstrap.started,{BASE}}}.as_count()", "Bootstrap"),
-        (f"sum:runtime.event.received{{event:prodops.delivery.hack.started,{BASE}}}.as_count()", "Hack"),
-        (f"sum:runtime.event.received{{event:prodops.delivery.sync.started,{BASE}}}.as_count()", "Sync"),
-        (f"sum:runtime.event.received{{event:prodops.delivery.finish.started,{BASE}}}.as_count()", "Finish"),
-        (f"sum:runtime.event.received{{event:prodops.delivery.ship.started,{BASE}}}.as_count()", "Ship"),
-        (f"sum:runtime.event.received{{event:prodops.delivery.validate.started,{BASE}}}.as_count()", "Validate"),
-        (f"sum:runtime.event.received{{event:prodops.delivery.promote.started,{BASE}}}.as_count()", "Promote"),
-        (f"sum:runtime.event.received{{event:prodops.delivery.promote.completed,{BASE}}}.as_count()", "DONE"),
-    ],
-    x=0, y=3, w=4, h=8,
-    display="bars"
-))
-
-# ── Delivery Journey label ──────────────────────────────────────────────────
-widgets.append(note(
-    "**DELIVERY JOURNEY**",
-    "vivid_orange", x=4, y=3, w=4, h=1, size="14"
-))
-
-# ── Delivery phase counters (8 phases, 4 per row) ──────────────────────────
+# 8 delivery phases: 2 rows of 4, w=2 each (x=4..11)
+# Row 1 (y=4, h=4): Bootstrap, Hack, Sync, Finish
+# Row 2 (y=8, h=4): Ship, Validate, Promote, DONE
 DELIVERY_PHASES = [
     ("Bootstrap", "prodops.delivery.bootstrap.started"),
     ("Hack",      "prodops.delivery.hack.started"),
@@ -178,90 +131,52 @@ DELIVERY_PHASES = [
     ("Promote",   "prodops.delivery.promote.started"),
     ("DONE ✓",    "prodops.delivery.promote.completed"),
 ]
-
 for idx, (label, event) in enumerate(DELIVERY_PHASES):
     row = idx // 4
     col = idx % 4
-    palette = "white_on_green" if label == "DONE ✓" else "white_on_yellow"
-    widgets.append(qv(
-        label,
+    palette = "white_on_green" if "DONE" in label else "white_on_yellow"
+    widgets.append(qv(label,
         f"sum:runtime.event.received{{event:{event},{BASE}}}.as_count()",
-        x=4 + col, y=4 + row * 3, w=1, h=3,
-        aggregator="sum",
-        palette=palette
-    ))
+        x=4 + col * 2, y=4 + row * 4, w=2, h=4,
+        palette=palette))
+# Column layout: x=4(w=2) + x=6(w=2) + x=8(w=2) + x=10(w=2) = 4..11 ✓
+# Row y: 4+0=4 (h=4) → 4..7; 4+4=8 (h=4) → 8..11. Funil y=3..11 ✓
 
-# ── Diligence Status label ──────────────────────────────────────────────────
-widgets.append(note(
-    "**DILIGENCE STATUS**",
-    "vivid_green", x=8, y=3, w=4, h=1, size="14"
-))
+# ═══ LINHA 3 — Diligence Status 4 phases × w=3 (y=12, h=3) ══════════════
+widgets.append(note("**D — DILIGENCE STATUS**", "vivid_green", x=0, y=12, w=12, h=1, size="14"))
 
-# ── Diligence phase counters (4 happy-path phases, 2 per row) ──────────────
 DILIGENCE_PHASES = [
     ("Capture",  "prodops.diligence.capture.completed"),
     ("Attach",   "prodops.diligence.attach.completed"),
     ("Promote",  "prodops.diligence.promote.completed"),
     ("Close ✓",  "prodops.diligence.close.completed"),
 ]
-
 for idx, (label, event) in enumerate(DILIGENCE_PHASES):
-    row = idx // 2
-    col = idx % 2
     palette = "white_on_green" if "✓" in label else "white_on_yellow"
-    widgets.append(qv(
-        label,
+    widgets.append(qv(label,
         f"sum:runtime.diligence.event.received{{event:{event},{BASE}}}.as_count()",
-        x=8 + col * 2, y=4 + row * 3, w=2, h=3,
-        aggregator="sum",
-        palette=palette
-    ))
+        x=idx * 3, y=13, w=3, h=3, palette=palette))
 
-# ═══════════════════════════════════════════════════════════════════════════
-# LINHA 3 — EXCEPTION PATHS (y=11, h=3)
-# BLOQUEIO | DRIFT | REPAIR | CLOSED
-# ═══════════════════════════════════════════════════════════════════════════
+# ═══ LINHA 4 — Exception Paths 4 × w=3 (y=16, h=3) ══════════════════════
+EXCEPTION = [
+    ("⛔ BLOQUEIO",  "prodops.diligence.block.declared",       "white_on_red"),
+    ("⚡ DRIFT",     "prodops.diligence.divergence.detected",  "white_on_orange"),
+    ("🔧 REPAIR",   "prodops.diligence.repair.completed",     "white_on_yellow"),
+    ("✅ CLOSED",   "prodops.diligence.close.completed",      "white_on_green"),
+]
+widgets.append(note("**E — EXCEPTION PATHS — BLOQUEIO · DRIFT · REPAIR · CLOSED**",
+                    "vivid_red", x=0, y=16, w=12, h=1, size="14"))
+for idx, (label, event, palette) in enumerate(EXCEPTION):
+    widgets.append(qv(label,
+        f"sum:runtime.diligence.event.received{{event:{event},{BASE}}}.as_count()",
+        x=idx * 3, y=17, w=3, h=3, palette=palette))
 
-widgets.append(qv(
-    "⛔ BLOQUEIO — Block Declarado",
-    f"sum:runtime.diligence.event.received{{event:prodops.diligence.block.declared,{BASE}}}.as_count()",
-    x=0, y=11, w=3, h=3,
-    aggregator="sum",
-    palette="white_on_red"
-))
-
-widgets.append(qv(
-    "⚡ DRIFT — Divergência Detectada",
-    f"sum:runtime.diligence.event.received{{event:prodops.diligence.divergence.detected,{BASE}}}.as_count()",
-    x=3, y=11, w=3, h=3,
-    aggregator="sum",
-    palette="white_on_orange"
-))
-
-widgets.append(qv(
-    "🔧 REPAIR — Reparo Concluído",
-    f"sum:runtime.diligence.event.received{{event:prodops.diligence.repair.completed,{BASE}}}.as_count()",
-    x=6, y=11, w=3, h=3,
-    aggregator="sum",
-    palette="white_on_yellow"
-))
-
-widgets.append(qv(
-    "✅ CLOSED — Encerrado",
-    f"sum:runtime.diligence.event.received{{event:prodops.diligence.close.completed,{BASE}}}.as_count()",
-    x=9, y=11, w=3, h=3,
-    aggregator="sum",
-    palette="white_on_green"
-))
-
-# ═══════════════════════════════════════════════════════════════════════════
-# Dashboard payload
-# ═══════════════════════════════════════════════════════════════════════════
+# ═══ Dashboard payload ═════════════════════════════════════════════════════
 dashboard = {
     "title": "ProdOps Runtime — Delivery & Diligence v3",
     "description": (
-        "v3.0.0 | Linha 1: KPIs | Linha 2: Funil + Delivery Journey phases + Diligence Status | "
-        "Linha 3: Exception Paths. Filtre por $service e $env."
+        "v3.1.0 | L1: KPIs | L2: Funil + Delivery Journey ×8 (w=2) | "
+        "L3: Diligence Status ×4 (w=3) | L4: Exception Paths. Filtre por service e env."
     ),
     "layout_type": "free",
     "tags": ["team:prodops"],
@@ -272,7 +187,6 @@ dashboard = {
         {"name": "issue",   "prefix": "issue",   "default": "*"}
     ]
 }
-
 print(json.dumps(dashboard, indent=2))
 PYEOF
 )
@@ -320,8 +234,8 @@ meta = {
     "version": "${VERSION}",
     "dashboard-id": "${DASH_ID}",
     "dashboard-url": "https://app.${DD_SITE}${DASH_URL}",
-    "title": "ProdOps Runtime — Delivery & Diligence v3",
-    "previous-dashboard-id": "d73-8be-pds",
+    "title": "ProdOps Runtime — Delivery & Diligence v3.1",
+    "previous-dashboard-id": "84w-hbn-6pn",
     "widget-count": ${WIDGET_COUNT_API:-0},
     "sections": 3,
     "created-at": "${NOW_ISO}",

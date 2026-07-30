@@ -1,5 +1,34 @@
 # Dashboard Changelog — ProdOps Runtime
 
+## v3.1.0 — 2026-07-30
+
+**Dashboard ID:** `g6i-3sn-wbx`
+
+**Arquivo:** `v3.1.0.json` (gerado por `create-v3-dashboard.sh`)
+
+**Layout:** free, 4 linhas, 24 widgets — sem widget de cabeçalho de texto
+
+**Linha 1 — KPIs (y=0, h=3):** 4 × w=3
+- Iteration Ativas | DONE — Concluídas | Falhas / Bloqueios | Lead Time (dias)
+
+**Linha 2 — Funil + Delivery Journey (y=3, h=9):**
+- Funil de Entrega timeseries bars (x=0, w=4) — alinhado com 2 linhas de phases
+- Delivery Journey: 8 phases × **w=2** (2 rows de 4 em x=4..11) — fases com título legível completo
+
+**Linha 3 — Diligence Status (y=12, h=4):** 4 × w=3 + label note
+- Capture | Attach | Promote | Close ✓
+
+**Linha 4 — Exception Paths (y=16, h=4):** 4 × w=3 + label note
+- BLOQUEIO | DRIFT | REPAIR | CLOSED
+
+**Mudanças em relação a v3.0.0:**
+- Delivery phases: `w=1` → `w=2` (títulos completos e legíveis)
+- Diligence Status: movido para linha própria (y=12), `w=3` por phase
+- Section labels: note widgets de seção adicionados (Delivery Journey, Diligence Status, Exception Paths)
+- Layout: abandonado ordered+groups (API rejeitou reflow_type=auto com grupos) → mantido free layout
+
+---
+
 ## v3.0.0 — 2026-07-30
 
 **Arquivo:** `v3.0.0.json` (gerado por `create-v3-dashboard.sh`)
