@@ -22,7 +22,7 @@ DASHBOARDS_DIR="${SCRIPT_DIR}/dashboards"
 EVIDENCE_DIR="${REPO_ROOT}/prodops/artifacts/experiments/014-diligence-tracks-delivery/evidence/executive-dashboard"
 ARTIFACTS_DIR="${REPO_ROOT}/prodops/artifacts/runtime"
 DD_SITE="${DD_SITE:-datadoghq.com}"
-VERSION="3.1.0"
+VERSION="3.2.0"
 
 # ─── credentials ────────────────────────────────────────────────────────────
 if [[ ! -f "$ENV_FILE" ]]; then
@@ -40,16 +40,16 @@ echo "site: ${DD_SITE}"
 echo ""
 
 # ─── generate dashboard JSON ─────────────────────────────────────────────────
-# Layout: free (explicit x,y,w,h)
+# Layout: free — altura mínima h=6 por widget (cada unit ≈ 15px → h=6 ≈ 90px)
 #
-# LINHA 1 (y=0, h=3): 4 KPIs × w=3
-# LINHA 2 (y=3, h=9): Funil(x=0,w=4) | Delivery Journey 2×4 phases w=2 each (x=4..11)
-# LINHA 3 (y=12, h=3): Diligence Status 4 phases × w=3 (x=0..11)
-# LINHA 4 (y=15, h=3): Exception Paths 4 × w=3 (x=0..11)
-#
-# Delivery phases use w=2 → readable titles (Bootstrap, Hack, etc.)
-# Diligence phases use w=3 → very readable
-# Exception paths use w=3 → very readable
+# y=0,  h=6  : LINHA 1 — KPIs × 4 (w=3 each)
+# y=6,  h=14 : LINHA 2 — Funil(w=4) + Delivery Journey (w=8, 2 rows × 4 phases w=2)
+#               Funil     : x=0, y=6,  w=4, h=14
+#               Label DJ  : x=4, y=6,  w=8, h=2
+#               Row 1 DJ  : x=4, y=8,  w=2, h=6  (Bootstrap/Hack/Sync/Finish)
+#               Row 2 DJ  : x=4, y=14, w=2, h=6  (Ship/Validate/Promote/DONE)
+# y=20, h=8  : LINHA 3 — Diligence Status (label h=2 + phases h=6) × 4 (w=3)
+# y=28, h=8  : LINHA 4 — Exception Paths  (label h=2 + phases h=6) × 4 (w=3)
 DASHBOARD_JSON=$(python3 - <<'PYEOF'
 import json
 
@@ -76,7 +76,7 @@ def timeseries_multi(title, series_list, x, y, w, h, display="bars"):
                             "legend_columns": ["sum"]},
             "layout": {"x": x, "y": y, "width": w, "height": h}}
 
-def note(content, color, x, y, w, h, size="12"):
+def note(content, color, x, y, w, h, size="14"):
     return {"definition": {"type": "note", "content": content, "background_color": color,
                             "font_size": size, "text_align": "center",
                             "vertical_align": "center", "show_tick": False},
@@ -84,24 +84,23 @@ def note(content, color, x, y, w, h, size="12"):
 
 widgets = []
 
-# ═══ LINHA 1 — KPIs (y=0, h=3) ═══════════════════════════════════════════
+# ═══ LINHA 1 — KPIs (y=0, h=6) ═══════════════════════════════════════════
 widgets += [
     qv("Iteration Ativas",
        f"sum:runtime.event.received{{event:prodops.delivery.bootstrap.started,{BASE}}}.as_count()",
-       x=0, y=0, w=3, h=3, palette="white_on_green"),
+       x=0, y=0, w=3, h=6, palette="white_on_green"),
     qv("DONE — Concluídas",
        f"sum:runtime.event.received{{event:prodops.delivery.promote.completed,{BASE}}}.as_count()",
-       x=3, y=0, w=3, h=3, palette="white_on_green"),
+       x=3, y=0, w=3, h=6, palette="white_on_green"),
     qv("Falhas — Bloqueios",
        f"sum:runtime.diligence.event.received{{event:prodops.diligence.block.declared,{BASE}}}.as_count()",
-       x=6, y=0, w=3, h=3, palette="white_on_red"),
+       x=6, y=0, w=3, h=6, palette="white_on_red"),
     qv("Lead Time (dias)",
        f"avg:runtime.delivery.lead_time_days{{{BASE}}}",
-       x=9, y=0, w=3, h=3, aggregator="avg", precision=1, unit="d"),
+       x=9, y=0, w=3, h=6, aggregator="avg", precision=1, unit="d"),
 ]
 
-# ═══ LINHA 2 — Funil(w=4) + Delivery Journey 2×4 phases w=2 (y=3, h=9) ══
-# Funil ocupa x=0..3, h=9 (alinhado com as 2 linhas de phases + label)
+# ═══ LINHA 2 — Funil(w=4, h=14) + Delivery Journey (y=6..19) ═════════════
 funil_series = [
     (f"sum:runtime.event.received{{event:prodops.delivery.bootstrap.started,{BASE}}}.as_count()", "Bootstrap"),
     (f"sum:runtime.event.received{{event:prodops.delivery.hack.started,{BASE}}}.as_count()", "Hack"),
@@ -112,15 +111,16 @@ funil_series = [
     (f"sum:runtime.event.received{{event:prodops.delivery.promote.started,{BASE}}}.as_count()", "Promote"),
     (f"sum:runtime.event.received{{event:prodops.delivery.promote.completed,{BASE}}}.as_count()", "DONE"),
 ]
+# Funil: y=6..19 (h=14), alinhado com label(h=2)+row1(h=6)+row2(h=6) = 14
 widgets.append(timeseries_multi("Funil de Entrega — Eventos por Stage",
-                                funil_series, x=0, y=3, w=4, h=9, display="bars"))
+                                funil_series, x=0, y=6, w=4, h=14, display="bars"))
 
-# Label "DELIVERY JOURNEY" (x=4, w=8, h=1, y=3)
-widgets.append(note("**C — DELIVERY JOURNEY**", "vivid_orange", x=4, y=3, w=8, h=1, size="14"))
+# Section label for Delivery Journey
+widgets.append(note("C — DELIVERY JOURNEY", "vivid_orange", x=4, y=6, w=8, h=2))
 
-# 8 delivery phases: 2 rows of 4, w=2 each (x=4..11)
-# Row 1 (y=4, h=4): Bootstrap, Hack, Sync, Finish
-# Row 2 (y=8, h=4): Ship, Validate, Promote, DONE
+# 8 delivery phases: 2 rows of 4, w=2 each
+# Row 1 (y=8,  h=6): Bootstrap, Hack, Sync, Finish
+# Row 2 (y=14, h=6): Ship, Validate, Promote, DONE ✓
 DELIVERY_PHASES = [
     ("Bootstrap", "prodops.delivery.bootstrap.started"),
     ("Hack",      "prodops.delivery.hack.started"),
@@ -135,16 +135,14 @@ for idx, (label, event) in enumerate(DELIVERY_PHASES):
     row = idx // 4
     col = idx % 4
     palette = "white_on_green" if "DONE" in label else "white_on_yellow"
+    # y: row0 → 8, row1 → 14  (8 + row*6)
     widgets.append(qv(label,
         f"sum:runtime.event.received{{event:{event},{BASE}}}.as_count()",
-        x=4 + col * 2, y=4 + row * 4, w=2, h=4,
-        palette=palette))
-# Column layout: x=4(w=2) + x=6(w=2) + x=8(w=2) + x=10(w=2) = 4..11 ✓
-# Row y: 4+0=4 (h=4) → 4..7; 4+4=8 (h=4) → 8..11. Funil y=3..11 ✓
+        x=4 + col * 2, y=8 + row * 6, w=2, h=6, palette=palette))
 
-# ═══ LINHA 3 — Diligence Status 4 phases × w=3 (y=12, h=3) ══════════════
-widgets.append(note("**D — DILIGENCE STATUS**", "vivid_green", x=0, y=12, w=12, h=1, size="14"))
-
+# ═══ LINHA 3 — Diligence Status (y=20, h=8) ═══════════════════════════════
+# label (h=2) + phases (h=6) = 8
+widgets.append(note("D — DILIGENCE STATUS", "vivid_green", x=0, y=20, w=12, h=2))
 DILIGENCE_PHASES = [
     ("Capture",  "prodops.diligence.capture.completed"),
     ("Attach",   "prodops.diligence.attach.completed"),
@@ -155,28 +153,29 @@ for idx, (label, event) in enumerate(DILIGENCE_PHASES):
     palette = "white_on_green" if "✓" in label else "white_on_yellow"
     widgets.append(qv(label,
         f"sum:runtime.diligence.event.received{{event:{event},{BASE}}}.as_count()",
-        x=idx * 3, y=13, w=3, h=3, palette=palette))
+        x=idx * 3, y=22, w=3, h=6, palette=palette))
 
-# ═══ LINHA 4 — Exception Paths 4 × w=3 (y=16, h=3) ══════════════════════
+# ═══ LINHA 4 — Exception Paths (y=28, h=8) ════════════════════════════════
+# label (h=2) + phases (h=6) = 8
+widgets.append(note("E — EXCEPTION PATHS — BLOQUEIO · DRIFT · REPAIR · CLOSED",
+                    "vivid_red", x=0, y=28, w=12, h=2))
 EXCEPTION = [
-    ("⛔ BLOQUEIO",  "prodops.diligence.block.declared",       "white_on_red"),
-    ("⚡ DRIFT",     "prodops.diligence.divergence.detected",  "white_on_orange"),
-    ("🔧 REPAIR",   "prodops.diligence.repair.completed",     "white_on_yellow"),
-    ("✅ CLOSED",   "prodops.diligence.close.completed",      "white_on_green"),
+    ("⛔ BLOQUEIO", "prodops.diligence.block.declared",       "white_on_red"),
+    ("⚡ DRIFT",    "prodops.diligence.divergence.detected",  "white_on_orange"),
+    ("🔧 REPAIR",  "prodops.diligence.repair.completed",     "white_on_yellow"),
+    ("✅ CLOSED",  "prodops.diligence.close.completed",      "white_on_green"),
 ]
-widgets.append(note("**E — EXCEPTION PATHS — BLOQUEIO · DRIFT · REPAIR · CLOSED**",
-                    "vivid_red", x=0, y=16, w=12, h=1, size="14"))
 for idx, (label, event, palette) in enumerate(EXCEPTION):
     widgets.append(qv(label,
         f"sum:runtime.diligence.event.received{{event:{event},{BASE}}}.as_count()",
-        x=idx * 3, y=17, w=3, h=3, palette=palette))
+        x=idx * 3, y=30, w=3, h=6, palette=palette))
 
 # ═══ Dashboard payload ═════════════════════════════════════════════════════
 dashboard = {
     "title": "ProdOps Runtime — Delivery & Diligence v3",
     "description": (
-        "v3.1.0 | L1: KPIs | L2: Funil + Delivery Journey ×8 (w=2) | "
-        "L3: Diligence Status ×4 (w=3) | L4: Exception Paths. Filtre por service e env."
+        "v3.2.0 | L1: KPIs (h=6) | L2: Funil+DeliveryJourney×8 (h=6/phase) | "
+        "L3: Diligence×4 (h=6) | L4: ExceptionPaths×4 (h=6). Filter: service, env."
     ),
     "layout_type": "free",
     "tags": ["team:prodops"],

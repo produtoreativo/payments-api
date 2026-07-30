@@ -1,5 +1,23 @@
 # Dashboard Changelog — ProdOps Runtime
 
+## v3.2.0 — 2026-07-30
+
+**Dashboard ID:** `3x5-6dn-9k4`
+
+**Arquivo:** `v3.2.0.json`
+
+**Correção:** todos os widgets reescalados para h=6 (≈90px). Anteriormente h=3 (~45px) não permitia que query_value renderizasse título + número sem compressão visual.
+
+**Heights v3.2.0:**
+- KPIs: h=6
+- Delivery phases: h=6 por phase
+- Funil: h=14 (label h=2 + row1 h=6 + row2 h=6)
+- Diligence phases: h=6 (+ label h=2)
+- Exception phases: h=6 (+ label h=2)
+- Total altura: y=0..36 (≈540px)
+
+---
+
 ## v3.1.0 — 2026-07-30
 
 **Dashboard ID:** `g6i-3sn-wbx`
