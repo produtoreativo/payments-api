@@ -526,11 +526,11 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ## Flow (Product Dimension)
 
-**Definição:** A dimensão comportamental da Product Topology. Descreve as jornadas, os processos, os eventos, as regras de negócio, os estados, os fluxos e as automações que definem como o produto se comporta.
+**Definição:** A dimensão temporal da Product Topology. Descreve como as demais Product Dimensions (Team, Data, Components) evoluem ao longo das jornadas do Framework — Discovery, Delivery, Operation e Diligence.
 
-**Quando um OBC impacta esta dimensão:** Quando a entrega cria novos fluxos de negócio, novos estados de transação, novas regras de validação ou novas automações no produto.
+**Quando um OBC impacta esta dimensão:** Sempre — todo OBC, ao ser entregue, transita pelas jornadas do Framework. Flow registra esse trânsito: quando o OBC nasceu (Discovery), foi implementado (Delivery), entrou em produção (Operation) e foi validado (Diligence).
 
-**Distinção crítica:** Não confundir com as jornadas do Framework (Discovery, Delivery, Operation…) — que são o *processo de trabalho* do time. A Product Dimension "Flow" descreve o *comportamento do produto* que clientes e sistemas experimentam.
+**Distinção crítica:** Flow não é comportamento funcional do produto. Não descreve fluxos de negócio, processos, regras de negócio, estados de máquina ou automações. Flow é o eixo temporal da Product Topology — descreve *quando* e *como* as dimensões evoluem, não *o que* o produto faz.
 
 **Relação com outros conceitos:** Uma das quatro Product Dimensions. Ver [`product-topology.md`](product-topology.md).
 

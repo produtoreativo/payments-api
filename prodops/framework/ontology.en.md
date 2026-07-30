@@ -236,7 +236,7 @@ These groups are organized by where Capabilities were originally defined, not by
 | Dimension | What it describes |
 |---|---|
 | **Team** | Organizational dimension: ownership, responsibilities, capabilities, roles, governance, and operational model |
-| **Flow** | Behavioral dimension: journeys, processes, events, business rules, states, flows, and automations |
+| **Flow** | Temporal dimension: how Team, Data, and Components evolve across the Framework journeys (Discovery, Delivery, Operation, Diligence) |
 | **Data** | Informational dimension: entities, data contracts, schemas, persistence, domain events, and APIs |
 | **Components** | Physical dimension: services, databases, queues, pipelines, infrastructure, and repositories |
 
