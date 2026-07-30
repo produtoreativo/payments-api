@@ -28,6 +28,7 @@ This directory contains the canonical ProdOps Framework documentation. The conte
 | [obc.en.md](obc.en.md) | Observable Business Contract — Global OBC, Local OBC, OBC Partitioning |
 | [artifact-governance.en.md](artifact-governance.en.md) | Artifact governance |
 | [origin-streams.en.md](origin-streams.en.md) | The four Intent origins |
+| [product-topology.en.md](product-topology.en.md) | Product Topology — the four permanent structural dimensions of the product |
 | [product-stages.en.md](product-stages.en.md) | Product stages (PoC→MLP) |
 | [dora-metrics.en.md](dora-metrics.en.md) | Extended DORA metrics |
 
