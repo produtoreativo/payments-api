@@ -223,8 +223,11 @@ export class InvoiceService {
       const errorType = message.includes('provider_contract_violation')
         ? 'provider_contract_violation'
         : 'provider_error';
+      const terminalStatus = this.isRetryableProviderError(message)
+        ? 'PROVIDER_PENDING'
+        : 'FAILED';
 
-      await this.repository.updateInvoice(pendingInvoice, 'FAILED', {
+      await this.repository.updateInvoice(pendingInvoice, terminalStatus, {
         failureReason: message,
       });
 
