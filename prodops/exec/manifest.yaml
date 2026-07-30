@@ -67,8 +67,10 @@ gates:
     expect: exit0
   no_mocks:
     # fonte: prodops/skills/hack/references/workflow.md (No Mocks Rule)
-    grep: ["jest.fn(", ".mockReturnValue(", ".overrideProvider(", "jest.mock("]
-    in: [api/src, api/test]
+    # Aplica-se apenas a api/test/ (testes de aceitação devem usar implementações reais).
+    # Unit tests em api/src/**/*.spec.ts podem usar jest.fn() para isolar dependências injetadas.
+    grep: ["jest.fn(", ".mockReturnValue(", ".overrideProvider(", "jest.mock(", ".mockRejectedValue(", ".mockResolvedValue(", ".mockImplementation("]
+    in: [api/test]
     expect: zero_hits
   smoke:
     # descritivo — mecânica em prodops/skills/local/payments-api-local-testing/

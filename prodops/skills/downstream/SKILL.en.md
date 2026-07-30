@@ -1,21 +1,67 @@
 ---
 name: downstream
-description: Guide committed work to readiness and execute CI Sync, CI Async, or the full governed ProdOps delivery flow.
+description: Orchestrates the governed ProdOps delivery flow. Without arguments, reads the Iteration Plan and executes Entrou items in priority order. With a Downstream ID, executes only that item.
 ---
 
 # DOWNSTREAM
 
-Downstream is the complete, governed execution mode. Commitment may be declared before every prerequisite exists; the orchestrator must guide the item toward readiness and stop at each missing gate. It must never bypass or invent a prerequisite.
+Downstream is the commitment mode of the ProdOps Framework. Every delivery must pass through readiness gates and the CI Sync and CI Async cycles. The orchestrator never bypasses prerequisites or invents artifacts.
+
+## Downstream ID
+
+Each Downstream item has a **Downstream ID** — the canonical identifier used by the skill and by humans to reference a specific item. The Downstream ID is composed of the GitHub Issue number associated with the capability:
+
+```
+DS-<issue-number>
+```
+
+Examples: `DS-40` (create-invoice-boleto), `DS-76` (create-invoice-pix).
+
+The Downstream ID is resolved by `/readiness` during the readiness gate and recorded in the `context.md`. Humans can use it directly in the commands below.
 
 ## Commands
 
 | Command | Scope |
 |---|---|
-| `/downstream ci-sync <capability>` | Readiness → Bootstrap → Hack → Sync → Finish |
-| `/downstream ci-async <capability>` | Readiness and CI Sync evidence check → Ship → Validate → Promote |
-| `/downstream full <capability>` | Readiness → CI Sync → CI Async |
+| `/downstream` | Reads the Iteration Plan, lists `Entrou` items in priority order and executes CI Sync one by one |
+| `/downstream <DS-ID>` | Executes CI Sync only for the item with that Downstream ID (e.g. `/downstream DS-40`) |
+| `/downstream ci-sync <DS-ID or capability>` | Readiness → Bootstrap → Hack → Sync → Finish for the given item |
+| `/downstream ci-async <DS-ID or capability>` | Verify CI Sync evidence → Ship → Validate → Promote |
+| `/downstream full <DS-ID or capability>` | Full CI Sync → Full CI Async |
+| `/readiness <capability>` | Verify prerequisites and generate context capsule — does not start implementation |
 
-Until CI Async automation is complete, `/downstream` without a scope defaults to `ci-sync` and must report that choice explicitly.
+Use `/readiness` when you want to verify gates and prepare the context capsule without starting implementation. Use `/downstream <DS-ID>` when ready to begin Bootstrap and Hack for a specific item.
+
+## No-argument mode — `/downstream`
+
+When invoked without arguments:
+
+1. Read `prodops/artifacts/plans/iteration-plan.md`.
+2. Collect all items with status `Entrou` from the "Iteration Plan recomendado" table.
+3. Present the execution queue in the order they appear in the Iteration Plan (PM/PO priority order):
+
+```
+Downstream Queue — Active Iteration Plan
+─────────────────────────────────────────
+1. DS-40  create-invoice-boleto
+...
+```
+
+4. For each item in the queue, in order, without requesting confirmation between them:
+   a. Run `/readiness <capability>` — if it fails, report blockers and **stop the entire queue**.
+   b. Execute CI Sync: Bootstrap → Hack → Sync → Finish.
+   c. Report evidence for the completed item and automatically advance to the next.
+
+Stop only when: (1) a readiness check fails, (2) a quality gate does not pass, (3) the queue is exhausted.
+
+## Downstream ID mode — `/downstream DS-<n>`
+
+When invoked with a Downstream ID:
+
+1. Resolve the capability from the issue number (`DS-40` → issue #40 → `create-invoice-boleto`).
+2. Verify the item appears in the Iteration Plan with status `Entrou`.
+3. Run `/readiness <capability>`.
+4. If Ready: confirm with the user and execute CI Sync.
 
 ## Readiness gate
 
@@ -24,10 +70,10 @@ Before executing either cycle, evaluate the capability against all current Downs
 1. OBC committed in `prodops/artifacts/obcs/`.
 2. BDD Feature committed in `prodops/artifacts/bdd/`.
 3. Risks documented in `prodops/artifacts/risks/risks.md`.
-4. Item committed in the Iteration Plan with status `In`.
-5. *(Recommended)* Reliability Plan produced by the parallel Assessment journey in `prodops/artifacts/plans/reliability/`. Not a hard gate — but if it exists, review it before confirming readiness. Strongly recommended for items with operational or reliability risk.
+4. Item in the Iteration Plan with status `Entrou`.
+5. Reliability Plan (when there is money movement, an external integration, an SLO change, high/critical risk, or a persistence or security change).
 
-If any mandatory prerequisite (1–4) is missing, stop before execution, identify the owning journey or artifact, and state the next action. Re-run readiness after the gap is resolved.
+Treat commitment as **Downstream Declared** while any prerequisite is missing. Mark **Downstream Ready** only after every applicable gate passes. **Delivery Started** begins only when Bootstrap starts.
 
 When all prerequisites exist, generate `prodops/exec/cards/<card-slug>/context.md` from `prodops/templates/delivery/context-capsule.md`. The capsule is generated by Downstream readiness, not Bootstrap.
 
@@ -40,8 +86,8 @@ When all prerequisites exist, generate `prodops/exec/cards/<card-slug>/context.m
 
 ## CI Async
 
-1. Confirm successful CI Sync evidence exists.
-2. **Ship** — build, publish and deploy according to the current release policy.
+1. Confirm successful CI Sync evidence exists and was approved.
+2. **Ship** — build, publish and deploy according to the current release policy. Trigger `staging-deploy.yml` via `gh workflow run` and wait for completion before Validate.
 3. **Validate** — validate BDD, OBC, observability, SLOs and risks in the target environment.
 4. **Promote** — apply promotion gates and append evidence to the Release Trail.
 
@@ -54,3 +100,14 @@ When all prerequisites exist, generate `prodops/exec/cards/<card-slug>/context.m
 - Do not ship work supported only by Upstream evidence.
 - Do not skip quality gates without an explicit recorded decision and risk acceptance.
 - Do not promote unresolved high-risk items without explicit acceptance.
+- Do not create GitHub Issues or PRs without declaring artifact_type, artifact_id, operation, and journey.
+- In no-argument mode, stop only on readiness failure or gate failure — never wait for confirmation between items.
+- Use the canonical Work Item title pattern: `[Artifact ID]: description`.
+
+## References
+
+→ [Readiness SKILL.md](../readiness/SKILL.md)
+→ [Execution Mapping](../../framework/execution-mapping/README.md)
+→ [Work Item Schema](../../framework/execution-mapping/work-item-schema.md)
+→ [Mapping Matrix](../../framework/execution-mapping/matrix.md)
+→ [Iteration Plan](../../artifacts/plans/iteration-plan.md)

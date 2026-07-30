@@ -82,8 +82,8 @@ PAYLOAD=$(jq -n \
       tags: [
         ("issue:" + $issue),
         ("event:" + $event),
-        ("state:" + $state),
-        ("correlation-id:" + $correlation_id),
+        ("delivery-state:" + $state),
+        ("delivery-correlation-id:" + $correlation_id),
         ("service:" + $service),
         ("env:" + $env),
         "runtime:prodops"
