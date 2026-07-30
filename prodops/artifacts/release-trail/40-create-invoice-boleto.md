@@ -114,6 +114,46 @@ No new event names added. Events `payment.boleto.created`, `payment.boleto.creat
 
 ---
 
+## Finish Phase Evidence (re-evaluation 2026-07-30)
+
+**Correlation-ID (Finish):** b130e7a2-7d67-4b82-9292-bfc532661229  
+**Finish.Started event-id:** a65ee9c5-f151-45de-84ff-165072f8beb3  
+**PR:** https://github.com/produtoreativo/payments-api/pull/87 (OPEN)
+
+### Quality Gates Re-verified
+
+| Gate | Result | Detail |
+|---|---|---|
+| lint | PASS (exit 0) | 0 errors, 15 warnings pre-existing in unrelated test files |
+| no_mocks (api/test/) | PASS (0 hits) | Zero forbidden mock patterns in api/test/ |
+| acceptance | PASS (exit 0) | 5 suites, 36 tests — criar-invoice-boleto.e2e-spec.ts all 6 scenarios green |
+| build | PASS (exit 0) | nest build succeeded |
+
+### BDD Scenario Coverage
+
+| # | Scenario | Test Location | Result |
+|---|---|---|---|
+| 1 | Criar boleto com sucesso para cliente já vinculado | e2e | PASS |
+| 2 | Criar cliente Asaas antes do boleto quando não houver vínculo | e2e | PASS |
+| 3 | Rejeitar boleto com data de vencimento no passado | e2e | PASS |
+| 4 | Rejeitar boleto sem data de vencimento | e2e | PASS |
+| 5 | Evitar duplicidade em retentativa do ecommerce | e2e | PASS |
+| 6 | Rejeitar provedor não habilitado | e2e | PASS |
+| 7 | Falha transiente ao criar boleto no provedor | unit (api/src) | PASS |
+| 8 | Falha de validação retornada pelo provedor | unit (api/src) | PASS |
+
+### OBC Success Criteria
+
+| Criterion | Evaluation |
+|---|---|
+| Boletos criados com bankSlipUrl: 99.9% | assertProviderChargeContract enforces presence; scenario 1 verifies in response — MET |
+| dueDate no passado rejeitada: 100% | Scenarios 3 and 4 verify 400 before provider call — MET |
+| Idempotência com Idempotency-Key: 100% | Scenario 5 verifies same invoice on retry — MET |
+| bankSlipUrl/identificationField não em logs: 100% | Security gate confirmed; not in emitObservable or error responses — MET |
+| Invoice OPEN retornada ao Checkout: 100% | Scenarios 1 and 2 confirm status OPEN — MET |
+
+---
+
 ## Summary
 
 DS-40 TDD cycle complete. All 8 BDD scenarios covered:
@@ -125,3 +165,57 @@ Risks mitigated:
 - B2: `dueDate` validated as future (>= D+1) before provider call
 - B3: status OPEN correct; webhook delivers confirmation asynchronously
 - B4: fields added to `ProviderChargeResponse`, `InvoiceRecord`, `InvoiceResponseDto`
+
+---
+
+## CI Async — Ship / Validate / Promote (2026-07-30)
+
+### Ship
+
+| Phase | Event-ID | Status |
+|---|---|---|
+| Ship.Started | c65822ff-57ee-4574-a198-65788c88f603 | accepted |
+| Ship.Completed | a23f4af0-3fc4-4f77-9a8f-b5937c694435 | accepted |
+
+CI fixes shipped alongside DS-40 delivery (pre-existing bugs):
+- `fix(ci): scope no_mocks gate to api/test only per manifest canonical policy` (f19f7eb)
+- `fix(ci): add sam build step to staging-deploy.yml before sam deploy` (f0b89db)
+
+Staging deploy run: https://github.com/produtoreativo/payments-api/actions/runs/30558335602
+
+| Job | Result |
+|---|---|
+| Lint and Test (LocalStack DynamoDB) | success |
+| Deploy — Real AWS Infrastructure (Staging) | success |
+| Smoke Test — Live Staging Endpoint | success |
+
+### Validate
+
+| Phase | Event-ID | Status |
+|---|---|---|
+| Validate.Started | 08e688e4-51fe-411e-8dcc-e3246fb80ea1 | accepted |
+| Shared.Gate.Passed | 41b5136e-61f7-4962-ad28-b5c71bc14816 | accepted |
+| Validate.Completed | 0abc7be6-350f-46df-918f-cb8bf3fdc04a | accepted |
+
+Evidence:
+- 8/8 BDD scenarios passing in CI acceptance gate
+- All PR CI checks green: acceptance, build, lint, no_mocks, prodops_consistency, CodeQL
+- Staging smoke: auth guard returns 401 on POST /invoices and DELETE /invoices/:id
+- OBC criteria: all 5 met (bankSlipUrl enforced, dueDate validated, idempotency, no-log policy, OPEN status)
+- Risks B1-B4: all mitigated in implementation
+
+diligence.attach dispatched on Validate.Completed.
+
+### Promote
+
+| Phase | Event-ID | Status |
+|---|---|---|
+| Promote.Started | 3d83c1b2-a498-4b95-900a-b5a81b3299f2 | accepted |
+
+Promotion decision: **Promover**
+
+- All required evidence present and verified.
+- No unresolved high-risk items.
+- Staging deploy successful.
+- PR #87 ready for merge: https://github.com/produtoreativo/payments-api/pull/87
+

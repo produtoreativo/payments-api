@@ -1,10 +1,10 @@
 {
   "issue": "40",
-  "state": "SYNCING",
-  "last-event-type": "prodops.delivery.sync.started",
-  "runtime-correlation-id": "6062d315-6bb8-4f92-bc9b-0c63c384c35c",
+  "state": "DONE",
+  "last-event-type": "prodops.delivery.promote.completed",
+  "runtime-correlation-id": "74c77616-f9d5-46f3-bd71-9c59e58e0d5e",
   "runtime-version": "0.3.0",
   "framework-version": "1.0.0",
   "schema-version": "1",
-  "computed-at": "2026-07-30T15:27:02Z"
+  "computed-at": "2026-07-30T15:56:47Z"
 }
