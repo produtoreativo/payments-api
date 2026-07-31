@@ -22,6 +22,8 @@ export class ApiTokenService {
 
     const record = await this.tokenRepository.validate(rawToken);
     if (!record) return null;
+    // Return the entry including revoked state so the guard can emit the
+    // correct rejection reason (token_revoked vs token_invalid).
     return {
       tokenId: record.tokenId,
       tenantId: record.tenantId,

@@ -58,7 +58,6 @@ export class TokenRepository {
       'METADATA',
     );
     if (!item) return null;
-    if (item.revoked === true) return null;
     return {
       tokenId: item.tokenId as string,
       tenantId: item.tenantId as string,

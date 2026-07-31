@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { INestApplication } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { TokenRepository } from '../src/modules/auth/token.repository';
@@ -9,20 +10,54 @@ import {
   teardownFixture,
   TestFixture,
   truncateAllTables,
+  WEBHOOK_SECRET,
 } from './support/app-fixture';
 
 const ADMIN_SECRET = 'test-admin-secret';
 const TENANT_ID = 'tenant-token-tests';
 
+function captureEvents(emitter: EventEmitter2): {
+  collected: Record<string, unknown>[];
+  stop: () => void;
+} {
+  const collected: Record<string, unknown>[] = [];
+  const listener = (e: Record<string, unknown>) => collected.push(e);
+  emitter.on('payments.observability', listener);
+  return {
+    collected,
+    stop: () => emitter.off('payments.observability', listener),
+  };
+}
+
 describe('API Token Management (acceptance)', () => {
   let fixture: TestFixture;
   let app: INestApplication<App>;
   let tokenRepository: TokenRepository;
+  let eventEmitter: EventEmitter2;
+
+  const invoicePayload = {
+    tenantId: TENANT_ID,
+    orderId: 'ORDER-TOKEN-001',
+    customer: {
+      id: 'customer-token-test',
+      name: 'João Token',
+      document: '98765432100',
+      email: 'joao@example.com',
+      mobilePhone: '11912345678',
+    },
+    amount: 99.9,
+    currency: 'BRL',
+    dueDate: '2027-01-31',
+    billingType: 'PIX',
+    provider: 'ASAAS',
+    description: 'Pedido TOKEN-001',
+  };
 
   beforeAll(async () => {
     fixture = await buildTestFixture();
     app = fixture.app;
     tokenRepository = app.get(TokenRepository);
+    eventEmitter = app.get(EventEmitter2);
   });
 
   afterAll(async () => {
@@ -104,24 +139,6 @@ describe('API Token Management (acceptance)', () => {
   });
 
   describe('Autenticacao via token DB', () => {
-    const invoicePayload = {
-      tenantId: TENANT_ID,
-      orderId: 'ORDER-TOKEN-001',
-      customer: {
-        id: 'customer-token-test',
-        name: 'João Token',
-        document: '98765432100',
-        email: 'joao@example.com',
-        mobilePhone: '11912345678',
-      },
-      amount: 99.9,
-      currency: 'BRL',
-      dueDate: '2027-01-31',
-      billingType: 'PIX',
-      provider: 'ASAAS',
-      description: 'Pedido TOKEN-001',
-    };
-
     it('sem token retorna 401', async () => {
       await request(app.getHttpServer())
         .post('/invoices')
@@ -175,6 +192,126 @@ describe('API Token Management (acceptance)', () => {
         .expect(201);
 
       delete process.env.API_TOKEN_LOCAL;
+    });
+  });
+
+  describe('Eventos de observabilidade (BDD: reasons por cenario)', () => {
+    it('token ausente emite api.token.rejected com reason token_missing', async () => {
+      const { collected, stop } = captureEvents(eventEmitter);
+
+      await request(app.getHttpServer())
+        .post('/invoices')
+        .send(invoicePayload)
+        .expect(401);
+
+      stop();
+
+      const evt = collected.find(
+        (e) => e['event_key'] === 'api.token.rejected',
+      );
+      expect(evt).toBeDefined();
+      expect(evt!['reason']).toBe('token_missing');
+    });
+
+    it('token invalido emite api.token.rejected com reason token_invalid', async () => {
+      const { collected, stop } = captureEvents(eventEmitter);
+
+      await request(app.getHttpServer())
+        .post('/invoices')
+        .set('x-api-token', 'not-a-real-token-value')
+        .send(invoicePayload)
+        .expect(401);
+
+      stop();
+
+      const evt = collected.find(
+        (e) => e['event_key'] === 'api.token.rejected',
+      );
+      expect(evt).toBeDefined();
+      expect(evt!['reason']).toBe('token_invalid');
+    });
+
+    it('token revogado emite api.token.rejected com reason token_revoked', async () => {
+      const { rawToken, tokenId } = await tokenRepository.create(TENANT_ID);
+      await tokenRepository.revoke(TENANT_ID, tokenId);
+
+      const { collected, stop } = captureEvents(eventEmitter);
+
+      await request(app.getHttpServer())
+        .post('/invoices')
+        .set('x-api-token', rawToken)
+        .send(invoicePayload)
+        .expect(401);
+
+      stop();
+
+      const evt = collected.find(
+        (e) => e['event_key'] === 'api.token.rejected',
+      );
+      expect(evt).toBeDefined();
+      expect(evt!['reason']).toBe('token_revoked');
+      expect(evt!['tokenId']).toBeDefined();
+    });
+
+    it('token valido emite api.token.validated com tenantId e tokenId', async () => {
+      const { rawToken } = await tokenRepository.create(TENANT_ID);
+
+      const { collected, stop } = captureEvents(eventEmitter);
+
+      await request(app.getHttpServer())
+        .post('/invoices')
+        .set('x-api-token', rawToken)
+        .set('Idempotency-Key', 'event-valid-001')
+        .send(invoicePayload)
+        .expect(201);
+
+      stop();
+
+      const evt = collected.find(
+        (e) => e['event_key'] === 'api.token.validated',
+      );
+      expect(evt).toBeDefined();
+      expect(evt!['tenantId']).toBe(TENANT_ID);
+      expect(evt!['tokenId']).toBeDefined();
+      expect(evt!['correlationId']).toBeDefined();
+    });
+  });
+
+  describe('Rota de webhook do provedor isenta de API Token (BDD cenario 6)', () => {
+    it('POST /webhook/payments aceita requisicao sem X-Api-Token', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/webhook/payments')
+        .set('asaas-access-token', WEBHOOK_SECRET)
+        .send({
+          event: 'PAYMENT_CONFIRMED',
+          payment: { id: 'pay_exempt_test' },
+        });
+
+      expect(res.status).not.toBe(401);
+    });
+  });
+
+  describe('Token nao aparece em logs ou respostas de erro (BDD cenario 7)', () => {
+    it('token invalido nao aparece no body da resposta 401', async () => {
+      const secretRawToken = 'super-secret-raw-token-must-not-leak-abc123';
+
+      const res = await request(app.getHttpServer())
+        .post('/invoices')
+        .set('x-api-token', secretRawToken)
+        .send(invoicePayload)
+        .expect(401);
+
+      expect(JSON.stringify(res.body)).not.toContain(secretRawToken);
+    });
+
+    it('token ausente nao expoe nenhum valor de token no body da resposta', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/invoices')
+        .send(invoicePayload)
+        .expect(401);
+
+      expect(res.body).not.toHaveProperty('token');
+      expect(res.body).not.toHaveProperty('rawToken');
     });
   });
 });
