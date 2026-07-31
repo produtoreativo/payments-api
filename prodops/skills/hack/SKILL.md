@@ -45,12 +45,15 @@ criteria.
 1. `prodops/skills/prodops-emit-event/SKILL.md` has been read and the agent
    understands how to invoke the tool.
 2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
-3. `Bootstrap.Completed` is present in the timeline for this `work-item-id`.
 
 ## Phase: Hack.Started
 
-**Moment**: after input context and preconditions are verified, before any
-implementation work begins.
+**Moment**: immediately after the input context (`work-item-id`, `iteration-id`,
+`correlation-id`, `actor`) is available — before reading the OBC, before
+checking the timeline, before any precondition verification or implementation
+work begins. Reading the OBC, verifying `Bootstrap.Completed`, loading the BDD
+Feature, and all implementation work are Hack's own execution cost and must be
+measured inside the Hack window.
 
 Emit:
 

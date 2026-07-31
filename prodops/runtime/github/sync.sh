@@ -132,7 +132,7 @@ if [[ -z "$STATE_FIELD_ID" ]]; then
     --owner "$OWNER" \
     --name "$STATE_FIELD_NAME" \
     --data-type "SINGLE_SELECT" \
-    --single-select-options "BOOTSTRAPPING,HACKING,SYNCING,FINISHING,SHIPPING,VALIDATING,PROMOTING,DONE,BLOCKED,REWORKING" \
+    --single-select-options "PENDING,BOOTSTRAPPING,HACKING,SYNCING,FINISHING,SHIPPING,VALIDATING,PROMOTING,DONE,BLOCKED,REWORKING" \
     2>&1 | tee -a "$LOG_FILE" || true
   refresh_fields
   STATE_FIELD_ID=$(echo "$FIELDS_JSON" | jq -r --arg n "$STATE_FIELD_NAME" \
