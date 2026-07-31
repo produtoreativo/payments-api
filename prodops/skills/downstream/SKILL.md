@@ -108,6 +108,46 @@ O `correlation-id` gerado aqui é o correlation-id do flow inteiro — propagado
 3. **Validate** — validar BDD, OBC, observabilidade, SLOs e riscos no ambiente alvo.
 4. **Promote** — aplicar gates de aprovação e registrar no Release Trail.
 
+## Protocolo de exceção — bloqueios
+
+Quando uma fase não pode avançar (permissão negada, gate falhou, timeout, bloqueio externo):
+
+1. Emitir `Delivery.Block.Declared` **antes de parar**, registrando o motivo no payload:
+
+```json
+{
+  "event": "Delivery.Block.Declared",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "downstream-agent" },
+  "payload": {}
+}
+```
+
+Isso seta `oem-state = BLOCKED` no GitHub Project e aciona automaticamente o Diligence Sync (`diligence.capture`) via dispatcher.
+
+2. Reportar o bloqueio ao caller com: fase em que ocorreu, motivo, e ação necessária para resolução.
+
+Quando o bloqueio é resolvido e o flow retoma:
+
+3. Emitir `Delivery.Block.Resolved` **antes de continuar**, usando o mesmo `correlation-id`:
+
+```json
+{
+  "event": "Delivery.Block.Resolved",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "downstream-agent" },
+  "payload": {}
+}
+```
+
+Isso seta `oem-state = PENDING` e permite que o Bootstrap inicie novamente.
+
 ## Guardrails
 
 - Não iniciar uma fase de Delivery enquanto o readiness estiver incompleto.
@@ -120,6 +160,7 @@ O `correlation-id` gerado aqui é o correlation-id do flow inteiro — propagado
 - Não criar GitHub Issues ou PRs sem declarar artifact_type, artifact_id, operation e journey.
 - No modo sem argumentos, parar apenas em falha de readiness ou falha de gate — nunca aguardar confirmação entre itens.
 - Usar o padrão canônico de título de Work Item: `[Artifact ID]: descrição`.
+- Nunca parar silenciosamente — todo bloqueio deve emitir `Delivery.Block.Declared` antes de reportar ao caller.
 
 ## Referências
 

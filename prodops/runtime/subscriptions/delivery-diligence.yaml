@@ -17,6 +17,9 @@ subscriptions:
   prodops.delivery.bootstrap.completed:
     - diligence.capture
 
+  prodops.delivery.block.declared:
+    - diligence.capture    # Diligence Sync reacts to delivery blocks automatically
+
   prodops.delivery.validate.completed:
     - diligence.attach
 

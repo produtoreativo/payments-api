@@ -307,6 +307,26 @@ events:
     phase: Completed
     alters-state: false
 
+  Delivery.Block.Declared:
+    cloud-event-type: prodops.delivery.block.declared
+    description: A blocking condition prevented a Delivery phase from advancing; oem-state set to BLOCKED and Diligence Sync is triggered automatically
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/block/declared/v1.0.0
+    journey: Delivery
+    cycle: Block
+    phase: Declared
+    alters-state: true
+    new-state: BLOCKED
+
+  Delivery.Block.Resolved:
+    cloud-event-type: prodops.delivery.block.resolved
+    description: The blocking condition was resolved; oem-state returns to PENDING so the flow can restart from Bootstrap
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/block/resolved/v1.0.0
+    journey: Delivery
+    cycle: Block
+    phase: Resolved
+    alters-state: true
+    new-state: PENDING
+
   Delivery.Restart.Requested:
     cloud-event-type: prodops.delivery.restart.requested
     description: A controlled, non-destructive restart of the Delivery Journey was requested; Timeline preserved, new correlation-id assigned
