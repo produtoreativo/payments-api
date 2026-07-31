@@ -6,6 +6,7 @@
       "Bash(gh workflow run release.yml*)",
       "Bash(gh pr create --base master*)",
       "Bash(gh issue close *)",
+      "Bash(gh issue reopen *)",
       "Read",
       "WebSearch",
       "WebFetch",
