@@ -34,12 +34,24 @@ export class ApiTokenGuard implements CanActivate {
     }
 
     const entry = await this.apiTokenService.validate(rawToken);
+
     if (!entry) {
       this.emitRejected({
         correlationId,
         path,
         method,
         reason: 'token_invalid',
+      });
+      throw new UnauthorizedException('Invalid or revoked API token');
+    }
+
+    if (entry.revoked) {
+      this.emitRejected({
+        correlationId,
+        path,
+        method,
+        reason: 'token_revoked',
+        tokenId: entry.tokenId,
       });
       throw new UnauthorizedException('Invalid or revoked API token');
     }
