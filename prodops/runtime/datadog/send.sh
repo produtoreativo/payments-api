@@ -59,7 +59,17 @@ done
 log() { echo "[$(date -u +"%Y-%m-%dT%H:%M:%SZ")] $*" | tee -a "$LOG_FILE"; }
 
 CORR="${CORRELATION_ID:-no-correlation-id}"
-log "Sending metric — runtime.event.received | issue=${ISSUE} event=${EVENT} state=${STATE} correlation-id=${CORR}"
+
+# Determine metric name based on event journey prefix:
+#   prodops.diligence.* → runtime.diligence.event.received
+#   prodops.delivery.*  → runtime.event.received
+if [[ "$EVENT" == prodops.diligence.* ]]; then
+  METRIC="runtime.diligence.event.received"
+else
+  METRIC="runtime.event.received"
+fi
+
+log "Sending metric — ${METRIC} | issue=${ISSUE} event=${EVENT} state=${STATE} correlation-id=${CORR}"
 
 if [[ -z "${DD_API_KEY:-}" ]]; then
   log "ERROR: DD_API_KEY is not set"
@@ -70,6 +80,7 @@ NOW=$(date +%s)
 
 PAYLOAD=$(jq -n \
   --argjson now "$NOW" \
+  --arg metric         "$METRIC" \
   --arg issue          "$ISSUE" \
   --arg event          "$EVENT" \
   --arg state          "$STATE" \
@@ -78,7 +89,7 @@ PAYLOAD=$(jq -n \
   --arg env            "$DD_ENV_VALUE" \
   '{
     series: [{
-      metric: "runtime.event.received",
+      metric: $metric,
       type: 1,
       points: [{ timestamp: $now, value: 1 }],
       tags: [
@@ -101,7 +112,7 @@ HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
 
 if [[ "$HTTP_STATUS" == "202" ]]; then
   log "Datadog accepted metric — HTTP ${HTTP_STATUS}"
-  log "Visualize: Metrics Explorer → metric: runtime.event.received → filter: issue:${ISSUE}"
+  log "Visualize: Metrics Explorer → metric: ${METRIC} → filter: issue:${ISSUE}"
 else
   log "ERROR: Datadog returned HTTP ${HTTP_STATUS}"
   log "Payload: $PAYLOAD"

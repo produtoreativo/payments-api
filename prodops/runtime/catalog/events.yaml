@@ -1,6 +1,16 @@
 catalog-version: "1"
 
 events:
+  Delivery.Plan.Entered:
+    cloud-event-type: prodops.delivery.plan.entered
+    description: Marks that a Feature passed the Downstream readiness gate and entered the Iteration Plan; sets state to PENDING until Bootstrap begins
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/plan/entered/v1.0.0
+    journey: Delivery
+    cycle: Plan
+    phase: Entered
+    alters-state: true
+    new-state: PENDING
+
   Delivery.Bootstrap.Started:
     cloud-event-type: prodops.delivery.bootstrap.started
     description: Marks the beginning of the Bootstrap cycle for a Feature in the Delivery Journey

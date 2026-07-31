@@ -110,7 +110,7 @@ describe('InvoiceService — Falhas de provedor Boleto', () => {
   });
 
   describe('Cenário 7: Falha transiente ao criar boleto no provedor', () => {
-    it('marca invoice como FAILED e lança ServiceUnavailableException', async () => {
+    it('marca invoice como PROVIDER_PENDING e lança ServiceUnavailableException', async () => {
       asaas.createCharge.mockRejectedValueOnce(
         new Error('timeout calling Asaas'),
       );
@@ -122,7 +122,7 @@ describe('InvoiceService — Falhas de provedor Boleto', () => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(repository.updateInvoice).toHaveBeenCalledWith(
         expect.objectContaining({ status: 'PROVIDER_PENDING' }),
-        'FAILED',
+        'PROVIDER_PENDING',
         expect.objectContaining({ failureReason: 'timeout calling Asaas' }),
       );
     });
@@ -220,6 +220,194 @@ describe('InvoiceService — Falhas de provedor Boleto', () => {
       );
       expect(response).not.toHaveProperty('bankSlipUrl');
       expect(response).not.toHaveProperty('identificationField');
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// DS-38 — Criar Invoice PIX
+// ---------------------------------------------------------------------------
+
+const makePixDto = (
+  overrides: Partial<CreateInvoiceDto> = {},
+): CreateInvoiceDto =>
+  ({
+    tenantId: TENANT_ID,
+    orderId: 'MS-100045',
+    customer: {
+      id: 'customer-123',
+      name: 'Maria Silva',
+      document: '12345678909',
+      email: 'maria@example.com',
+      mobilePhone: '11987654321',
+    },
+    amount: 159.9,
+    currency: 'BRL',
+    dueDate: '2027-12-31',
+    billingType: 'PIX',
+    provider: 'ASAAS',
+    description: 'Pedido MS-100045',
+    ...overrides,
+  }) as CreateInvoiceDto;
+
+const makePixPendingInvoice = (): InvoiceRecord => ({
+  invoiceId: 'inv_pix_test',
+  tenantId: TENANT_ID,
+  orderId: 'MS-100045',
+  customer: {
+    id: 'customer-123',
+    name: 'Maria Silva',
+    document: '12345678909',
+  },
+  amount: 159.9,
+  currency: 'BRL',
+  dueDate: '2027-12-31',
+  billingType: 'PIX',
+  provider: 'ASAAS',
+  status: 'PROVIDER_PENDING',
+  externalReference: 'inv_pix_test',
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+});
+
+describe('InvoiceService — Falhas de provedor PIX (DS-38)', () => {
+  let service: InvoiceService;
+  let repository: jest.Mocked<InvoiceRepository>;
+  let asaas: jest.Mocked<AsaasService>;
+  let eventEmitter: jest.Mocked<EventEmitter2>;
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        InvoiceService,
+        {
+          provide: InvoiceRepository,
+          useValue: {
+            findByIdempotencyKey: jest.fn(),
+            saveInvoice: jest.fn(),
+            updateInvoice: jest.fn(),
+            findCustomerLink: jest.fn(),
+            saveIdempotencyKey: jest.fn(),
+          },
+        },
+        {
+          provide: ProviderRouterService,
+          useValue: { resolve: jest.fn().mockReturnValue('ASAAS') },
+        },
+        {
+          provide: AsaasService,
+          useValue: { createCharge: jest.fn(), createCustomer: jest.fn() },
+        },
+        {
+          provide: EventEmitter2,
+          useValue: { emit: jest.fn() },
+        },
+      ],
+    }).compile();
+
+    service = module.get(InvoiceService);
+    repository = module.get(InvoiceRepository);
+    asaas = module.get(AsaasService);
+    eventEmitter = module.get(EventEmitter2);
+
+    repository.findByIdempotencyKey.mockResolvedValue(undefined);
+    repository.saveInvoice.mockResolvedValue(undefined);
+    repository.updateInvoice.mockResolvedValue(makePixPendingInvoice());
+    repository.findCustomerLink.mockResolvedValue(makeCustomerLink());
+    eventEmitter.emit.mockReturnValue(true);
+  });
+
+  describe('Cenário 5 PIX: Falha transiente ao criar cobrança PIX no provedor', () => {
+    it('marca invoice como PROVIDER_PENDING em falha transiente (PIX)', async () => {
+      asaas.createCharge.mockRejectedValueOnce(
+        new Error('Request failed with status code 503'),
+      );
+
+      await expect(
+        service.createInvoice(makePixDto(), 'MS-100045:transient', 'corr-pix'),
+      ).rejects.toThrow(ServiceUnavailableException);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(repository.updateInvoice).toHaveBeenCalledWith(
+        expect.objectContaining({ status: 'PROVIDER_PENDING' }),
+        'PROVIDER_PENDING',
+        expect.objectContaining({
+          failureReason: 'Request failed with status code 503',
+        }),
+      );
+    });
+
+    it('nao retorna invoice OPEN sem providerPaymentId em falha transiente (PIX)', async () => {
+      asaas.createCharge.mockRejectedValueOnce(
+        new Error('ETIMEDOUT connecting to Asaas'),
+      );
+
+      let thrown: unknown;
+      try {
+        await service.createInvoice(
+          makePixDto(),
+          'MS-100045:transient2',
+          'corr-pix',
+        );
+      } catch (err) {
+        thrown = err;
+      }
+
+      expect(thrown).toBeInstanceOf(ServiceUnavailableException);
+      const response = (
+        thrown as ServiceUnavailableException
+      ).getResponse() as Record<string, unknown>;
+      expect(response.message).toBe(
+        'Failed to create invoice on payment provider',
+      );
+    });
+  });
+
+  describe('Cenário 6 PIX: Falha de validação retornada pelo provedor (PIX)', () => {
+    it('marca invoice como FAILED em rejeição por validação do provedor (PIX)', async () => {
+      asaas.createCharge.mockRejectedValueOnce(
+        new Error('invalid_billingType: billingType inválido para PIX'),
+      );
+
+      await expect(
+        service.createInvoice(makePixDto(), 'MS-100045:validation', 'corr-pix'),
+      ).rejects.toThrow(ServiceUnavailableException);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(repository.updateInvoice).toHaveBeenCalledWith(
+        expect.objectContaining({ status: 'PROVIDER_PENDING' }),
+        'FAILED',
+        expect.objectContaining({
+          failureReason: 'invalid_billingType: billingType inválido para PIX',
+        }),
+      );
+    });
+
+    it('retorna erro claro sem expor segredo ou payload sensivel (PIX)', async () => {
+      asaas.createCharge.mockRejectedValueOnce(
+        new Error('invalid_cpfCnpj: CPF/CNPJ inválido'),
+      );
+
+      let thrown: unknown;
+      try {
+        await service.createInvoice(
+          makePixDto(),
+          'MS-100045:validation2',
+          'corr-pix',
+        );
+      } catch (err) {
+        thrown = err;
+      }
+
+      expect(thrown).toBeInstanceOf(ServiceUnavailableException);
+      const response = (
+        thrown as ServiceUnavailableException
+      ).getResponse() as Record<string, unknown>;
+      expect(response.message).toBe(
+        'Failed to create invoice on payment provider',
+      );
+      expect(JSON.stringify(response)).not.toContain('access_token');
+      expect(JSON.stringify(response)).not.toContain('ASAAS_TOKEN');
     });
   });
 });
