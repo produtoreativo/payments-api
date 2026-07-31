@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Bash(gh pr merge * --auto --squash)",
+      "Bash(gh workflow run release.yml*)",
+      "Bash(gh pr create --base master*)",
+      "Bash(gh issue close *)",
+      "Read",
+      "WebSearch",
+      "WebFetch",
+      "WebFetch(domain:github.blog)"
+    ],
+    "deny": [
+      "Bash(git push --force*)"
+    ]
+  }
+}
