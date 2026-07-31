@@ -10,21 +10,17 @@
 |---|---|---|
 | v0.2.0 | DS-40: create-invoice-boleto | ✅ Concluído — PR #87 merged |
 | v0.3.0 | Trilha A: Runtime Fix (send.sh + Lead Time + Status field) | ✅ Concluído |
-| **v0.4.0** | **Trilha B: Delivery de Produto — Pix + Confirmação + Cancel** | 🔄 Em execução |
+| **v0.4.0** | **Trilha B: DS-38 create-invoice via Pix** | 🔄 Em execução |
 
 ---
 
 ## Escopo da iteração
 
-Entrega dos OBCs de produto prioritários via jornada completa de Downstream (CI Sync + CI Async). Todos os artefatos estão comprometidos e prontos para cada item.
-
 | # | DS | Issue | Feature | Dependência | OBC | BDD | E2E | Status |
 |---|---|-------|---------|-------------|-----|-----|-----|--------|
 | 1 | DS-38 | [#38](https://github.com/produtoreativo/payments-api/issues/38) | create-invoice: criar invoice via Pix no gateway Payments | — | ✓ | ✓ | ✓ | ⬜ Pendente |
-| 2 | DS-39 | [#39](https://github.com/produtoreativo/payments-api/issues/39) | payment-confirmation: confirmar pagamento aprovado via webhook | DS-38 merged | ✓ | ✓ | ✓ | ⬜ Pendente |
-| 3 | DS-47 | [#47](https://github.com/produtoreativo/payments-api/issues/47) | cancel-invoice: cancelar invoice no provedor | DS-38 + DS-39 estáveis | ✓ | ✓ | ✓ | ⬜ Pendente |
 
-**Ordem de execução:** DS-38 → DS-39 → DS-47. Os itens 2 e 3 podem iniciar Bootstrap assim que o anterior atingir `DONE`.
+> DS-39 e DS-47 removidos desta iteração. DS-39 entra na próxima iteração após DS-38 promovido. DS-47 aguarda reconciliação do OBC (status "Adiado") e entrada no Reliability Plan.
 
 ---
 
@@ -124,12 +120,10 @@ Ações concretas:
 
 Ações concretas:
 - Confirma que `Finish.Completed` foi emitido para este work item
-- Monitora a aprovação e merge do PR (`staging-deploy.yml` é acionado por push em `main`)
-- Confirma que o workflow de deploy de Staging iniciou e concluiu com sucesso
+- Faz o merge do PR via `gh pr merge --squash` (autorizado pela Skill)
+- Confirma que o workflow de deploy de Staging iniciou e concluiu com sucesso (`staging-deploy.yml`)
 - Registra o run ID e o resultado do workflow como evidência no Release Trail
 - Confirma que o ambiente de Staging está responsivo após o deploy
-
-**O que não faz:** Não faz push de código. Não aprova o PR manualmente. Não aciona o deploy via `workflow_dispatch` (o trigger é o merge em `main`).
 
 **Eventos:** `Ship.Started` → `Ship.Completed` (após merge confirmado + deploy Staging bem-sucedido).
 
@@ -145,9 +139,7 @@ Ações concretas:
 - Verifica ausência de regressão nos cenários BDD não relacionados à mudança
 - Registra evidência no Release Trail
 
-**Eventos emitidos:** `Validate.Started` → `Shared.Gate.Passed` (após evidência coletada e gates passando) → `Validate.Completed`.
-
-**Nota:** `Shared.Gate.Passed` é um evento distinto — registra o momento exato em que todos os gates de validação foram satisfeitos, antes da conclusão formal da fase.
+**Eventos emitidos:** `Validate.Started` → `Shared.Gate.Passed` → `Validate.Completed`.
 
 ---
 
@@ -164,17 +156,14 @@ Ações concretas:
   - Cálculo do Lead Time (diferença entre `Bootstrap.Started` e `Promote.Completed` em dias)
   - Emissão de `runtime.delivery.lead_time_days` gauge no Datadog
 
-**O que não faz:** Não promove para Production. Production é fora da Delivery Journey.
-
 **Eventos:** `Promote.Started` → `Promote.Completed` (+ Lead Time automático via Step 4b do `emit-event`).
 
 ---
 
 ## Critérios de saída da iteração
 
-- PRs de DS-38, DS-39 e DS-47 merged em `main`.
-- Eventos `prodops.delivery.promote.completed` emitidos para issues #38, #39 e #47.
-- Dashboard v3.4.0: KPI "DONE — Concluídas" incrementado em 3 unidades após os três Promotes.
-- KPI Lead Time preenchido automaticamente nos três Promotes (sem intervenção manual).
-- Issues #38, #39 e #47 fechadas no GitHub.
-- Diligence concluída para os três OBCs: evidence capturada, attached, promoted e closed.
+- PR de DS-38 merged em `main`.
+- Evento `prodops.delivery.promote.completed` emitido para issue #38.
+- KPI Lead Time preenchido automaticamente no Promote (sem intervenção manual).
+- Issue #38 fechada no GitHub.
+- Diligence concluída para DS-38: evidence capturada, attached, promoted e closed.
