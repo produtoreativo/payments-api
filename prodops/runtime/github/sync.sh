@@ -228,4 +228,22 @@ else
   [[ -z "$DERIVED_CYCLE" ]] && log "Cycle: no override for state $STATE (BLOCKED/REWORKING)"
 fi
 
+# Sync native issue state — closed when DONE, open otherwise
+CURRENT_ISSUE_STATE=$(gh api "repos/${OWNER}/${REPO}/issues/${ISSUE_NUMBER}" -q '.state' 2>/dev/null)
+if [[ "$STATE" == "DONE" ]]; then
+  if [[ "$CURRENT_ISSUE_STATE" != "closed" ]]; then
+    gh issue close "$ISSUE_NUMBER" --repo "${OWNER}/${REPO}" > /dev/null 2>&1 && \
+      log "Issue #${ISSUE_NUMBER} closed (state=DONE)" || \
+      log "WARNING: failed to close issue #${ISSUE_NUMBER}"
+  else
+    log "Issue #${ISSUE_NUMBER} already closed"
+  fi
+else
+  if [[ "$CURRENT_ISSUE_STATE" == "closed" ]]; then
+    gh issue reopen "$ISSUE_NUMBER" --repo "${OWNER}/${REPO}" > /dev/null 2>&1 && \
+      log "Issue #${ISSUE_NUMBER} reopened (state=${STATE})" || \
+      log "WARNING: failed to reopen issue #${ISSUE_NUMBER}"
+  fi
+fi
+
 log "GitHub sync complete"
