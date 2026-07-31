@@ -48,7 +48,7 @@ graph TB
         end
 
         subgraph Controllers["Controllers"]
-            InvCtrl["InvoiceController\nPOST   /invoices\nGET    /invoices/:invoiceId\nDELETE /invoices/:invoiceId"]
+            InvCtrl["InvoiceController\nPOST   /invoices\nGET    /invoices/:invoiceId\nDELETE /invoices/:invoiceId\nPOST   /invoices/:invoiceId/refund"]
             WkCtrl["WebhookConfigController\nPOST   /webhooks\nGET    /webhooks\nDELETE /webhooks/:webhookId"]
             AsaasWkCtrl["AsaasWebhookController\nPOST /webhook/payments\nGET  /webhook/payments/queue"]
             SandboxCtrl["AsaasSandboxController\nPOST /sandbox/asaas/payments/:providerPaymentId/confirm"]
@@ -158,3 +158,4 @@ de contrato.
 | 2026-07-12 | Consolidada a fronteira Payments SOR ↔ PSP que antes estava duplicada em `docs/`; nenhum contrato de runtime foi alterado. |
 | 2026-07-17 | Retroativo: adicionados `HealthController` (`GET /health`, sem guard), `WebhookWorker` (Lambda SQS trigger separado), `TransactionsTable`, GSI1 (ProviderPaymentIndex) em PaymentsTable. Corrigidos nomes de parâmetros de rota (`:webhookId`, `:providerPaymentId`). Adicionada aresta `WkDelivery → emit payments.observability`. |
 | 2026-07-23 | Diagrama atualizado com dados reais da IaC: Lambda Function URL como ponto de entrada explícito (AuthType: NONE), Datadog Extension Layer (arn:…:Datadog-Extension:97), CloudWatch Log Groups com retenção 30d, parâmetros reais de SQS (VisibilityTimeout 60s, retenção 14d, maxReceiveCount 5), nomes reais de tabelas e GSIs com chaves de partição/range e ProjectionType. Removidos GSI2 (StatusOrderIndex) e ProvidersTable — não provisionados na IaC (`dynamodb.yaml`). |
+| 2026-07-31 | DS-41 (credit-card-authorization-confirmation): adicionada rota `POST /invoices/:invoiceId/refund` no `InvoiceController`; adicionado `hostedPaymentUrl` em `InvoiceResponseDto`; adicionado status `REFUND_REQUESTED` em `InvoiceStatus`; emissão de `payment.card.hosted_invoice.created` e `payment.card.refund.requested`. |
