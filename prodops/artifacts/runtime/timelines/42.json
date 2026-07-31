@@ -64,5 +64,27 @@
       "framework-version": "1.0.0",
       "schema-version": "1"
     }
+  },
+  {
+    "specversion": "1.0",
+    "id": "917a8f36-2114-4ffe-a163-7734302cf87c",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.sync.completed",
+    "subject": "42",
+    "time": "2026-07-31T22:02:39Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/sync/completed/v1.0.0",
+    "data": {
+      "issue": "42",
+      "journey": "Delivery",
+      "cycle": "Sync",
+      "phase": "Completed",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "c8f27fb0-7c9e-483e-8620-7095625222e3",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
   }
 ]
