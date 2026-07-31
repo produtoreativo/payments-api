@@ -265,6 +265,39 @@ if ! bash "$DATADOG" \
   DD_STATUS="error"
 fi
 
+# ── Step 4b: Lead Time (Promote.Completed only, non-fatal) ───────────────────
+# Calculates Bootstrap.Started → Promote.Completed delta in days and emits
+# runtime.delivery.lead_time_days gauge automatically — no manual intervention.
+if [[ "$CE_TYPE" == "prodops.delivery.promote.completed" && -f "$TIMELINE_FILE" ]]; then
+  BOOTSTRAP_TIME=$(jq -r '
+    [.[] | select(.type == "prodops.delivery.bootstrap.started")] | first | .time // empty
+  ' "$TIMELINE_FILE" 2>/dev/null)
+
+  if [[ -n "$BOOTSTRAP_TIME" ]]; then
+    PROMOTE_EPOCH=$(date +%s)
+    BOOTSTRAP_EPOCH=$(date -u -j -f "%Y-%m-%dT%H:%M:%SZ" "$BOOTSTRAP_TIME" +%s 2>/dev/null \
+                   || date -u -d "$BOOTSTRAP_TIME" +%s 2>/dev/null || echo "")
+
+    if [[ -n "$BOOTSTRAP_EPOCH" && "$PROMOTE_EPOCH" -gt "$BOOTSTRAP_EPOCH" ]]; then
+      LEAD_SECS=$(( PROMOTE_EPOCH - BOOTSTRAP_EPOCH ))
+      LEAD_DAYS=$(python3 -c "print(round($LEAD_SECS / 86400, 2))")
+      log "Lead time calculated: ${LEAD_DAYS} days (Bootstrap.Started → Promote.Completed)"
+      if ! bash "$DATADOG" \
+          --issue          "$WORK_ITEM_ID" \
+          --event          "$CE_TYPE" \
+          --state          "$DERIVED_STATE" \
+          --correlation-id "$CORRELATION_ID" \
+          --lead-time-days "$LEAD_DAYS" >/dev/null 2>&1; then
+        warn "Lead time metric failed (non-fatal)"
+      fi
+    else
+      warn "Lead time: could not parse Bootstrap.Started timestamp — skipping"
+    fi
+  else
+    warn "Lead time: Bootstrap.Started not found in timeline — skipping"
+  fi
+fi
+
 # ── Step 5: GitHub sync (non-fatal) ──────────────────────────────────────────
 GH_STATUS="success"
 log "Syncing GitHub Project..."
