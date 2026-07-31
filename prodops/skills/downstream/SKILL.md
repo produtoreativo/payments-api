@@ -75,7 +75,24 @@ Antes de executar qualquer ciclo, avaliar a capability contra todos os pré-requ
 
 Tratar como **Downstream Declared** enquanto houver pré-requisitos ausentes. Declarar **Downstream Ready** apenas após todos os gates passarem. **Delivery Started** começa somente quando o Bootstrap inicia.
 
-Quando todos os pré-requisitos existirem, gerar `prodops/exec/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md`. O capsule é gerado pelo readiness do Downstream, não pelo Bootstrap.
+Quando todos os pré-requisitos existirem:
+
+1. Gerar `prodops/exec/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md`. O capsule é gerado pelo readiness do Downstream, não pelo Bootstrap.
+2. Emitir o evento `Delivery.Plan.Entered` para a issue, definindo `oem-state = PENDING` no GitHub Project. Isso posiciona o item na coluna PENDING do board antes do Bootstrap iniciar.
+
+```json
+{
+  "event": "Delivery.Plan.Entered",
+  "work-item-id": "<issue-number>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<new-uuid>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "downstream-agent" },
+  "payload": {}
+}
+```
+
+O `correlation-id` gerado aqui é o correlation-id do flow inteiro — propagado para Bootstrap, Hack, Sync, Finish, Ship, Validate e Promote.
 
 ## CI Sync
 
