@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# GitHub Project Sync — updates oem-state and oem-last-event for the pilot issue
+# GitHub Project Sync — updates oem-state, oem-last-event and Cycle for the pilot issue
 # Usage: sync.sh --issue <number> --state <STATE> --last-event <event> --correlation-id <id>
 
 set -euo pipefail
@@ -28,6 +28,16 @@ REPO=$(yaml_get "github.repository")
 
 STATE_FIELD_NAME="oem-state"
 LAST_EVENT_FIELD_NAME="oem-last-event"
+CYCLE_FIELD_NAME="Cycle"
+
+# Derive delivery cycle from oem-state
+derive_cycle() {
+  case "$1" in
+    PENDING|BOOTSTRAPPING|HACKING|SYNCING|FINISHING) echo "CI Sync" ;;
+    SHIPPING|VALIDATING|PROMOTING|DONE)              echo "CI Async" ;;
+    *)                                               echo "" ;; # BLOCKED/REWORKING: no override
+  esac
+}
 
 ISSUE_NUMBER=""
 STATE=""
@@ -124,6 +134,8 @@ STATE_FIELD_ID=$(echo "$FIELDS_JSON" | jq -r --arg n "$STATE_FIELD_NAME" \
   '.data.node.fields.nodes[] | select(.name == $n) | .id' 2>/dev/null)
 LAST_EVENT_FIELD_ID=$(echo "$FIELDS_JSON" | jq -r --arg n "$LAST_EVENT_FIELD_NAME" \
   '.data.node.fields.nodes[] | select(.name == $n) | .id' 2>/dev/null)
+CYCLE_FIELD_ID=$(echo "$FIELDS_JSON" | jq -r --arg n "$CYCLE_FIELD_NAME" \
+  '.data.node.fields.nodes[] | select(.name == $n) | .id' 2>/dev/null)
 
 # Create oem-state field if absent
 if [[ -z "$STATE_FIELD_ID" ]]; then
@@ -154,6 +166,7 @@ fi
 
 log "oem-state field ID:      ${STATE_FIELD_ID:-NOT_FOUND}"
 log "oem-last-event field ID: ${LAST_EVENT_FIELD_ID:-NOT_FOUND}"
+log "Cycle field ID:          ${CYCLE_FIELD_ID:-NOT_FOUND}"
 
 # Update oem-state (SingleSelect)
 if [[ -n "$STATE_FIELD_ID" ]]; then
@@ -188,6 +201,31 @@ if [[ -n "$LAST_EVENT_FIELD_ID" ]]; then
     }' -f project="$PROJECT_ID" -f item="$ITEM_ID" \
        -f field="$LAST_EVENT_FIELD_ID" -f value="$LAST_EVENT" > /dev/null 2>&1
   log "oem-last-event updated to: $LAST_EVENT"
+fi
+
+# Update Cycle (SingleSelect) — derived from oem-state; skip BLOCKED/REWORKING
+DERIVED_CYCLE=$(derive_cycle "$STATE")
+if [[ -n "$DERIVED_CYCLE" && -n "$CYCLE_FIELD_ID" ]]; then
+  CYCLE_OPTION_ID=$(echo "$FIELDS_JSON" | jq -r \
+    --arg n "$CYCLE_FIELD_NAME" \
+    --arg cycle "$DERIVED_CYCLE" \
+    '.data.node.fields.nodes[] | select(.name == $n) | .options[]? | select(.name == $cycle) | .id' 2>/dev/null)
+
+  if [[ -n "$CYCLE_OPTION_ID" ]]; then
+    gh api graphql -f query='
+      mutation($project: ID!, $item: ID!, $field: ID!, $option: String!) {
+        updateProjectV2ItemFieldValue(input: {
+          projectId: $project, itemId: $item, fieldId: $field,
+          value: { singleSelectOptionId: $option }
+        }) { projectV2Item { id } }
+      }' -f project="$PROJECT_ID" -f item="$ITEM_ID" \
+         -f field="$CYCLE_FIELD_ID" -f option="$CYCLE_OPTION_ID" > /dev/null 2>&1
+    log "Cycle updated to: $DERIVED_CYCLE"
+  else
+    log "WARNING: Cycle option '$DERIVED_CYCLE' not found — field may need update"
+  fi
+else
+  [[ -z "$DERIVED_CYCLE" ]] && log "Cycle: no override for state $STATE (BLOCKED/REWORKING)"
 fi
 
 log "GitHub sync complete"
