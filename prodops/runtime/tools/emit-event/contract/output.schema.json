@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prodops.produtoreativo.io/schemas/tools/emit-event/output/v1.0.0",
+  "title": "prodops_emit_event — Output",
+  "description": "Canonical output contract for the prodops_emit_event tool. All players must produce a response that conforms to this schema.",
+  "type": "object",
+  "required": ["status", "event-id", "event-type", "correlation-id", "derived-state", "github-sync", "datadog-sync", "errors"],
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["accepted", "skipped", "dry-run", "error"],
+      "description": "'accepted' = event processed and pipeline complete; 'skipped' = idempotent duplicate detected; 'dry-run' = validation + CE construction only, no side effects; 'error' = processing failed."
+    },
+    "cloudevent": {
+      "type": ["object", "null"],
+      "description": "Full CloudEvent JSON produced by the tool. Populated only in dry-run mode or when --evidence-file is requested; null otherwise."
+    },
+    "event-id": {
+      "type": ["string", "null"],
+      "description": "CloudEvent id (UUID) assigned by the runtime producer. Null on error."
+    },
+    "event-type": {
+      "type": ["string", "null"],
+      "description": "CloudEvent type resolved from the catalog (e.g. 'prodops.delivery.bootstrap.started'). Null on error before catalog lookup."
+    },
+    "correlation-id": {
+      "type": ["string", "null"],
+      "description": "Echo of the input correlation-id. Null if input parsing failed."
+    },
+    "derived-state": {
+      "type": ["string", "null"],
+      "enum": ["BOOTSTRAPPING", "HACKING", "SYNCING", "FINISHING", "SHIPPING", "VALIDATING", "PROMOTING", "DONE", "UNKNOWN", null],
+      "description": "Feature state computed from the full timeline after this event. Null on error."
+    },
+    "github-sync": {
+      "type": "string",
+      "enum": ["success", "error", "skipped"],
+      "description": "'success' = GitHub Project fields updated; 'error' = sync failed (non-fatal, pipeline continued); 'skipped' = not attempted (idempotent or pre-error)."
+    },
+    "datadog-sync": {
+      "type": "string",
+      "enum": ["success", "error", "skipped"],
+      "description": "'success' = metric sent; 'error' = send failed (non-fatal, pipeline continued); 'skipped' = not attempted."
+    },
+    "errors": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of error messages. Empty on success or skip."
+    }
+  },
+  "examples": [
+    {
+      "status": "accepted",
+      "event-id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "event-type": "prodops.delivery.bootstrap.started",
+      "correlation-id": "f1e2d3c4-b5a6-9780-fedc-ba0987654321",
+      "derived-state": "BOOTSTRAPPING",
+      "github-sync": "success",
+      "datadog-sync": "success",
+      "errors": []
+    },
+    {
+      "status": "skipped",
+      "event-id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "event-type": "prodops.delivery.bootstrap.started",
+      "correlation-id": "f1e2d3c4-b5a6-9780-fedc-ba0987654321",
+      "derived-state": "BOOTSTRAPPING",
+      "github-sync": "skipped",
+      "datadog-sync": "skipped",
+      "errors": []
+    },
+    {
+      "status": "error",
+      "event-id": null,
+      "event-type": null,
+      "correlation-id": null,
+      "derived-state": null,
+      "github-sync": "skipped",
+      "datadog-sync": "skipped",
+      "errors": ["missing required field: event"]
+    }
+  ]
+}

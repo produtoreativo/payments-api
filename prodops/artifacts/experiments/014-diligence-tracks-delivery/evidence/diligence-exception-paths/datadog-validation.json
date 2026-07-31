@@ -1,0 +1,85 @@
+{
+  "iteration": "5",
+  "type": "exception-paths",
+  "date": "2026-07-27",
+  "demo-run-id": "exp-014-exc-2026-07-27-2249",
+  "runtime-version": "0.3.0",
+  "description": "Datadog metric validation for EXP-014 Iteration 5 — Diligence Exception Paths",
+  "validation-method": "API query (sum, last 60 min) — NOT only HTTP 202",
+
+  "confirmed-metrics": [
+    {
+      "metric": "runtime.diligence.blocked",
+      "type": "count",
+      "value": 1.0,
+      "points": 1,
+      "expected": ">= 1",
+      "result": "CONFIRMED",
+      "scenario": "B (#77) — Block.Declared",
+      "tags-used": ["issue:77", "block-reason:derived-state-absent"]
+    },
+    {
+      "metric": "runtime.diligence.drift.detected",
+      "type": "count",
+      "value": 1.0,
+      "points": 1,
+      "expected": ">= 1",
+      "result": "CONFIRMED",
+      "scenario": "C (#78) — Divergence.Detected",
+      "tags-used": ["issue:78", "finding-id:FND-202607272251-78"]
+    },
+    {
+      "metric": "runtime.diligence.findings.open",
+      "type": "count",
+      "value": 1.0,
+      "points": 1,
+      "expected": ">= 1",
+      "result": "CONFIRMED",
+      "scenario": "C (#78) — Divergence.Detected",
+      "tags-used": ["issue:78", "severity:HIGH"]
+    },
+    {
+      "metric": "runtime.diligence.repairs.completed",
+      "type": "count",
+      "value": 1.0,
+      "points": 1,
+      "expected": ">= 1",
+      "result": "CONFIRMED",
+      "scenario": "C (#78) — Repair.Completed",
+      "tags-used": ["issue:78", "finding-id:FND-202607272251-78"]
+    },
+    {
+      "metric": "runtime.diligence.features.closed",
+      "type": "count",
+      "value": 3.0,
+      "points": 3,
+      "expected": "= 3",
+      "result": "CONFIRMED",
+      "scenario": "A (#76) + B (#77) + C (#78) — Close.Completed",
+      "note": "One emission per issue at Close.Completed"
+    }
+  ],
+
+  "also-confirmed": [
+    "runtime.diligence.event.received: 33 total (8+10+15)",
+    "runtime.diligence.features.tracked: 3 (one per issue at Closed)"
+  ],
+
+  "datadog-api-validation": {
+    "command": "validate-demo.sh --demo-run-id exp-014-exc-2026-07-27-2249 --mode exception-paths",
+    "result": "53/53 PASS",
+    "queries-used": [
+      "sum:runtime.diligence.blocked{service:payments-api}.as_count()",
+      "sum:runtime.diligence.drift.detected{service:payments-api}.as_count()",
+      "sum:runtime.diligence.findings.open{service:payments-api}.as_count()",
+      "sum:runtime.diligence.repairs.completed{service:payments-api}.as_count()",
+      "sum:runtime.diligence.features.closed{service:payments-api}.as_count()"
+    ]
+  },
+
+  "known-limitations": [
+    "FF-13: tags with spaces (e.g. runtime-sync:In Sync) cannot be used as Datadog filter queries",
+    "FF-14: macOS bash 3.2 — no declare -A — fixed via tr",
+    "findings.open counter reflects emissions (not current open count) — no decrement on Close"
+  ]
+}

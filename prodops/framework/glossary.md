@@ -133,7 +133,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Vive em:** Portfolio Tracking List (plataforma) ou Product Tracking List (produto).
 
-**Representação no GitHub:** Business Signal Issue.
+**Representação no Execution Space:** Um Business Signal não tem representação permanente como GitHub Issue. Work Items são criados quando há uma operação ativa sobre o Signal (ex.: exploração, triagem, promoção). Um mesmo Signal pode ter zero ou mais Work Items ao longo de sua vida. Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
 
 **Regra crítica:** Entidades nunca mudam de identidade. Um Business Signal nunca "se torna" uma Business Intent — ele **gera** novas entidades Business Intent.
 
@@ -155,7 +155,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 **Origem:** Pode ser criada diretamente no Business Intent Backlog sem origem em um Business Signal. Quando gerada a partir de um Business Signal, mantém referência opcional ao Signal de origem.
 
-**Representação no GitHub:** Business Intent Issue.
+**Representação no Execution Space:** Work Items são criados quando há operações ativas sobre a Intent (ex.: exploração, refinamento, promoção). Um mesmo Intent pode ter zero ou mais Work Items ao longo de sua vida. Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
 
 **Relação com outros conceitos:** Nasce de um Business Signal (ou criada diretamente no BIB). Possui um OBC como documento de contrato. Ver [`flow.md`](flow.md), [`origin-streams.md`](origin-streams.md) e [`backlogs.md`](backlogs.md).
 
@@ -404,7 +404,7 @@ Os quatro níveis hierárquicos que compõem o ecossistema ProdOps. Ver [operati
 
 ## OBC Partitioning
 
-**Definição:** Capability responsável por transformar um Global OBC em Local OBCs — um por produto envolvido. Ocorre entre o Discovery no BIB e a criação de itens nos Product Backlogs dos produtos.
+**Definição:** Processo de governança responsável por particionar um Global OBC em Local OBCs — um por produto envolvido. Ocorre entre o Discovery no BIB e a criação de itens nos Product Backlogs dos produtos. Não é uma Framework Capability nem uma Product Capability — é uma atividade pontual de responsabilidade humana.
 
 **Responsabilidades:** identificar produtos envolvidos, identificar repositórios, identificar Bounded Contexts, decompor o Global OBC, criar os Local OBCs, manter rastreabilidade.
 
@@ -548,7 +548,7 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ## Product Backlog
 
-**Definição:** Backlog de produto que representa todo trabalho formalmente aceito pelo Product Owner. Contém exclusivamente **OBCs (Local OBCs)** — nunca Business Signals, nunca Business Intents, nunca Global OBCs. Ponto de entrada único do produto para o ciclo de Delivery. Views: **Icebox** (Refining), **Iteration Backlog** (Committed) e **Release** (agrupado por versão).
+**Definição:** Backlog de produto que representa todo trabalho formalmente aceito pelo Product Owner. Contém exclusivamente **Business Intents** — cada Intent possui um Local OBC como documento de contrato. Nunca contém Business Signals isolados nem Global OBCs. Ponto de entrada único do produto para o ciclo de Delivery. Views: **Icebox** (Refining), **Iteration Backlog** (Committed) e **Release** (agrupado por versão).
 
 **Pergunta:** O que foi oficialmente aceito pelo Product Owner?
 
@@ -644,7 +644,7 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ## Cycle (Ciclo)
 
-**Definição:** Agrupamento ordenado de Phases dentro de uma Journey, com propósito, acionamento e natureza distintos. Delivery tem CI Sync e CI Async; Diligence tem diligence-sync, diligence-async e workspace-reconciliation. Discovery, Operation e Assessment não têm Cycles formais.
+**Definição:** Agrupamento ordenado de Phases dentro de uma Journey, com propósito, acionamento e natureza distintos. Delivery tem CI Sync e CI Async; Diligence tem diligence-sync e diligence-async. Workspace Reconciliation é uma Capability do Diligence — não é um Cycle. Discovery, Operation e Assessment não têm Cycles formais.
 
 → Definição completa: [`ontology.md — Cycle`](ontology.md#cycle-ciclo)
 
@@ -800,6 +800,38 @@ Ver [`prodops/framework/execution-model/downstream.md`](execution-model/downstre
 
 ---
 
+## Canonical Operational Representation
+
+**Definição:** A materialização operacional do modelo conceitual do ProdOps.
+
+No estágio atual do Framework, a Canonical Operational Representation é realizada através de **GitHub Projects** (escopo por Jornada ou domínio operacional) e **GitHub Issues** (Work Items individuais).
+
+**O que NÃO é:** A Canonical Operational Representation não é o modelo conceitual em si. OBCs, Business Intents, Business Signals e demais artefatos continuam vivendo como arquivos Markdown em `prodops/`. O GitHub é a expressão operacional desse conhecimento — não o conhecimento.
+
+**Responsabilidade de manutenção:** A jornada **Diligence** é a guardiã da sincronização entre o modelo conceitual (`prodops/`) e a Canonical Operational Representation (GitHub Projects e Issues).
+
+**Relação com outros conceitos:** Ver [GitHub Project](#github-project), [GitHub Issue](#github-issue), [knowledge-vs-execution.md](knowledge-vs-execution.md).
+
+---
+
+## GitHub Project
+
+**Definição:** A representação operacional canônica de uma Jornada ou domínio operacional do ProdOps. Organiza e projeta Work Items (GitHub Issues) de um escopo específico (por Journey, Phase e Operation). Não representa o Framework como um todo — o Framework pode ter múltiplos Projects canônicos, cada um cobrindo o escopo de sua Jornada. Não substitui artefatos do Knowledge Space.
+
+**Propósito:** Tornar visível o trabalho em andamento sobre artefatos ProdOps, agrupado e filtrado por dimensões operacionais (Journey, Artifact Type, Operation, Phase).
+
+**O que representa:** Um domínio de gestão do trabalho. Cada GitHub Project rastreia Work Items de um escopo (Portfolio ou Product Repository). Não contém artefatos — contém operações sobre artefatos.
+
+**O que NÃO representa:** Backlogs de artefatos. O GitHub Project não é um substituto para OBCs, Business Intents, Business Signals ou qualquer artefato do Knowledge Space. Views dentro de um Project são filtros sobre Work Items — nunca sobre artefatos.
+
+**Canonical status:** GitHub Projects constituem a Canonical Operational Representation do ProdOps — cada Project representa operacionalmente uma Jornada ou domínio operacional específico. Não existe abstração para outras ferramentas (Jira, Azure DevOps, Linear). Ferramentas externas são sincronizações opcionais — nunca equivalentes.
+
+→ Ver [Canonical Operational Representation](#canonical-operational-representation)
+
+**Relação com outros conceitos:** Contém Work Items (GitHub Issues). Organizado por Views. Estado representado por Fields. Classificado por Labels. Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
+
+---
+
 ## GitHub Issue
 
 **Definição:** Work Item que representa uma operação sendo executada sobre um ou mais artefatos do Knowledge Space (Business Signal, Business Intent, OBC, BDD, etc.).
@@ -830,20 +862,81 @@ Um mesmo Work Item pode afetar múltiplos artefatos.
 
 ---
 
-## Business Signal Issue
+## View (GitHub Project)
 
-**Definição:** GitHub Issue que representa um Business Signal. Pertence ao GitHub Project do Portfolio. Captura qualquer sinal que mereça investigação — oportunidade, hipótese, problema, benchmark, reclamação, ideia.
+**Definição:** Projeção canônica do estado de Work Items (GitHub Issues) dentro de um GitHub Project, filtrada e organizada por uma dimensão operacional específica — Journey, Phase, Operation, Artifact Type ou combinação delas.
 
-**Pertence a:** Portfolio GitHub Project (view: Business Signals ou Discovery).
+**Propósito:** Tornar visíveis as fatias operacionais relevantes do trabalho em andamento — ex.: "todos os Work Items da jornada Delivery em fase Hack" ou "Work Items bloqueados por Findings".
 
-**Não confundir com:** Business Intent Issue (representa decisão estratégica já reconhecida).
+**O que representa:** Um filtro persistente e nomeado sobre Work Items. A View não altera o estado dos Work Items — apenas os projeta. Diferentes Views podem mostrar os mesmos Work Items sob diferentes perspectivas.
+
+**O que NÃO representa:** Uma lista de artefatos. "A View do Icebox" mostra Work Items sobre artefatos em estado Refining — não os artefatos em si. Ausência de um artefato em uma View não significa ausência do artefato no sistema.
+
+**Distinção:** View no sentido desta entrada é a construção de interface do GitHub Projects. Não confundir com as Views conceituais de backlog (Icebox, Iteration Backlog, Release) — essas são construções do modelo ProdOps que podem ser _implementadas_ como Views do GitHub Project.
+
+**Relação com outros conceitos:** Deriva de Fields. Parte de um GitHub Project. Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
 
 ---
 
-## Business Intent Issue
+## Field (GitHub Project)
 
-**Definição:** GitHub Issue que representa uma Business Intent — decisão estratégica de perseguir valor. Pertence ao GitHub Project do Portfolio. Representa a Intent tanto no Business Intent Backlog quanto no Product Backlog (após OBC Partitioning).
+**Definição:** Estado operacional de um Work Item (GitHub Issue) dentro de um GitHub Project. Campos representam dimensões do estado operacional necessárias para projetar corretamente cada Work Item nas Views.
 
-**Pertence a:** Portfolio GitHub Project (view: Business Intent Backlog, Roadmap, ou Platform Releases conforme o estado).
+**Campos canônicos obrigatórios:** `Artifact Type`, `Artifact ID`, `Operation`, `Journey`. Ver schema completo em [`execution-mapping/work-item-schema.md`](execution-mapping/work-item-schema.md).
 
-**Não confundir com:** Business Signal Issue (sinal ainda não estruturado). O OBC é um documento Markdown — não tem representação como Issue.
+**Dois tipos de campos:**
+- **Campos cujo dono é o Execution Space** (GitHub): `Status`, `Assignee`, `Priority` — podem ser editados diretamente no Project.
+- **Campos cujo dono é o Knowledge Space** (artefatos Markdown): `Artifact ID`, `Artifact Type`, `Finding Severity`, `Waiver Expiration` — não devem ser editados manualmente no Project; edição manual cria drift.
+
+**O que NÃO são:** Fonte de verdade de artefatos. O estado canônico de um artefato vive em seu arquivo Markdown. Campos que derivam do Knowledge Space são reflexos — não fontes de verdade.
+
+**Relação com outros conceitos:** Preenchidos pelo criador do Work Item (campos de identidade) ou pelo GitHub (campos operacionais). Lidos pelas Views. Auditados pela Diligence (Capability: Workspace Reconciliation). Ver [execution-mapping/work-item-schema.md](execution-mapping/work-item-schema.md).
+
+---
+
+## Label (GitHub)
+
+**Definição:** Mecanismo auxiliar de classificação de Work Items (GitHub Issues) — **nunca** fonte de verdade para estado de nenhum artefato ou entidade ProdOps.
+
+**Propósito:** Facilitar busca, filtro e categorização operacional de Work Items por `operation:<valor>` e `artifact-type:<valor>`.
+
+**Uso canônico no ProdOps:**
+- `operation:<valor>` — operação sendo executada (ex: `operation:refine`, `operation:promote`)
+- `artifact-type:<valor>` — tipo do artefato afetado (ex: `artifact-type:local-obc`, `artifact-type:finding`)
+- `journey:<valor>` — jornada ProdOps (recomendada)
+
+**O que Labels NÃO podem representar:**
+- ID canônico de nenhuma entidade (Finding, Remediation, Waiver, OBC, etc.)
+- Status canônico de Finding ou de qualquer artefato
+- Severidade de Finding
+- Aprovação de Waiver
+- Estado de expiração de Waiver
+- Qualquer estado que exija persistência e auditoria
+
+**Regra:** Se a informação precisa ser permanente, auditável ou autoritativa, ela pertence ao arquivo Markdown da entidade — não a uma Label. Labels são efêmeras e mutáveis; estados canônicos não são.
+
+**Relação com outros conceitos:** Usadas em GitHub Issues. Convenção de nomenclatura definida em [execution-mapping/work-item-schema.md](execution-mapping/work-item-schema.md). Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
+
+---
+
+## Business Signal Work Item
+
+**Definição:** Work Item (GitHub Issue) que rastreia uma operação ativa sobre um Business Signal. Representa trabalho SOBRE o Signal — não é o Signal em si. O Signal é um artefato do Knowledge Space (arquivo na tracking list); o Work Item é uma representação efêmera do trabalho de execução.
+
+**Exemplos de operações:** captura, triagem, exploração, promoção para Business Intent.
+
+**Cardinalidade:** Um Business Signal pode ter zero ou mais Work Items ao longo de sua vida. A ausência de Work Item não é uma divergência — só é divergência quando há operação ativa sem Work Item rastreável.
+
+**Não confundir com:** O Business Signal em si (artefato permanente). Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
+
+---
+
+## Business Intent Work Item
+
+**Definição:** Work Item (GitHub Issue) que rastreia uma operação ativa sobre uma Business Intent. Representa trabalho SOBRE a Intent — não é a Intent em si. A Intent é um artefato do Knowledge Space; o Work Item é uma representação efêmera do trabalho de execução.
+
+**Exemplos de operações:** exploração, refinamento, revisão, promoção, particionamento.
+
+**Cardinalidade:** Uma Business Intent pode ter zero ou mais Work Items ao longo de sua vida. A ausência de Work Item não é uma divergência — só é divergência quando há operação ativa sem Work Item rastreável.
+
+**Não confundir com:** A Business Intent em si (artefato permanente). O OBC é um documento Markdown — não tem representação como Issue. Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).

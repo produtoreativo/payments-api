@@ -1,0 +1,425 @@
+#!/usr/bin/env bash
+# prodops_emit_event — canonical player-neutral Delivery event emission tool
+#
+# Usage:
+#   emit-event [--input <json-file>] [--dry-run] [--evidence-file <path>]
+#   echo '{"event":"..."}' | emit-event [--dry-run] [--evidence-file <path>]
+#
+# Exit codes:
+#   0  accepted (or dry-run)
+#   1  invalid input (missing required fields, forbidden fields present)
+#   2  unknown event (not in catalog)
+#   3  pipeline error (fatal step failed)
+#   4  idempotent skip (same correlation-id + event-type already in timeline)
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+TOOL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+RUNTIME_DIR="$(cd "$TOOL_DIR/../.." && pwd)"
+PRODOPS_DIR="$(cd "$RUNTIME_DIR/.." && pwd)"
+
+PRODUCER="$RUNTIME_DIR/producer/emit.sh"
+TIMELINE="$RUNTIME_DIR/timeline/append.sh"
+DERIVE="$RUNTIME_DIR/consumer/derive-state.sh"
+DATADOG="$RUNTIME_DIR/datadog/send.sh"
+GITHUB="$RUNTIME_DIR/github/sync.sh"
+DISPATCHER="$RUNTIME_DIR/dispatcher/dispatch.sh"
+SUBSCRIPTIONS="$RUNTIME_DIR/subscriptions/delivery-diligence.yaml"
+CATALOG="$RUNTIME_DIR/catalog/events.yaml"
+TIMELINES_DIR="$PRODOPS_DIR/artifacts/runtime/timelines"
+
+TOOL_VERSION="1.0.0"
+
+log()  { echo "[prodops_emit_event] $*" >&2; }
+warn() { echo "[prodops_emit_event] WARNING: $*" >&2; }
+
+catalog_get() {
+  python3 - "$CATALOG" "$1" "$2" <<'PYEOF'
+import sys, yaml
+data = yaml.safe_load(open(sys.argv[1]))
+event, field = sys.argv[2], sys.argv[3]
+val = data['events'][event].get(field, '')
+print('true' if val is True else ('false' if val is False else str(val)))
+PYEOF
+}
+
+error_output() {
+  local corr="${CORRELATION_ID:-null}"
+  local corr_val
+  if [[ "$corr" == "null" ]]; then
+    corr_val="null"
+  else
+    corr_val="\"$corr\""
+  fi
+  local errors_json="$1"
+  printf '{"status":"error","event-id":null,"event-type":null,"correlation-id":%s,"derived-state":null,"github-sync":"skipped","datadog-sync":"skipped","cloudevent":null,"errors":%s}\n' \
+    "$corr_val" "$errors_json"
+}
+
+# ── Argument parsing ───────────────────────────────────────────────────────────
+INPUT_FILE=""
+DRY_RUN="false"
+EVIDENCE_FILE=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --input)         INPUT_FILE="$2"; shift 2 ;;
+    --dry-run)       DRY_RUN="true"; shift ;;
+    --evidence-file) EVIDENCE_FILE="$2"; shift 2 ;;
+    --help|-h)
+      cat >&2 <<'HELP'
+prodops_emit_event v1.0.0
+Player-neutral Delivery event emission tool.
+
+Usage:
+  emit-event [--input <json-file>] [--dry-run] [--evidence-file <path>]
+  echo '{"event":"..."}' | emit-event
+
+Options:
+  --input <file>         Read input JSON from file instead of stdin
+  --dry-run              Validate and construct CloudEvent; skip pipeline side effects
+  --evidence-file <path> Write full run evidence JSON to this path
+
+Exit codes:
+  0  accepted (or dry-run)   1  invalid input   2  unknown event
+  3  pipeline error          4  idempotent skip
+HELP
+      exit 0
+      ;;
+    *) log "Unknown argument: $1"; exit 1 ;;
+  esac
+done
+
+# ── Read input ─────────────────────────────────────────────────────────────────
+if [[ -n "$INPUT_FILE" ]]; then
+  [[ ! -f "$INPUT_FILE" ]] && { log "Error: input file not found: $INPUT_FILE"; exit 1; }
+  INPUT_JSON=$(cat "$INPUT_FILE")
+elif [[ ! -t 0 ]]; then
+  INPUT_JSON=$(cat)
+else
+  log "Error: provide --input <file> or pipe JSON to stdin"
+  exit 1
+fi
+
+# Validate JSON parsability
+if ! echo "$INPUT_JSON" | jq . >/dev/null 2>&1; then
+  error_output '["input is not valid JSON"]'
+  exit 1
+fi
+
+# ── Parse fields ───────────────────────────────────────────────────────────────
+CORRELATION_ID=""  # set early so error_output can use it
+EVENT=$(echo "$INPUT_JSON"          | jq -r '.event              // empty')
+WORK_ITEM_ID=$(echo "$INPUT_JSON"   | jq -r '."work-item-id"    // empty')
+CORRELATION_ID=$(echo "$INPUT_JSON" | jq -r '."correlation-id"  // empty')
+EXECUTION_ID=$(echo "$INPUT_JSON"   | jq -r '."execution-id"    // empty')
+ITERATION_ID=$(echo "$INPUT_JSON"   | jq -r '."iteration-id"    // empty')
+PLAYER=$(echo "$INPUT_JSON"         | jq -r '.actor.player      // "unknown"')
+AGENT_NAME=$(echo "$INPUT_JSON"     | jq -r '.actor.agent       // "unknown"')
+
+log "player=$PLAYER agent=$AGENT_NAME iteration=${ITERATION_ID:-—} execution=${EXECUTION_ID:-—}${DRY_RUN:+ dry-run=true}"
+
+# ── Guard: reject catalog-owned fields ────────────────────────────────────────
+FORBIDDEN_FOUND=$(python3 - <<PYEOF
+import sys, json
+FORBIDDEN = ['specversion','source','type','dataschema','journey','cycle','phase','alters-state','new-state']
+try:
+    data = json.loads('''${INPUT_JSON}''')
+    found = [f for f in FORBIDDEN if f in data]
+    print(','.join(found))
+except Exception:
+    pass
+PYEOF
+)
+if [[ -n "$FORBIDDEN_FOUND" ]]; then
+  ERR="forbidden fields belong to the event catalog and must not be provided by the caller: $FORBIDDEN_FOUND"
+  error_output "$(jq -n --arg e "$ERR" '[$e]')"
+  exit 1
+fi
+
+# ── Validate required fields ──────────────────────────────────────────────────
+declare -a ERRORS=()
+[[ -z "$EVENT" ]]          && ERRORS+=("missing required field: event")
+[[ -z "$WORK_ITEM_ID" ]]   && ERRORS+=("missing required field: work-item-id")
+[[ -z "$CORRELATION_ID" ]] && ERRORS+=("missing required field: correlation-id")
+
+# actor validation
+ACTOR_PLAYER=$(echo "$INPUT_JSON" | jq -r '.actor.player // empty')
+ACTOR_AGENT=$(echo "$INPUT_JSON"  | jq -r '.actor.agent  // empty')
+[[ -z "$ACTOR_PLAYER" ]] && ERRORS+=("missing required field: actor.player")
+[[ -z "$ACTOR_AGENT" ]]  && ERRORS+=("missing required field: actor.agent")
+
+if [[ ${#ERRORS[@]} -gt 0 ]]; then
+  ERROR_JSON=$(printf '%s\n' "${ERRORS[@]}" | jq -R . | jq -s .)
+  error_output "$ERROR_JSON"
+  exit 1
+fi
+
+# player enum check
+case "$PLAYER" in
+  claude|codex|copilot) ;;
+  *) error_output "$(jq -n --arg p "$PLAYER" '["invalid actor.player: \($p) — must be claude, codex, or copilot"]')"; exit 1 ;;
+esac
+
+# ── Verify event in catalog ───────────────────────────────────────────────────
+if ! python3 - "$CATALOG" "$EVENT" <<'PYEOF' 2>/dev/null; then
+import sys, yaml
+data = yaml.safe_load(open(sys.argv[1]))
+assert sys.argv[2] in data['events']
+PYEOF
+  error_output "$(jq -n --arg e "$EVENT" '["event not in catalog: \($e)"]')"
+  exit 2
+fi
+
+CE_TYPE=$(catalog_get "$EVENT" "cloud-event-type")
+ALTERS_STATE=$(catalog_get "$EVENT" "alters-state")
+
+log "Catalog resolved: type=$CE_TYPE alters-state=$ALTERS_STATE"
+
+# ── Idempotency check (skip in dry-run) ───────────────────────────────────────
+TIMELINE_FILE="$TIMELINES_DIR/${WORK_ITEM_ID}.json"
+if [[ "$DRY_RUN" == "false" && -f "$TIMELINE_FILE" ]]; then
+  EXISTING_ID=$(jq -r \
+    --arg cid "$CORRELATION_ID" --arg type "$CE_TYPE" \
+    '.[] | select(.data["runtime-correlation-id"] == $cid and .type == $type) | .id' \
+    "$TIMELINE_FILE" 2>/dev/null | head -1)
+
+  if [[ -n "$EXISTING_ID" ]]; then
+    log "Idempotent skip — already processed: correlation-id=$CORRELATION_ID type=$CE_TYPE"
+    CURRENT_STATE=$(jq -r \
+      '[.[] | select(.data["alters-state"] == true)] | if length == 0 then "UNKNOWN" else last.data["new-state"] end' \
+      "$TIMELINE_FILE" 2>/dev/null)
+    OUTPUT=$(jq -n \
+      --arg event_id       "$EXISTING_ID" \
+      --arg event_type     "$CE_TYPE" \
+      --arg correlation_id "$CORRELATION_ID" \
+      --arg derived_state  "$CURRENT_STATE" \
+      '{"status":"skipped","event-id":$event_id,"event-type":$event_type,
+        "correlation-id":$correlation_id,"derived-state":$derived_state,
+        "github-sync":"skipped","datadog-sync":"skipped","cloudevent":null,"errors":[]}')
+    echo "$OUTPUT"
+    exit 4
+  fi
+fi
+
+# ── Step 1: Emit CloudEvent (always, including dry-run) ───────────────────────
+log "Constructing CloudEvent: $EVENT for issue #$WORK_ITEM_ID"
+EMIT_ERR=$(mktemp)
+if ! CE_JSON=$(bash "$PRODUCER" \
+    --issue          "$WORK_ITEM_ID" \
+    --event          "$EVENT" \
+    --correlation-id "$CORRELATION_ID" 2>"$EMIT_ERR"); then
+  ERR_MSG=$(cat "$EMIT_ERR"); rm -f "$EMIT_ERR"
+  error_output "$(jq -n --arg e "$ERR_MSG" '[$e]')"
+  exit 3
+fi
+rm -f "$EMIT_ERR"
+EVENT_ID=$(echo "$CE_JSON" | jq -r '.id')
+log "CloudEvent constructed: id=$EVENT_ID"
+
+# ── Dry-run short-circuit ─────────────────────────────────────────────────────
+if [[ "$DRY_RUN" == "true" ]]; then
+  log "Dry-run: skipping timeline, derive-state, Datadog, GitHub"
+  OUTPUT=$(jq -n \
+    --arg event_id       "$EVENT_ID" \
+    --arg event_type     "$CE_TYPE" \
+    --arg correlation_id "$CORRELATION_ID" \
+    --argjson cloudevent "$CE_JSON" \
+    '{"status":"dry-run","event-id":$event_id,"event-type":$event_type,
+      "correlation-id":$correlation_id,"derived-state":null,
+      "github-sync":"skipped","datadog-sync":"skipped",
+      "cloudevent":$cloudevent,"errors":[]}')
+  echo "$OUTPUT"
+  exit 0
+fi
+
+# ── Step 2: Persist timeline ──────────────────────────────────────────────────
+log "Appending to timeline..."
+if ! bash "$TIMELINE" --issue "$WORK_ITEM_ID" --event-json "$CE_JSON" >/dev/null 2>&1; then
+  error_output '["timeline/append.sh failed — event not persisted"]'
+  exit 3
+fi
+
+# ── Step 3: Derive state ──────────────────────────────────────────────────────
+log "Deriving state..."
+DERIVE_ERR=$(mktemp)
+if ! DERIVED_JSON=$(bash "$DERIVE" --issue "$WORK_ITEM_ID" 2>"$DERIVE_ERR"); then
+  ERR_MSG=$(cat "$DERIVE_ERR"); rm -f "$DERIVE_ERR"
+  error_output "$(jq -n --arg e "consumer/derive-state.sh failed: $ERR_MSG" '[$e]')"
+  exit 3
+fi
+rm -f "$DERIVE_ERR"
+DERIVED_STATE=$(echo "$DERIVED_JSON" | jq -r '.state')
+log "Derived state: $DERIVED_STATE"
+
+# ── Step 4: Datadog (non-fatal) ───────────────────────────────────────────────
+DD_STATUS="success"
+log "Sending Datadog metric..."
+if ! bash "$DATADOG" \
+    --issue          "$WORK_ITEM_ID" \
+    --event          "$CE_TYPE" \
+    --state          "$DERIVED_STATE" \
+    --correlation-id "$CORRELATION_ID" >/dev/null 2>&1; then
+  warn "Datadog sync failed (non-fatal)"
+  DD_STATUS="error"
+fi
+
+# ── Step 4b: Lead Time (Promote.Completed only, non-fatal) ───────────────────
+# Calculates Bootstrap.Started → Promote.Completed delta in days and emits
+# runtime.delivery.lead_time_days gauge automatically — no manual intervention.
+if [[ "$CE_TYPE" == "prodops.delivery.promote.completed" && -f "$TIMELINE_FILE" ]]; then
+  BOOTSTRAP_TIME=$(jq -r '
+    [.[] | select(.type == "prodops.delivery.bootstrap.started")] | first | .time // empty
+  ' "$TIMELINE_FILE" 2>/dev/null)
+
+  if [[ -n "$BOOTSTRAP_TIME" ]]; then
+    PROMOTE_EPOCH=$(date +%s)
+    BOOTSTRAP_EPOCH=$(date -u -j -f "%Y-%m-%dT%H:%M:%SZ" "$BOOTSTRAP_TIME" +%s 2>/dev/null \
+                   || date -u -d "$BOOTSTRAP_TIME" +%s 2>/dev/null || echo "")
+
+    if [[ -n "$BOOTSTRAP_EPOCH" && "$PROMOTE_EPOCH" -gt "$BOOTSTRAP_EPOCH" ]]; then
+      LEAD_SECS=$(( PROMOTE_EPOCH - BOOTSTRAP_EPOCH ))
+      LEAD_DAYS=$(python3 -c "print(round($LEAD_SECS / 86400, 2))")
+      log "Lead time calculated: ${LEAD_DAYS} days (Bootstrap.Started → Promote.Completed)"
+      if ! bash "$DATADOG" \
+          --issue          "$WORK_ITEM_ID" \
+          --event          "$CE_TYPE" \
+          --state          "$DERIVED_STATE" \
+          --correlation-id "$CORRELATION_ID" \
+          --lead-time-days "$LEAD_DAYS" >/dev/null 2>&1; then
+        warn "Lead time metric failed (non-fatal)"
+      fi
+    else
+      warn "Lead time: could not parse Bootstrap.Started timestamp — skipping"
+    fi
+  else
+    warn "Lead time: Bootstrap.Started not found in timeline — skipping"
+  fi
+fi
+
+# ── Step 5: GitHub sync (non-fatal) ──────────────────────────────────────────
+GH_STATUS="success"
+log "Syncing GitHub Project..."
+if ! bash "$GITHUB" \
+    --issue          "$WORK_ITEM_ID" \
+    --state          "$DERIVED_STATE" \
+    --last-event     "$CE_TYPE" \
+    --correlation-id "$CORRELATION_ID" >/dev/null 2>&1; then
+  warn "GitHub sync failed (non-fatal)"
+  GH_STATUS="error"
+fi
+
+# ── Step 6: Dispatch to subscribers (non-fatal) ───────────────────────────────
+DISPATCH_STATUS="skipped"
+DISPATCH_SUBS="[]"
+
+# Recursion guard: only dispatch if the event type has a subscription entry.
+# Diligence events do not appear in delivery-diligence.yaml so they return skipped.
+if [[ -f "$DISPATCHER" && -f "$SUBSCRIPTIONS" ]]; then
+  # Check if this event type has any subscribers before invoking dispatcher
+  HAS_SUB=$(python3 - "$SUBSCRIPTIONS" "$CE_TYPE" <<'PYEOF'
+import sys, yaml
+data = yaml.safe_load(open(sys.argv[1]))
+subs = data.get("subscriptions", {}).get(sys.argv[2], [])
+print("yes" if subs else "no")
+PYEOF
+)
+  if [[ "$HAS_SUB" == "yes" ]]; then
+    log "Dispatcher: invoking for $CE_TYPE..."
+    DISPATCH_TMP=$(mktemp)
+    set +e
+    bash "$DISPATCHER" \
+        --event-type     "$CE_TYPE" \
+        --work-item-id   "$WORK_ITEM_ID" \
+        --correlation-id "$CORRELATION_ID" \
+        --iteration-id   "$ITERATION_ID" \
+        --player         "$PLAYER" \
+        >"$DISPATCH_TMP" 2>&1
+    DISPATCH_EXIT=$?
+    set -e
+    if [[ $DISPATCH_EXIT -eq 0 ]]; then
+      DISPATCH_STATUS="success"
+      log "Dispatcher: success"
+    else
+      warn "Dispatcher: failed (non-fatal, exit $DISPATCH_EXIT)"
+      DISPATCH_STATUS="failed"
+    fi
+    rm -f "$DISPATCH_TMP"
+
+    # Build subscriptions list for output
+    DISPATCH_SUBS=$(python3 - "$SUBSCRIPTIONS" "$CE_TYPE" <<'PYEOF'
+import sys, json, yaml
+data = yaml.safe_load(open(sys.argv[1]))
+subs = data.get("subscriptions", {}).get(sys.argv[2], [])
+print(json.dumps([{"subscriber": s, "status": "success"} for s in subs]))
+PYEOF
+)
+  else
+    log "Dispatcher: no subscription for $CE_TYPE — skipped"
+  fi
+fi
+
+# ── Canonical output ──────────────────────────────────────────────────────────
+OUTPUT=$(jq -n \
+  --arg event_id       "$EVENT_ID" \
+  --arg event_type     "$CE_TYPE" \
+  --arg correlation_id "$CORRELATION_ID" \
+  --arg derived_state  "$DERIVED_STATE" \
+  --arg github_sync    "$GH_STATUS" \
+  --arg datadog_sync   "$DD_STATUS" \
+  --arg dispatch_status "$DISPATCH_STATUS" \
+  --argjson dispatch_subs "$DISPATCH_SUBS" \
+  '{"status":"accepted","event-id":$event_id,"event-type":$event_type,
+    "correlation-id":$correlation_id,"derived-state":$derived_state,
+    "github-sync":$github_sync,"datadog-sync":$datadog_sync,
+    "dispatch":{"status":$dispatch_status,"subscriptions":$dispatch_subs},
+    "cloudevent":null,"errors":[]}')
+
+echo "$OUTPUT"
+
+# ── Evidence file (optional) ──────────────────────────────────────────────────
+if [[ -n "$EVIDENCE_FILE" ]]; then
+  EVIDENCE_DIR=$(dirname "$EVIDENCE_FILE")
+  mkdir -p "$EVIDENCE_DIR"
+  jq -n \
+    --arg player       "$PLAYER" \
+    --arg agent        "$AGENT_NAME" \
+    --arg iteration_id "$ITERATION_ID" \
+    --arg execution_id "$EXECUTION_ID" \
+    --arg executed_at  "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+    --arg tool_version "$TOOL_VERSION" \
+    --argjson input_json   "$INPUT_JSON" \
+    --argjson output_json  "$OUTPUT" \
+    --argjson cloudevent   "$CE_JSON" \
+    --argjson derived_json "$DERIVED_JSON" \
+    --arg dd_status       "$DD_STATUS" \
+    --arg gh_status       "$GH_STATUS" \
+    --arg dispatch_status "$DISPATCH_STATUS" \
+    --argjson dispatch_subs "$DISPATCH_SUBS" \
+    '{
+      "_meta": {
+        "experiment": "EXP-015",
+        "tool-version": $tool_version,
+        "player": $player,
+        "agent": $agent,
+        "iteration-id": $iteration_id,
+        "execution-id": $execution_id,
+        "executed-at": $executed_at
+      },
+      "input": $input_json,
+      "output": $output_json,
+      "cloudevent": $cloudevent,
+      "derived-state": $derived_json,
+      "pipeline-steps": {
+        "emit": "success",
+        "timeline": "success",
+        "derive-state": "success",
+        "datadog": $dd_status,
+        "github": $gh_status,
+        "dispatch": $dispatch_status
+      },
+      "dispatch": {"status": $dispatch_status, "subscriptions": $dispatch_subs}
+    }' > "$EVIDENCE_FILE"
+  log "Evidence written to: $EVIDENCE_FILE"
+fi

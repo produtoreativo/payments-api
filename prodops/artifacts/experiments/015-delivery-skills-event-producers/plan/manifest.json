@@ -1,0 +1,20 @@
+{
+  "experiment": "EXP-015",
+  "title": "Delivery Skills as Event Producers",
+  "players": [
+    "claude",
+    "codex",
+    "copilot"
+  ],
+  "files": [
+    "00-roadmap.md",
+    "01-contract-spike.md",
+    "02-generic-tool.md",
+    "03-player-adapters.md",
+    "04-bootstrap-skill.md",
+    "05-conformance-suite.md",
+    "06-bootstrap-hack-chain.md",
+    "07-full-happy-path.md",
+    "08-failure-and-diligence-subscriptions.md"
+  ]
+}

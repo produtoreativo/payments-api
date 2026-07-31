@@ -136,7 +136,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **Lives in:** Portfolio Tracking List (platform) or Product Tracking List (product).
 
-**GitHub representation:** Business Signal Issue.
+**Execution Space representation:** A Business Signal has no permanent GitHub Issue representation. Work Items are created when there is an active operation over the Signal (e.g., exploration, triage, promotion). A Signal can have zero or more Work Items across its lifetime. See [knowledge-vs-execution.en.md](knowledge-vs-execution.en.md).
 
 **Critical rule:** Entities never change identity. A Business Signal never "becomes" a Business Intent — it **generates** new Business Intent entities.
 
@@ -158,7 +158,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 **Origin:** Can be created directly in the Business Intent Backlog without originating from a Business Signal. When generated from a Business Signal, it stores an optional back-reference to the originating Signal.
 
-**GitHub representation:** Business Intent Issue.
+**Execution Space representation:** Work Items are created when there are active operations over the Intent (e.g., exploration, refinement, promotion). An Intent can have zero or more Work Items across its lifetime. See [knowledge-vs-execution.en.md](knowledge-vs-execution.en.md).
 
 **Relationship with other concepts:** Born from a Business Signal (or created directly in the BIB). Has an OBC as its contract document. See [`flow.en.md`](flow.en.md), [`origin-streams.en.md`](origin-streams.en.md) and [`backlogs.en.md`](backlogs.en.md).
 
@@ -434,7 +434,7 @@ The four hierarchical levels that compose the ProdOps ecosystem. See [operating-
 
 ## OBC Partitioning
 
-**Definition:** The capability that transforms a Global OBC into Local OBCs — one for each product involved in delivering the business intent.
+**Definition:** A governance process responsible for partitioning a Global OBC into Local OBCs — one for each product involved in delivering the business intent. Not a Framework Capability — it is a point-in-time activity of human responsibility.
 
 **When it happens:** After Discovery in the Business Intent Backlog, when the Global OBC is sufficiently understood to identify the involved products and their responsibilities.
 
@@ -587,7 +587,7 @@ See [`flow.en.md`](flow.en.md), [`journeys/discovery/README.en.md`](journeys/dis
 
 ## Product Backlog
 
-**Definition:** Product-level backlog representing all work formally accepted by the Product Owner. Single entry point for the product into the Delivery cycle — regardless of where the item came from (Portfolio or local flow). Contains **Local OBCs only** — never Global OBCs, never Business Signals.
+**Definition:** Product-level backlog representing all work formally accepted by the Product Owner. Single entry point for the product into the Delivery cycle — regardless of where the item came from (Portfolio or local flow). Contains exclusively **Business Intents** — each Intent has a Local OBC as its contract document. Never contains Business Signals in isolation or Global OBCs.
 
 **Question:** What has been officially accepted by the Product Owner?
 
@@ -822,20 +822,24 @@ A single Work Item can affect multiple artifacts.
 
 ---
 
-## Business Signal Issue
+## Business Signal Work Item
 
-**Definition:** GitHub Issue representing a Business Signal. Created when any signal is captured in the system — before any strategic decision.
+**Definition:** Work Item (GitHub Issue) tracking an active operation over a Business Signal. Represents work ABOUT the Signal — it is not the Signal itself. The Signal is a Knowledge Space artifact (file in the tracking list); the Work Item is an ephemeral representation of execution work.
 
-**Belongs to:** Portfolio GitHub Project (views: Business Signals or Discovery).
+**Example operations:** capture, triage, exploration, promotion to Business Intent.
 
-**Relationship with other concepts:** Represents a Business Signal. May reference Business Intent Issues that were generated from it. See **Business Signal**.
+**Cardinality:** A Business Signal can have zero or more Work Items across its lifetime. The absence of a Work Item is not a divergence — it only is a divergence when there is an active operation without a traceable Work Item.
+
+**Do not confuse with:** The Business Signal itself (permanent artifact). See [knowledge-vs-execution.en.md](knowledge-vs-execution.en.md).
 
 ---
 
-## Business Intent Issue
+## Business Intent Work Item
 
-**Definition:** GitHub Issue representing a Business Intent — the strategic decision to pursue value. Represents the Intent in both the Business Intent Backlog and the Product Backlog (after OBC Partitioning).
+**Definition:** Work Item (GitHub Issue) tracking an active operation over a Business Intent. Represents work ABOUT the Intent — it is not the Intent itself. The Intent is a Knowledge Space artifact; the Work Item is an ephemeral representation of execution work.
 
-**Belongs to:** Portfolio GitHub Project (views: Business Intent Backlog, Roadmap, or Platform Releases).
+**Example operations:** exploration, refinement, review, promotion, partitioning.
 
-**Relationship with other concepts:** Represents a Business Intent. References the Business Signal Issue(s) that originated it (when applicable). The OBC is a Markdown document — it does not have an Issue representation. See **Business Intent**.
+**Cardinality:** A Business Intent can have zero or more Work Items across its lifetime. The absence of a Work Item is not a divergence — it only is a divergence when there is an active operation without a traceable Work Item.
+
+**Do not confuse with:** The Business Intent itself (permanent artifact). The OBC is a Markdown document — it does not have an Issue representation. See [knowledge-vs-execution.en.md](knowledge-vs-execution.en.md).

@@ -1,6 +1,6 @@
 ---
 name: hack
-description: Execute implementation work with TDD. Use when changing code, behavior, contracts, tests, or release artifacts as part of a ProdOps-backed task.
+description: Execute implementation work with TDD. Use when changing code, behavior, contracts, tests, or release artifacts as part of a ProdOps-backed task. Emits Hack.Started and Hack.Completed via prodops_emit_event.
 ---
 
 # HACK
@@ -12,6 +12,20 @@ executing it.
 
 For detailed execution mechanics (branching, code style, No Mocks Rule), read
 `references/workflow.md` on demand.
+
+## Required input context
+
+Before starting, the agent must have:
+
+- `work-item-id` — the GitHub issue number of the Feature (string, numeric)
+- `iteration-id` — the Iteration Plan identifier (e.g. `IP-RUNTIME-001`)
+- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
+- `correlation-id` — the Delivery-flow UUID provided by the chain runner (shared
+  with Bootstrap and all other phases in this flow). If invoked standalone,
+  generate a new UUID.
+
+If any of these are absent, ask the caller to provide them before proceeding. Do
+not generate placeholder values for `work-item-id` or `iteration-id`.
 
 ## Required context
 
@@ -25,6 +39,45 @@ Read before editing — and only this:
 If the OBC or BDD Feature for the requested behavior is missing, stop and
 surface the gap — Bootstrap was not completed. Do not invent acceptance
 criteria.
+
+## Preconditions
+
+1. `prodops/skills/prodops-emit-event/SKILL.md` has been read and the agent
+   understands how to invoke the tool.
+2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
+
+## Phase: Hack.Started
+
+**Moment**: immediately after the input context (`work-item-id`, `iteration-id`,
+`correlation-id`, `actor`) is available — before reading the OBC, before
+checking the timeline, before any precondition verification or implementation
+work begins. Reading the OBC, verifying `Bootstrap.Completed`, loading the BDD
+Feature, and all implementation work are Hack's own execution cost and must be
+measured inside the Hack window.
+
+Emit:
+
+```json
+{
+  "event": "Delivery.Hack.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id-from-runner-or-generated>",
+  "execution-id": "<new-uuid>",
+  "actor": {
+    "player": "<player>",
+    "agent": "hack-agent"
+  },
+  "payload": {}
+}
+```
+
+If the tool returns `status: error` (exit 1 or 2): report the error to the
+caller, fix the input, and do not proceed with implementation until the event is
+accepted.
+
+If the tool returns `status: accepted` (exit 0): record the `event-id` for
+tracing and proceed.
 
 ## Steps
 
@@ -88,6 +141,47 @@ These gates are the minimum to commit. The canonical checklist lives in
 Release-blocking gates (what blocks merge) live in
 [`../../framework/journeys/delivery/phases/finish/quality-gates.md`](../../framework/journeys/delivery/phases/finish/quality-gates.md).
 
+## Phase: Hack.Completed
+
+**Moment**: after all quality gates pass (Green + Lint + Release Trail) and the
+commit is staged — before reporting success to the caller.
+
+Emit using the **same `correlation-id`** received at Hack.Started:
+
+```json
+{
+  "event": "Delivery.Hack.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": {
+    "player": "<player>",
+    "agent": "hack-agent"
+  },
+  "payload": {}
+}
+```
+
+If the tool returns `status: error` for Hack.Completed: report the error
+explicitly. Do not invent a `Completed` event; the timeline will show only
+`Hack.Started`.
+
+## Completion gate
+
+Do not emit `Hack.Completed` until **all** quality gates below are satisfied:
+
+| Gate | Check |
+|---|---|
+| Green | Focused test passing |
+| Lint | Exits 0 for the affected package |
+| No forbidden mock | Zero hits for jest mock patterns in diff |
+| No secrets or PII | None in the diff |
+| Release Trail | Cycle evidence appended |
+
+If any gate fails, report the concrete blocker to the caller. Do not emit
+`Hack.Completed` for a partial execution.
+
 ## Guardrails
 
 - Do not copy product context into this skill.
@@ -99,6 +193,10 @@ Release-blocking gates (what blocks merge) live in
   exploration.
 - Preserve existing architecture and module boundaries unless the BDD or
   Reliability Plan requires a contract change.
+- Do not emit `Hack.Completed` if the completion gate has not been reached.
+- Do not call GitHub, Datadog, or any external service directly. All external
+  state is managed by `prodops_emit_event`.
+- Do not construct a CloudEvent manually.
 
 For Clean Code rules (naming, functions, refactoring) see
 [`../references/local/engineering/clean-code/`](../references/local/engineering/clean-code/README.md) _(product-local reference)_.

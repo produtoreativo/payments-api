@@ -83,7 +83,7 @@ Nunca o inverso. Use os termos: **decomposição**, **especialização**, **part
 
 ## Particionamento do OBC
 
-O **Particionamento do OBC** é a capability responsável por transformar um Global OBC em Local OBCs. Ocorre entre o Discovery no BIB e a criação de itens nos Product Backlogs dos produtos.
+O **Particionamento do OBC** é o processo de governança responsável por particionar um Global OBC em Local OBCs. Ocorre entre o Discovery no BIB e a criação de itens nos Product Backlogs dos produtos. Não é uma Framework Capability — é uma atividade pontual de responsabilidade do Portfolio PM + Tech Leads.
 
 **Responsabilidades do Particionamento:**
 - Identificar os produtos envolvidos

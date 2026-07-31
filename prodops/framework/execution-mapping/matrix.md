@@ -212,17 +212,70 @@ O Context Capsule (`prodops/exec/cards/<slug>/context.md`) é gerado automaticam
 
 ---
 
+## Diligence — Entidades Canônicas
+
+> Adicionado em 2026-07-24. Ver `prodops/framework/journeys/diligence/github-workspace.md`
+> e `prodops/framework/journeys/diligence/github-workspace-schema.yaml` para o schema completo.
+>
+> **Princípio:** Finding, Remediation, Waiver, Evidence e Check são entidades do Knowledge Space.
+> Work Items representam operações sobre essas entidades — não as entidades em si.
+> Finding sem Work Item ativo = estado correto. Project não deve criar Issues artificiais para cobertura visual.
+
+### Finding
+
+| Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
+|---|---|---|---|---|---|
+| `Review` | Issue | Diligence | Async, Manual | Finding investigado; causa raiz identificada; decisão registrada no arquivo FND-* | Diligence Owner, PRE |
+| `Validate` | Issue | Diligence | Async, Manual | Check de verificação executado; Evidence (EVD-*) referenciada; Finding → Verified | PRE (independente) |
+| `Update` | PR | Diligence | Both | Arquivo FND-* atualizado com nova informação (status, severity, findings complementares) | Diligence Owner |
+| `Close` | PR | Diligence | Both | Finding → Closed; nota de encerramento; Evidence referenciada no arquivo | Diligence Owner |
+
+**Nunca:** Finding é uma Issue; Issue number como ID de Finding; fechar Issue = transição canônica de Finding
+
+### Remediation
+
+| Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
+|---|---|---|---|---|---|
+| `Review` | Issue | Diligence | Async, Manual | Remediation avaliada; estratégia aprovada ou rejeitada; decisão no arquivo RMD-* | Diligence Owner, TL |
+| `Implement` | PR | Diligence | Async, Manual | Código ou documentação corrigida; arquivo RMD-* → Implemented; Evidence (EVD-*) | SE |
+| `Validate` | Issue, PR | Diligence | Async, Manual | Check de verificação executado por verificador independente; Finding → Resolved/Verified | PRE (independente) |
+| `Update` | PR | Diligence | Both | Arquivo RMD-* atualizado (status, scope, abordagem) | Diligence Owner |
+
+**Nunca:** PR merged = Finding Verified; fechar Issue de implementação = Remediation completa sem verificação independente
+
+### Waiver
+
+| Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
+|---|---|---|---|---|---|
+| `Review` | Issue | Diligence | Async, Manual | Waiver avaliado; controles compensatórios revisados; decisão registrada | Diligence Owner, PO |
+| `Approve` | PR | Diligence | Manual | Arquivo WVR-* com approved_by, approved_at, expires_at preenchidos; Evidence (EVD-*) do PR de aprovação | PO (com autoridade) |
+| `Update` | PR | Diligence | Manual | Arquivo WVR-* atualizado (controles, justificativa) — não estende expires_at sem novo Waiver | Diligence Owner |
+
+**Nunca:** Waiver por label; aprovação por mudança de status de Issue; extensão de expires_at sem novo arquivo WVR-*
+
+### Check (execução manual)
+
+| Operação | Recursos GitHub | Jornadas | Modo | Evidência esperada | Responsáveis |
+|---|---|---|---|---|---|
+| `Review` | Issue | Diligence | Manual | Check executado; resultado registrado; Finding criado se falha detectada; Evidence (EVD-*) | PRE, Diligence Owner |
+| `Reconcile` | Issue, PR | Diligence | Manual | Workspace reconciliado com schema declarado; snapshot antes + depois; DIL-WSP-001 executado | PE, Diligence Owner |
+| `Validate` | Issue | Diligence | Manual | Check de conformidade executado; resultado Pass/Fail/Warning registrado em Evidence (EVD-*) | PRE |
+
+**Nunca:** Check executado sem Evidence; resultado de Check como campo editável no Project
+
+---
+
 ## Resumo por recurso GitHub
 
 | Recurso | Artefatos que pode referenciar |
 |---|---|
-| **Issue** | Business Signal, Business Intent, Local OBC, Global OBC, Experiment, Risk Register, Reliability Plan, Evidence |
+| **Issue** | Business Signal, Business Intent, Local OBC, Global OBC, Experiment, Risk Register, Reliability Plan, Evidence, Finding, Remediation, Waiver, Check |
 | **Pull Request** | Todos os artefatos que existem como arquivos Markdown |
 | **Discussion** | Business Intent, Global OBC, Local OBC, Architecture, Experiment |
 | **Release** | Iteration Plan, Release Trail |
 | **Workflow** | BDD Feature, Local OBC, Reliability Plan |
 | **Milestone** | Iteration Plan |
-| **Project Item** | Business Intent (priorização) |
+| **Project Item** | Business Intent (priorização), Finding, Remediation, Waiver, Check (via Work Item) |
 
 ---
 

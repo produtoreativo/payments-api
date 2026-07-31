@@ -67,8 +67,10 @@ gates:
     expect: exit0
   no_mocks:
     # fonte: prodops/skills/hack/references/workflow.md (No Mocks Rule)
-    grep: ["jest.fn(", ".mockReturnValue(", ".overrideProvider(", "jest.mock("]
-    in: [api/src, api/test]
+    # Aplica-se apenas a api/test/ (testes de aceitação devem usar implementações reais).
+    # Unit tests em api/src/**/*.spec.ts podem usar jest.fn() para isolar dependências injetadas.
+    grep: ["jest.fn(", ".mockReturnValue(", ".overrideProvider(", "jest.mock(", ".mockRejectedValue(", ".mockResolvedValue(", ".mockImplementation("]
+    in: [api/test]
     expect: zero_hits
   smoke:
     # descritivo — mecânica em prodops/skills/local/payments-api-local-testing/
@@ -76,11 +78,25 @@ gates:
     expect: "201"
     when: bootstrap
 
-# GitHub — Execution Space (não Knowledge Space)
-# Representa trabalho executado sobre artefatos. Artefatos vivem em prodops/ como Markdown.
+# GitHub — Representação operacional canônica do Framework ProdOps
+# GitHub Projects e Issues são a representação operacional canônica do ProdOps.
+# Não existe abstração para outras ferramentas. Ferramentas externas são sync opcionais.
 # Agentes: ler prodops/framework/knowledge-vs-execution.md para o modelo completo.
 github:
   execution_space: true   # representa execução, não conhecimento
+  # Declaração canônica: GitHub é a representação operacional do Framework ProdOps.
+  canonical_operational_representation:
+    tool: GitHub
+    project_type: ProjectsV2
+    work_item_type: Issue
+    view_semantics: projeção canônica de Issues por Journey/Phase/Operation
+    field_semantics: estado operacional necessário para projetar corretamente cada Work Item
+    label_semantics: classificação auxiliar — nunca fonte de verdade para estado
+    note: >
+      GitHub Projects e Issues são a representação operacional canônica do
+      Framework ProdOps. Não existe camada de abstração para outras ferramentas
+      (Jira, Azure DevOps, Linear). Ferramentas externas são sincronizações
+      opcionais — nunca equivalentes ou substitutos.
   # Work Items devem referenciar artefatos explicitamente (tipo + ID + operação)
   work_item_fields: [artifact_type, artifact_id, operation, journey, execution_mode, owner]
   # Domínios de gestão do trabalho via GitHub Projects
@@ -101,6 +117,48 @@ execution_mapping:
   work_item_schema: prodops/framework/execution-mapping/work-item-schema.md
   # Regra: ao criar Work Item, consultar a matriz para operações permitidas
   # e o schema para campos obrigatórios (artifact_type, artifact_id, operation, journey)
+
+# Diligence — Persistência de entidades operacionais
+# Convenções de armazenamento para Finding, Evidence, Remediation e Waiver.
+# NÃO lista instâncias individuais — aponta para convenções e localização.
+diligence:
+  schema_version: "1.0"
+  # Modelo canônico (schemas, estados, regras)
+  model: prodops/framework/journeys/diligence/model/
+  # Catálogo de Checks (definições normativas de regras)
+  checks_catalog: prodops/framework/journeys/diligence/checks/
+  checks_catalog_file: prodops/framework/journeys/diligence/checks/catalog.yaml
+  checks_catalog_schema_version: 1
+  checks_catalog_status: Active
+  # Instâncias de entidades (Findings, Evidence, Remediations, Waivers)
+  instances: prodops/artifacts/diligence/
+  # Índice estruturado de entidades (não é fonte de verdade — é índice)
+  registry: prodops/artifacts/diligence/registry.yaml
+  # Templates para criação de instâncias
+  templates: prodops/templates/diligence/
+  # Política de IDs
+  id_policy:
+    finding:   "FND-YYYY-NNNN"
+    evidence:  "EVD-YYYY-NNNN"
+    remediation: "RMD-YYYY-NNNN"
+    waiver:    "WVR-YYYY-NNNN"
+    check:     "DIL-CATEGORY-NNN"
+    immutable: true          # IDs nunca mudam após criação
+    tool_independent: true   # IDs não dependem de números de GitHub Issue
+  # Localização canônica por tipo de entidade
+  paths:
+    findings:     prodops/artifacts/diligence/findings/
+    evidence:     prodops/artifacts/diligence/evidence/
+    remediations: prodops/artifacts/diligence/remediations/
+    waivers:      prodops/artifacts/diligence/waivers/
+    reports:      prodops/artifacts/diligence/reports/
+  # Referência para protocolo completo de IDs, deduplicação e aprovação
+  # → prodops/artifacts/diligence/README.md
+  github_workspace:
+    specification: prodops/framework/journeys/diligence/github-workspace.md
+    readiness: prodops/framework/journeys/diligence/github-workspace-readiness.md
+    schema: prodops/framework/journeys/diligence/github-workspace-schema.yaml
+    implementation_status: planned
 
 # Vocabulário canônico (enums — corrige drift entre docs, skills e instâncias)
 vocabulary:

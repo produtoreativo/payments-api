@@ -1,0 +1,82 @@
+{
+  "_meta": {
+    "experiment": "EXP-015",
+    "iteration": 1,
+    "player": "claude",
+    "agent": "delivery-agent",
+    "spike-version": "1.0.0-spike",
+    "spike-path": "prodops/runtime/tools/emit-event/emit-event.sh",
+    "executed-at": "2026-07-28T17:03:35Z",
+    "execution-id": "ebd56ab0-325c-44f3-96e9-4d496b18eef5",
+    "iteration-id": "EXP-015-I1"
+  },
+  "input": {
+    "event": "Delivery.Bootstrap.Started",
+    "work-item-id": "76",
+    "iteration-id": "EXP-015-I1",
+    "correlation-id": "9c81a3c7-5d1d-4faf-b386-5b41ff7c7f41",
+    "execution-id": "ebd56ab0-325c-44f3-96e9-4d496b18eef5",
+    "actor": {
+      "player": "claude",
+      "agent": "delivery-agent"
+    },
+    "payload": {}
+  },
+  "output": {
+    "status": "accepted",
+    "event-id": "5c1ca69b-4db7-45f7-b0bc-5e36f8f0eedd",
+    "event-type": "prodops.delivery.bootstrap.started",
+    "correlation-id": "9c81a3c7-5d1d-4faf-b386-5b41ff7c7f41",
+    "derived-state": "BOOTSTRAPPING",
+    "github-sync": "success",
+    "datadog-sync": "success",
+    "errors": []
+  },
+  "cloudevent": {
+    "specversion": "1.0",
+    "id": "5c1ca69b-4db7-45f7-b0bc-5e36f8f0eedd",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.bootstrap.started",
+    "subject": "76",
+    "time": "2026-07-28T17:03:35Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/bootstrap/started/v1.0.0",
+    "data": {
+      "issue": "76",
+      "journey": "Delivery",
+      "cycle": "Bootstrap",
+      "phase": "Started",
+      "alters-state": true,
+      "new-state": "BOOTSTRAPPING",
+      "runtime-correlation-id": "9c81a3c7-5d1d-4faf-b386-5b41ff7c7f41",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  "derived-state": {
+    "issue": "76",
+    "state": "BOOTSTRAPPING",
+    "last-event-type": "prodops.delivery.bootstrap.started",
+    "runtime-correlation-id": "9c81a3c7-5d1d-4faf-b386-5b41ff7c7f41",
+    "runtime-version": "0.3.0",
+    "framework-version": "1.0.0",
+    "schema-version": "1",
+    "computed-at": "2026-07-28T17:03:37Z"
+  },
+  "pipeline-steps": {
+    "emit": "success",
+    "timeline": "success",
+    "derive-state": "success",
+    "datadog": "success",
+    "github": "success"
+  },
+  "idempotency-check": {
+    "re-run-with-same-correlation-id": {
+      "exit-code": 4,
+      "output-status": "skipped",
+      "github-sync": "skipped",
+      "datadog-sync": "skipped"
+    }
+  }
+}

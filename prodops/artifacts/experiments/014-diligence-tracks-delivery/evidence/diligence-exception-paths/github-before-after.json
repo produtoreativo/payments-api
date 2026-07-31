@@ -1,0 +1,59 @@
+{
+  "demo-run-id": "exp-014-exc-2026-07-27-2249",
+  "scenario": "C — drift introduced on #78 oem-state",
+  "drift-field": "oem-state",
+  "drift-value": "BOOTSTRAPPING",
+  "repaired-to": "HACKING",
+  "repair-source": "Timeline → Derived State",
+  "github-before-drift": [
+    {
+      "issue": 78,
+      "fields": {
+        "oem-state": "HACKING",
+        "Status": "Todo",
+        "diligence-status": "Attached",
+        "diligence-evidence": "Complete",
+        "runtime-sync": "In Sync"
+      }
+    }
+  ],
+  "github-after-repair": [
+    {
+      "issue": 76,
+      "fields": {
+        "Title": "FTR-001: Invoice PIX — Happy Path Completo",
+        "Status": "Todo",
+        "oem-state": "DONE",
+        "oem-last-event": "prodops.delivery.promote.completed",
+        "diligence-status": "Closed",
+        "diligence-evidence": "Complete",
+        "runtime-sync": "In Sync"
+      }
+    },
+    {
+      "issue": 77,
+      "fields": {
+        "Title": "FTR-002: Invoice Cartão — Happy Path sem PAN",
+        "Status": "Todo",
+        "oem-state": "VALIDATING",
+        "oem-last-event": "prodops.delivery.validate.started",
+        "diligence-status": "Closed",
+        "diligence-evidence": "Complete",
+        "runtime-sync": "In Sync"
+      }
+    },
+    {
+      "issue": 78,
+      "fields": {
+        "Title": "FTR-003: Confirmação de Pagamento — Webhook",
+        "oem-state": "HACKING",
+        "Status": "Todo",
+        "oem-last-event": "prodops.delivery.hack.started",
+        "diligence-status": "Closed",
+        "diligence-evidence": "Complete",
+        "runtime-sync": "In Sync",
+        "diligence-finding-id": "FND-202607272251-78"
+      }
+    }
+  ]
+}

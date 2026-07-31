@@ -97,11 +97,13 @@ flowchart TD
 - **Business Intent:** decisão estratégica de perseguir valor. Nasce quando o Portfolio (Fluxo Global) ou o Product Owner (Fluxo Local) aceita o Business Signal. A Business Intent documenta o valor a ser gerado, o contexto, as perguntas em aberto e o modo de execução sugerido.
 
 **O que é produzido:**
-- Business Signal Issue (GitHub: Portfolio GitHub Project)
+- Registro do Business Signal na tracking list canônica (`tracking-list.md`)
 - Documento de Business Intent em `prodops/artifacts/business-intents/<slug>.md`
 - Origin Stream declarado
 - Hipóteses e perguntas em aberto listadas
 - Sugestão de modo de execução (Upstream ou Downstream)
+
+> **Nota:** Um Work Item (GitHub Issue) sobre o Business Signal é criado somente quando há operação ativa em andamento — não automaticamente ao registrar o Signal. A ausência de Work Item não é uma divergência enquanto não houver operação ativa identificada.
 
 **Quando avançar:** Assim que a Business Intent estiver registrada e sua abrangência permitir escolher um dos caminhos: Global, quando o produto responsável ainda não está definido; ou Local, quando o destino já é conhecido.
 

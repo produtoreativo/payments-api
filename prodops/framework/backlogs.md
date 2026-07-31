@@ -8,12 +8,12 @@ O trabalho nunca pula níveis sem justificativa explícita registrada no OBC.
 
 ## Modelo de entidades → backlogs
 
-| Entidade | Onde vive | Representação no GitHub |
+| Entidade | Onde vive | Representação no Execution Space |
 |---|---|---|
-| **Business Signal** | Portfolio Tracking List (plataforma) ou Product Tracking List (produto) | Business Signal Issue |
-| **Business Intent** | Business Intent Backlog e Product Backlog | Business Intent Issue |
+| **Business Signal** | Portfolio Tracking List (plataforma) ou Product Tracking List (produto) | Work Items quando há operação ativa — não automaticamente |
+| **Business Intent** | Business Intent Backlog e Product Backlog | Work Items quando há operação ativa — não automaticamente |
 
-> **Nota:** A Business Intent existe tanto no Business Intent Backlog quanto no Product Backlog (após OBC Partitioning). Cada Intent possui um Local OBC como documento de contrato. O OBC é um documento Markdown — não tem representação como Issue.
+> **Nota:** A Business Intent existe tanto no Business Intent Backlog quanto no Product Backlog (após OBC Partitioning). Cada Intent possui um Local OBC como documento de contrato. O OBC é um documento Markdown — não tem representação como Issue. A ausência de Work Item não é uma divergência por si só — só é divergência quando há operação ativa sem Work Item rastreável. Ver [knowledge-vs-execution.md](knowledge-vs-execution.md).
 
 **Regra crítica:** Entidades nunca mudam de identidade. Um Business Signal **gera** Business Intents — não se torna uma. Uma Business Intent pode ser criada diretamente no BIB sem passar pela Tracking List. Quando originada de um Business Signal, mantém referência opcional ao Signal de origem.
 
@@ -126,7 +126,7 @@ Um item pode estar no BIB, associado a um Roadmap e a uma Platform Release, ao m
 
 ### OBC Partitioning
 
-**O que é:** Capability responsável por transformar o Global OBC em Local OBCs — um por produto envolvido. Ocorre após o Discovery no BIB, antes da criação de itens nos Product Backlogs dos produtos.
+**O que é:** Processo de governança responsável por particionar o Global OBC em Local OBCs — um por produto envolvido. Ocorre após o Discovery no BIB, antes da criação de itens nos Product Backlogs dos produtos. Não é uma Framework Capability — é uma atividade pontual de responsabilidade humana.
 
 **Responsabilidades:**
 - Identificar os produtos envolvidos na implementação

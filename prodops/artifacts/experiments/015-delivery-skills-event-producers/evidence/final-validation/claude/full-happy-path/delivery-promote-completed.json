@@ -1,0 +1,92 @@
+{
+  "_meta": {
+    "experiment": "EXP-015",
+    "tool-version": "1.0.0",
+    "player": "claude",
+    "agent": "promote-agent",
+    "iteration-id": "IP-EXP015-FULLPATH",
+    "execution-id": "6e07a76c-dbf7-4a2f-9e4c-da46ca925c0d",
+    "executed-at": "2026-07-28T19:51:54Z"
+  },
+  "input": {
+    "event": "Delivery.Promote.Completed",
+    "work-item-id": "957",
+    "iteration-id": "IP-EXP015-FULLPATH",
+    "correlation-id": "03f16d80-a07d-490c-996b-7db102ab831f",
+    "execution-id": "6e07a76c-dbf7-4a2f-9e4c-da46ca925c0d",
+    "actor": {
+      "player": "claude",
+      "agent": "promote-agent"
+    },
+    "payload": {}
+  },
+  "output": {
+    "status": "accepted",
+    "event-id": "6b87c547-b39b-466f-9d9e-70b66957c3ac",
+    "event-type": "prodops.delivery.promote.completed",
+    "correlation-id": "03f16d80-a07d-490c-996b-7db102ab831f",
+    "derived-state": "DONE",
+    "github-sync": "error",
+    "datadog-sync": "success",
+    "dispatch": {
+      "status": "success",
+      "subscriptions": [
+        {
+          "subscriber": "diligence.promote",
+          "status": "success"
+        }
+      ]
+    },
+    "cloudevent": null,
+    "errors": []
+  },
+  "cloudevent": {
+    "specversion": "1.0",
+    "id": "6b87c547-b39b-466f-9d9e-70b66957c3ac",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.promote.completed",
+    "subject": "957",
+    "time": "2026-07-28T19:51:36Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/promote/completed/v1.0.0",
+    "data": {
+      "issue": "957",
+      "journey": "Delivery",
+      "cycle": "Promote",
+      "phase": "Completed",
+      "alters-state": true,
+      "new-state": "DONE",
+      "runtime-correlation-id": "03f16d80-a07d-490c-996b-7db102ab831f",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  "derived-state": {
+    "issue": "957",
+    "state": "DONE",
+    "last-event-type": "prodops.delivery.promote.completed",
+    "runtime-correlation-id": "03f16d80-a07d-490c-996b-7db102ab831f",
+    "runtime-version": "0.3.0",
+    "framework-version": "1.0.0",
+    "schema-version": "1",
+    "computed-at": "2026-07-28T19:51:38Z"
+  },
+  "pipeline-steps": {
+    "emit": "success",
+    "timeline": "success",
+    "derive-state": "success",
+    "datadog": "success",
+    "github": "error",
+    "dispatch": "success"
+  },
+  "dispatch": {
+    "status": "success",
+    "subscriptions": [
+      {
+        "subscriber": "diligence.promote",
+        "status": "success"
+      }
+    ]
+  }
+}

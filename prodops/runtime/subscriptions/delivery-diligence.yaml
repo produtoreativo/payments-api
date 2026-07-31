@@ -1,0 +1,27 @@
+# Declarative Diligence subscriptions — EXP-015 Iteration 9
+#
+# Delivery Skills emit facts. This file declares which Diligence Skills react
+# to which Delivery events. The Runtime dispatcher reads this configuration and
+# triggers the appropriate Diligence skill. Delivery is never aware of Diligence.
+#
+# Format:
+#   <event-cloud-type>:
+#     - <diligence-skill-name>    # triggers this skill when the event is processed
+#
+# The skill name maps to Diligence events:
+#   diligence.capture → Diligence.Capture.Started + Diligence.Capture.Completed
+#   diligence.attach  → Diligence.Attach.Started  + Diligence.Attach.Completed
+#   diligence.promote → Diligence.Promote.Started  + Diligence.Promote.Completed
+
+subscriptions:
+  prodops.delivery.bootstrap.completed:
+    - diligence.capture
+
+  prodops.delivery.block.declared:
+    - diligence.capture    # Diligence Sync reacts to delivery blocks automatically
+
+  prodops.delivery.validate.completed:
+    - diligence.attach
+
+  prodops.delivery.promote.completed:
+    - diligence.promote

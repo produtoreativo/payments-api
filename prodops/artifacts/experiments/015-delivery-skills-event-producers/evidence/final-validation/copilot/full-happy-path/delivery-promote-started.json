@@ -1,0 +1,82 @@
+{
+  "_meta": {
+    "experiment": "EXP-015",
+    "tool-version": "1.0.0",
+    "player": "copilot",
+    "agent": "promote-agent",
+    "iteration-id": "IP-EXP015-FULLPATH",
+    "execution-id": "02d0e083-f0c4-41b1-a5f4-bdf92f6248cf",
+    "executed-at": "2026-07-28T19:45:25Z"
+  },
+  "input": {
+    "event": "Delivery.Promote.Started",
+    "work-item-id": "983",
+    "iteration-id": "IP-EXP015-FULLPATH",
+    "correlation-id": "26011132-6684-401d-ad71-2840491baa19",
+    "execution-id": "02d0e083-f0c4-41b1-a5f4-bdf92f6248cf",
+    "actor": {
+      "player": "copilot",
+      "agent": "promote-agent"
+    },
+    "payload": {}
+  },
+  "output": {
+    "status": "accepted",
+    "event-id": "06d8e6ef-8253-404b-b717-a08aaf33a0d8",
+    "event-type": "prodops.delivery.promote.started",
+    "correlation-id": "26011132-6684-401d-ad71-2840491baa19",
+    "derived-state": "PROMOTING",
+    "github-sync": "error",
+    "datadog-sync": "success",
+    "dispatch": {
+      "status": "skipped",
+      "subscriptions": []
+    },
+    "cloudevent": null,
+    "errors": []
+  },
+  "cloudevent": {
+    "specversion": "1.0",
+    "id": "06d8e6ef-8253-404b-b717-a08aaf33a0d8",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.promote.started",
+    "subject": "983",
+    "time": "2026-07-28T19:45:20Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/promote/started/v1.0.0",
+    "data": {
+      "issue": "983",
+      "journey": "Delivery",
+      "cycle": "Promote",
+      "phase": "Started",
+      "alters-state": true,
+      "new-state": "PROMOTING",
+      "runtime-correlation-id": "26011132-6684-401d-ad71-2840491baa19",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  "derived-state": {
+    "issue": "983",
+    "state": "PROMOTING",
+    "last-event-type": "prodops.delivery.promote.started",
+    "runtime-correlation-id": "26011132-6684-401d-ad71-2840491baa19",
+    "runtime-version": "0.3.0",
+    "framework-version": "1.0.0",
+    "schema-version": "1",
+    "computed-at": "2026-07-28T19:45:22Z"
+  },
+  "pipeline-steps": {
+    "emit": "success",
+    "timeline": "success",
+    "derive-state": "success",
+    "datadog": "success",
+    "github": "error",
+    "dispatch": "skipped"
+  },
+  "dispatch": {
+    "status": "skipped",
+    "subscriptions": []
+  }
+}

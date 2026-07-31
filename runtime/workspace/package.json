@@ -1,0 +1,32 @@
+{
+  "name": "@prodops/workspace-provisioner",
+  "version": "0.1.0",
+  "description": "ProdOps Workspace Provisioner — materializes the COR into GitHub Projects",
+  "type": "module",
+  "scripts": {
+    "provision": "tsx src/cli.ts provision",
+    "doctor": "tsx src/cli.ts doctor",
+    "build": "tsc --project tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "bin": {
+    "workspace": "dist/cli.js"
+  },
+  "dependencies": {
+    "@vitest/coverage-v8": "^4.1.10",
+    "vitest": "^4.1.10",
+    "yaml": "^2.4.5"
+  },
+  "optionalDependencies": {
+    "playwright": "^1.62.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.15.6",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

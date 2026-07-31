@@ -8,12 +8,12 @@ Work never skips levels without explicit justification recorded in the OBC.
 
 ## Entity → backlog model
 
-| Entity | Where it lives | GitHub representation |
+| Entity | Where it lives | Execution Space representation |
 |---|---|---|
-| **Business Signal** | Portfolio Tracking List (platform) or Product Tracking List (product) | Business Signal Issue |
-| **Business Intent** | Business Intent Backlog and Product Backlog | Business Intent Issue |
+| **Business Signal** | Portfolio Tracking List (platform) or Product Tracking List (product) | Work Items when there is an active operation — not automatically |
+| **Business Intent** | Business Intent Backlog and Product Backlog | Work Items when there is an active operation — not automatically |
 
-> **Note:** A Business Intent exists in both the Business Intent Backlog and the Product Backlog (after OBC Partitioning). Each Intent owns a Local OBC as its contract document. The OBC is a Markdown document — it does not have an Issue representation.
+> **Note:** A Business Intent exists in both the Business Intent Backlog and the Product Backlog (after OBC Partitioning). Each Intent owns a Local OBC as its contract document. The OBC is a Markdown document — it does not have an Issue representation. The absence of a Work Item is not a divergence by itself — it only is a divergence when there is an active operation without a traceable Work Item. See [knowledge-vs-execution.en.md](knowledge-vs-execution.en.md).
 
 **Critical rule:** Entities never change identity. A Business Signal **generates** Business Intents — it does not become one. A Business Intent can be created directly in the BIB without passing through the Tracking List. When originating from a Business Signal, it stores an optional back-reference to the originating Signal.
 

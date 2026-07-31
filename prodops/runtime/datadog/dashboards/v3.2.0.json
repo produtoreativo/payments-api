@@ -1,0 +1,703 @@
+{
+  "title": "ProdOps Runtime \u2014 Delivery & Diligence v3",
+  "description": "v3.2.0 | L1: KPIs (h=6) | L2: Funil+DeliveryJourney\u00d78 (h=6/phase) | L3: Diligence\u00d74 (h=6) | L4: ExceptionPaths\u00d74 (h=6). Filter: service, env.",
+  "layout_type": "free",
+  "tags": [
+    "team:prodops"
+  ],
+  "widgets": [
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Iteration Ativas",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 3,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "DONE \u2014 Conclu\u00eddas",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.promote.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 3,
+        "y": 0,
+        "width": 3,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Falhas \u2014 Bloqueios",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.block.declared,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_red"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 0,
+        "width": 3,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Lead Time (dias)",
+        "precision": 1,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "avg:runtime.delivery.lead_time_days{service:$service.value,env:$env.value}",
+            "aggregator": "avg"
+          }
+        ],
+        "custom_unit": "d"
+      },
+      "layout": {
+        "x": 9,
+        "y": 0,
+        "width": 3,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Funil de Entrega \u2014 Eventos por Stage",
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.started,service:$service.value,env:$env.value}.as_count()",
+            "display_type": "bars",
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            }
+          },
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.hack.started,service:$service.value,env:$env.value}.as_count()",
+            "display_type": "bars",
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            }
+          },
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.sync.started,service:$service.value,env:$env.value}.as_count()",
+            "display_type": "bars",
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            }
+          },
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.finish.started,service:$service.value,env:$env.value}.as_count()",
+            "display_type": "bars",
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            }
+          },
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.ship.started,service:$service.value,env:$env.value}.as_count()",
+            "display_type": "bars",
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            }
+          },
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.validate.started,service:$service.value,env:$env.value}.as_count()",
+            "display_type": "bars",
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            }
+          },
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.promote.started,service:$service.value,env:$env.value}.as_count()",
+            "display_type": "bars",
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            }
+          },
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.promote.completed,service:$service.value,env:$env.value}.as_count()",
+            "display_type": "bars",
+            "style": {
+              "palette": "dog_classic",
+              "line_type": "solid",
+              "line_width": "normal"
+            }
+          }
+        ],
+        "show_legend": true,
+        "legend_layout": "vertical",
+        "legend_columns": [
+          "sum"
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 6,
+        "width": 4,
+        "height": 14
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "C \u2014 DELIVERY JOURNEY",
+        "background_color": "vivid_orange",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 4,
+        "y": 6,
+        "width": 8,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Bootstrap",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 8,
+        "width": 2,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Hack",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.hack.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 8,
+        "width": 2,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Sync",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.sync.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 8,
+        "y": 8,
+        "width": 2,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Finish",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.finish.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 10,
+        "y": 8,
+        "width": 2,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Ship",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.ship.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 14,
+        "width": 2,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Validate",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.validate.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 14,
+        "width": 2,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Promote",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.promote.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 8,
+        "y": 14,
+        "width": 2,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "DONE \u2713",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.promote.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 10,
+        "y": 14,
+        "width": 2,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "D \u2014 DILIGENCE STATUS",
+        "background_color": "vivid_green",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 20,
+        "width": 12,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Capture",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.capture.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 22,
+        "width": 3,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Attach",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.attach.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 3,
+        "y": 22,
+        "width": 3,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Promote",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.promote.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 22,
+        "width": 3,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Close \u2713",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.close.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 9,
+        "y": 22,
+        "width": 3,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "E \u2014 EXCEPTION PATHS \u2014 BLOQUEIO \u00b7 DRIFT \u00b7 REPAIR \u00b7 CLOSED",
+        "background_color": "vivid_red",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 28,
+        "width": 12,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "\u26d4 BLOQUEIO",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.block.declared,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_red"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 30,
+        "width": 3,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "\u26a1 DRIFT",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.divergence.detected,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_orange"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 3,
+        "y": 30,
+        "width": 3,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "\ud83d\udd27 REPAIR",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.repair.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 30,
+        "width": 3,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "\u2705 CLOSED",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.close.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">=",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 9,
+        "y": 30,
+        "width": 3,
+        "height": 6
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "service",
+      "prefix": "service",
+      "default": "payments-api"
+    },
+    {
+      "name": "env",
+      "prefix": "env",
+      "default": "development"
+    },
+    {
+      "name": "issue",
+      "prefix": "issue",
+      "default": "*"
+    }
+  ]
+}

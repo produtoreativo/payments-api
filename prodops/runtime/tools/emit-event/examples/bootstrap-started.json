@@ -1,0 +1,12 @@
+{
+  "event": "Delivery.Bootstrap.Started",
+  "work-item-id": "76",
+  "iteration-id": "IP-RUNTIME-001",
+  "correlation-id": "REPLACE-WITH-UUID",
+  "execution-id": "REPLACE-WITH-UUID",
+  "actor": {
+    "player": "claude",
+    "agent": "delivery-agent"
+  },
+  "payload": {}
+}

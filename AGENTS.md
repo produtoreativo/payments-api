@@ -51,7 +51,7 @@ Adicionar linha na tabela "Histórico de mudanças estruturais" do `overview.md`
 Ao criar qualquer Work Item (GitHub Issue, PR, Discussion):
 1. Consultar `prodops/framework/execution-mapping/matrix.md` — verificar se a operação é permitida para o artefato.
 2. Preencher campos obrigatórios: `artifact_type`, `artifact_id`, `operation`, `journey`.
-3. Usar o padrão de título: `[Operation] — [Artifact Type] [Artifact ID]: descrição`.
+3. Usar o padrão de título: `[Artifact ID]: descrição concisa`. A operação e o tipo de artefato vão em campos e labels do Issue — não no título.
 4. Nunca criar Work Item sem referência de artefato.
 
 Referência: `prodops/framework/execution-mapping/work-item-schema.md`

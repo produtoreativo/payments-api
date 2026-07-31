@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "experiment": "EXP-015",
+    "iteration": 1,
+    "player": "copilot",
+    "agent": "delivery-agent",
+    "spike-version": "1.0.0-spike",
+    "spike-path": "prodops/runtime/tools/emit-event/emit-event.sh",
+    "status": "PENDING — awaiting Copilot player execution",
+    "instructions": "See prodops/artifacts/experiments/015-delivery-skills-event-producers/evidence/iteration-1/contract.md § Player Test Instructions"
+  },
+  "input": {
+    "event": "Delivery.Bootstrap.Started",
+    "work-item-id": "76",
+    "iteration-id": "EXP-015-I1",
+    "correlation-id": "COPILOT-PLACEHOLDER-USE-A-NEW-UUID",
+    "execution-id": "COPILOT-PLACEHOLDER-USE-A-NEW-UUID",
+    "actor": {
+      "player": "copilot",
+      "agent": "delivery-agent"
+    },
+    "payload": {}
+  },
+  "output": null,
+  "cloudevent": null,
+  "derived-state": null,
+  "pipeline-steps": null,
+  "idempotency-check": null
+}

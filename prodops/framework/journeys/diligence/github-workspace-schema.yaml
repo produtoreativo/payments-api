@@ -1,0 +1,865 @@
+schema_version: 1
+generated: "2026-07-24"
+status: planned  # planned | partial | implemented
+
+# Source document
+specification: prodops/framework/journeys/diligence/github-workspace.md
+
+# ============================================================================
+# OPERATIONS CONVERGENCE DECISIONS (Step 1)
+# ============================================================================
+#
+# | Necessidade da Diligence  | Operação existente | Decisão                          |
+# |---------------------------|-------------------|----------------------------------|
+# | Investigar Finding        | Review            | REUTILIZAR — Review cobre        |
+# |                           |                   | avaliação e investigação de      |
+# |                           |                   | qualquer artefato                |
+# | Implementar Remediation   | Implement         | REUTILIZAR — Implement cobre     |
+# |                           |                   | implementação de correções;      |
+# |                           |                   | Repair é nome de fase, não op.   |
+# | Verificar Remediation     | Validate          | REUTILIZAR — Validate cobre      |
+# |                           |                   | verificação contra critérios     |
+# |                           |                   | objetivos com independência      |
+# | Aprovar Waiver            | Approve           | REUTILIZAR — Approve + Artifact  |
+# |                           |                   | Type = Waiver é suficiente para  |
+# |                           |                   | filtro e governança de Waiver    |
+# | Revisar Waiver            | Review            | REUTILIZAR — Review cobre        |
+# |                           |                   | revisão de qualquer artefato     |
+# | Coletar Evidence          | Capture           | REUTILIZAR — Capture cobre       |
+# |                           |                   | "registrar observação";          |
+# |                           |                   | Capture + Artifact Type =        |
+# |                           |                   | Evidence é suficiente            |
+# | Reconciliar Workspace     | (nenhuma)         | CRIAR `Reconcile` — nenhuma      |
+# |                           |                   | operação existente cobre         |
+# |                           |                   | "alinhar estado real ao estado   |
+# |                           |                   | declarado"; semântica distinta   |
+# |                           |                   | de Update, Implement e Validate  |
+#
+# Operações NÃO adicionadas (rationale):
+# - Approve Waiver: redundante com Approve + Artifact Type = Waiver;
+#   operações compostas criam inconsistência de vocabulário
+# - Collect Evidence: redundante com Capture + Artifact Type = Evidence;
+#   Capture já existe e cobre a semântica de registrar/capturar
+# - Repair: nome de fase do Diligence Async, não uma operação de Work Item;
+#   Implement cobre a semântica de implementar uma correção
+# - Investigate: sinônimo de Review no contexto operacional; Review é mais geral
+#   e preferido para minimizar vocabulário
+#
+# Operação CRIADA:
+# - Reconcile: adicionada a work-item-schema.md (família Execução);
+#   cobre "alinhar estado real ao estado canônico declarado" — semântica
+#   exclusiva sem equivalente nos 20 existentes
+# ============================================================================
+
+project:
+  purpose: >
+    Representação operacional do trabalho da Jornada de Diligence no GitHub.
+    O Project organiza Work Items e operações rastreáveis — não as entidades
+    canônicas do Knowledge Space.
+  source_of_truth: execution-space
+  finding_representation: >
+    Finding não é Issue. O Project mostra operações sobre Findings,
+    não os Findings em si. Finding sem Work Item ativo = estado correto.
+  principle: >
+    O GitHub representa operações sobre entidades da Diligence.
+    Ele não representa as entidades canônicas em si.
+
+fields:
+  # =========================================================================
+  # A. Base existentes (já existem no Project — documentar estado esperado)
+  # =========================================================================
+
+  - name: Status
+    classification: base_existing
+    required: true
+    type: single_select
+    options:
+      - Todo
+      - In Progress
+      - Done
+      - Blocked
+      - Cancelled
+    source_of_truth: github
+    direction: execution-only
+    editable: true
+    implementation_phase: A
+    automation_required: false
+    drift_policy: >
+      Low — campo é owned pelo Execution Space; estado da operação é
+      independente do estado da entidade canônica
+
+  - name: Repository
+    classification: base_existing
+    required: true
+    type: repository
+    source_of_truth: github
+    direction: execution-only
+    editable: false
+    implementation_phase: A
+    automation_required: false
+    drift_policy: None
+
+  - name: Owner
+    classification: base_existing
+    required: false
+    type: assignees
+    source_of_truth: github
+    direction: execution-only
+    editable: true
+    implementation_phase: A
+    automation_required: false
+    drift_policy: Low
+
+  # =========================================================================
+  # B. Canônicos do Work Item (from work-item-schema.md — criar como campos)
+  # =========================================================================
+
+  - name: Journey
+    classification: work_item_canonical
+    required: true
+    type: single_select
+    options:
+      - Discovery
+      - Assessment
+      - Delivery
+      - Operation
+      - Diligence
+    source_of_truth: work_item
+    direction: knowledge_to_github
+    editable: false  # deve corresponder ao front matter do Work Item
+    implementation_phase: C
+    automation_required: false  # definido na criação do Work Item
+    drift_policy: >
+      High — se Journey = Diligence estiver incorreto, Work Item não aparece
+      nas Views de Diligence e traceabilidade é perdida; detectável por DIL-WSP-001
+
+  - name: Cycle
+    classification: work_item_canonical
+    required: true
+    type: single_select
+    options:
+      - diligence-sync
+      - diligence-async
+      - workspace-reconciliation  # nota: WR é Capability; valor usado para Work Items
+                                  # de operações específicas de reconciliação
+    note: >
+      Workspace Reconciliation é uma Capability (não um terceiro Cycle canônico).
+      O valor "workspace-reconciliation" identifica Work Items de operações de
+      reconciliação do workspace. Quando invocado por diligence-sync ou
+      diligence-async, o Cycle parent pode ser declarado no body do Issue via
+      related_references.
+    source_of_truth: work_item
+    direction: knowledge_to_github
+    editable: false
+    implementation_phase: C
+    automation_required: false
+    drift_policy: Medium
+
+  - name: Phase
+    classification: work_item_canonical
+    required: true
+    type: single_select
+    options:
+      # Diligence Sync
+      - Capture
+      - Attach
+      - Promote
+      - Close
+      # Diligence Async
+      - Scan
+      - Flag
+      - Repair
+      # Workspace Reconciliation (steps internos da Capability)
+      - Inspect
+      - Reconcile
+      - Verify
+    source_of_truth: work_item
+    direction: knowledge_to_github
+    editable: false
+    implementation_phase: C
+    automation_required: false
+    drift_policy: Medium
+
+  - name: Operation
+    classification: work_item_canonical
+    required: true
+    type: single_select
+    options:
+      # Convergência canônica de operações para Diligence
+      # (baseada na análise de convergência documentada no cabeçalho deste arquivo)
+      - Review        # investigar Finding, revisar Waiver, avaliar artefato
+      - Implement     # implementar Remediation (fase Repair do Diligence Async)
+      - Validate      # verificar Remediation com independência, executar Check
+      - Approve       # aprovar Waiver (combinado com Artifact Type = Waiver)
+      - Capture       # capturar Evidence, registrar divergência
+      - Attach        # anexar Evidence existente a artefato
+      - Reconcile     # alinhar estado real ao estado declarado (nova operação)
+      - Promote       # promover Finding para estado subsequente (diligence-sync)
+      - Close         # fechar Finding após critérios satisfeitos
+      # Operações canônicas existentes também aplicáveis
+      - Create        # criar nova entidade Diligence (Finding, Waiver, etc.)
+      - Update        # atualizar conteúdo de entidade existente
+    source_of_truth: work_item
+    direction: knowledge_to_github
+    editable: true  # pode ser atualizado quando a operação muda de fase
+    implementation_phase: C
+    automation_required: false
+    drift_policy: Medium
+
+  - name: Mode
+    classification: work_item_canonical
+    required: true
+    type: single_select
+    options:
+      - Sync
+      - Async
+      - Manual
+    source_of_truth: work_item
+    direction: knowledge_to_github
+    editable: false
+    implementation_phase: C
+    automation_required: false
+    drift_policy: Low
+
+  - name: Artifact ID
+    classification: work_item_canonical
+    required: true
+    type: text
+    description: >
+      ID canônico da entidade primária. Formatos por tipo:
+      FND-YYYY-NNNN (Finding),
+      RMD-YYYY-NNNN (Remediation),
+      WVR-YYYY-NNNN (Waiver),
+      EVD-YYYY-NNNN (Evidence),
+      DIL-CAT-NNN (Check).
+      O ID é imutável após criação e independente de número de Issue.
+    source_of_truth: work_item
+    direction: knowledge_to_github
+    editable: false  # definido na criação; mudança = novo Work Item
+    implementation_phase: C
+    automation_required: false
+    drift_policy: >
+      High — Artifact ID é âncora primária de traceabilidade;
+      divergência entre campo e artefato canônico cria inconsistência de auditoria
+
+  - name: Artifact Type
+    classification: work_item_canonical
+    required: true
+    type: single_select
+    options:
+      # Entidades canônicas da Diligence
+      - Finding
+      - Remediation
+      - Waiver
+      - Evidence
+      - Check
+      # Outras entidades do Knowledge Space (compatibilidade com outros journeys)
+      - OBC
+      - Business Signal
+      - Business Intent
+      - BDD Feature
+      - Architecture
+      - Reliability Plan
+      - Release Trail
+      - Experiment
+      - Risk Register
+    source_of_truth: work_item
+    direction: knowledge_to_github
+    editable: false
+    implementation_phase: C
+    automation_required: false
+    drift_policy: >
+      High — Artifact Type combinado com Artifact ID forma o par de identificação
+      primária; divergência gera traceabilidade incorreta
+
+  # =========================================================================
+  # C. Campos derivados (requerem automação — NÃO na primeira reconciliação)
+  # =========================================================================
+
+  - name: Blocking
+    classification: derived
+    required: false
+    type: boolean
+    formula: >
+      check.blocking = true
+      AND finding.status IN [Open, Acknowledged, In Remediation]
+      AND check.scope aplicável ao contexto do Work Item
+      AND NOT (waiver.status = Active AND waiver.expires_at > now())
+    source_of_truth: finding_file + check_catalog + waiver_file
+    direction: knowledge_to_github
+    editable: false  # NUNCA editável manualmente — edição cria drift detectável por DIL-WSP-001
+    implementation_phase: E
+    automation_required: true
+    drift_policy: >
+      Critical — edição manual de Blocking NÃO suspende a regra canônica;
+      suspensão requer Waiver canônico válido (WVR-YYYY-NNNN com status Active
+      e expires_at futuro); edit manual = Finding de drift imediato
+    guardrail: >
+      Blocking = false manual é ANTI-PADRÃO. A única via de suspensão é
+      Waiver canônico com todos os campos obrigatórios e Evidence de aprovação.
+
+  - name: Waiver Expiration
+    classification: derived
+    required: false
+    type: date
+    description: >
+      Data de expiração derivada do campo expires_at do arquivo WVR-YYYY-NNNN.md.
+      Editável no Project = violação canônica; renovação requer novo WVR com novo ID.
+    source_of_truth: waiver_file.expires_at
+    direction: knowledge_to_github
+    editable: false
+    implementation_phase: E
+    automation_required: true
+    drift_policy: >
+      Critical — expiração não é renovável via edição de campo no Project;
+      renovação = novo arquivo WVR-YYYY-NNNN+1 com nova Evidence de aprovação;
+      Waiver expirado retorna blocking_effective = true imediatamente
+
+  - name: Finding Status
+    classification: derived
+    required: false
+    type: single_select
+    options:
+      - Open
+      - Acknowledged
+      - In Remediation
+      - Resolved
+      - Verified
+      - Waived
+      - Closed
+    description: >
+      Estado canônico do Finding, derivado do campo status do arquivo
+      FND-YYYY-NNNN.md. Finding Status é INDEPENDENTE do Work Item Status.
+      Fechar Work Item NÃO altera Finding Status. Finding transiciona somente
+      quando critérios canônicos são satisfeitos (Evidence, Check Pass, Waiver).
+    source_of_truth: finding_file.status
+    direction: knowledge_to_github
+    editable: false  # estado de entidade, não de operação
+    implementation_phase: E
+    automation_required: true
+    drift_policy: >
+      High — Finding Status e Work Item Status são independentes e nunca
+      sincronizados por fechamento de Issue; edição manual = drift estrutural
+
+  - name: Finding Severity
+    classification: derived
+    required: false
+    type: single_select
+    options:
+      - Critical
+      - High
+      - Medium
+      - Low
+      - Info
+    description: >
+      Severidade canônica do Finding, derivada do campo severity do arquivo
+      FND-YYYY-NNNN.md. Editável no Project = drift imediato.
+    source_of_truth: finding_file.severity
+    direction: knowledge_to_github
+    editable: false
+    implementation_phase: E
+    automation_required: true
+    drift_policy: High
+
+  # =========================================================================
+  # D. Rejeitados ou adiados (com razão documentada)
+  # =========================================================================
+
+  - name: Check Result
+    classification: rejected
+    required: false
+    reason: >
+      Check Result é temporal — um Check pode ser executado múltiplas vezes.
+      Campo de texto ou single_select não captura histórico de execuções.
+      Referência a Evidence (EVD-*) no Issue body é suficiente para v1.
+      Campo pode ser considerado na v2 se houver necessidade demonstrada de
+      filtro por resultado de Check específico.
+    implementation_phase: deferred
+
+  - name: Finding ID
+    classification: rejected
+    reason: >
+      Artifact ID + Artifact Type (Finding) cobre o caso.
+      Campo redundante cria drift quando Work Item referencia múltiplos Findings.
+      Usar related_references no Issue body para Findings secundários.
+    implementation_phase: rejected
+
+  - name: Remediation ID
+    classification: rejected
+    reason: >
+      Artifact ID + Artifact Type (Remediation) cobre o caso.
+      Redundante com a estratégia Artifact ID + Artifact Type.
+    implementation_phase: rejected
+
+  - name: Waiver ID
+    classification: rejected
+    reason: >
+      Artifact ID + Artifact Type (Waiver) cobre o caso.
+      Redundante com a estratégia Artifact ID + Artifact Type.
+    implementation_phase: rejected
+
+  - name: Check ID
+    classification: rejected
+    reason: >
+      Artifact ID + Artifact Type (Check) cobre o caso quando Work Item é
+      sobre um Check. Em outros casos, Check ID fica em related_references
+      no Issue body como referência secundária.
+    implementation_phase: rejected
+
+labels:
+  # =========================================================================
+  # Labels aprovadas
+  # =========================================================================
+
+  - name: diligence
+    status: approved
+    purpose: Identifica todos os Work Items da Jornada de Diligence
+    use_outside_project: true  # útil em PRs, buscas globais, automações de repo
+    redundant_with_field: Journey (parcialmente)
+    justification: >
+      Útil em PRs (que não são Project items), buscas globais via gh issue list,
+      e automações de repositório. Journey field filtra dentro do Project;
+      label filtra globalmente sem depender de Project específico.
+    implementation_phase: C
+
+  - name: diligence:investigation
+    status: approved
+    purpose: Operação de investigação de Finding (Operation = Review, Artifact Type = Finding)
+    use_outside_project: true
+    redundant_with_field: Operation + Artifact Type (parcialmente)
+    justification: >
+      Útil em PRs e automações onde a combinação de campos do Project não
+      está disponível para filtragem. Label classifica Issues e PRs no
+      contexto global do repositório.
+    implementation_phase: C
+
+  - name: diligence:remediation
+    status: approved
+    purpose: Operação de implementação de Remediation (Operation = Implement, Artifact Type = Remediation)
+    use_outside_project: true
+    redundant_with_field: Operation + Artifact Type (parcialmente)
+    justification: >
+      Mesma justificativa que diligence:investigation — útil em PRs de
+      implementação onde o Project field não está disponível para filtro.
+    implementation_phase: C
+
+  - name: diligence:verification
+    status: approved
+    purpose: Operação de verificação pós-Remediation (Operation = Validate)
+    use_outside_project: true
+    redundant_with_field: Operation (parcialmente)
+    justification: >
+      Identificação específica de PRs e Issues de verificação independente.
+      Facilita busca de Work Items na Verification Queue sem depender do Project.
+    implementation_phase: C
+
+  - name: diligence:waiver-review
+    status: approved
+    purpose: Operação de revisão ou aprovação de Waiver (Artifact Type = Waiver)
+    use_outside_project: true
+    redundant_with_field: Artifact Type + Operation
+    justification: >
+      Útil em PRs de aprovação de Waiver, que requerem revisores específicos
+      com autoridade para aprovação. A combinação Artifact Type + Operation filtra
+      somente dentro do Project; label filtra PRs globalmente e facilita routing
+      de revisores com autoridade de aprovação de Waiver.
+    implementation_phase: C
+
+  - name: diligence:reconciliation
+    status: approved
+    purpose: Operação de Workspace Reconciliation (Cycle = workspace-reconciliation, Operation = Reconcile)
+    use_outside_project: true
+    redundant_with_field: Cycle + Operation (parcialmente)
+    justification: >
+      Útil para roteamento de Issues de reconciliação fora do Project.
+      Facilita identificação de Work Items de Workspace Reconciliation sem
+      depender de campos do Project v2.
+    implementation_phase: C
+
+  # =========================================================================
+  # Labels adiadas
+  # =========================================================================
+
+  - name: diligence:evidence-collection
+    status: deferred
+    reason: >
+      Depende da adoção de Capture + Artifact Type = Evidence como padrão.
+      Se a combinação de campos for suficiente para identificar Work Items de
+      coleta de Evidence, label específica é desnecessária e aumenta proliferação.
+      Avaliar após Fase C estar implementada e em uso.
+    implementation_phase: deferred
+
+  # =========================================================================
+  # Labels rejeitadas (com razão documentada)
+  # =========================================================================
+
+  - name: "journey:diligence"
+    status: rejected
+    reason: >
+      Redundante com campo Journey e label 'diligence'. Três formas de expressar
+      o mesmo conceito criam inconsistência e proliferação de labels. Preferir
+      label 'diligence' (mais curta, sem namespace journey: desnecessário).
+      O padrão journey:* pode ser mantido para outros contextos onde não existe
+      label direta equivalente.
+    implementation_phase: rejected
+
+  - name: "artifact-type:finding"
+    status: rejected
+    reason: >
+      Redundante com campo Artifact Type. Fora do Project, o Artifact ID no
+      título (FND-YYYY-NNNN) já identifica o tipo. Label artifact-type:*
+      duplica informação sem agregar valor para filtros globais quando o
+      prefixo de ID já indica o tipo.
+    implementation_phase: rejected
+
+  - name: "artifact-type:remediation"
+    status: rejected
+    reason: Mesma razão que artifact-type:finding. RMD-YYYY-NNNN já indica tipo.
+    implementation_phase: rejected
+
+  - name: "artifact-type:waiver"
+    status: rejected
+    reason: >
+      Mesma razão. WVR-YYYY-NNNN já indica tipo. Para roteamento de Waivers,
+      diligence:waiver-review é mais específico e útil.
+    implementation_phase: rejected
+
+  - name: "operation:*"
+    status: deferred
+    reason: >
+      Avaliar após definição final do catálogo de operações estar em uso.
+      Se labels diligence:* forem suficientes para roteamento fora do Project,
+      labels operation:* podem ser evitadas para reduzir proliferação de labels
+      no repositório. Labels operation:repair, operation:validate, operation:review
+      já existem no schema canônico — avaliar reutilização vs. criação específica.
+    implementation_phase: deferred
+
+views:
+  # =========================================================================
+  # Views prontas para Fase C (não dependem de automação)
+  # =========================================================================
+
+  - name: Diligence Operations
+    status: ready
+    purpose: Todos os Work Items ativos da Jornada de Diligence
+    depends_on_fields:
+      - Journey
+      - Status
+    depends_on_automation: false
+    filter: "Journey = Diligence AND Status NOT IN [Done, Cancelled]"
+    group_by: Phase
+    sort: Status ASC
+    visible_fields:
+      - Title
+      - Status
+      - Artifact ID
+      - Artifact Type
+      - Operation
+      - Phase
+      - Owner
+      - Repository
+    implementation_phase: C
+    limitations: >
+      Não mostra Findings sem operação ativa — ausência de Work Item é estado
+      correto, não lacuna. Não representa todas as entidades da Diligence —
+      apenas Work Items com operação em curso.
+
+  - name: Active Remediations
+    status: ready
+    purpose: Work Items cuja entidade primária é Remediation e operação está ativa
+    depends_on_fields:
+      - Artifact Type
+      - Status
+    depends_on_automation: false
+    filter: "Artifact Type = Remediation AND Status IN [Todo, In Progress]"
+    group_by: Phase
+    sort: Status ASC
+    visible_fields:
+      - Title
+      - Status
+      - Artifact ID
+      - Operation
+      - Phase
+      - Owner
+    implementation_phase: C
+    limitations: >
+      Não inclui Remediations sem Work Item ativo. Remediations aprovadas mas
+      sem operação em andamento são invisíveis — visibilidade via registry.yaml.
+
+  - name: Workspace Reconciliation
+    status: ready
+    purpose: Operações associadas à Capability Workspace Reconciliation
+    depends_on_fields:
+      - Cycle
+      - Status
+    depends_on_automation: false
+    filter: "Cycle = workspace-reconciliation AND Status NOT IN [Done, Cancelled]"
+    group_by: Phase
+    sort: Phase ASC
+    visible_fields:
+      - Title
+      - Status
+      - Phase
+      - Artifact ID
+      - Artifact Type
+      - Owner
+    implementation_phase: C
+    limitations: >
+      Workspace Reconciliation é Capability (não Cycle canônico). Work Items de
+      reconciliação invocados por diligence-sync ou diligence-async podem usar
+      Cycle = workspace-reconciliation como classificação prática. Alternativamente,
+      filtrar por label diligence:reconciliation para cobrir todos os Work Items
+      de reconciliação independente do Cycle declarado.
+
+  - name: Verification Queue
+    status: ready
+    purpose: Work Items aguardando verificação independente após Remediation
+    depends_on_fields:
+      - Operation
+      - Status
+    depends_on_automation: false
+    filter: "Operation = Validate AND Status = Todo"
+    group_by: null
+    sort: null
+    visible_fields:
+      - Title
+      - Status
+      - Artifact ID
+      - Artifact Type
+      - Owner
+    implementation_phase: C
+    limitations: >
+      Fila vazia NÃO significa que todos os Findings foram verificados — apenas
+      que não há Work Items de verificação pendentes. Findings não verificados
+      sem Work Item de verificação são invisíveis nesta View. Verificação requer
+      Evidence independente (EVD-*) — não apenas fechar Work Item.
+
+  - name: Diligence History
+    status: ready
+    purpose: Work Items concluídos — preserva histórico de operações da Diligence
+    depends_on_fields:
+      - Journey
+      - Status
+    depends_on_automation: false
+    filter: "Journey = Diligence AND Status = Done"
+    group_by: Phase
+    sort: null
+    visible_fields:
+      - Title
+      - Status
+      - Artifact ID
+      - Artifact Type
+      - Operation
+      - Phase
+      - Owner
+    implementation_phase: C
+    limitations: >
+      Registro histórico de operações — NÃO representa estado atual de Findings.
+      Finding Status não é sincronizado automaticamente com Work Item Status.
+      Histórico de estados de entidade vive nos arquivos canônicos.
+
+  - name: Waiver Reviews
+    status: ready
+    purpose: Operações de revisão, aprovação ou monitoramento de expiração de Waivers
+    depends_on_fields:
+      - Artifact Type
+      - Status
+    depends_on_automation: false  # funciona sem Waiver Expiration field
+    filter: "Artifact Type = Waiver AND Status NOT IN [Done, Cancelled]"
+    group_by: null
+    sort: null
+    visible_fields:
+      - Title
+      - Status
+      - Artifact ID
+      - Operation
+      - Owner
+      # Waiver Expiration — adicionar quando campo derivado disponível (Fase E)
+    implementation_phase: C
+    limitations: >
+      Waiver Expiration derivada só disponível na Fase E. View pode ser criada
+      na Fase C sem o campo de expiração — limitação aceitável para v1.
+      Não representa todos os Waivers — apenas aqueles com Work Item ativo.
+
+  # =========================================================================
+  # Views adiadas (dependem de automação)
+  # =========================================================================
+
+  - name: Blocking Findings
+    status: deferred
+    purpose: Work Items associados a Findings bloqueantes com operação ativa
+    depends_on_fields:
+      - Blocking  # campo derivado — requer automação
+      - Status
+    depends_on_automation: true
+    automation_dependency: >
+      Campo Blocking derivado de Check.blocking + Finding.status + Waiver canônico.
+      Automação deve ler entidades canônicas e calcular blocking_effective por Work Item.
+    filter: "Blocking = true AND Status NOT IN [Done, Cancelled]"
+    group_by: Artifact Type
+    sort: null
+    visible_fields:
+      - Title
+      - Status
+      - Artifact ID
+      - Blocking
+      - Artifact Type
+      - Owner
+    implementation_phase: E
+    limitations: >
+      Requer campo Blocking derivado implementado e validado. View sem campo
+      Blocking = view inoperante. Mesmo com campo, mostra apenas Findings com
+      Work Item ativo — Findings bloqueantes sem Work Item são invisíveis.
+
+templates:
+  # =========================================================================
+  # Templates conceituais — especificados, NÃO criados neste passo
+  # =========================================================================
+
+  - name: Work Item Issue Body
+    status: specified
+    implementation_phase: C
+    description: >
+      Template para body de Issues de Work Items de Diligence.
+      Seção ProdOps References é obrigatória; campos de campos do Project
+      complementam com informações que não cabem em campos únicos.
+    schema: |
+      ## ProdOps References
+      - Primary: `{ARTIFACT_ID}` ({ARTIFACT_TYPE})
+      - Related:
+        - {TYPE}: `{ID}`
+        - {TYPE}: `{ID}`
+
+      ## Operation
+      - Journey: {JOURNEY}
+      - Cycle: {CYCLE}
+      - Phase: {PHASE}
+      - Operation: {OPERATION}
+      - Mode: {MODE}
+
+      ## Completion Criteria
+      - [ ] {CRITERION_1}
+      - [ ] {CRITERION_2}
+
+      ## Expected Evidence
+      - {EVD_ID} — {description}
+
+  - name: PR Remediation Body
+    status: specified
+    implementation_phase: C
+    description: >
+      Template para body de PRs que implementam uma Remediation.
+      Seção Diligence References é obrigatória para traceabilidade.
+      Verificador deve ser diferente de quem implementou (DIL-OPS-004).
+    schema: |
+      ## Diligence References
+      - Remediation: `{RMD_ID}`
+      - Findings:
+        - `{FND_ID}`
+        - `{FND_ID}`
+      - Work Item: #{ISSUE_NUMBER}
+      - Expected Result: {description}
+      - Verification Check: `{DIL_CHECK_ID}@{version}`
+      - Expected Evidence: `{EVD_ID}`
+
+  - name: PR Waiver Body
+    status: specified
+    implementation_phase: C
+    description: >
+      Template para body de PRs que materializam aprovação formal de Waiver.
+      PR aprovado por revisor com autoridade = Evidence de aprovação.
+      O arquivo WVR-YYYY-NNNN.md é a autoridade — não o PR em si.
+    schema: |
+      ## Diligence References
+      - Waiver: `{WVR_ID}`
+      - Finding: `{FND_ID}`
+      - Required Approver: {APPROVER}  # deve ter autoridade sobre o Check
+      - expires_at: {DATE}             # obrigatório, sem exceção
+      - Risk Accepted: {RISK}
+      - Compensating Controls: {CONTROLS}
+      - Evidence of Approval: `{EVD_ID}`
+
+  - name: PR Verification Body
+    status: specified
+    implementation_phase: C
+    description: >
+      Template para body de PRs de verificação pós-Remediation.
+      Verifier deve ser independente do implementador (DIL-OPS-004).
+      PR merge pode ser Evidence de verificação se critérios forem satisfeitos.
+    schema: |
+      ## Diligence References
+      - Findings:
+        - `{FND_ID}`
+      - Remediation: `{RMD_ID}`
+      - Check: `{DIL_CHECK_ID}@{version}`
+      - Result: {Pass|Fail|Warning}
+      - Evidence: `{EVD_ID}`
+      - Verifier: {VERIFIER}  # deve ser diferente do implementador
+
+reconciliation:
+  inspect:
+    enabled: false  # NÃO executado neste passo — próxima etapa
+    read_only: true  # Inspect É read-only — nenhuma criação, modificação ou remoção
+    scope:
+      - project_fields      # campos customizados e seus tipos/opções
+      - field_options       # valores dos enums de cada campo
+      - views               # views, filtros, agrupamentos, ordenações
+      - labels              # labels do repositório
+      - issue_templates     # templates de Issue no repositório
+      - pr_templates        # templates de PR no repositório
+      - automations         # GitHub Actions e workflows relacionados
+      - manifest            # entradas no manifest.yaml
+      - permissions         # permissões do Project
+    output_path: prodops/artifacts/diligence/reports/github-workspace-inspection-{date}.md
+    drift_taxonomy:
+      - Missing       # elemento esperado não existe no workspace real
+      - Unexpected    # elemento existe mas não está no schema esperado
+      - Different     # elemento existe com configuração divergente do esperado
+      - Unsupported   # estado esperado não pode ser implementado via API disponível
+      - Unverifiable  # Inspect não confirmou (tratar como Missing para plano)
+      - Compliant     # estado observado corresponde ao estado esperado
+    critical_constraints:
+      - "Inspect NÃO cria nenhum recurso GitHub"
+      - "Inspect NÃO modifica nenhum recurso GitHub"
+      - "Inspect NÃO remove nenhum recurso GitHub"
+      - "Unexpected NÃO significa inválido — investigar uso antes de planejar remoção"
+      - "Inspect deve ser executado ANTES de qualquer Reconcile"
+
+  reconcile:
+    enabled: false  # NÃO executado neste passo — aguarda Inspect + autorização
+    requires_authorization: true  # autorização humana explícita é obrigatória
+    automation_first: true
+    automation_order:
+      - official_api      # gh api graphql ou REST — preferido
+      - official_sdk      # GitHub SDK (JavaScript, Go, etc.)
+      - official_cli      # GitHub CLI: field-create, view-create, label commands, etc.
+      - mcp_integration   # MCP autorizado com escopo de criação
+      - web_assisted      # humano segue instruções passo a passo
+      - manual_instruction  # documentado step-by-step; último recurso
+    removal_policy: conservative
+    removal_policy_description: >
+      Elementos Unexpected NÃO são removidos automaticamente.
+      Antes de remover qualquer elemento Unexpected:
+      1. Identificar uso (Issues, PRs, Actions que o referenciam)
+      2. Identificar owner (time que o usa)
+      3. Verificar dependências
+      4. Produzir Evidence de análise
+      5. Obter autorização explícita do owner
+      6. Definir rollback
+      7. Verificar histórico git para contexto
+
+  verify:
+    enabled: false  # NÃO executado neste passo — aguarda Reconcile
+    checks:
+      - DIL-WSP-001
+    requires_evidence: true
+    evidence_minimum:
+      - snapshot_before         # output do Inspect pré-Reconcile
+      - authorized_plan         # plano aprovado com ações documentadas
+      - commands_or_mechanism   # o que foi usado (API calls, CLI, etc.)
+      - api_responses           # respostas reais da API
+      - snapshot_after          # output do Inspect pós-Reconcile
+      - dil_wsp_001_result      # Pass | Fail | Warning
+      - limitations_noted       # o que não pôde ser verificado
+      - deferred_items          # o que foi explicitamente adiado
+      - approver                # quem autorizou o Reconcile

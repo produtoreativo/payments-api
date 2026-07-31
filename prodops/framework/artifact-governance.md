@@ -193,7 +193,7 @@ Operation
 | **Quem aprova** | Product Owner + Tech Lead (para saída do Icebox) |
 | **Consumidores** | Iteration Backlog |
 | **OBC** | Refining (Discovery); atinge Committed ao sair |
-| **Critério de entrada** | Item no Product Backlog com Local OBC em estado Draft |
+| **Critério de entrada** | Local OBC transitioning de Draft para **Refining** — início do Discovery ativo |
 | **Critério de saída** | OBC Committed → Iteration Backlog |
 | **Jornadas** | Discovery (Downstream), Assessment |
 
@@ -208,7 +208,7 @@ Operation
 | **Quem aprova** | Product Owner (priorização) |
 | **Consumidores** | Iteration Plan |
 | **OBC** | Committed |
-| **Critério de entrada** | OBC Committed + BDD Feature draft |
+| **Critério de entrada** | OBC Committed + Discovery funcional, técnico e operacional suficiente + Riscos identificados |
 | **Critério de saída** | OBC committed + BDD Feature committed + entrada no Iteration Plan |
 | **Jornadas** | Diligence, Assessment |
 

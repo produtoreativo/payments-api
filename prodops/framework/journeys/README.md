@@ -12,7 +12,7 @@ O Framework ProdOps possui cinco jornadas organizadas em dois grupos.
 |---|---|---|
 | **Modo** | Determina o nível de compromisso e os quality gates aplicados | Upstream, Downstream |
 | **Jornada** | Descreve o caminho de trabalho dentro de um modo | Discovery, Delivery, Operation |
-| **Backlog** | Organiza o trabalho antes e durante a execução | Product Intent Backlog, Icebox, Iteration Backlog |
+| **Backlog** | Organiza o trabalho antes e durante a execução | Product Backlog, Icebox, Iteration Backlog |
 | **Plano** | Registra a execução de uma iteração | Iteration Plan |
 
 Upstream e Downstream são modos, não jornadas. A Discovery é a jornada — ela existe em ambos os modos com responsabilidades diferentes.
@@ -27,7 +27,7 @@ Upstream e Downstream são modos, não jornadas. A Discovery é a jornada — el
 | [Delivery](delivery/) | Construir, validar e promover a solução |
 | [Operation](operation/) | Operar e evoluir o produto em produção |
 | [Assessment](assessment/) | Produzir análises para apoiar decisões |
-| [Diligence](diligence/) | Garantir aderência ao modelo operacional |
+| [Diligence](diligence/) | Garantir a consistência do sistema de trabalho do ProdOps |
 
 ---
 
@@ -54,7 +54,7 @@ Não existe compromisso de entrega. O objetivo é reduzir incerteza. Uma Intent 
 ```
 Intent
   ↓
-Product Intent Backlog
+Product Backlog
   ↓
 Icebox (Discovery preparatória)
   ↓
@@ -73,13 +73,16 @@ Existe compromisso de entrega, validação, governança e confiabilidade.
 
 ## Relação entre jornadas e backlogs
 
-| Backlog | Jornada responsável |
+| Backlog | Responsável |
 |---|---|
-| Repository Tracking List / Global Tracking List | Assessment (sinaliza) |
-| Product Intent Backlog | Diligence (sincroniza) |
+| Portfolio Tracking List | Portfolio (Assessment sinaliza) |
+| Product Tracking List | Product Owner (Assessment sinaliza) |
+| Product Backlog | Product Owner gerencia; Diligence sincroniza consistência |
 | Icebox | Discovery (Downstream) — preparação |
-| Iteration Backlog | Diligence + Assessment |
+| Iteration Backlog | Product Owner + Diligence |
 | Iteration Plan | Delivery — execução |
+
+O **Product Backlog** é gerenciado pelo Product Owner. A Diligence sincroniza o estado dos artefatos e das ferramentas — não gerencia o backlog. A Diligence garante consistência; a priorização é responsabilidade do Product Owner.
 
 A Discovery no Downstream opera dentro do Icebox.
 A Delivery começa somente quando um item entra no Iteration Plan.
@@ -92,5 +95,43 @@ Assessment e Diligence acompanham continuamente as demais jornadas. Não represe
 
 Assessment pode ocorrer tanto no Upstream quanto no Downstream.
 
+### Diligence — natureza transversal
+
+A Diligence não é uma etapa linear ao final do fluxo. É transversal: verifica consistência, rastreabilidade, completude e conformidade em todas as jornadas simultaneamente.
+
+```
+                    DISCOVERY
+                        │
+                        ▼
+                    ASSESSMENT
+                        │
+                        ▼
+                     DELIVERY
+                        │
+                        ▼
+                    OPERATION
+                        │
+                        └──────────┐
+                                   │
+DILIGENCE ─────────────────────────┤
+                                   │
+verifica consistência,             │
+rastreabilidade, completude        │
+e conformidade em todas            │
+as jornadas                        │
+                                   ▼
+                              novos sinais,
+                              decisões e trabalho
+```
+
+**Questão central da Diligence:** O conhecimento, as decisões, a execução e as evidências continuam coerentes e rastreáveis?
+
+A Diligence opera em exatamente dois ciclos:
+- **diligence-sync** — síncrono, reativo, contextual, ligado a uma operação em andamento
+- **diligence-async** — assíncrono, proativo, para detecção de drift acumulado
+
+Capabilities como Workspace Reconciliation são sub-rotinas consumidas pelos ciclos — não são ciclos independentes.
+
+→ [Diligence — especificação completa](diligence/README.md)
 → [Execution Model](../execution-model/README.md)
 → [Hierarquia de backlogs](../backlogs.md)

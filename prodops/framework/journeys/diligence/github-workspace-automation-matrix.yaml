@@ -1,0 +1,480 @@
+schema_version: 1
+generated: "2026-07-24"
+purpose: >
+  Matriz de automação para cada operação do Workspace Reconciliation.
+  Baseada em pesquisa técnica exaustiva de mecanismos disponíveis,
+  executada em 2026-07-24 via introspecção GraphQL, teste REST API e
+  pesquisa de documentação oficial GitHub.
+
+research_date: "2026-07-24"
+researcher: "cmilfont (Christiano Milfont)"
+evidence_basis:
+  - "GraphQL schema introspection via gh api graphql __schema.mutationType"
+  - "REST API endpoint testing: GET /orgs/produtoreativo/projectsV2/24/views"
+  - "GitHub CLI help: gh project --help (v2.95.0 / 2026-06-17)"
+  - "REST API documentation: docs.github.com/en/rest/projects/views"
+  - "GitHub Changelog: REST API for Projects (September 2025)"
+  - "Community discussions: github.com/orgs/community/discussions/194509, 150130, 153532"
+
+# ============================================================================
+# Automation First Order
+# ============================================================================
+# Mecanismos em ordem de preferência. Cada operação deve usar o mecanismo
+# mais alto disponível. Só usar o próximo se o anterior for comprovadamente
+# indisponível para aquela operação específica.
+automation_first_order:
+  1: Native API (GraphQL mutation oficial)
+  2: GitHub CLI (gh project subcommand oficial)
+  3: GitHub REST API (endpoints oficiais documentados)
+  4: GitHub SDK/Octokit (wrapper do REST/GraphQL)
+  5: GitHub Action (github-script wrapping API)
+  6: MCP (github-mcp-server com ferramenta específica)
+  7: Browser Automation (Playwright contra Web UI)
+  8: Manual Exception (último recurso com justificativa técnica documentada)
+
+# ============================================================================
+# Classificações canônicas
+# ============================================================================
+classifications:
+  native_automation:
+    definition: "API oficial GraphQL com mutation documentada, estável, idempotente"
+    examples: ["updateProjectV2Field (rename)", "addProjectV2Field (criar campo)"]
+  supported_automation:
+    definition: "Ferramenta ou API oficial (CLI/REST/SDK) wrapping a API, estável"
+    examples: ["REST POST /orgs/{org}/projectsV2/{project_number}/views"]
+  experimental_automation:
+    definition: "API não documentada ou beta, funciona mas pode quebrar sem aviso"
+    examples: ["Endpoints REST de beta, comportamento não especificado"]
+  browser_automation:
+    definition: "Playwright/Puppeteer contra Web UI — frágil mas determinístico"
+    examples: ["Criar View via botão 'New view' no browser"]
+  manual_exception:
+    definition: >
+      Tecnicamente impossível de automatizar com ferramentas atuais.
+      Aceitável SOMENTE com: (1) ausência de API confirmada via introspecção,
+      (2) ausência de CLI confirmada, (3) MCP indisponível,
+      (4) browser automation inviável OU mais custoso que o benefício,
+      (5) operação suficientemente infrequente, (6) passos manuais documentados.
+    examples: ["Configurar group_by em View", "Configurar sort_by em View"]
+
+# ============================================================================
+# Evidências técnicas da pesquisa
+# ============================================================================
+technical_evidence:
+  graphql_view_mutations:
+    searched_for:
+      - addProjectV2View
+      - createProjectV2View
+      - updateProjectV2View
+      - deleteProjectV2View
+    result: NOT_FOUND
+    evidence: "Introspecção completa do mutationType da schema GraphQL em 2026-07-24"
+    confirmed_existing_project_mutations:
+      - addProjectV2DraftIssue
+      - addProjectV2ItemById
+      - archiveProjectV2Item
+      - clearProjectV2ItemFieldValue
+      - convertProjectV2DraftIssueItemToIssue
+      - copyProjectV2
+      - createProjectV2
+      - createProjectV2Field
+      - createProjectV2IssueField
+      - createProjectV2StatusUpdate
+      - deleteProjectV2
+      - deleteProjectV2Field
+      - deleteProjectV2Item
+      - updateProjectV2
+      - updateProjectV2Field  # SUPORTA name= para rename
+      - updateProjectV2ItemFieldValue
+      - updateProjectV2ItemPosition
+
+  graphql_view_queryability:
+    result: SUPPORTED
+    query: "projectV2.views(first: N) { nodes { id name layout filter } }"
+    fields_returned: [id, name, number, layout, filter, createdAt, updatedAt]
+    use: "Verificação de idempotência antes de criar via REST"
+    confirmed: true
+
+  rest_api_views:
+    endpoint: "POST /orgs/{org}/projectsV2/{project_number}/views"
+    released: "2025-09-11"
+    source: "https://github.blog/changelog/2025-09-11-a-rest-api-for-github-projects-sub-issues-improvements-and-more/"
+    documentation: "https://docs.github.com/en/rest/projects/views"
+    parameters:
+      name:
+        type: string
+        required: true
+      layout:
+        type: string
+        required: true
+        values: [table, board, roadmap]
+      filter:
+        type: string
+        required: false
+        description: "GitHub Projects filter box syntax"
+      visible_fields:
+        type: array_of_integers
+        required: false
+        description: "Field IDs — not applicable to roadmap layout"
+    parameters_NOT_supported:
+      - group_by
+      - sort_by
+      - vertical_group_by
+    tested_endpoints:
+      - endpoint: "GET /orgs/produtoreativo/projectsV2"
+        result: "200 OK"
+      - endpoint: "GET /orgs/produtoreativo/projectsV2/24"
+        result: "200 OK"
+      - endpoint: "GET /orgs/produtoreativo/projectsV2/24/fields"
+        result: "200 OK"
+      - endpoint: "GET /orgs/produtoreativo/projectsV2/24/items"
+        result: "200 OK"
+      - endpoint: "GET /orgs/produtoreativo/projectsV2/24/views"
+        result: "404 (GET não implementado — apenas POST)"
+
+  github_cli:
+    version: "2.95.0 (2026-06-17)"
+    available_subcommands:
+      - close
+      - copy
+      - create
+      - delete
+      - edit
+      - field-create
+      - field-delete
+      - field-list
+      - item-add
+      - item-archive
+      - item-create
+      - item-delete
+      - item-edit
+      - item-list
+      - link
+      - list
+      - mark-template
+      - unlink
+      - view
+    view_subcommands_missing:
+      - view-create
+      - view-list
+      - view-delete
+      - view-update
+    conclusion: "gh project view é READ-ONLY — não cria Views"
+
+  update_project_v2_field:
+    mutation: updateProjectV2Field
+    input_type: UpdateProjectV2FieldInput
+    fields:
+      - name: clientMutationId
+        type: String
+        required: false
+      - name: fieldId
+        type: ID!
+        required: true
+      - name: name
+        type: String
+        required: false
+        description: "Renomeia o campo — confirma suporte a rename"
+      - name: singleSelectOptions
+        type: "[...]"
+        required: false
+      - name: iterationConfiguration
+        type: ProjectV2IterationFieldConfigurationInput
+        required: false
+    conclusion: "Native Automation para rename de campo confirmado"
+
+# ============================================================================
+# Operações
+# ============================================================================
+operations:
+  # --------------------------------------------------------------------------
+  # Operação 1: Criar Project Views (6 Views de Diligence)
+  # --------------------------------------------------------------------------
+  - operation: Create Project View
+    targets:
+      - "Diligence Operations"
+      - "Active Remediations"
+      - "Workspace Reconciliation"
+      - "Verification Queue"
+      - "Diligence History"
+      - "Waiver Reviews"
+    drf_ids: [DRF-012, DRF-013, DRF-014, DRF-015, DRF-016, DRF-017]
+    previous_classification: Manual Required (Reconcile Plan 2026-07-24)
+    previous_justification: "Schema GraphQL sem mutations de View"
+
+    research_result:
+      native_api_graphql:
+        mutation: addProjectV2View
+        found_in_schema: false
+        evidence: "Introspecção completa em 2026-07-24 — NOT FOUND"
+        conclusion: "GraphQL: não suportado"
+
+      github_cli:
+        command: "gh project view-create"
+        supported: false
+        version_tested: "2.95.0"
+        conclusion: "CLI: não suportado"
+
+      rest_api:
+        endpoint: "POST /orgs/{org}/projectsV2/{project_number}/views"
+        documented: true
+        released: "2025-09-11"
+        supported_params: [name, layout, filter, visible_fields]
+        unsupported_params: [group_by, sort_by]
+        risk: low
+        conclusion: "REST API: SUPORTADO — Supported Automation"
+
+      mcp:
+        available: false
+        reason: "github-mcp-server não configurado no projeto"
+
+      browser_automation:
+        tool: Playwright
+        feasibility: High
+        selector_stability: Medium
+        idempotency_strategy: "GraphQL read antes de navegar ao browser"
+        conclusion: "Viável mas desnecessário dado REST API disponível"
+
+    recommended_mechanism: "REST API POST /orgs/{org}/projectsV2/{project_number}/views"
+    idempotency_strategy: >
+      1. GraphQL query: projectV2.views(first:20) → listar names existentes
+      2. Calcular diff: expectedViews XOR existingViews
+      3. REST POST somente para Views Missing
+      4. GraphQL verify após criação
+    final_classification: Supported Automation
+    idempotent: false  # CORRIGIDO via EVD-2026-0003 — API cria duplicatas silenciosamente
+    idempotency_guard: mandatory  # GraphQL pre-check OBRIGATÓRIO antes de qualquer POST
+    rollback: >
+      REST DELETE /orgs/{org}/projectsV2/{project_number}/views/{view_number}: 404 Not Found.
+      GraphQL deleteProjectV2View: mutation não existe no schema.
+      Rollback requer deleção manual via Web UI.
+      CONFIRMADO via EVD-2026-0003 (2026-07-24).
+    implementation_effort: Low
+    implementation_phase: A
+    empirical_validation:
+      date: "2026-07-24"
+      evidence: EVD-2026-0003
+      result: Partial Success
+      http_status: 201
+      view_created: true
+      view_name: "Workspace Reconciliation"
+      view_number: 7
+      view_node_id: "PVTV_lADOAT1J1c4BeILXzgLFNOI"
+      idempotency_finding: "API creates duplicates on repeated POST — pre-check is mandatory"
+      delete_finding: "No DELETE available via REST or GraphQL — manual Web UI required for cleanup"
+    notes: >
+      Mudança em relação ao Reconcile Plan: O plano assumia "Web UI para filtros"
+      pois a GraphQL API não expõe mutations de View. A REST API lançada em setembro
+      de 2025 resolve a criação e configuração do filter. A classificação migra de
+      "Manual Required" para "Supported Automation".
+      ATUALIZAÇÃO 2026-07-24 (EVD-2026-0003): Validação empírica confirma criação (HTTP 201).
+      idempotent corrigido para false — API não é auto-idempotente. O GraphQL pre-check
+      documentado na idempotency_strategy é MANDATÓRIO, não opcional.
+
+  # --------------------------------------------------------------------------
+  # Operação 2: Configurar filter das Views
+  # --------------------------------------------------------------------------
+  - operation: Set View Filter Configuration
+    targets:
+      - "filter param nas 6 Views de Diligence"
+    previous_classification: Manual Required (Seção 6 do Reconcile Plan)
+
+    research_result:
+      native_api_graphql:
+        mutation: "(nenhuma — sem mutations de View)"
+        found_in_schema: false
+        notes: "Filter é campo do tipo ProjectV2View mas sem mutation de escrita"
+
+      rest_api:
+        endpoint: "POST /orgs/{org}/projectsV2/{project_number}/views"
+        parameter: filter
+        supported: true
+        notes: >
+          O parâmetro filter aceita a sintaxe do GitHub Projects filter box.
+          Exemplos confirmados: "is:issue", "label:journey:diligence".
+          Sintaxe para campos customizados (ex: "journey:Diligence") requer
+          validação em ambiente real.
+
+      browser_automation:
+        feasibility: Medium
+        selector_stability: Low
+        notes: "Input de filtro da UI é dinâmico e propenso a instabilidade"
+
+    recommended_mechanism: "REST POST filter param (durante criação da View)"
+    final_classification: Supported Automation
+    idempotent: true
+    notes: >
+      O filter é definido no mesmo POST de criação da View.
+      Não requer chamada separada. A sintaxe exata para campos customizados
+      requer validação em ambiente real antes de produção.
+      Classificação migra de "Manual Required" para "Supported Automation".
+    implementation_effort: Low
+    implementation_phase: A
+
+  # --------------------------------------------------------------------------
+  # Operação 3: Configurar group_by das Views
+  # --------------------------------------------------------------------------
+  - operation: Set View GroupBy Configuration
+    targets:
+      - "group_by (Phase) nas Views: Diligence Operations, Active Remediations, Workspace Reconciliation, Diligence History"
+    previous_classification: Manual Required (implícito na limitação da API)
+
+    research_result:
+      native_api_graphql:
+        found_in_schema: false
+        notes: "groupByFields é campo READ-ONLY do tipo ProjectV2View — sem mutation"
+
+      rest_api:
+        endpoint: "POST /orgs/{org}/projectsV2/{project_number}/views"
+        parameter: group_by
+        supported: false
+        notes: "O payload de criação NÃO aceita group_by ou group_by_fields"
+
+      browser_automation:
+        feasibility: Medium
+        selector_stability: Low
+        notes: "Configurável via UI mas propensa a instabilidade de seletores"
+
+    recommended_mechanism: "Web UI manual (instrução documentada)"
+    final_classification: Manual Exception
+    idempotent: false
+    justification:
+      - "Sem API oficial: REST POST não aceita group_by — confirmado na documentação"
+      - "Sem suporte CLI: gh project não tem subcomando para configurar Views"
+      - "MCP indisponível: github-mcp-server não configurado"
+      - "Browser automation: custo de manutenção alto para operação infrequente"
+      - "Operação infrequente: group_by configurado uma vez por View, raramente alterado"
+      - "Passos manuais documentados: instrução step-by-step na Seção 6 de github-workspace-automation.md"
+    implementation_effort: Low (manual)
+    implementation_phase: A
+    manual_steps: >
+      Para cada View criada:
+      1. Navegar para https://github.com/orgs/produtoreativo/projects/24
+      2. Clicar na View desejada (ex: "Diligence Operations")
+      3. Clicar em "..." (menu da View) → "Group by"
+      4. Selecionar o campo "Phase"
+      5. Confirmar
+
+  # --------------------------------------------------------------------------
+  # Operação 4: Configurar sort_by das Views
+  # --------------------------------------------------------------------------
+  - operation: Set View SortBy Configuration
+    targets:
+      - "sort_by (Status ASC) nas Views: Diligence Operations, Active Remediations"
+      - "sort_by (Phase ASC) na View: Workspace Reconciliation"
+    previous_classification: Manual Required (implícito na limitação da API)
+
+    research_result:
+      native_api_graphql:
+        found_in_schema: false
+        notes: "sortByFields é campo READ-ONLY do tipo ProjectV2View — sem mutation"
+
+      rest_api:
+        parameter: sort_by
+        supported: false
+        notes: "O payload de criação NÃO aceita sort_by"
+
+    recommended_mechanism: "Web UI manual (instrução documentada)"
+    final_classification: Manual Exception
+    idempotent: false
+    justification: "Mesmo raciocínio que group_by — sem mecanismo de API disponível"
+    implementation_effort: Low (manual)
+    implementation_phase: A
+
+  # --------------------------------------------------------------------------
+  # Operação 5: Rename campo "Execution Mode" → "Mode"
+  # --------------------------------------------------------------------------
+  - operation: Rename Field "Execution Mode" to "Mode"
+    target: "Campo single_select 'Execution Mode' (ID: PVTSSF_lADOAT1J1c4BeILXzhYkr1o)"
+    drf_id: DRF-006
+    previous_classification: "Update via GraphQL mutation (já identificado no Reconcile Plan)"
+
+    research_result:
+      native_api_graphql:
+        mutation: updateProjectV2Field
+        found_in_schema: true
+        supports_rename: true
+        input_field: name
+        field_id: "PVTSSF_lADOAT1J1c4BeILXzhYkr1o"
+        evidence: >
+          Introspecção de UpdateProjectV2FieldInput confirma campo 'name' (String)
+          com description "The name to update."
+        example_command: |
+          gh api graphql -f query='mutation {
+            updateProjectV2Field(input: {
+              fieldId: "PVTSSF_lADOAT1J1c4BeILXzhYkr1o"
+              name: "Mode"
+            }) {
+              projectV2Field {
+                ... on ProjectV2SingleSelectField { id name }
+              }
+            }
+          }'
+
+    recommended_mechanism: "GraphQL mutation updateProjectV2Field com name=\"Mode\""
+    final_classification: Native Automation
+    idempotent: true
+    idempotency_strategy: >
+      Antes de executar:
+      gh api graphql -f query='query {
+        organization(login: "produtoreativo") {
+          projectV2(number: 24) {
+            field(name: "Mode") { ... on ProjectV2SingleSelectField { id name } }
+          }
+        }
+      }'
+      Se campo já se chama "Mode" → Skip (já Compliant)
+    rollback: >
+      gh api graphql com mutation updateProjectV2Field (fieldId + name="Execution Mode")
+    implementation_effort: Low
+    implementation_phase: A
+    notes: >
+      Esta operação já estava identificada como automável no Reconcile Plan.
+      A pesquisa confirma: Native Automation — mutation exists, stable, idempotent.
+
+  # --------------------------------------------------------------------------
+  # Operação 6: Adicionar opção Manual ao campo Mode
+  # --------------------------------------------------------------------------
+  - operation: Add Option "Manual" to Mode field
+    target: "Campo single_select 'Mode' (após rename de 'Execution Mode')"
+    drf_id: DRF-006
+    previous_classification: "Update via GraphQL mutation"
+
+    research_result:
+      native_api_graphql:
+        mutation: updateProjectV2Field
+        found_in_schema: true
+        input_field: singleSelectOptions
+        notes: >
+          O campo singleSelectOptions substitui TODAS as opções existentes quando fornecido.
+          Obter opções atuais ANTES de executar para não perder opções existentes.
+
+    recommended_mechanism: "GraphQL mutation updateProjectV2Field com singleSelectOptions"
+    final_classification: Native Automation
+    idempotent: true
+    idempotency_strategy: "Listar opções atuais antes — só executar se 'Manual' estiver ausente"
+    implementation_effort: Low
+    implementation_phase: A
+
+# ============================================================================
+# Resumo da matriz
+# ============================================================================
+summary:
+  total_operations_analyzed: 6
+  classifications:
+    native_automation: 2
+    supported_automation: 2
+    manual_exception: 2
+    experimental_automation: 0
+    browser_automation: 0
+  items_resolved: >
+    4 de 7 itens "Manual Required" eliminados pela pesquisa.
+    Criação das 6 Views + configuração de filter = Supported Automation.
+    Rename campo = Native Automation (já identificado).
+    group_by e sort_by = Manual Exception justificada (sem API disponível).
+  key_finding: >
+    A REST API para GitHub Projects v2 lançada em setembro de 2025 resolve
+    o principal bloqueio: criação programática de Views com filter.
+    A única limitação persistente é a configuração de group_by e sort_by,
+    para as quais não existe mecanismo de API — classificadas como
+    Manual Exception com justificativa técnica completa.

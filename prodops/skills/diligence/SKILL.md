@@ -75,7 +75,7 @@ Invocável pelo usuário (`/diligence workspace-reconciliation`) e pelos ciclos 
 - Nunca criar Pull Requests de implementação.
 - Nunca tomar decisões de produto — essas pertencem ao Assessment.
 - Nunca pular uma transição de Promote sem registrar o pré-requisito ausente e seu artefato canônico.
-- Nunca inventar OBCs, BDD Features ou riscos — apenas sincronizar o que já existe.
+- Nunca inventar OBCs, BDD Features ou riscos sem gatilho canônico documentado. A Diligence PODE criar ou registrar um OBC quando existe gatilho canônico explícito: experimento concluído com decisão registrada, decisão de Assessment documentada, sinal de Operation que justifica o artefato, ou operação autorizada ativa. O que a Diligence nunca faz: inventar conteúdo, intenção ou compromisso de negócio.
 - Usar sempre o padrão canônico de título de Work Item: `[Artifact ID]: descrição`. Declarar `operation:<valor>` e `artifact-type:<valor>` como labels do Issue.
 - Preencher sempre `artifact_type`, `artifact_id`, `operation` e `journey` ao criar Work Items.
 - Parar e surfacing bloqueio quando uma divergência exige decisão de produto para ser resolvida.

@@ -1,0 +1,92 @@
+{
+  "_meta": {
+    "experiment": "EXP-015",
+    "tool-version": "1.0.0",
+    "player": "copilot",
+    "agent": "bootstrap-agent",
+    "iteration-id": "IP-EXP015-FULLPATH",
+    "execution-id": "8521e207-985d-46ea-bc5d-6f8b71ecbaa0",
+    "executed-at": "2026-07-28T19:43:38Z"
+  },
+  "input": {
+    "event": "Delivery.Bootstrap.Completed",
+    "work-item-id": "983",
+    "iteration-id": "IP-EXP015-FULLPATH",
+    "correlation-id": "26011132-6684-401d-ad71-2840491baa19",
+    "execution-id": "8521e207-985d-46ea-bc5d-6f8b71ecbaa0",
+    "actor": {
+      "player": "copilot",
+      "agent": "bootstrap-agent"
+    },
+    "payload": {}
+  },
+  "output": {
+    "status": "accepted",
+    "event-id": "3a555e1c-6366-4095-99be-d89ac9716898",
+    "event-type": "prodops.delivery.bootstrap.completed",
+    "correlation-id": "26011132-6684-401d-ad71-2840491baa19",
+    "derived-state": "BOOTSTRAPPING",
+    "github-sync": "error",
+    "datadog-sync": "success",
+    "dispatch": {
+      "status": "success",
+      "subscriptions": [
+        {
+          "subscriber": "diligence.capture",
+          "status": "success"
+        }
+      ]
+    },
+    "cloudevent": null,
+    "errors": []
+  },
+  "cloudevent": {
+    "specversion": "1.0",
+    "id": "3a555e1c-6366-4095-99be-d89ac9716898",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.bootstrap.completed",
+    "subject": "983",
+    "time": "2026-07-28T19:43:17Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/bootstrap/completed/v1.0.0",
+    "data": {
+      "issue": "983",
+      "journey": "Delivery",
+      "cycle": "Bootstrap",
+      "phase": "Completed",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "26011132-6684-401d-ad71-2840491baa19",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  "derived-state": {
+    "issue": "983",
+    "state": "BOOTSTRAPPING",
+    "last-event-type": "prodops.delivery.bootstrap.started",
+    "runtime-correlation-id": "26011132-6684-401d-ad71-2840491baa19",
+    "runtime-version": "0.3.0",
+    "framework-version": "1.0.0",
+    "schema-version": "1",
+    "computed-at": "2026-07-28T19:43:20Z"
+  },
+  "pipeline-steps": {
+    "emit": "success",
+    "timeline": "success",
+    "derive-state": "success",
+    "datadog": "success",
+    "github": "error",
+    "dispatch": "success"
+  },
+  "dispatch": {
+    "status": "success",
+    "subscriptions": [
+      {
+        "subscriber": "diligence.capture",
+        "status": "success"
+      }
+    ]
+  }
+}

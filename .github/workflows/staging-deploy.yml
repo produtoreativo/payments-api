@@ -183,6 +183,13 @@ jobs:
         with:
           use-installer: true
 
+      # ── SAM Build ────────────────────────────────────────────────────────────
+      # Processes infra/lambda.yaml and dist/ into .aws-sam/build/template.yaml
+      # Required before sam deploy can reference .aws-sam/build/template.yaml
+      - name: SAM Build
+        working-directory: api
+        run: sam build --template-file infra/lambda.yaml --no-cached
+
       # ── DynamoDB Tables ──────────────────────────────────────────────────────
       # Deployed as a separate stack so tables survive Lambda stack re-deploys.
       # `aws cloudformation deploy` is synchronous — it waits for the stack to

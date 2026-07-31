@@ -1,0 +1,74 @@
+{
+  "dashboard-id": "4rs-983-e35",
+  "dashboard-url": "https://app.datadoghq.com/dashboard/4rs-983-e35/prodops-runtime--executive-cockpit",
+  "validated-at": "2026-07-27T20:07Z",
+  "demo-run-id": "exp-014-demo-2026-07-27-1959",
+  "widget-count": 42,
+  "sections": 8,
+  "iteration": "4b",
+  "kpis": {
+    "active-features":     {"value": 2, "formula": "total(3) - done(1)", "status": "ok"},
+    "done-features":       {"value": 1, "query": "delivery-state:done", "status": "ok"},
+    "blocked-features":    {"value": 0, "query": "state:blocked", "status": "ok"},
+    "features-in-sync":    {"value": 3, "query": "diligence-status:attached", "status": "ok", "note": "FF-13: proxy for runtime-sync:In Sync"},
+    "delivery-events":     {"value": 29, "status": "ok"},
+    "diligence-events":    {"value": 12, "status": "ok"},
+    "total-events":        {"value": 41, "status": "ok"}
+  },
+  "lead-time": {
+    "metric": "runtime.delivery.leadtime",
+    "values": {"76": 129, "77": 90, "78": 21},
+    "avg": 80,
+    "unit": "seconds",
+    "status": "ok",
+    "http": "202"
+  },
+  "funnel": {
+    "metric": "runtime.delivery.funnel",
+    "type": "toplist by {stage}",
+    "stages": {
+      "planned":    {"value": 3, "http": "202", "status": "ok"},
+      "delivery":   {"value": 3, "http": "202", "status": "ok"},
+      "validation": {"value": 2, "formula": "done(1)+validating(1)", "http": "202", "status": "ok"},
+      "production": {"value": 1, "http": "202", "status": "ok"}
+    }
+  },
+  "journey": {
+    "type": "8 individual query_value widgets",
+    "stages": {
+      "bootstrapping": {"widget": "QV", "query": "runtime.diligence.features.tracked{delivery-state:bootstrapping}"},
+      "hacking":       {"widget": "QV", "query": "runtime.diligence.features.tracked{delivery-state:hacking}"},
+      "syncing":       {"widget": "QV", "query": "runtime.diligence.features.tracked{delivery-state:syncing}"},
+      "finishing":     {"widget": "QV", "query": "runtime.diligence.features.tracked{delivery-state:finishing}"},
+      "shipping":      {"widget": "QV", "query": "runtime.diligence.features.tracked{delivery-state:shipping}"},
+      "validating":    {"widget": "QV", "query": "runtime.diligence.features.tracked{delivery-state:validating}"},
+      "promoting":     {"widget": "QV", "query": "runtime.diligence.features.tracked{delivery-state:promoting}"},
+      "done":          {"widget": "QV", "query": "runtime.diligence.features.tracked{delivery-state:done}"}
+    }
+  },
+  "diligence-status": {
+    "pending":   {"widget": "query_value", "query": "diligence-status:N/A", "value": 0},
+    "captured":  {"widget": "note", "note": "estado intermediário — sem métrica distinta", "value": "N/A"},
+    "attached":  {"widget": "query_value", "query": "diligence-status:attached", "value": 3},
+    "drift":     {"widget": "note", "note": "FF-13: tag com espaço inutilizável", "value": "N/A"},
+    "repair":    {"widget": "note", "note": "não implementado", "value": "N/A"},
+    "in-sync":   {"widget": "query_value", "query": "diligence-status:attached", "value": 3, "note": "proxy: attached = In Sync"}
+  },
+  "sections-validated": [
+    {"name": "Delivery Health",      "widgets": 8,  "data": true,  "status": "ok", "new": "Lead Time real (runtime.delivery.leadtime)"},
+    {"name": "Feature Funnel",       "widgets": 2,  "data": true,  "status": "ok", "new": "toplist runtime.delivery.funnel by {stage}"},
+    {"name": "Delivery Journey",     "widgets": 10, "data": true,  "status": "ok", "new": "8 QVs individuais por etapa + 1 timeseries"},
+    {"name": "Diligence Status",     "widgets": 7,  "data": true,  "status": "ok", "new": "6 cards (3 QV + 3 note) + sunburst"},
+    {"name": "Live Execution",       "widgets": 2,  "data": true,  "status": "ok", "new": "query_table com delivery/diligence correlation IDs"},
+    {"name": "Event Stream",         "widgets": 3,  "data": true,  "status": "ok"},
+    {"name": "Correlation Overview", "widgets": 2,  "data": true,  "status": "ok"},
+    {"name": "System Health",        "widgets": 8,  "data": true,  "status": "ok", "new": "6 note cards (Runtime, GitHub, Datadog, Timeline, Events, Demo Run)"}
+  ],
+  "validate-demo-result": "28/28 PASS",
+  "known-limitations": [
+    "FF-13: diligence-status:attached usado como proxy para runtime-sync:In Sync (espaço no valor da tag)",
+    "FF-13: Captured/Drift/Repair como note placeholders (estado intermediário ou tag inválida)",
+    "Dashboard tags restrito a team:prodops (restrição Datadog org)",
+    "FF-14 resolvido: tr '[:upper:]' '[:lower:]' em vez de ${var,,} (bash 3.2 macOS)"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "_meta": {
+    "experiment": "EXP-015",
+    "tool-version": "1.0.0",
+    "player": "codex",
+    "status": "PENDING — awaiting codex player execution",
+    "instructions": "See evidence/iteration-2/test-suite-claude.md § Instructions for Codex and Copilot"
+  },
+  "input": null,
+  "output": null,
+  "cloudevent": null,
+  "derived-state": null,
+  "pipeline-steps": null
+}
