@@ -1,5 +1,28 @@
 # Dashboard Changelog — ProdOps Runtime
 
+## v3.5.0 — 2026-07-31
+
+**Dashboard ID:** `iut-r7k-ehn` (atualizado via PUT — mesmo ID da v3.4.0)
+
+**Arquivo:** `v3.5.0.json`
+
+**Mudanças:** restyling semântico de paleta — estrutura e queries inalteradas.
+
+| Seção | Antes | Depois |
+|---|---|---|
+| A — KPIs: Iterações Ativas | `white_on_green` | `white_on_blue` — neutro, não implica aprovação |
+| B — Funil: background | `vivid_purple` | `blue` — informacional, não saturado |
+| C — Delivery Journey: background | `vivid_orange` | `purple` — anchora no brand Datadog |
+| C — fases Bootstrap→Promote | `white_on_yellow` | `white_on_blue` — in-progress, não warning |
+| D — Diligence: background | `vivid_green` | `gray` — suporte, não protagonista |
+| D — fases Capture/Attach/Promote | `white_on_yellow` | `white_on_blue` |
+| E — Exception Paths: background | `vivid_red` | `orange` — seção inclui estados resolvidos |
+| E — REPAIR | `white_on_yellow` | `white_on_blue` — ação em progresso |
+
+**Mantidos sem alteração:** DONE `white_on_green`, BLOQUEIO `white_on_red`, DRIFT `white_on_orange`, Close ✓ `white_on_green`.
+
+---
+
 ## v3.4.0 — 2026-07-30
 
 **Dashboard ID:** `iut-r7k-ehn`

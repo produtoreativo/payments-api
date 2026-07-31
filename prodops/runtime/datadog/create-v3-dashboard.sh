@@ -22,7 +22,7 @@ DASHBOARDS_DIR="${SCRIPT_DIR}/dashboards"
 EVIDENCE_DIR="${REPO_ROOT}/prodops/artifacts/experiments/014-diligence-tracks-delivery/evidence/executive-dashboard"
 ARTIFACTS_DIR="${REPO_ROOT}/prodops/artifacts/runtime"
 DD_SITE="${DD_SITE:-datadoghq.com}"
-VERSION="3.4.0"
+VERSION="3.5.0"
 
 # ─── credentials ────────────────────────────────────────────────────────────
 if [[ ! -f "$ENV_FILE" ]]; then
