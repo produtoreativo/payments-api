@@ -78,6 +78,27 @@ Warnings are pre-existing `@typescript-eslint/no-unsafe-argument` patterns in al
 
 ---
 
+## Finish Phase Evidence
+
+### Quality Gates — Finish Agent Run (2026-07-31)
+
+| Gate | Result | Detail |
+|------|--------|--------|
+| `lint` | PASS | 0 errors, 28 pre-existing warnings |
+| `build` | PASS | `nest build` exits 0 |
+| `no_mocks` | PASS | 0 hits in `api/test/` |
+| `acceptance` | PASS | 73/73 tests, 8 suites (incl. 13 new cartao-credito-hospedado) |
+
+Note: `scripts/test-acceptance.sh` does not register `cartao-credito-hospedado.e2e-spec.ts` in the default spec list. Tests were verified by running the full Jest suite directly (`npx jest --config ./test/jest-e2e.json`). Registration in the shell script is a follow-up item.
+
+### PR
+
+- **PR**: [#104 [DS-41]: credit-card-authorization-confirmation](https://github.com/produtoreativo/payments-api/pull/104)
+- **Auto-merge**: enabled (squash) — PR merged
+- **Branch**: `feat/41-credit-card-authorization-confirmation` → `master`
+
+---
+
 ## Modules Changed
 
 | File | Change |
