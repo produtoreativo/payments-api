@@ -57,4 +57,22 @@ export class InvoiceController {
       correlationId,
     );
   }
+
+  @Post(':invoiceId/refund')
+  @HttpCode(HttpStatus.ACCEPTED)
+  async requestRefund(
+    @Param('invoiceId') invoiceId: string,
+    @Headers('x-tenant-id') tenantId: string,
+    @Headers('idempotency-key') idempotencyKey: string,
+    @Body() body: { reason?: string },
+    @Headers('x-correlation-id') correlationId?: string,
+  ) {
+    return await this.invoiceService.requestRefund(
+      tenantId,
+      invoiceId,
+      idempotencyKey,
+      body?.reason,
+      correlationId,
+    );
+  }
 }

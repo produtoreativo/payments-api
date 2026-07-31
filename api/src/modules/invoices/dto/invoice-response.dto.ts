@@ -9,6 +9,7 @@ export class InvoiceResponseDto {
   billingType: string;
   dueDate: string;
   paymentUrl?: string;
+  hostedPaymentUrl?: string;
   bankSlipUrl?: string;
   identificationField?: string;
   externalReference: string;

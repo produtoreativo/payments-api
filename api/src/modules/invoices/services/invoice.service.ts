@@ -167,6 +167,11 @@ export class InvoiceService {
         },
       );
 
+      const hostedPaymentUrl =
+        pendingInvoice.billingType === 'CREDIT_CARD'
+          ? (charge.invoiceUrl ?? undefined)
+          : undefined;
+
       const openInvoice = await this.repository.updateInvoice(
         pendingInvoice,
         'OPEN',
@@ -177,6 +182,7 @@ export class InvoiceService {
             charge.invoiceUrl ??
             charge.bankSlipUrl ??
             charge.transactionReceiptUrl,
+          hostedPaymentUrl,
           bankSlipUrl: charge.bankSlipUrl,
           identificationField: charge.identificationField,
         },
@@ -199,6 +205,17 @@ export class InvoiceService {
           providerPaymentId: openInvoice.providerPaymentId,
           billingType: openInvoice.billingType,
           dueDate: openInvoice.dueDate,
+          correlationId: resolvedCorrelationId,
+        });
+      }
+
+      if (openInvoice.billingType === 'CREDIT_CARD') {
+        this.eventEmitter.emit('payment.card.hosted_invoice.created', {
+          tenantId: openInvoice.tenantId,
+          orderId: openInvoice.orderId,
+          invoiceId: openInvoice.invoiceId,
+          providerPaymentId: openInvoice.providerPaymentId,
+          provider: openInvoice.provider,
           correlationId: resolvedCorrelationId,
         });
       }
@@ -448,6 +465,75 @@ export class InvoiceService {
     });
 
     return this.toResponse(cancelledInvoice);
+  }
+
+  async requestRefund(
+    tenantId: string,
+    invoiceId: string,
+    idempotencyKey: string,
+    reason?: string,
+    correlationId?: string,
+  ): Promise<InvoiceResponseDto> {
+    if (!tenantId?.trim()) {
+      throw new BadRequestException('X-Tenant-Id header is required');
+    }
+    if (!idempotencyKey?.trim()) {
+      throw new BadRequestException('Idempotency-Key header is required');
+    }
+
+    const resolvedCorrelationId = correlationId?.trim() || `corr_${ulid()}`;
+
+    const existing = await this.repository.findByIdempotencyKey(
+      tenantId,
+      idempotencyKey,
+    );
+
+    if (existing?.status === 'REFUND_REQUESTED') {
+      return this.toResponse(existing);
+    }
+
+    const invoice = await this.repository.findInvoice(tenantId, invoiceId);
+
+    if (!invoice) {
+      throw new NotFoundException('Invoice not found');
+    }
+
+    if (invoice.status !== 'CONFIRMED' && invoice.status !== 'RECEIVED') {
+      throw new BadRequestException(
+        'Refund is only allowed for CONFIRMED or RECEIVED invoices',
+      );
+    }
+
+    const refundInvoice = await this.repository.updateInvoice(
+      invoice,
+      'REFUND_REQUESTED',
+    );
+    await this.repository.saveIdempotencyKey(
+      tenantId,
+      idempotencyKey,
+      refundInvoice,
+    );
+
+    this.eventEmitter.emit('payment.card.refund.requested', {
+      tenantId: refundInvoice.tenantId,
+      orderId: refundInvoice.orderId,
+      invoiceId: refundInvoice.invoiceId,
+      providerPaymentId: refundInvoice.providerPaymentId,
+      amount: refundInvoice.amount,
+      reason: reason ?? 'unspecified',
+      correlationId: resolvedCorrelationId,
+    });
+
+    this.emitObservable('pagamento.estorno.cobranca.estorno.solicitado', {
+      invoice: refundInvoice,
+      correlationId: resolvedCorrelationId,
+      stage: 'estorno_solicitado',
+      flow: 'estorno',
+      step: 1,
+      reason: reason ?? 'unspecified',
+    });
+
+    return this.toResponse(refundInvoice);
   }
 
   async confirmProviderCancellation(
@@ -1058,6 +1144,7 @@ export class InvoiceService {
       billingType: invoice.billingType,
       dueDate: invoice.dueDate,
       paymentUrl: invoice.paymentUrl,
+      hostedPaymentUrl: invoice.hostedPaymentUrl,
       bankSlipUrl: invoice.bankSlipUrl,
       identificationField: invoice.identificationField,
       externalReference: invoice.externalReference,

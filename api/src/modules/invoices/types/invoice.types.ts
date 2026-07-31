@@ -8,6 +8,7 @@ export type InvoiceStatus =
   | 'OPEN'
   | 'CONFIRMED'
   | 'RECEIVED'
+  | 'REFUND_REQUESTED'
   | 'CANCEL_REQUESTED'
   | 'CANCELLED'
   | 'CANCEL_RECONCILIATION_REQUIRED'
@@ -36,6 +37,7 @@ export interface InvoiceRecord {
   description?: string;
   externalReference: string;
   paymentUrl?: string;
+  hostedPaymentUrl?: string;
   bankSlipUrl?: string;
   identificationField?: string;
   providerPayload?: unknown;

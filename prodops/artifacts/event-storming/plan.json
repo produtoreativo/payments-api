@@ -1808,6 +1808,294 @@
       "priority": "normal",
       "source_type_name": "odd-exception",
       "aggregation_key": "webhook_entrega_falhou"
+    },
+    {
+      "title": "payment.card.hosted_invoice.created",
+      "text": "Hosted Asaas credit card invoice created — hostedPaymentUrl available for customer to complete payment",
+      "tags": [
+        "event_key:payment.card.hosted_invoice.created",
+        "env:dev",
+        "stage:fatura_cartao_hospedada_criada",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:criacao_cartao_hospedado",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "success",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "cartao_hospedado_criado"
+    },
+    {
+      "title": "payment.card.hosted_invoice.created_exception",
+      "text": "Exception during hosted credit card invoice creation",
+      "tags": [
+        "event_key:payment.card.hosted_invoice.created_exception",
+        "env:dev",
+        "stage:fatura_cartao_hospedada_criada",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:criacao_cartao_hospedado",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "cartao_hospedado_criado"
+    },
+    {
+      "title": "pagamento.cartao.webhook.pagamento.autorizado",
+      "text": "Provider authorized card payment before capture — order NOT released",
+      "tags": [
+        "event_key:pagamento.cartao.webhook.pagamento.autorizado",
+        "env:dev",
+        "stage:webhook_cartao",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "info",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "cartao_autorizado"
+    },
+    {
+      "title": "pagamento.cartao.webhook.pagamento.autorizado_exception",
+      "text": "Exception processing PAYMENT_AUTHORIZED card webhook",
+      "tags": [
+        "event_key:pagamento.cartao.webhook.pagamento.autorizado_exception",
+        "env:dev",
+        "stage:webhook_cartao",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "cartao_autorizado"
+    },
+    {
+      "title": "pagamento.cartao.webhook.analise_risco.aguardando",
+      "text": "Card payment placed under risk analysis by provider — awaiting decision",
+      "tags": [
+        "event_key:pagamento.cartao.webhook.analise_risco.aguardando",
+        "env:dev",
+        "stage:webhook_cartao",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "warning",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "cartao_analise_risco"
+    },
+    {
+      "title": "pagamento.cartao.webhook.analise_risco.aguardando_exception",
+      "text": "Exception processing PAYMENT_AWAITING_RISK_ANALYSIS card webhook",
+      "tags": [
+        "event_key:pagamento.cartao.webhook.analise_risco.aguardando_exception",
+        "env:dev",
+        "stage:webhook_cartao",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "cartao_analise_risco"
+    },
+    {
+      "title": "pagamento.cartao.webhook.analise_risco.aprovada",
+      "text": "Risk analysis approved by provider — waiting for PAYMENT_CONFIRMED before releasing order",
+      "tags": [
+        "event_key:pagamento.cartao.webhook.analise_risco.aprovada",
+        "env:dev",
+        "stage:webhook_cartao",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "success",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "cartao_analise_risco"
+    },
+    {
+      "title": "pagamento.cartao.webhook.analise_risco.aprovada_exception",
+      "text": "Exception processing PAYMENT_APPROVED_BY_RISK_ANALYSIS card webhook",
+      "tags": [
+        "event_key:pagamento.cartao.webhook.analise_risco.aprovada_exception",
+        "env:dev",
+        "stage:webhook_cartao",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "cartao_analise_risco"
+    },
+    {
+      "title": "pagamento.cartao.webhook.analise_risco.reprovada",
+      "text": "Risk analysis reproved — invoice marked FAILED, payment.confirmed NOT published",
+      "tags": [
+        "event_key:pagamento.cartao.webhook.analise_risco.reprovada",
+        "env:dev",
+        "stage:webhook_cartao",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "cartao_analise_risco"
+    },
+    {
+      "title": "pagamento.cartao.webhook.analise_risco.reprovada_exception",
+      "text": "Exception processing PAYMENT_REPROVED_BY_RISK_ANALYSIS card webhook",
+      "tags": [
+        "event_key:pagamento.cartao.webhook.analise_risco.reprovada_exception",
+        "env:dev",
+        "stage:webhook_cartao",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "cartao_analise_risco"
+    },
+    {
+      "title": "pagamento.cartao.webhook.captura_recusada",
+      "text": "Card capture refused by provider — invoice marked FAILED with observable reason",
+      "tags": [
+        "event_key:pagamento.cartao.webhook.captura_recusada",
+        "env:dev",
+        "stage:webhook_cartao",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "cartao_captura_recusada"
+    },
+    {
+      "title": "pagamento.cartao.webhook.captura_recusada_exception",
+      "text": "Exception processing PAYMENT_CREDIT_CARD_CAPTURE_REFUSED card webhook",
+      "tags": [
+        "event_key:pagamento.cartao.webhook.captura_recusada_exception",
+        "env:dev",
+        "stage:webhook_cartao",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "cartao_captura_recusada"
+    },
+    {
+      "title": "payment.card.refund.requested",
+      "text": "Refund requested for confirmed card payment — provider evidence awaited before marking complete",
+      "tags": [
+        "event_key:payment.card.refund.requested",
+        "env:dev",
+        "stage:estorno_solicitado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:estorno_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "warning",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "cartao_estorno_solicitado"
+    },
+    {
+      "title": "payment.card.refund.requested_exception",
+      "text": "Exception during card refund request",
+      "tags": [
+        "event_key:payment.card.refund.requested_exception",
+        "env:dev",
+        "stage:estorno_solicitado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:estorno_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "cartao_estorno_solicitado"
+    },
+    {
+      "title": "pagamento.estorno.cobranca.estorno.solicitado",
+      "text": "Internal observability event when refund is requested — carries tenantId, orderId, invoiceId, providerPaymentId",
+      "tags": [
+        "event_key:pagamento.estorno.cobranca.estorno.solicitado",
+        "env:dev",
+        "stage:estorno_solicitado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:estorno_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "info",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "cartao_estorno_solicitado"
+    },
+    {
+      "title": "pagamento.estorno.cobranca.estorno.solicitado_exception",
+      "text": "Exception during internal refund observability emission",
+      "tags": [
+        "event_key:pagamento.estorno.cobranca.estorno.solicitado_exception",
+        "env:dev",
+        "stage:estorno_solicitado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:estorno_cartao",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "cartao_estorno_solicitado"
     }
   ],
   "sloSuggestions": [
@@ -1953,6 +2241,36 @@
         "flow:caminho-webhook-configuracao:step:delivery:event:pagamento.webhook.entrega.entrega.falhou"
       ],
       "queryHint": "tags:(event_key:pagamento.webhook.entrega.entrega.falhou env:dev)"
+    },
+    {
+      "id": "cartao_hospedado_criado_availability",
+      "name": "Faturas de Cartão Hospedado Criadas com hostedPaymentUrl",
+      "objective": "Garantir que 99% das faturas de cartão hospedado retornem hostedPaymentUrl válida em até 5 segundos.",
+      "sliType": "availability",
+      "target": "99%",
+      "rationale": "SLI crítico do fluxo cartão hospedado (DS-41): sem hostedPaymentUrl, o cliente não consegue completar o pagamento no ambiente Asaas. OBC target: 99% em 5 minutos.",
+      "sourceEventKeys": [
+        "payment.card.hosted_invoice.created"
+      ],
+      "sourceOccurrenceKeys": [
+        "flow:caminho-cartao-hospedado:step:1:event:payment.card.hosted_invoice.created"
+      ],
+      "queryHint": "tags:(event_key:payment.card.hosted_invoice.created env:dev)"
+    },
+    {
+      "id": "cartao_confirmacao_unica_availability",
+      "name": "Confirmações de Cartão Publicadas Uma Única Vez",
+      "objective": "Garantir que payment.confirmed seja publicado exatamente uma vez por PAYMENT_CONFIRMED e nunca re-emitido em PAYMENT_RECEIVED.",
+      "sliType": "availability",
+      "target": "99%",
+      "rationale": "OBC DS-41: payment.confirmed deve ser publicado uma única vez. Dupla emissão pode causar liberação duplicada de pedido.",
+      "sourceEventKeys": [
+        "pagamento.confirmacao.webhook.pagamento.confirmado"
+      ],
+      "sourceOccurrenceKeys": [
+        "flow:confirmacao:step:1:event:pagamento.confirmacao.webhook.pagamento.confirmado"
+      ],
+      "queryHint": "tags:(event_key:pagamento.confirmacao.webhook.pagamento.confirmado env:dev)"
     }
   ],
   "assumptions": [
@@ -1962,6 +2280,7 @@
     "Fluxos cobertos: caminho-feliz (confirmação + webhook), alternativo-cliente-novo, cancelamento, token-rejeitado, webhook-configuracao, boleto.",
     "Atualizar este arquivo sempre que um novo emit() de domínio for adicionado ao código ou um flow existente mudar de sequência.",
     "2026-07-29: adicionados eventos do fluxo Boleto (payment.boleto.created, payment.boleto.creation_failed, payment.boleto.idempotency_hit) conforme OBC create-invoice-boleto.",
-    "2026-07-31: DS-43 webhook-configuration — adicionados eventos webhook.deleted, webhook.delivery.failed e sloSuggestion para falha de entrega observável."
+    "2026-07-31: DS-43 webhook-configuration — adicionados eventos webhook.deleted, webhook.delivery.failed e sloSuggestion para falha de entrega observável.",
+    "2026-07-31: DS-41 credit-card-authorization-confirmation — adicionados eventos: payment.card.hosted_invoice.created, pagamento.cartao.webhook.pagamento.autorizado, pagamento.cartao.webhook.analise_risco.aguardando/aprovada/reprovada, pagamento.cartao.webhook.captura_recusada, payment.card.refund.requested, pagamento.estorno.cobranca.estorno.solicitado (e respectivos _exception). Novos sloSuggestions: cartao_hospedado_criado_availability, cartao_confirmacao_unica_availability."
   ]
 }
