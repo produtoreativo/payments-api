@@ -1,10 +1,10 @@
 {
   "issue": "38",
-  "state": "SHIPPING",
-  "last-event-type": "prodops.delivery.ship.started",
-  "runtime-correlation-id": "5a19bf95-7383-45b5-ad51-d25a04bc6315",
+  "state": "HACKING",
+  "last-event-type": "prodops.delivery.hack.started",
+  "runtime-correlation-id": "ea2cdc10-d4a1-43cd-9774-6d25a3a0237d",
   "runtime-version": "0.3.0",
   "framework-version": "1.0.0",
   "schema-version": "1",
-  "computed-at": "2026-07-31T02:23:22Z"
+  "computed-at": "2026-07-31T03:13:55Z"
 }
