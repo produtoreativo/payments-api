@@ -1,10 +1,10 @@
 {
   "issue": "42",
-  "state": "HACKING",
-  "last-event-type": "prodops.delivery.hack.started",
+  "state": "SYNCING",
+  "last-event-type": "prodops.delivery.sync.started",
   "runtime-correlation-id": "c8f27fb0-7c9e-483e-8620-7095625222e3",
   "runtime-version": "0.3.0",
   "framework-version": "1.0.0",
   "schema-version": "1",
-  "computed-at": "2026-07-31T21:46:15Z"
+  "computed-at": "2026-07-31T22:01:40Z"
 }
