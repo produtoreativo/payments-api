@@ -143,15 +143,17 @@ case "${FILTER}" in
   cancelar)  SPECS="test/cancelar-invoice.e2e-spec.ts" ;;
   confirmar) SPECS="test/confirmar-pagamento.e2e-spec.ts" ;;
   token)     SPECS="test/api-token.acceptance.e2e-spec.ts" ;;
+  webhook)   SPECS="test/webhook-configuration.e2e-spec.ts" ;;
   "")
     SPECS="test/criar-invoice.e2e-spec.ts \
            test/criar-invoice-boleto.e2e-spec.ts \
            test/cancelar-invoice.e2e-spec.ts \
            test/confirmar-pagamento.e2e-spec.ts \
-           test/api-token.acceptance.e2e-spec.ts"
+           test/api-token.acceptance.e2e-spec.ts \
+           test/webhook-configuration.e2e-spec.ts"
     ;;
   *)
-    abort "Filtro inválido: '${FILTER}'. Use: criar | boleto | cancelar | confirmar | token"
+    abort "Filtro inválido: '${FILTER}'. Use: criar | boleto | cancelar | confirmar | token | webhook"
     ;;
 esac
 
