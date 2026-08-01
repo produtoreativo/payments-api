@@ -253,21 +253,10 @@ rm -f "$DERIVE_ERR"
 DERIVED_STATE=$(echo "$DERIVED_JSON" | jq -r '.state')
 log "Derived state: $DERIVED_STATE"
 
-# ── Step 4: Datadog (non-fatal) ───────────────────────────────────────────────
-DD_STATUS="success"
-log "Sending Datadog metric..."
-if ! bash "$DATADOG" \
-    --issue          "$WORK_ITEM_ID" \
-    --event          "$CE_TYPE" \
-    --state          "$DERIVED_STATE" \
-    --correlation-id "$CORRELATION_ID" >/dev/null 2>&1; then
-  warn "Datadog sync failed (non-fatal)"
-  DD_STATUS="error"
-fi
-
-# ── Step 4b: Lead Time (Promote.Completed only, non-fatal) ───────────────────
-# Calculates Bootstrap.Started → Promote.Completed delta in days and emits
-# runtime.delivery.lead_time_days gauge automatically — no manual intervention.
+# ── Step 4: Lead Time pre-calculation (Promote.Completed only) ───────────────
+# Calculated before the Datadog call so it can be passed in a single send.sh
+# invocation — avoids a second runtime.event.received metric with state=DONE.
+LEAD_TIME_ARG=()
 if [[ "$CE_TYPE" == "prodops.delivery.promote.completed" && -f "$TIMELINE_FILE" ]]; then
   BOOTSTRAP_TIME=$(jq -r '
     [.[] | select(.type == "prodops.delivery.bootstrap.started")] | first | .time // empty
@@ -282,20 +271,28 @@ if [[ "$CE_TYPE" == "prodops.delivery.promote.completed" && -f "$TIMELINE_FILE" 
       LEAD_SECS=$(( PROMOTE_EPOCH - BOOTSTRAP_EPOCH ))
       LEAD_DAYS=$(python3 -c "print(round($LEAD_SECS / 86400, 2))")
       log "Lead time calculated: ${LEAD_DAYS} days (Bootstrap.Started → Promote.Completed)"
-      if ! bash "$DATADOG" \
-          --issue          "$WORK_ITEM_ID" \
-          --event          "$CE_TYPE" \
-          --state          "$DERIVED_STATE" \
-          --correlation-id "$CORRELATION_ID" \
-          --lead-time-days "$LEAD_DAYS" >/dev/null 2>&1; then
-        warn "Lead time metric failed (non-fatal)"
-      fi
+      LEAD_TIME_ARG=(--lead-time-days "$LEAD_DAYS")
     else
       warn "Lead time: could not parse Bootstrap.Started timestamp — skipping"
     fi
   else
     warn "Lead time: Bootstrap.Started not found in timeline — skipping"
   fi
+fi
+
+# ── Step 4b: Datadog (non-fatal) ──────────────────────────────────────────────
+# Single send.sh call — lead-time-days included when pre-calculated above.
+# This ensures only one runtime.event.received metric is emitted per event.
+DD_STATUS="success"
+log "Sending Datadog metric..."
+if ! bash "$DATADOG" \
+    --issue          "$WORK_ITEM_ID" \
+    --event          "$CE_TYPE" \
+    --state          "$DERIVED_STATE" \
+    --correlation-id "$CORRELATION_ID" \
+    "${LEAD_TIME_ARG[@]}" >/dev/null 2>&1; then
+  warn "Datadog sync failed (non-fatal)"
+  DD_STATUS="error"
 fi
 
 # ── Step 5: GitHub sync (non-fatal) ──────────────────────────────────────────
