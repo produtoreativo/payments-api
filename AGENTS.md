@@ -47,6 +47,7 @@ Para pedidos do tipo **Delivery**, antes de propor execução, verificar:
 2. Existe BDD Feature em `prodops/artifacts/bdd/<capability>.feature`?
 3. Risco documentado em `prodops/artifacts/risks/risks.md`?
 4. Item no Iteration Plan com status `Entrou`?
+5. GitHub Issue mapeada na coluna `Issue` do `plan.md` da iteração ativa? Se não existir, o downstream cria automaticamente antes de iniciar (ver gate 5 em `prodops/skills/downstream/SKILL.md`).
 
 ### Passo 2 — Propor, não executar
 

@@ -104,10 +104,51 @@ Antes de executar qualquer ciclo, avaliar a capability contra todos os pré-requ
 2. BDD Feature committed em `prodops/artifacts/bdd/`.
 3. Riscos documentados em `prodops/artifacts/risks/risks.md`.
 4. Item no Iteration Plan com status `Entrou`.
+5. GitHub Issue existente e mapeada na coluna `Issue` do `plan.md` da iteração ativa.
 
-Tratar como **Downstream Declared** enquanto houver pré-requisitos ausentes. Declarar **Downstream Ready** apenas após os quatro gates passarem. **Delivery Started** começa somente quando o Bootstrap inicia.
+Tratar como **Downstream Declared** enquanto houver pré-requisitos ausentes. Declarar **Downstream Ready** apenas após os cinco gates passarem. **Delivery Started** começa somente quando o Bootstrap inicia.
 
 Reliability Plan (`prodops/artifacts/plans/reliability/<capability>.md`) é opcional. Se existir, incluir `reliability-path` na capsule e referenciar SLOs nas fases de Validate e Promote. Sua ausência não bloqueia o flow.
+
+### Gate 5 — criação de Issue quando ausente
+
+Se o item estiver no Iteration Plan com status `Entrou` mas sem Issue mapeada:
+
+1. Criar Issue via `gh issue create`:
+   - **Título:** `[DS-<n>]: <capability-description>`
+   - **Body:** incluir DS-ID, iteration-id, OBC path, BDD path e link para o plan.md
+   - **Labels:** `journey:delivery`, `artifact-type:local-obc`, `operation:implement`
+2. Associar ao Project 25:
+   ```bash
+   gh issue edit <number> --add-project "ProdOps Runtime"
+   ```
+3. Atualizar a coluna `Issue` do `plan.md` com o número criado.
+4. Commitar `plan.md` antes de continuar.
+
+Nunca iniciar Bootstrap sem Issue mapeada — o `work-item-id` da capsule e dos eventos depende desse número.
+
+### Registro automático por fase — Issue Trail
+
+Após cada fase concluída (Readiness, Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote), postar um comentário na Issue com o resultado da fase:
+
+```bash
+gh issue comment <work-item-id> --body "<resumo da fase>"
+```
+
+Formato do comentário:
+
+```
+## <Fase> — <YYYY-MM-DD HH:MM UTC>
+
+**Status:** <Concluído | Bloqueado | Falhou>
+
+<resumo em até 5 linhas: o que foi feito, evidências principais, próximo passo>
+
+---
+*correlation-id: <uuid> · iteration: <iteration-id> · actor: <player>*
+```
+
+O registro é obrigatório mesmo em caso de falha ou bloqueio — o comentário de bloqueio deve descrever o motivo e a ação necessária para resolução. Isso garante rastreabilidade completa do trabalho diretamente na Issue, acessível a qualquer agente ou humano sem precisar ler timelines ou trails.
 
 Quando todos os pré-requisitos existirem:
 
