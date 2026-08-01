@@ -41,6 +41,34 @@ env:
   ENVIRONMENT: staging
 
 jobs:
+  # ── Job 0: Detect IaC changes ────────────────────────────────────────────────
+  # Runs in parallel with lint-and-test. Avoids unnecessary CloudFormation API
+  # calls when the IaC files haven't changed (which is the common case for
+  # feature delivery — app code changes, infra stays the same).
+  detect-changes:
+    name: Detect IaC changes
+    runs-on: ubuntu-latest
+    outputs:
+      dynamo: ${{ steps.diff.outputs.dynamo }}
+      lambda: ${{ steps.diff.outputs.lambda }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect changed IaC paths
+        id: diff
+        run: |
+          DYNAMO_FILES=$(git diff --name-only HEAD~1 HEAD -- api/infra/dynamodb.yaml | wc -l | tr -d ' ')
+          LAMBDA_FILES=$(git diff --name-only HEAD~1 HEAD -- api/infra/lambda.yaml api/src/ | wc -l | tr -d ' ')
+          DYNAMO_CHANGED=$([[ "$DYNAMO_FILES" -gt 0 ]] && echo 'true' || echo 'false')
+          LAMBDA_CHANGED=$([[ "$LAMBDA_FILES" -gt 0 ]] && echo 'true' || echo 'false')
+          echo "dynamo=${DYNAMO_CHANGED}" >> "$GITHUB_OUTPUT"
+          echo "lambda=${LAMBDA_CHANGED}" >> "$GITHUB_OUTPUT"
+          echo "DynamoDB IaC changed: $DYNAMO_FILES file(s) → deploy: ${DYNAMO_CHANGED}"
+          echo "Lambda IaC/code changed: $LAMBDA_FILES file(s) → deploy: ${LAMBDA_CHANGED}"
+
   # ── Job 1: Lint + Acceptance Tests ─────────────────────────────────────────
   # Runs against LocalStack so every test hits the real DynamoDB API.
   # No in-memory mocks, no AWS account required.
@@ -120,9 +148,11 @@ jobs:
   # ── Job 2: Deploy to Staging ────────────────────────────────────────────────
   # Deploys REAL AWS infrastructure. Zero mocks. All parameters reflect a
   # production-like environment using the Asaas sandbox (non-mock) API.
+  # Skipped entirely when neither DynamoDB nor Lambda IaC/code changed.
   deploy-staging:
     name: Deploy — Real AWS Infrastructure (Staging)
-    needs: lint-and-test
+    needs: [lint-and-test, detect-changes]
+    if: needs.detect-changes.outputs.dynamo == 'true' || needs.detect-changes.outputs.lambda == 'true'
     runs-on: ubuntu-latest
 
     environment:
@@ -186,15 +216,19 @@ jobs:
       # ── SAM Build ────────────────────────────────────────────────────────────
       # Processes infra/lambda.yaml and dist/ into .aws-sam/build/template.yaml
       # Required before sam deploy can reference .aws-sam/build/template.yaml
+      # Skipped when Lambda IaC and code are unchanged (detect-changes gate).
       - name: SAM Build
+        if: needs.detect-changes.outputs.lambda == 'true'
         working-directory: api
-        run: sam build --template-file infra/lambda.yaml --no-cached
+        run: sam build --template-file infra/lambda.yaml
 
       # ── DynamoDB Tables ──────────────────────────────────────────────────────
       # Deployed as a separate stack so tables survive Lambda stack re-deploys.
       # `aws cloudformation deploy` is synchronous — it waits for the stack to
       # reach CREATE_COMPLETE or UPDATE_COMPLETE before returning. No extra wait.
+      # Skipped when dynamodb.yaml is unchanged (detect-changes gate).
       - name: Deploy DynamoDB tables
+        if: needs.detect-changes.outputs.dynamo == 'true'
         run: |
           aws cloudformation deploy \
             --region "${{ env.AWS_REGION }}" \
@@ -217,7 +251,9 @@ jobs:
       # only secrets here would leave all non-secret params as UsePreviousValue
       # on existing stacks, or template defaults on first deploy. Pass everything.
       # Secrets are injected at deploy time and never stored in samconfig.toml.
+      # Skipped when Lambda IaC and code are unchanged (detect-changes gate).
       - name: Deploy Lambda application
+        if: needs.detect-changes.outputs.lambda == 'true'
         working-directory: api
         env:
           STAGING_ASAAS_TOKEN: ${{ secrets.STAGING_ASAAS_TOKEN }}
@@ -309,9 +345,11 @@ jobs:
   # ── Job 3: Smoke Test ───────────────────────────────────────────────────────
   # Validates the live staging endpoint immediately after deploy.
   # Confirms: (1) API is reachable, (2) auth guard returns 401 correctly.
+  # Runs even when deploy-staging was skipped (validates existing deployment).
   smoke-test:
     name: Smoke Test — Live Staging Endpoint
-    needs: deploy-staging
+    needs: [lint-and-test, detect-changes, deploy-staging]
+    if: always() && needs.lint-and-test.result != 'failure' && needs.deploy-staging.result != 'failure' && needs.deploy-staging.result != 'cancelled'
     runs-on: ubuntu-latest
 
     steps:
