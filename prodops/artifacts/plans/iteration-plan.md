@@ -1,6 +1,6 @@
-# Iteration Plan — v0.6.0
+# Iteration Plan — v0.7.0
 
-> **Iteração ativa.** Plano detalhado em [`prodops/artifacts/iterations/v0.6.0/plan.md`](../iterations/v0.6.0/plan.md).
+> **Iteração ativa.** Plano detalhado em [`prodops/artifacts/iterations/v0.7.0/plan.md`](../iterations/v0.7.0/plan.md).
 >
 > Histórico completo de iterações em [`prodops/artifacts/iterations/`](../iterations/).
 
@@ -14,6 +14,8 @@
 | [v0.5.0](../iterations/v0.5.0/plan.md) | DS-39 · DS-42 · DS-43 · DS-41 | ✅ Concluído |
 | [v0.6.0](../iterations/v0.6.0/plan.md) | DS-39 · DS-42 · DS-43 · DS-41 | ✅ Concluído — PRs #111–#114 |
 
-## Iteração corrente
+## Iteração corrente — v0.7.0
 
-Nenhuma iteração ativa. Próxima iteração a definir.
+| DS | Issue | Feature | Status |
+|---|---|---|---|
+| DS-44 | — | dependency-security-update: eliminar vulnerabilidades Dependabot | Entrou |
