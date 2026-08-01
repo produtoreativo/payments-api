@@ -9,15 +9,30 @@ Downstream is the commitment mode of the ProdOps Framework. Every delivery must 
 
 ## Downstream ID
 
-Each Downstream item has a **Downstream ID** — the canonical identifier used by the skill and by humans to reference a specific item. The Downstream ID is composed of the GitHub Issue number associated with the capability:
+Each Downstream item has a **Downstream ID** — the stable identifier of the feature across iterations:
 
 ```
-DS-<issue-number>
+DS-<feature-slug-number>
 ```
 
-Examples: `DS-40` (create-invoice-boleto), `DS-76` (create-invoice-pix).
+The DS-ID identifies the **feature** (stable), not the GitHub Issue (ephemeral — changes each iteration). The mapping `DS-ID → issue` is declared in the active iteration's `plan.md`. The agent resolves `DS-39 → issue #106` by reading the mapping table from the plan, never inferring from the DS-ID number.
 
-The Downstream ID is resolved by `/readiness` during the readiness gate and recorded in the `context.md`. Humans can use it directly in the commands below.
+## Iteration Directory
+
+At the start of any execution, the agent resolves the **ITERATION_DIR** from the `iteration-id` declared in the active plan:
+
+```
+ITERATION_DIR = prodops/artifacts/iterations/<iteration-id>/
+```
+
+All runtime artifacts for this iteration live exclusively inside this directory:
+- Timelines: `ITERATION_DIR/runtime/timelines/<issue>.json`
+- Plan Bootstrap: `ITERATION_DIR/runtime/plan-bootstrap.json`
+- Plan Validate: `ITERATION_DIR/runtime/plan-validate.json`
+- Context capsules: `ITERATION_DIR/cards/<slug>/context.md`
+- Session trails: `ITERATION_DIR/trails/`
+
+The `--iteration-id` is propagated to all calls of `emit-event`, `append.sh`, `derive-state.sh`, and `derive-diligence-state.sh`. No runtime artifact is written outside the ITERATION_DIR of the current iteration.
 
 ## Commands
 
@@ -36,8 +51,8 @@ Use `/readiness` when you want to verify gates and prepare the context capsule w
 
 When invoked without arguments:
 
-1. Read `prodops/artifacts/plans/iteration-plan.md`.
-2. Collect all items with status `Entrou` from the "Iteration Plan recomendado" table.
+1. Read `prodops/artifacts/plans/iteration-plan.md` → identify the active version (e.g. `v0.6.0`).
+2. Read `prodops/artifacts/iterations/<version>/plan.md` → resolve `ITERATION_ID` and collect all items with status `Entrou` from the scope table, using the DS-ID → Issue mapping table to obtain the correct issue numbers.
 3. Present the execution queue in the order they appear in the Iteration Plan (PM/PO priority order):
 
 ```
@@ -47,9 +62,27 @@ Downstream Queue — Active Iteration Plan
 ...
 ```
 
-4. For each item in the queue, in order, without requesting confirmation between them:
+4. **Plan Bootstrap** — run once before the issue loop:
+   a. Check if `ITERATION_DIR/runtime/plan-bootstrap.json` already exists with `"status": "completed"`. If so, skip to step 5 (environment already ready).
+   b. Emit `Delivery.Plan.Bootstrap.Started` with `subject: <iteration-id>`, `work-item-id: null` and `--iteration-id <iteration-id>`.
+   c. Execute Bootstrap work: install dependencies, verify runtimes and local services, confirm environment variables, run the manifest smoke gate.
+   d. If any step fails: report the blocker and **stop the entire queue** — do not start any issue.
+   e. Emit `Delivery.Plan.Bootstrap.Completed` with `subject: <iteration-id>` and `--iteration-id <iteration-id>`.
+   f. Write `ITERATION_DIR/runtime/plan-bootstrap.json`:
+   ```json
+   {
+     "iteration-id": "<iteration-id>",
+     "status": "completed",
+     "correlation-id": "<uuid-generated-at-started>",
+     "completed-at": "<iso8601-timestamp>",
+     "issues": ["<issue-1>", "<issue-2>", "..."]
+   }
+   ```
+   g. Commit the file to the repository before starting the loop.
+
+5. For each item in the queue, in order, without requesting confirmation between them:
    a. Run `/readiness <capability>` — if it fails, report blockers and **stop the entire queue**.
-   b. Execute CI Sync: Bootstrap → Hack → Sync → Finish.
+   b. Execute CI Sync: Bootstrap (fast path via plan-bootstrap) → Hack → Sync → Finish.
    c. Report evidence for the completed item and automatically advance to the next.
 
 Stop only when: (1) a readiness check fails, (2) a quality gate does not pass, (3) the queue is exhausted.
@@ -71,26 +104,167 @@ Before executing either cycle, evaluate the capability against all current Downs
 2. BDD Feature committed in `prodops/artifacts/bdd/`.
 3. Risks documented in `prodops/artifacts/risks/risks.md`.
 4. Item in the Iteration Plan with status `Entrou`.
+5. GitHub Issue existing and mapped in the `Issue` column of the active iteration's `plan.md`.
 
-Treat commitment as **Downstream Declared** while any prerequisite is missing. Mark **Downstream Ready** only after all four gates pass. **Delivery Started** begins only when Bootstrap starts.
+Treat commitment as **Downstream Declared** while any prerequisite is missing. Mark **Downstream Ready** only after all five gates pass. **Delivery Started** begins only when Bootstrap starts.
 
 Reliability Plan (`prodops/artifacts/plans/reliability/<capability>.md`) is optional. If it exists, include `reliability-path` in the capsule and reference SLOs during Validate and Promote. Its absence does not block the flow.
 
-When all prerequisites exist, generate `prodops/artifacts/iterations/<iteration-id>/cards/<card-slug>/context.md` from `prodops/templates/delivery/context-capsule.md`. The capsule is generated by Downstream readiness, not Bootstrap.
+### Gate 5 — Issue creation when absent
+
+If the item is in the Iteration Plan with status `Entrou` but without a mapped Issue:
+
+1. Create the Issue via `gh issue create`:
+   - **Title:** `[DS-<n>]: <capability-description>`
+   - **Body:** include DS-ID, iteration-id, OBC path, BDD path and link to plan.md
+   - **Labels:** `journey:delivery`, `artifact-type:local-obc`, `operation:implement`
+2. Associate with Project 25:
+   ```bash
+   gh issue edit <number> --add-project "ProdOps Runtime"
+   ```
+3. Update the `Issue` column in `plan.md` with the created number.
+4. Commit `plan.md` before continuing.
+
+Never start Bootstrap without a mapped Issue — the `work-item-id` in the capsule and events depends on this number.
+
+### Automatic phase registration — Issue Trail
+
+After each completed phase (Readiness, Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote), post a comment on the Issue with the phase result:
+
+```bash
+gh issue comment <work-item-id> --body "<phase summary>"
+```
+
+Comment format:
+
+```
+## <Phase> — <YYYY-MM-DD HH:MM UTC>
+
+**Status:** <Completed | Blocked | Failed>
+
+<summary in up to 5 lines: what was done, key evidence, next step>
+
+---
+*correlation-id: <uuid> · iteration: <iteration-id> · actor: <player>*
+```
+
+The comment is mandatory even in case of failure or blocker — the blocker comment must describe the reason and the action required to resolve it. This ensures full traceability of the work directly on the Issue, accessible to any agent or human without needing to read timelines or trails.
+
+When all prerequisites exist:
+
+1. Emit `Delivery.Plan.Entered` for the issue, generating the `correlation-id` for the entire flow:
+
+```json
+{
+  "event": "Delivery.Plan.Entered",
+  "work-item-id": "<issue-number>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<new-uuid>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "downstream-agent" },
+  "payload": {}
+}
+```
+
+2. Generate `ITERATION_DIR/cards/<card-slug>/context.md` from `prodops/templates/delivery/context-capsule.md`. Fill in **all** template fields, including:
+
+**Runtime Context** — filled with data from the active iteration:
+- `ds-id` — stable feature identifier (e.g. `DS-39`)
+- `work-item-id` — issue number for the current iteration (resolved via DS-ID → Issue table in `plan.md`)
+- `iteration-id` — iteration version (e.g. `v0.6.0`)
+- `iteration-dir` — `prodops/artifacts/iterations/<version>/`
+- `correlation-id` — UUID generated at `Delivery.Plan.Entered` above
+- `actor-player` — current player (`claude`, `codex` or `copilot`)
+
+**Runtime Paths** — pre-computed to eliminate derivation at each phase:
+- `feature-branch` — `feat/<work-item-id>-<slug>`
+- `base-branch` — base branch for the merge (normally `master`)
+- `timeline-path` — `ITERATION_DIR/runtime/timelines/<work-item-id>.json`
+- `plan-bootstrap-path` — `ITERATION_DIR/runtime/plan-bootstrap.json`
+- `plan-validate-path` — `ITERATION_DIR/runtime/plan-validate.json`
+- `session-trail-dir` — `ITERATION_DIR/trails/`
+- `obc-path`, `bdd-path` — absolute paths to product artifacts
+- `reliability-path` — path to the Reliability Plan if it exists, otherwise `"none"`
+
+**Flow State** — leave blank; filled by Finish (`pr-number`) and Ship (`infra-scope`):
+- `pr-number: (filled by Finish)`
+- `infra-scope: (filled by Ship)`
+- `oem-state: PENDING`
+
+**BDD Scenarios** — include complete steps (Given/When/Then), not just one-liners, so that Hack/tdd can execute the Red phase without opening the `.feature` file.
+
+The capsule is the only artifact the agent needs to load to execute the entire flow without re-reading infrastructure files. The `correlation-id` generated here is propagated to Bootstrap, Hack, Sync, Finish, Ship, Validate, and Promote.
 
 ## CI Sync
 
-1. **Bootstrap** — prepare dependencies, local infrastructure and smoke gate only.
+1. **Bootstrap** — when invoked inside the `/downstream` loop (no-argument mode or DS-ID from a plan), Bootstrap operates in fast path if the Plan Bootstrap already completed: emits only the Started/Completed events without re-executing dependencies or smoke gate. In isolated executions (without Plan Bootstrap), it runs the full flow.
 2. **Hack** — run `start`, `tdd`, and `commit`; `start` owns Git flow and branch creation.
 3. **Sync** — synchronize the branch and align impacted ProdOps artifacts.
 4. **Finish** — execute final quality gates and prepare the PR.
 
 ## CI Async
 
-1. Confirm successful CI Sync evidence exists and was approved.
-2. **Ship** — build, publish and deploy according to the current release policy. Trigger `staging-deploy.yml` via `gh workflow run` and wait for completion before Validate.
-3. **Validate** — validate BDD, OBC, observability, SLOs and risks in the target environment.
-4. **Promote** — apply promotion gates and append evidence to the Release Trail.
+CI Async operates in three sequential phases across all plan items:
+
+**Phase 1 — Ship (per issue, in sequence)**
+For each issue in the plan queue, in order:
+1. Confirm that CI Sync evidence exists and was approved.
+2. Trigger `staging-deploy.yml` via `gh workflow run` and wait for completion.
+3. Advance to the next issue without waiting for Validate.
+
+**Phase 2 — Validate (per issue, in sequence)**
+For each issue in the plan queue, in order:
+1. Validate BDD, OBC, observability, SLOs, and risks in the target environment.
+2. After `Validate.Completed`: update `plan-validate-<iteration-id>.json` marking the issue as validated.
+3. After the last issue validates: emit `Delivery.Plan.Validated` — the plan gate passes.
+4. If any Validate fails: **stop all of phase 3**. No Promote occurs while issues are pending.
+
+**Phase 3 — Promote (per issue, in sequence — mandatory plan gate)**
+Only started after `Delivery.Plan.Validated` is emitted:
+1. For each issue in the plan queue, in order: apply approval gates and record in the Release Trail.
+2. The Promote for each issue verifies `plan-validate-<iteration-id>.json` before emitting `Promote.Started`.
+
+**Note on standalone executions** (`/downstream ci-async DS-<n>`): without an Iteration Plan context, CI Async operates per issue independently (Ship → Validate → Promote) without a plan gate.
+
+## Exception protocol — blockers
+
+When a phase cannot advance (permission denied, gate failed, timeout, external blocker):
+
+1. Emit `Delivery.Block.Declared` **before stopping**, recording the reason in the payload:
+
+```json
+{
+  "event": "Delivery.Block.Declared",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "downstream-agent" },
+  "payload": {}
+}
+```
+
+This sets `oem-state = BLOCKED` in the GitHub Project and automatically triggers the Diligence Sync (`diligence.capture`) via dispatcher.
+
+2. Report the blocker to the caller with: the phase where it occurred, the reason, and the action required to resolve it.
+
+When the blocker is resolved and the flow resumes:
+
+3. Emit `Delivery.Block.Resolved` **before continuing**, using the same `correlation-id`:
+
+```json
+{
+  "event": "Delivery.Block.Resolved",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "downstream-agent" },
+  "payload": {}
+}
+```
+
+This sets `oem-state = PENDING` and allows Bootstrap to start again.
 
 ## Guardrails
 
@@ -104,6 +278,7 @@ When all prerequisites exist, generate `prodops/artifacts/iterations/<iteration-
 - Do not create GitHub Issues or PRs without declaring artifact_type, artifact_id, operation, and journey.
 - In no-argument mode, stop only on readiness failure or gate failure — never wait for confirmation between items.
 - Use the canonical Work Item title pattern: `[Artifact ID]: description`.
+- Never stop silently — every blocker must emit `Delivery.Block.Declared` before reporting to the caller.
 
 ## References
 
