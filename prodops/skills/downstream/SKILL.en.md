@@ -64,11 +64,19 @@ Downstream Queue — Active Iteration Plan
 
 4. **Plan Bootstrap** — run once before the issue loop:
    a. Check if `ITERATION_DIR/runtime/plan-bootstrap.json` already exists with `"status": "completed"`. If so, skip to step 5 (environment already ready).
-   b. Emit `Delivery.Plan.Bootstrap.Started` with `subject: <iteration-id>`, `work-item-id: null` and `--iteration-id <iteration-id>`.
-   c. Execute Bootstrap work: install dependencies, verify runtimes and local services, confirm environment variables, run the manifest smoke gate.
-   d. If any step fails: report the blocker and **stop the entire queue** — do not start any issue.
-   e. Emit `Delivery.Plan.Bootstrap.Completed` with `subject: <iteration-id>` and `--iteration-id <iteration-id>`.
-   f. Write `ITERATION_DIR/runtime/plan-bootstrap.json`:
+   b. **Project cleanup** — remove all closed issues from Project 25 before adding the new iteration's issues:
+      ```bash
+      gh project item-list 25 --owner produtoreativo --format json \
+        | jq -r '.items[] | select(.content.state == "CLOSED") | .id' \
+        | xargs -I{} gh project item-delete 25 --owner produtoreativo --id {}
+      ```
+      - Do not block if the project is empty or no closed issues are found.
+      - Do not remove open issues from other iterations that may be in the project.
+   c. Emit `Delivery.Plan.Bootstrap.Started` with `subject: <iteration-id>`, `work-item-id: null` and `--iteration-id <iteration-id>`.
+   d. Execute Bootstrap work: install dependencies, verify runtimes and local services, confirm environment variables, run the manifest smoke gate.
+   e. If any step fails: report the blocker and **stop the entire queue** — do not start any issue.
+   f. Emit `Delivery.Plan.Bootstrap.Completed` with `subject: <iteration-id>` and `--iteration-id <iteration-id>`.
+   g. Write `ITERATION_DIR/runtime/plan-bootstrap.json`:
    ```json
    {
      "iteration-id": "<iteration-id>",
@@ -78,7 +86,7 @@ Downstream Queue — Active Iteration Plan
      "issues": ["<issue-1>", "<issue-2>", "..."]
    }
    ```
-   g. Commit the file to the repository before starting the loop.
+   h. Commit the file to the repository before starting the loop.
 
 5. For each item in the queue, in order, without requesting confirmation between them:
    a. Run `/readiness <capability>` — if it fails, report blockers and **stop the entire queue**.

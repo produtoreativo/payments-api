@@ -64,11 +64,20 @@ Fila Downstream — Iteration Plan ativo
 
 4. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
    a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` já existe com `"status": "completed"`. Se sim, pular para o passo 5 (ambiente já pronto).
-   b. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>`, `work-item-id: null` e `--iteration-id <iteration-id>`.
-   c. Executar o Bootstrap work: instalar dependências, verificar runtimes e serviços locais, confirmar variáveis de ambiente, executar o smoke gate do manifest.
-   d. Se qualquer etapa falhar: reportar o bloqueio e **parar toda a fila** — não iniciar nenhum issue.
-   e. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`.
-   f. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
+   b. **Project cleanup** — remover do Project 25 todas as issues com estado `closed` antes de adicionar as novas da iteração corrente:
+      ```bash
+      # listar items do projeto e remover os fechados
+      gh project item-list 25 --owner produtoreativo --format json \
+        | jq -r '.items[] | select(.content.state == "CLOSED") | .id' \
+        | xargs -I{} gh project item-delete 25 --owner produtoreativo --id {}
+      ```
+      - Não bloquear se o projeto estiver vazio ou se nenhuma issue fechada for encontrada.
+      - Não remover issues abertas de outras iterações que eventualmente estejam no projeto.
+   c. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>`, `work-item-id: null` e `--iteration-id <iteration-id>`.
+   d. Executar o Bootstrap work: instalar dependências, verificar runtimes e serviços locais, confirmar variáveis de ambiente, executar o smoke gate do manifest.
+   e. Se qualquer etapa falhar: reportar o bloqueio e **parar toda a fila** — não iniciar nenhum issue.
+   f. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`.
+   g. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
    ```json
    {
      "iteration-id": "<iteration-id>",
@@ -78,7 +87,7 @@ Fila Downstream — Iteration Plan ativo
      "issues": ["<issue-1>", "<issue-2>", "..."]
    }
    ```
-   g. Commitar o arquivo no repositório antes de iniciar o loop.
+   h. Commitar o arquivo no repositório antes de iniciar o loop.
 
 5. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
    a. Executar `/readiness <capability>` — se falhar, reportar blockers e **parar toda a fila**.
