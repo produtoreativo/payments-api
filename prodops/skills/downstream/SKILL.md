@@ -9,15 +9,30 @@ Downstream é o modo de compromisso do Framework ProdOps. Toda entrega passa obr
 
 ## Downstream ID
 
-Cada item do Downstream possui um **Downstream ID** — o identificador canônico usado pelo skill e por humanos para referenciar um item específico. O Downstream ID é composto pelo número da GitHub Issue associada à capability:
+Cada item do Downstream possui um **Downstream ID** — o identificador estável da feature ao longo das iterações:
 
 ```
-DS-<issue-number>
+DS-<feature-slug-number>
 ```
 
-Exemplos: `DS-40` (create-invoice-boleto), `DS-76` (create-invoice-pix).
+O DS-ID identifica a **feature** (estável), não a GitHub Issue (efêmera — muda a cada iteração). O mapeamento `DS-ID → issue` é declarado no `plan.md` da iteração ativa. O agente resolve `DS-39 → issue #106` lendo a tabela de mapeamento do plano, nunca inferindo do número do DS-ID.
 
-O Downstream ID é resolvido pelo `/readiness` durante o gate de readiness e registrado no `context.md`. Humanos podem usá-lo diretamente nos comandos abaixo.
+## Iteration Directory
+
+Ao iniciar qualquer execução, o agente resolve o **ITERATION_DIR** a partir do `iteration-id` declarado no plano ativo:
+
+```
+ITERATION_DIR = prodops/artifacts/iterations/<iteration-id>/
+```
+
+Todos os artefatos de runtime desta iteração vivem exclusivamente dentro deste diretório:
+- Timelines: `ITERATION_DIR/runtime/timelines/<issue>.json`
+- Plan Bootstrap: `ITERATION_DIR/runtime/plan-bootstrap.json`
+- Plan Validate: `ITERATION_DIR/runtime/plan-validate.json`
+- Context capsules: `ITERATION_DIR/cards/<slug>/context.md`
+- Session trails: `ITERATION_DIR/trails/`
+
+O `--iteration-id` é propagado para todas as chamadas de `emit-event`, `append.sh`, `derive-state.sh` e `derive-diligence-state.sh`. Nenhum artefato de runtime é escrito fora do ITERATION_DIR da iteração corrente.
 
 ## Comandos
 
@@ -36,8 +51,8 @@ Use `/readiness` quando quiser verificar gates e preparar o context capsule sem 
 
 Quando invocado sem argumentos:
 
-1. Ler `prodops/artifacts/plans/iteration-plan.md`.
-2. Coletar todos os itens com status `Entrou` na tabela "Iteration Plan recomendado".
+1. Ler `prodops/artifacts/plans/iteration-plan.md` → identificar a versão ativa (ex: `v0.6.0`).
+2. Ler `prodops/artifacts/iterations/<version>/plan.md` → resolver `ITERATION_ID` e coletar todos os itens com status `Entrou` da tabela de escopo, usando a tabela de mapeamento DS-ID → Issue para obter os números de issue corretos.
 3. Apresentar a fila de execução na ordem em que aparecem no Iteration Plan (ordem de prioridade do PM/PO):
 
 ```
@@ -48,12 +63,12 @@ Fila Downstream — Iteration Plan ativo
 ```
 
 4. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
-   a. Verificar se `prodops/artifacts/runtime/plan-bootstrap-<iteration-id>.json` já existe com `"status": "completed"`. Se sim, pular para o passo 5 (ambiente já pronto).
-   b. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>` e `work-item-id: null`.
+   a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` já existe com `"status": "completed"`. Se sim, pular para o passo 5 (ambiente já pronto).
+   b. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>`, `work-item-id: null` e `--iteration-id <iteration-id>`.
    c. Executar o Bootstrap work: instalar dependências, verificar runtimes e serviços locais, confirmar variáveis de ambiente, executar o smoke gate do manifest.
    d. Se qualquer etapa falhar: reportar o bloqueio e **parar toda a fila** — não iniciar nenhum issue.
-   e. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>`.
-   f. Escrever `prodops/artifacts/runtime/plan-bootstrap-<iteration-id>.json`:
+   e. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`.
+   f. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
    ```json
    {
      "iteration-id": "<iteration-id>",
@@ -95,7 +110,7 @@ Tratar como **Downstream Declared** enquanto houver pré-requisitos ausentes. De
 
 Quando todos os pré-requisitos existirem:
 
-1. Gerar `prodops/exec/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md`. O capsule é gerado pelo readiness do Downstream, não pelo Bootstrap.
+1. Gerar `ITERATION_DIR/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md`. O capsule é gerado pelo readiness do Downstream, não pelo Bootstrap. `ITERATION_DIR` = `prodops/artifacts/iterations/<iteration-id>/`.
 2. Emitir o evento `Delivery.Plan.Entered` para a issue, definindo `oem-state = PENDING` no GitHub Project. Isso posiciona o item na coluna PENDING do board antes do Bootstrap iniciar.
 
 ```json

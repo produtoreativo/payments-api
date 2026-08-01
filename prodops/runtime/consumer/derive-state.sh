@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Derived State Consumer — reads CloudEvents from Timeline; last alters-state=true wins
-# Usage: derive-state.sh --issue <id>
+# Usage: derive-state.sh --issue <id> [--iteration-id <id>]
+#
+# With --iteration-id: reads from artifacts/iterations/<id>/runtime/timelines/<issue>.json
+#                      writes to   artifacts/iterations/<id>/runtime/derived-state-<issue>.json
+# Without:             reads/writes artifacts/runtime/ (legacy fallback)
 
 set -euo pipefail
 
@@ -8,8 +12,6 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 RUNTIME_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 PRODOPS_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 CONFIG="$RUNTIME_DIR/runtime.yaml"
-TIMELINES_DIR="$PRODOPS_DIR/artifacts/runtime/timelines"
-OUTPUT_FILE="$PRODOPS_DIR/artifacts/runtime/derived-state.json"
 
 yaml_get() {
   python3 - "$CONFIG" "$1" <<'PYEOF'
@@ -24,14 +26,26 @@ PYEOF
 }
 
 ISSUE=""
+ITERATION_ID=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --issue) ISSUE="$2"; shift 2 ;;
+    --issue)        ISSUE="$2"; shift 2 ;;
+    --iteration-id) ITERATION_ID="$2"; shift 2 ;;
     *) echo "Unknown arg: $1" >&2; exit 1 ;;
   esac
 done
 
 [[ -z "$ISSUE" ]] && { echo "Error: --issue required" >&2; exit 1; }
+
+if [[ -n "$ITERATION_ID" ]]; then
+  SAFE_ITER=$(echo "$ITERATION_ID" | tr '/ ' '--')
+  TIMELINES_DIR="$PRODOPS_DIR/artifacts/iterations/${SAFE_ITER}/runtime/timelines"
+  OUTPUT_DIR="$PRODOPS_DIR/artifacts/iterations/${SAFE_ITER}/runtime"
+else
+  TIMELINES_DIR="$PRODOPS_DIR/artifacts/runtime/timelines"
+  OUTPUT_DIR="$PRODOPS_DIR/artifacts/runtime"
+fi
+OUTPUT_FILE="$OUTPUT_DIR/derived-state.json"
 
 TIMELINE_FILE="$TIMELINES_DIR/${ISSUE}.json"
 [[ ! -f "$TIMELINE_FILE" ]] && { echo "Error: timeline not found: $TIMELINE_FILE" >&2; exit 1; }
@@ -87,6 +101,6 @@ DERIVED=$(jq \
   end
   ' "$TIMELINE_FILE")
 
-echo "$DERIVED" > "$OUTPUT_FILE"
-echo "$DERIVED" > "${OUTPUT_FILE%.json}-${ISSUE}.json"
+mkdir -p "$OUTPUT_DIR"
+echo "$DERIVED" > "$OUTPUT_DIR/derived-state-${ISSUE}.json"
 echo "$DERIVED"

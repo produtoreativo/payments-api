@@ -2,9 +2,11 @@
 # Derived Diligence State Consumer — reads CloudEvents from Diligence timeline;
 # computes the current Diligence checkpoint for a given issue.
 #
-# Usage: derive-diligence-state.sh --issue <id>
+# Usage: derive-diligence-state.sh --issue <id> [--iteration-id <id>]
 #
-# Output: writes prodops/artifacts/runtime/derived-state-diligence-<issue>.json
+# With --iteration-id: reads from artifacts/iterations/<id>/runtime/timelines/
+#                      writes to   artifacts/iterations/<id>/runtime/derived-state-diligence-<issue>.json
+# Without:             reads/writes artifacts/runtime/ (legacy fallback)
 #
 # The Diligence timeline is at timelines/diligence-<issue>.json (canonical)
 # or timelines/<issue>.json (fallback — dispatcher signals only).
@@ -15,8 +17,6 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 RUNTIME_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 PRODOPS_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 CONFIG="$RUNTIME_DIR/runtime.yaml"
-TIMELINES_DIR="$PRODOPS_DIR/artifacts/runtime/timelines"
-OUTPUT_DIR="$PRODOPS_DIR/artifacts/runtime"
 
 yaml_get() {
   python3 - "$CONFIG" "$1" <<'PYEOF'
@@ -31,14 +31,25 @@ PYEOF
 }
 
 ISSUE=""
+ITERATION_ID=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --issue) ISSUE="$2"; shift 2 ;;
+    --issue)        ISSUE="$2"; shift 2 ;;
+    --iteration-id) ITERATION_ID="$2"; shift 2 ;;
     *) echo "Unknown arg: $1" >&2; exit 1 ;;
   esac
 done
 
 [[ -z "$ISSUE" ]] && { echo "Error: --issue required" >&2; exit 1; }
+
+if [[ -n "$ITERATION_ID" ]]; then
+  SAFE_ITER=$(echo "$ITERATION_ID" | tr '/ ' '--')
+  TIMELINES_DIR="$PRODOPS_DIR/artifacts/iterations/${SAFE_ITER}/runtime/timelines"
+  OUTPUT_DIR="$PRODOPS_DIR/artifacts/iterations/${SAFE_ITER}/runtime"
+else
+  TIMELINES_DIR="$PRODOPS_DIR/artifacts/runtime/timelines"
+  OUTPUT_DIR="$PRODOPS_DIR/artifacts/runtime"
+fi
 
 # Prefer the dedicated Diligence timeline; fall back to delivery timeline
 DILIGENCE_TIMELINE="$TIMELINES_DIR/diligence-${ISSUE}.json"
@@ -115,6 +126,6 @@ DERIVED=$(jq \
   }
   ' "$TIMELINE_FILE")
 
-OUTPUT_FILE="$OUTPUT_DIR/derived-state-diligence-${ISSUE}.json"
-echo "$DERIVED" > "$OUTPUT_FILE"
+mkdir -p "$OUTPUT_DIR"
+echo "$DERIVED" > "$OUTPUT_DIR/derived-state-diligence-${ISSUE}.json"
 echo "$DERIVED"

@@ -21,10 +21,10 @@ If any of these are absent, ask the caller to provide them before proceeding. Do
 
 ## Fast path — Plan Bootstrap already ran
 
-Before executing any Bootstrap work, check for a Plan Bootstrap artifact:
+Before executing any Bootstrap work, resolve `ITERATION_DIR = prodops/artifacts/iterations/<iteration-id>/` and check for a Plan Bootstrap artifact:
 
 ```
-prodops/artifacts/runtime/plan-bootstrap-<iteration-id>.json
+ITERATION_DIR/runtime/plan-bootstrap.json
 ```
 
 If the file exists and contains `"status": "completed"`:
