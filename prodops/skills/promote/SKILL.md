@@ -109,6 +109,12 @@ skill Bootstrap). Se ausente, o cálculo é ignorado e um warning é logado.
    operational trail.
 4. Record approval, evidence, and remaining next steps.
 5. Append promotion or closure notes to the Release Trail.
+6. Close the GitHub Issue:
+   ```bash
+   gh issue close <work-item-id> --comment "Entrega concluída — Promote.Completed emitido. PR #<pr-number> mergeado em master."
+   ```
+   This is the canonical close point. The issue must have remained open through
+   Ship and Validate — closing here signals full delivery, not just code merge.
 
 ## Guardrails
 

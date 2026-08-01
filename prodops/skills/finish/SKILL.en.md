@@ -95,9 +95,11 @@ Do not emit `Finish.Completed` if any quality gate fails or evidence is incomple
    ```bash
    git push origin <branch>
    gh pr create --title "[DS-<id>]: <slug>" \
-     --body "<description and issue reference>" \
+     --body "<description>\n\nRelated to #<work-item-id>" \
      --base master
    ```
+   Use `Related to #<n>` — **never** `Closes #<n>`. The issue must remain open
+   until `Promote.Completed`: Ship, Validate, and Promote still need to run.
 7. Enable auto-merge on the PR immediately after creation:
    ```bash
    gh pr merge <number> --auto --squash
