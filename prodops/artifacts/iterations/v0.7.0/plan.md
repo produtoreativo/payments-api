@@ -6,13 +6,13 @@
 
 | DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status |
 |---|---|---|---|---|---|---|---|
-| DS-44 | — | dependency-security-update: eliminar vulnerabilidades Dependabot (14H/11M/2L em 9 pacotes) | — | ✓ | ✓ | ✓ | Entrou |
+| DS-44 | #115 | dependency-security-update: eliminar vulnerabilidades Dependabot (14H/11M/2L em 9 pacotes) | — | ✓ | ✓ | ✓ | Entrou |
 
 ## Mapeamento DS-ID → Issue
 
 | DS-ID | Feature slug | Issue v0.7.0 |
 |---|---|---|
-| DS-44 | dependency-security-update | — (criada pelo Gate 5 do /downstream) |
+| DS-44 | dependency-security-update | #115 |
 
 ## Critérios de saída
 
