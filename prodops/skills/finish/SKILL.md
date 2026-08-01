@@ -9,13 +9,28 @@ Use this skill to close a task with explicit quality evidence.
 
 ## Required input context
 
-Before starting, the agent must have:
+Ler a context capsule em `prodops/artifacts/iterations/<iteration-id>/cards/<slug>/context.md`.
+Campos obrigatórios:
 
-- `work-item-id` — the GitHub issue number of the Feature
-- `iteration-id` — the Iteration Plan identifier
-- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
-- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
-  invoked standalone, generate a new UUID.
+- `work-item-id` — campo `work-item-id` da capsule
+- `iteration-id` — campo `iteration-id`
+- `correlation-id` — campo `correlation-id`
+- `actor-player` — campo `actor-player`
+- `feature-branch` — campo `feature-branch` (branch a fazer push/PR)
+- `base-branch` — campo `base-branch`
+- `session-trail-dir` — campo `session-trail-dir` (onde gravar o trail)
+
+Se invocado standalone (sem capsule), gerar novo `correlation-id`.
+
+## Capsule update — após PR criado
+
+Após abrir o PR com sucesso, atualizar o campo `pr-number` na capsule:
+
+```
+pr-number: <número do PR criado>
+```
+
+Isso elimina a necessidade de Ship e Promote buscarem o PR via `gh pr list`.
 
 ## Preconditions
 

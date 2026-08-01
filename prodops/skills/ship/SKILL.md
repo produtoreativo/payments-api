@@ -11,13 +11,26 @@ For detailed Codex submission mechanics, read `references/workflow.md`.
 
 ## Required input context
 
-Before starting, the agent must have:
+Ler a context capsule em `prodops/artifacts/iterations/<iteration-id>/cards/<slug>/context.md`.
+Campos obrigatórios:
 
-- `work-item-id` — the GitHub issue number of the Feature
-- `iteration-id` — the Iteration Plan identifier
-- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
-- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
-  invoked standalone, generate a new UUID.
+- `work-item-id` — campo `work-item-id` da capsule
+- `iteration-id` — campo `iteration-id`
+- `correlation-id` — campo `correlation-id`
+- `actor-player` — campo `actor-player`
+- `pr-number` — campo `pr-number` da capsule (preenchido pelo Finish); se ausente, buscar via `gh pr list`
+- `reliability-path` — campo `reliability-path` (SLOs para verificação de changeset)
+- `session-trail-dir` — campo `session-trail-dir`
+
+Se invocado standalone (sem capsule), gerar novo `correlation-id`.
+
+## Capsule update — após deploy
+
+Após confirmar o `infra-scope` do PR (dynamo/lambda/both/none via diff), atualizar o campo na capsule:
+
+```
+infra-scope: <dynamo|lambda|both|none>
+```
 
 ## Preconditions
 

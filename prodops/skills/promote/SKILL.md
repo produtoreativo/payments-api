@@ -9,13 +9,18 @@ Use this skill to move a release to the next stage or close it.
 
 ## Required input context
 
-Before starting, the agent must have:
+Ler a context capsule em `prodops/artifacts/iterations/<iteration-id>/cards/<slug>/context.md`.
+Todos os campos abaixo devem estar disponíveis na capsule:
 
-- `work-item-id` — the GitHub issue number of the Feature
-- `iteration-id` — the Iteration Plan identifier
-- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
-- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
-  invoked standalone, generate a new UUID.
+- `work-item-id` — campo `work-item-id` da capsule (issue da iteração corrente)
+- `iteration-id` — campo `iteration-id`
+- `correlation-id` — campo `correlation-id` (gerado em `Delivery.Plan.Entered`)
+- `actor-player` — campo `actor-player`
+- `plan-bootstrap-path` — campo `plan-bootstrap-path`
+- `plan-validate-path` — campo `plan-validate-path`
+- `timeline-path` — campo `timeline-path` (para o cálculo de lead-time)
+
+Se invocado standalone (sem capsule), gerar novo `correlation-id`.
 
 ## Preconditions
 
@@ -24,11 +29,9 @@ Before starting, the agent must have:
 
 ## Plan Promote gate — verificar antes de Promote.Started
 
-Resolver `ITERATION_DIR = prodops/artifacts/iterations/<iteration-id>/`.
+Se `plan-bootstrap-path` da capsule existir com `"status": "completed"` (execução dentro de um Iteration Plan):
 
-Se `ITERATION_DIR/runtime/plan-bootstrap.json` existir (execução dentro de um Iteration Plan):
-
-1. Ler `ITERATION_DIR/runtime/plan-validate.json`.
+1. Ler `plan-validate-path` da capsule.
 2. Se o arquivo não existir ou `status != "all-validated"`: **bloquear**. Não emitir `Promote.Started`. Reportar quais issues do plano ainda não completaram Validate e aguardar.
 3. Se `status == "all-validated"`: prosseguir com o fluxo abaixo normalmente.
 

@@ -110,8 +110,7 @@ Tratar como **Downstream Declared** enquanto houver pré-requisitos ausentes. De
 
 Quando todos os pré-requisitos existirem:
 
-1. Gerar `ITERATION_DIR/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md`. O capsule é gerado pelo readiness do Downstream, não pelo Bootstrap. `ITERATION_DIR` = `prodops/artifacts/iterations/<iteration-id>/`.
-2. Emitir o evento `Delivery.Plan.Entered` para a issue, definindo `oem-state = PENDING` no GitHub Project. Isso posiciona o item na coluna PENDING do board antes do Bootstrap iniciar.
+1. Emitir `Delivery.Plan.Entered` para a issue, gerando o `correlation-id` do flow inteiro:
 
 ```json
 {
@@ -125,7 +124,33 @@ Quando todos os pré-requisitos existirem:
 }
 ```
 
-O `correlation-id` gerado aqui é o correlation-id do flow inteiro — propagado para Bootstrap, Hack, Sync, Finish, Ship, Validate e Promote.
+2. Gerar `ITERATION_DIR/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md`. Preencher **todos** os campos do template, incluindo:
+
+**Runtime Context** — preenchido com dados da iteração ativa:
+- `ds-id` — identificador estável da feature (ex: `DS-39`)
+- `work-item-id` — número da issue da iteração corrente (resolvido via tabela DS-ID → Issue do `plan.md`)
+- `iteration-id` — versão da iteração (ex: `v0.6.0`)
+- `iteration-dir` — `prodops/artifacts/iterations/<version>/`
+- `correlation-id` — UUID gerado no `Delivery.Plan.Entered` acima
+- `actor-player` — player corrente (`claude`, `codex` ou `copilot`)
+
+**Runtime Paths** — pré-computados para eliminar derivação em cada fase:
+- `feature-branch` — `feat/<work-item-id>-<slug>`
+- `base-branch` — branch base do merge (normalmente `master`)
+- `timeline-path` — `ITERATION_DIR/runtime/timelines/<work-item-id>.json`
+- `plan-bootstrap-path` — `ITERATION_DIR/runtime/plan-bootstrap.json`
+- `plan-validate-path` — `ITERATION_DIR/runtime/plan-validate.json`
+- `session-trail-dir` — `ITERATION_DIR/trails/`
+- `obc-path`, `bdd-path`, `reliability-path` — paths absolutos dos artefatos de produto
+
+**Flow State** — deixar em branco; preenchido por Finish (`pr-number`) e Ship (`infra-scope`):
+- `pr-number: (preenchido pelo Finish)`
+- `infra-scope: (preenchido pelo Ship)`
+- `oem-state: PENDING`
+
+**BDD Scenarios** — incluir os steps completos (Given/When/Then), não apenas one-liners, para que o Hack/tdd possa executar o Red phase sem abrir o arquivo `.feature`.
+
+O capsule é o único artefato que o agente precisa carregar para executar o flow inteiro sem reler arquivos de infraestrutura. O `correlation-id` gerado aqui é propagado para Bootstrap, Hack, Sync, Finish, Ship, Validate e Promote.
 
 ## CI Sync
 
