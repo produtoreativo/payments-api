@@ -230,3 +230,33 @@ A linha digitável (`identificationField`) não está mapeada no `ProviderCharge
 - Atualização da Repository Tracking List
 - Atualização dos OBCs
 - Atualização do Product Deck e Service Deck
+
+---
+
+# DS-Security-01 — Breaking change em atualização de dependência npm
+
+**Capability:** dependency-security-update
+**Severidade:** Média
+**Probabilidade:** Média (multer 1.x → 2.x é upgrade de major; demais são minor/patch)
+**Status:** Aberto — pendente de análise durante Hack
+
+## Descrição
+
+A resolução das 27 vulnerabilidades Dependabot envolve atualizar `axios` de `^1.13.2` para `>=1.18.0` (dependência direta) e resolver dependências transitivas via `npm audit fix`. O risco principal é `multer`: a versão patched (`2.2.0`) é um upgrade de major version (1.x → 2.x), o que pode introduzir breaking changes na API de upload de arquivos.
+
+## Impacto
+
+- Regressão silenciosa em funcionalidades que usam `multer` para processamento de multipart
+- Build quebrado se a atualização transitiva for incompatível com o código existente
+- Delay na resolução dos alertas Dependabot enquanto a adequação é feita
+
+## Mitigações
+
+- Verificar se `multer` é dependência direta ou puramente transitiva antes de aplicar `npm audit fix --force`
+- Executar o test suite completo localmente após cada atualização — antes de abrir PR
+- Se houver breaking change real: registrar aceite de risco aqui e abrir issue de follow-up em vez de bloquear a entrega
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/dependency-security-update.md`
+- Issue: [#55](https://github.com/produtoreativo/payments-api/issues/55)
