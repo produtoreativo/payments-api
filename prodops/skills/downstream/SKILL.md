@@ -43,6 +43,7 @@ O `--iteration-id` é propagado para todas as chamadas de `emit-event`, `append.
 | `/downstream ci-sync <DS-ID ou capability>` | Readiness → Bootstrap → Hack → Sync → Finish para o item indicado |
 | `/downstream ci-async <DS-ID ou capability>` | Verifica evidências do CI Sync → Ship → Validate → Promote |
 | `/downstream full <DS-ID ou capability>` | CI Sync completo → CI Async completo |
+| `/downstream recheck` | Apaga `readiness-gate.json` e executa gate check completo — ignora cache |
 | `/readiness <capability>` | Verifica pré-requisitos e gera context capsule — sem iniciar implementação |
 
 Use `/readiness` quando quiser verificar gates e preparar o context capsule sem iniciar implementação. Use `/downstream <DS-ID>` quando estiver pronto para iniciar Bootstrap e Hack de um item específico.
@@ -53,7 +54,25 @@ Quando invocado sem argumentos:
 
 1. Ler `prodops/artifacts/plans/iteration-plan.md` → identificar a versão ativa (ex: `v0.6.0`).
 2. Ler `prodops/artifacts/iterations/<version>/plan.md` → resolver `ITERATION_ID` e coletar todos os itens com status `Entrou` da tabela de escopo, usando a tabela de mapeamento DS-ID → Issue para obter os números de issue corretos.
-3. Apresentar a fila de execução na ordem em que aparecem no Iteration Plan (ordem de prioridade do PM/PO):
+3. **Readiness Cache Check** — verificar `ITERATION_DIR/runtime/readiness-gate.json` **antes de qualquer gate check ou Plan Bootstrap**:
+   a. Se o arquivo não existe: continuar normalmente para o passo 4.
+   b. Se `"result": "ready"`: continuar normalmente para o passo 4.
+   c. Se `"result": "blocked"`:
+      - Para cada capability em `capabilities`, checar se algum `missing-artifacts` agora existe no disco:
+        ```bash
+        test -f <artifact-path>
+        ```
+      - Se **nenhum** artefato novo apareceu: exibir o resultado cacheado abaixo e **parar imediatamente** — não gastar tokens em gate check.
+        ```
+        ⛔ Readiness bloqueada (resultado cacheado — <checked-at>)
+        Gates faltando: <lista de capabilities e gates>
+        Artefatos ausentes: <lista de paths>
+        Próximo passo: <next-action>
+        Re-check forçado: /downstream recheck
+        ```
+      - Se **qualquer** artefato ausente agora existe: ignorar o cache, deletar o arquivo e continuar para o passo 4 com gate check completo.
+
+4. Apresentar a fila de execução na ordem em que aparecem no Iteration Plan (ordem de prioridade do PM/PO):
 
 ```
 Fila Downstream — Iteration Plan ativo
@@ -62,8 +81,8 @@ Fila Downstream — Iteration Plan ativo
 ...
 ```
 
-4. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
-   a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` já existe com `"status": "completed"`. Se sim, pular para o passo 5 (ambiente já pronto).
+6. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
+   a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` já existe com `"status": "completed"`. Se sim, pular para o passo 7 (ambiente já pronto).
    b. **Project cleanup** — remover do Project 25 todas as issues com estado `closed` antes de adicionar as novas da iteração corrente:
       ```bash
       # listar items do projeto e remover os fechados
@@ -89,8 +108,8 @@ Fila Downstream — Iteration Plan ativo
    ```
    h. Commitar o arquivo no repositório antes de iniciar o loop.
 
-5. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
-   a. Executar `/readiness <capability>` — se falhar, reportar blockers e **parar toda a fila**.
+7. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
+   a. Executar `/readiness <capability>` — se falhar: gravar `readiness-gate.json` com `"result": "blocked"` (ver seção **Readiness Cache**) e **parar toda a fila**.
    b. Executar CI Sync: Bootstrap (fast path via plan-bootstrap) → Hack → Sync → Finish.
    c. Reportar evidências do item concluído e avançar automaticamente para o próximo.
 
@@ -118,6 +137,46 @@ Antes de executar qualquer ciclo, avaliar a capability contra todos os pré-requ
 Tratar como **Downstream Declared** enquanto houver pré-requisitos ausentes. Declarar **Downstream Ready** apenas após os cinco gates passarem. **Delivery Started** começa somente quando o Bootstrap inicia.
 
 Reliability Plan (`prodops/artifacts/plans/reliability/<capability>.md`) é opcional. Se existir, incluir `reliability-path` na capsule e referenciar SLOs nas fases de Validate e Promote. Sua ausência não bloqueia o flow.
+
+## Readiness Cache
+
+Para evitar consumo de tokens em invocações repetidas com gates bloqueados, o resultado do gate check é persistido em `ITERATION_DIR/runtime/readiness-gate.json`.
+
+### Formato
+
+```json
+{
+  "iteration-id": "<iteration-id>",
+  "checked-at": "<timestamp-iso8601>",
+  "result": "blocked",
+  "capabilities": {
+    "<DS-ID>": {
+      "slug": "<capability-slug>",
+      "gates": {
+        "obc": false,
+        "bdd": false,
+        "risks": false,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": [
+        "prodops/artifacts/obcs/<slug>.md",
+        "prodops/artifacts/bdd/<slug>.feature"
+      ]
+    }
+  },
+  "next-action": "Criar artefatos via /upstream antes de re-invocar /downstream"
+}
+```
+
+### Regras
+
+1. **Gravar ao falhar**: quando qualquer gate de readiness falhar, gravar o arquivo com `"result": "blocked"` antes de parar.
+2. **Fast path de bloqueio**: se o arquivo existe com `"result": "blocked"` e **nenhum** `missing-artifact` apareceu no disco, parar imediatamente sem re-executar o gate check.
+3. **Auto-invalidação**: se qualquer artefato listado em `missing-artifacts` agora existe (`test -f <path>`), deletar o arquivo e executar o gate check completo.
+4. **Limpeza após passe**: quando todos os gates passarem, gravar `"result": "ready"` (sobrescreve o blocked anterior).
+5. **Re-check forçado**: `/downstream recheck` apaga o arquivo e executa gate check completo independentemente do estado atual.
+6. **Commitar**: após gravar ou atualizar o arquivo, incluir no próximo commit de artefatos de runtime da iteração.
 
 ### Gate 5 — criação de Issue quando ausente
 

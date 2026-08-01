@@ -43,6 +43,7 @@ The `--iteration-id` is propagated to all calls of `emit-event`, `append.sh`, `d
 | `/downstream ci-sync <DS-ID or capability>` | Readiness → Bootstrap → Hack → Sync → Finish for the given item |
 | `/downstream ci-async <DS-ID or capability>` | Verify CI Sync evidence → Ship → Validate → Promote |
 | `/downstream full <DS-ID or capability>` | Full CI Sync → Full CI Async |
+| `/downstream recheck` | Delete `readiness-gate.json` and run full gate check — bypass cache |
 | `/readiness <capability>` | Verify prerequisites and generate context capsule — does not start implementation |
 
 Use `/readiness` when you want to verify gates and prepare the context capsule without starting implementation. Use `/downstream <DS-ID>` when ready to begin Bootstrap and Hack for a specific item.
@@ -53,7 +54,25 @@ When invoked without arguments:
 
 1. Read `prodops/artifacts/plans/iteration-plan.md` → identify the active version (e.g. `v0.6.0`).
 2. Read `prodops/artifacts/iterations/<version>/plan.md` → resolve `ITERATION_ID` and collect all items with status `Entrou` from the scope table, using the DS-ID → Issue mapping table to obtain the correct issue numbers.
-3. Present the execution queue in the order they appear in the Iteration Plan (PM/PO priority order):
+3. **Readiness Cache Check** — check `ITERATION_DIR/runtime/readiness-gate.json` **before any gate check or Plan Bootstrap**:
+   a. If the file does not exist: continue normally to step 4.
+   b. If `"result": "ready"`: continue normally to step 4.
+   c. If `"result": "blocked"`:
+      - For each capability in `capabilities`, check if any `missing-artifacts` now exist on disk:
+        ```bash
+        test -f <artifact-path>
+        ```
+      - If **no** new artifact appeared: display the cached result below and **stop immediately** — save tokens.
+        ```
+        ⛔ Readiness blocked (cached result — <checked-at>)
+        Failing gates: <capability list and gates>
+        Missing artifacts: <path list>
+        Next step: <next-action>
+        Force recheck: /downstream recheck
+        ```
+      - If **any** missing artifact now exists: ignore the cache, delete the file, and continue to step 4 with a full gate check.
+
+4. Present the execution queue in the order they appear in the Iteration Plan (PM/PO priority order):
 
 ```
 Downstream Queue — Active Iteration Plan
@@ -62,8 +81,8 @@ Downstream Queue — Active Iteration Plan
 ...
 ```
 
-4. **Plan Bootstrap** — run once before the issue loop:
-   a. Check if `ITERATION_DIR/runtime/plan-bootstrap.json` already exists with `"status": "completed"`. If so, skip to step 5 (environment already ready).
+6. **Plan Bootstrap** — run once before the issue loop:
+   a. Check if `ITERATION_DIR/runtime/plan-bootstrap.json` already exists with `"status": "completed"`. If so, skip to step 7 (environment already ready).
    b. **Project cleanup** — remove all closed issues from Project 25 before adding the new iteration's issues:
       ```bash
       gh project item-list 25 --owner produtoreativo --format json \
@@ -88,8 +107,8 @@ Downstream Queue — Active Iteration Plan
    ```
    h. Commit the file to the repository before starting the loop.
 
-5. For each item in the queue, in order, without requesting confirmation between them:
-   a. Run `/readiness <capability>` — if it fails, report blockers and **stop the entire queue**.
+7. For each item in the queue, in order, without requesting confirmation between them:
+   a. Run `/readiness <capability>` — if it fails: write `readiness-gate.json` with `"result": "blocked"` (see **Readiness Cache** section) and **stop the entire queue**.
    b. Execute CI Sync: Bootstrap (fast path via plan-bootstrap) → Hack → Sync → Finish.
    c. Report evidence for the completed item and automatically advance to the next.
 
@@ -117,6 +136,46 @@ Before executing either cycle, evaluate the capability against all current Downs
 Treat commitment as **Downstream Declared** while any prerequisite is missing. Mark **Downstream Ready** only after all five gates pass. **Delivery Started** begins only when Bootstrap starts.
 
 Reliability Plan (`prodops/artifacts/plans/reliability/<capability>.md`) is optional. If it exists, include `reliability-path` in the capsule and reference SLOs during Validate and Promote. Its absence does not block the flow.
+
+## Readiness Cache
+
+To avoid token consumption on repeated invocations with blocked gates, the gate check result is persisted in `ITERATION_DIR/runtime/readiness-gate.json`.
+
+### Format
+
+```json
+{
+  "iteration-id": "<iteration-id>",
+  "checked-at": "<iso8601-timestamp>",
+  "result": "blocked",
+  "capabilities": {
+    "<DS-ID>": {
+      "slug": "<capability-slug>",
+      "gates": {
+        "obc": false,
+        "bdd": false,
+        "risks": false,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": [
+        "prodops/artifacts/obcs/<slug>.md",
+        "prodops/artifacts/bdd/<slug>.feature"
+      ]
+    }
+  },
+  "next-action": "Create artifacts via /upstream before re-invoking /downstream"
+}
+```
+
+### Rules
+
+1. **Write on failure**: when any readiness gate fails, write the file with `"result": "blocked"` before stopping.
+2. **Blocked fast path**: if the file exists with `"result": "blocked"` and **no** `missing-artifact` has appeared on disk, stop immediately without re-running the gate check.
+3. **Auto-invalidation**: if any artifact listed in `missing-artifacts` now exists (`test -f <path>`), delete the file and run a full gate check.
+4. **Cleanup after pass**: when all gates pass, write `"result": "ready"` (overwrites the previous blocked entry).
+5. **Forced recheck**: `/downstream recheck` deletes the file and runs the full gate check regardless of current state.
+6. **Commit**: after writing or updating the file, include it in the next runtime artifact commit for the iteration.
 
 ### Gate 5 — Issue creation when absent
 
