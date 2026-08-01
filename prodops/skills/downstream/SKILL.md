@@ -17,6 +17,20 @@ DS-<feature-slug-number>
 
 O DS-ID identifica a **feature** (estável), não a GitHub Issue (efêmera — muda a cada iteração). O mapeamento `DS-ID → issue` é declarado no `plan.md` da iteração ativa. O agente resolve `DS-39 → issue #106` lendo a tabela de mapeamento do plano, nunca inferindo do número do DS-ID.
 
+## Resolução de skills
+
+Todos os paths de skill são resolvidos pelo índice em `prodops/runtime/runtime.yaml`, seção `skills:`. Ler esse arquivo uma única vez no início da execução — **nunca usar `find` ou `ls` para localizar arquivos de skill**. Exemplo:
+
+```yaml
+# prodops/runtime/runtime.yaml
+skills:
+  bootstrap: prodops/skills/bootstrap/SKILL.md
+  hack:      prodops/skills/hack/SKILL.md
+  # ...
+```
+
+Para invocar um skill: ler `runtime.yaml` → extrair o path → ler o arquivo diretamente com o path canônico.
+
 ## Iteration Directory
 
 Ao iniciar qualquer execução, o agente resolve o **ITERATION_DIR** a partir do `iteration-id` declarado no plano ativo:

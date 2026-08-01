@@ -17,3 +17,44 @@ github:
 datadog:
   service: payments-api
   environment: development
+
+skills:
+  # CI Sync
+  downstream:    prodops/skills/downstream/SKILL.md
+  bootstrap:     prodops/skills/bootstrap/SKILL.md
+  hack:          prodops/skills/hack/SKILL.md
+  hack-start:    prodops/skills/hack/steps/start/SKILL.md
+  hack-tdd:      prodops/skills/hack/steps/tdd/SKILL.md
+  hack-commit:   prodops/skills/hack/steps/commit/SKILL.md
+  sync:          prodops/skills/sync/SKILL.md
+  sync-rebase:   prodops/skills/sync/steps/rebase/SKILL.md
+  sync-align:    prodops/skills/sync/steps/align/SKILL.md
+  finish:        prodops/skills/finish/SKILL.md
+  # CI Async
+  ship:          prodops/skills/ship/SKILL.md
+  validate:      prodops/skills/validate/SKILL.md
+  promote:       prodops/skills/promote/SKILL.md
+  # Discovery / Upstream
+  upstream:      prodops/skills/upstream/SKILL.md
+  upstream-deploy-to-sandbox:  prodops/skills/upstream/steps/deploy-to-sandbox/SKILL.md
+  upstream-move-to-downstream: prodops/skills/upstream/steps/move-to-downstream/SKILL.md
+  # Diligence
+  diligence:               prodops/skills/diligence/SKILL.md
+  diligence-sync:          prodops/skills/diligence/diligence-sync/SKILL.md
+  diligence-sync-capture:  prodops/skills/diligence/diligence-sync/steps/capture/SKILL.md
+  diligence-sync-attach:   prodops/skills/diligence/diligence-sync/steps/attach/SKILL.md
+  diligence-sync-close:    prodops/skills/diligence/diligence-sync/steps/close/SKILL.md
+  diligence-sync-promote:  prodops/skills/diligence/diligence-sync/steps/promote/SKILL.md
+  diligence-async:         prodops/skills/diligence/diligence-async/SKILL.md
+  diligence-async-scan:    prodops/skills/diligence/diligence-async/steps/scan/SKILL.md
+  diligence-async-flag:    prodops/skills/diligence/diligence-async/steps/flag/SKILL.md
+  diligence-async-repair:  prodops/skills/diligence/diligence-async/steps/repair/SKILL.md
+  workspace-reconciliation:         prodops/skills/diligence/workspace-reconciliation/SKILL.md
+  workspace-reconciliation-inspect: prodops/skills/diligence/workspace-reconciliation/steps/inspect/SKILL.md
+  workspace-reconciliation-reconcile: prodops/skills/diligence/workspace-reconciliation/steps/reconcile/SKILL.md
+  workspace-reconciliation-verify:  prodops/skills/diligence/workspace-reconciliation/steps/verify/SKILL.md
+  # Tooling
+  prodops-emit-event: prodops/skills/prodops-emit-event/SKILL.md
+  delivery:           prodops/skills/delivery/SKILL.md
+  restart:            prodops/skills/restart/SKILL.md
+  local-testing:      prodops/skills/local/payments-api-local-testing/SKILL.md

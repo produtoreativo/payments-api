@@ -77,6 +77,9 @@ Nunca implementar código de produção fora do ciclo Bootstrap → Hack → Syn
 1. **Trabalho de Delivery:** invoque o skill da fase — `/bootstrap`, `/hack`,
    `/sync`, `/finish`, `/ship`, `/validate`, `/promote`. Cada skill é
    autossuficiente e diz o que ler.
+   **Localização de skills:** todos os paths canônicos estão em `prodops/runtime/runtime.yaml`
+   seção `skills:`. Ler esse arquivo uma única vez para resolver qualquer path de skill.
+   **Nunca usar `find` ou `ls` para localizar arquivos de skill.**
 2. **Exploração:** `/upstream`. **Implementação governada:** `/downstream`.
 3. **Paths canônicos, quality gates e vocabulário:** `prodops/exec/manifest.yaml`
    — fonte única, legível por máquina. Consistência: `./prodops/scripts/validate-manifest.sh`.
