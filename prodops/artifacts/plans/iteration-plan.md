@@ -1,4 +1,4 @@
-# Iteration Plan — v0.5.0
+# Iteration Plan — v0.6.0
 
 > **Propósito:** Escopo de entrega aprovado para esta iteração. Contém os itens selecionados, a estratégia de execução, o detalhamento de cada fase e os critérios de saída.
 >
@@ -11,7 +11,8 @@
 | v0.2.0 | DS-40: create-invoice-boleto | ✅ Concluído — PR #87 merged |
 | v0.3.0 | Trilha A: Runtime Fix (send.sh + Lead Time + Status field) | ✅ Concluído |
 | v0.4.0 | Trilha B: DS-38 create-invoice via Pix | ✅ Concluído — PR #89 merged |
-| **v0.5.0** | **DS-39 · DS-42 · DS-43 · DS-41** | ✅ Concluído |
+| v0.5.0 | DS-39 · DS-42 · DS-43 · DS-41 | ✅ Concluído |
+| **v0.6.0** | **DS-39 · DS-42 · DS-43 · DS-41** | 🔄 Em andamento |
 
 ---
 
@@ -19,17 +20,17 @@
 
 | # | DS | Issue | Feature | Dependência | OBC | BDD | E2E | Status |
 |---|---|-------|---------|-------------|-----|-----|-----|--------|
-| 1 | DS-39 | [#39](https://github.com/produtoreativo/payments-api/issues/39) | payment-confirmation: confirmar pagamento aprovado via webhook do provedor | — | ✓ | ✓ | ✓ | ✅ DONE — PR #100 |
-| 2 | DS-42 | [#42](https://github.com/produtoreativo/payments-api/issues/42) | api-token-validation: garantir acesso autenticado por token de API | — | ✓ | ✓ | ✓ | ✅ DONE — PR #102 |
-| 3 | DS-43 | [#43](https://github.com/produtoreativo/payments-api/issues/43) | webhook-configuration: configurar webhook de notificação por token de API | DS-42 | ✓ | ✓ | ✓ | ✅ DONE — PR #103 |
-| 4 | DS-41 | [#41](https://github.com/produtoreativo/payments-api/issues/41) | credit-card-authorization-confirmation: aceitar pagamento com cartão de crédito hospedado | — | ✓ | ✓ | ✓ | ✅ DONE — PR #104 |
+| 1 | DS-39 | [#106](https://github.com/produtoreativo/payments-api/issues/106) | payment-confirmation: confirmar pagamento aprovado via webhook do provedor | — | ✓ | ✓ | ✓ | 🔄 Pendente |
+| 2 | DS-42 | [#107](https://github.com/produtoreativo/payments-api/issues/107) | api-token-validation: garantir acesso autenticado por token de API | — | ✓ | ✓ | ✓ | 🔄 Pendente |
+| 3 | DS-43 | [#108](https://github.com/produtoreativo/payments-api/issues/108) | webhook-configuration: configurar webhook de notificação por token de API | DS-42 | ✓ | ✓ | ✓ | 🔄 Pendente |
+| 4 | DS-41 | [#109](https://github.com/produtoreativo/payments-api/issues/109) | credit-card-authorization-confirmation: aceitar pagamento com cartão de crédito hospedado | — | ✓ | ✓ | ✓ | 🔄 Pendente |
 
 ---
 
 ## Critérios de saída da iteração
 
-- ✅ PRs #100, #102, #103, #104 merged em `main`.
-- ✅ Evento `prodops.delivery.promote.completed` emitido para issues #39, #42, #43, #41.
-- ⚠️ KPI Lead Time não calculável: `Bootstrap.Started` ausente nos timelines de DS-39, DS-42, DS-43 (tracking gap — execução real ~10-30 min por item).
-- ✅ Issues #39, #42, #43, #41 fechadas no GitHub.
-- ✅ Diligence concluída para cada item: evidence capturada, attached, promoted e closed.
+- [ ] PRs merged em `main` para cada issue.
+- [ ] Evento `prodops.delivery.promote.completed` emitido para issues #106, #107, #108, #109.
+- [ ] KPI Lead Time calculável: `Bootstrap.Started` presente nos timelines de cada issue.
+- [ ] Issues #106, #107, #108, #109 fechadas no GitHub.
+- [ ] Diligence concluída para cada item: evidence capturada, attached, promoted e closed.
