@@ -11,7 +11,7 @@ Subagentes **não devem pausar para solicitar confirmação** dessas operações
 - **Read** — qualquer arquivo do repositório, incluindo:
   - `prodops/artifacts/bdd/*.feature`
   - `prodops/artifacts/obcs/*.md`
-  - `prodops/exec/cards/*/context.md`
+  - `prodops/artifacts/iterations/*/cards/*/context.md`
   - `prodops/runtime/**`
   - `prodops/skills/**`
   - `prodops/framework/**`
@@ -33,8 +33,10 @@ do projeto. Em caso de conflito, `CLAUDE.md` prevalece.
 3. **Paths canônicos, quality gates e vocabulário:** `prodops/exec/manifest.yaml`
    — fonte única, legível por máquina. Consistência: `./prodops/scripts/validate-manifest.sh`.
 4. **Contexto da tarefa:** a context capsule do card —
-   `prodops/exec/cards/<card>/context.md`, gerada pelo gate de readiness do
-   `/downstream`. Leia-a antes de alterar código de produção — e somente ela.
+   `prodops/artifacts/iterations/<iteration-id>/cards/<slug>/context.md`, gerada pelo gate
+   de readiness do `/downstream`. O `iteration-id` e o `slug` vêm do Iteration Plan ativo
+   (`prodops/artifacts/plans/iteration-plan.md` → `prodops/artifacts/iterations/<version>/plan.md`).
+   Leia-a antes de alterar código de produção — e somente ela.
    Se não existir, execute o readiness do `/downstream` antes do `/bootstrap`.
 
 ## Regras invioláveis
@@ -43,9 +45,8 @@ do projeto. Em caso de conflito, `CLAUDE.md` prevalece.
   faltando → parar e reportar, não improvisar.
 - Downstream exige: OBC committed + BDD Feature committed + entrada no
   Iteration Plan com status `Entrou` + riscos documentados.
-- Reliability Plan é gate quando houver movimentação financeira, integração
-  externa, mudança de SLO, risco alto/crítico ou alteração de persistência
-  ou segurança.
+- Reliability Plan é **opcional** — nunca bloqueia readiness. Incluir quando houver
+  movimentação financeira, integração externa, mudança de SLO ou risco alto/crítico.
 - Conflito entre diretriz nova e regra existente: preservar a regra existente e
   registrar em Decision Trail (`prodops/templates/assessment/decision-trail.md`).
 - Commits seguem Conventional Commits (tipos e limite de summary: no manifest).

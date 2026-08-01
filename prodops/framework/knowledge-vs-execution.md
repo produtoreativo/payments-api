@@ -100,7 +100,7 @@ Nem todo documento no repositório é um artefato do Knowledge Space.
 
 | Documento | Classificação | Motivo |
 |---|---|---|
-| `prodops/exec/cards/<slug>/context.md` | **Execution-generated** | Gerado pelo Downstream readiness a partir de artefatos existentes. Efêmero — não é a fonte do conhecimento. |
+| `prodops/artifacts/iterations/<version>/cards/<slug>/context.md` | **Execution-generated** | Gerado pelo Downstream readiness a partir de artefatos existentes. Efêmero — não é a fonte do conhecimento. |
 | Evidence | **Componente** | Não existe de forma autônoma. Sempre pertence a um OBC, Trail ou Experiment. Nunca tem Work Item próprio — o Work Item referencia o artefato que contém a evidência. |
 
 ### Propriedades dos artefatos

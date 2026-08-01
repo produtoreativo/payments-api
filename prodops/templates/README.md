@@ -34,7 +34,7 @@ Crie um diretório `evidence/` ao lado do experimento quando precisar de outputs
 
 | Template | Uso | Localização canônica |
 |---|---|---|
-| [delivery/context-capsule.md](delivery/context-capsule.md) | Context Capsule gerada pelo Downstream readiness | `prodops/exec/cards/<card-slug>/context.md` |
+| [delivery/context-capsule.md](delivery/context-capsule.md) | Context Capsule gerada pelo Downstream readiness | `prodops/artifacts/iterations/<version>/cards/<slug>/context.md` |
 | [delivery/release-entry.md](delivery/release-entry.md) | Entrada no Release Trail | acrescentar no trail da sessão ativa em `prodops/artifacts/trails/sessions/` |
 | [delivery/pull-request-checklist.md](delivery/pull-request-checklist.md) | Checklist de PR antes do Finish | usado na revisão do Pull Request |
 
