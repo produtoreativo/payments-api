@@ -32,7 +32,7 @@ reliability-path:     none
 ## Flow State
 
 ```
-pr-number:      (preenchido pelo Finish)
+pr-number:      111
 infra-scope:    (preenchido pelo Ship — dynamo|lambda|both|none)
 oem-state:      PENDING
 ```
