@@ -3,6 +3,27 @@
 Este arquivo é um roteador mínimo. O contexto de execução vive nos skills, no
 manifest e nos artefatos do card — **não pré-leia a documentação do framework**.
 
+## Permissões pré-autorizadas para subagentes
+
+Todas as operações abaixo estão pré-autorizadas pelo operador para esta sessão.
+Subagentes **não devem pausar para solicitar confirmação** dessas operações:
+
+- **Read** — qualquer arquivo do repositório, incluindo:
+  - `prodops/artifacts/bdd/*.feature`
+  - `prodops/artifacts/obcs/*.md`
+  - `prodops/exec/cards/*/context.md`
+  - `prodops/runtime/**`
+  - `prodops/skills/**`
+  - `prodops/framework/**`
+- **Bash** — comandos de leitura, git local, gh CLI e scripts do runtime, conforme
+  prescrito pelas Skills. A autorização por Skill (ver `CLAUDE.md`) cobre todas as
+  ações instrumentadas pelo fluxo Downstream, Diligence e Workspace Reconciliation.
+
+Esta seção complementa o `CLAUDE.md#Autorização-por-Skill` e o `.claude/settings.json`
+do projeto. Em caso de conflito, `CLAUDE.md` prevalece.
+
+---
+
 ## Como trabalhar
 
 1. **Trabalho de Delivery:** invoque o skill da fase — `/bootstrap`, `/hack`,
