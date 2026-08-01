@@ -72,6 +72,21 @@ Emit using the **same `correlation-id`** as Promote.Started:
 
 Do not emit `Promote.Completed` if evidence is missing, risks are unresolved, or operational readiness is not confirmed.
 
+## Lead-time automático
+
+Ao emitir `Promote.Completed`, o `emit-event` tool calcula automaticamente o
+lead-time da Feature e envia a métrica `runtime.delivery.lead_time_days` para
+o Datadog — sem ação manual.
+
+Como funciona:
+1. Localiza o primeiro `Bootstrap.Started` no timeline da issue (`timelines/<issue>.json`)
+2. Calcula `delta = Promote.Completed.timestamp − Bootstrap.Started.timestamp` em dias
+3. Emite gauge `runtime.delivery.lead_time_days` via Datadog sync (não-fatal — falha silenciosa)
+
+O agente não precisa calcular nem enviar esta métrica manualmente. Basta garantir
+que `Bootstrap.Started` esteja presente no timeline (emitido corretamente pelo
+skill Bootstrap). Se ausente, o cálculo é ignorado e um warning é logado.
+
 ## Inputs
 
 - `AGENTS.md`
