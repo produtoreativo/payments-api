@@ -10,9 +10,9 @@ Entregar a tríade de prontidão para produção: pipeline CI/CD governado, otim
 
 | DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status | PR |
 |---|---|---|---|---|---|---|---|---|
-| DS-48 | #46 | production-cicd-pipeline: pipeline CI/CD para produção com gate de aprovação humana | — | ✓ | ✓ | — | Entrou | — |
-| DS-49 | #45 | dynamodb-optimization: otimizar persistência DynamoDB para produção | — | ✓ | ✓ | — | Entrou | — |
-| DS-50 | #44 | observability-datadog: instrumentar Payments API com Datadog em produção | — | ✓ | ✓ | — | Entrou | — |
+| DS-48 | #46 | production-cicd-pipeline: pipeline CI/CD para produção com gate de aprovação humana | — | ✓ | ✓ | ✓ | Entrou | — |
+| DS-49 | #45 | dynamodb-optimization: otimizar persistência DynamoDB para produção | — | ✓ | ✓ | ✓ | Entrou | — |
+| DS-50 | #44 | observability-datadog: instrumentar Payments API com Datadog em produção | — | ✓ | ✓ | ✓ | Entrou | — |
 
 ## Mapeamento DS-ID → Issue
 

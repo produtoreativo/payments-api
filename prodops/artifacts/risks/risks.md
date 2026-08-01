@@ -377,3 +377,60 @@ O upgrade para multer >=2.2.0 foi aplicado via `npm audit fix` sem alteração e
 - OBC: `prodops/artifacts/obcs/dependency-security-update.md`
 - Issue: [#55](https://github.com/produtoreativo/payments-api/issues/55)
 - Trail: `prodops/artifacts/trails/sessions/2026-08-01-a0e86737.md`
+
+---
+
+# DS-48 — Pipeline CI/CD para produção (production-cicd-pipeline)
+
+**Capability:** production-cicd-pipeline
+**Severidade:** Baixa
+**Status:** Aceito
+
+## Riscos identificados
+
+- Deploy acidental em produção sem aprovação humana — mitigado pelo gate de aprovação manual no workflow.
+- Falha no pipeline bloqueia entrega — mitigado por rollback via revert de tag e re-execução manual.
+- Credenciais de produção expostas em logs de CI — mitigado por uso exclusivo de GitHub Secrets.
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/production-cicd-pipeline.md`
+- Issue: [#46](https://github.com/produtoreativo/payments-api/issues/46)
+
+---
+
+# DS-49 — Otimização DynamoDB para produção (dynamodb-optimization)
+
+**Capability:** dynamodb-optimization
+**Severidade:** Baixa
+**Status:** Aceito
+
+## Riscos identificados
+
+- Migração de índices causa downtime em tabelas existentes — mitigado por criação de novos índices antes de remover os antigos (blue/green de índice).
+- Capacidade provisionada insuficiente em pico — mitigado por modo on-demand nas tabelas críticas.
+- Leitura inconsistente durante transição de modelo — mitigado por eventual consistency aceitável no contexto (invoices são confirmadas via webhook, não polling imediato).
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/dynamodb-optimization.md`
+- Issue: [#45](https://github.com/produtoreativo/payments-api/issues/45)
+
+---
+
+# DS-50 — Instrumentação Datadog em produção (observability-datadog)
+
+**Capability:** observability-datadog
+**Severidade:** Baixa
+**Status:** Aceito
+
+## Riscos identificados
+
+- Agente Datadog com overhead de CPU/memória em produção — mitigado por configuração de sampling e limites de recursos no container.
+- API key exposta em variável de ambiente sem rotação — mitigado por uso de GitHub Secret + rotação semestral documentada em runbook.
+- Métricas customizadas sem custo controlado — mitigado por revisão de custom metrics antes do merge; alertas de billing configurados no Datadog.
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/observability-datadog.md`
+- Issue: [#44](https://github.com/produtoreativo/payments-api/issues/44)
