@@ -41,6 +41,38 @@ git add prodops/artifacts/obcs/<obc-id>.md
 git commit -m "docs(diligence): close OBC <obc-id> — Operational"
 ```
 
+## Eventos — emissão obrigatória
+
+Antes de qualquer trabalho de Close, emitir:
+
+```json
+{
+  "event": "Diligence.Close.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-close-agent" },
+  "payload": {}
+}
+```
+
+Após OBC atualizado para Operational, Work Item fechado e commit realizado, emitir:
+
+```json
+{
+  "event": "Diligence.Close.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-close-agent" },
+  "payload": {}
+}
+```
+
+Não emitir `Close.Completed` se o OBC não foi atualizado ou o Work Item não foi fechado.
+
 ## Post-conditions
 
 Concluído quando:

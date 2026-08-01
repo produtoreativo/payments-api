@@ -83,6 +83,67 @@ git commit -m "docs(diligence): repair divergences from async scan"
 Para cada item reparado: OBC afetado, ação executada, data.
 Para cada item não reparado: motivo e jornada responsável.
 
+## Eventos — emissão obrigatória
+
+Antes de executar qualquer correção, emitir:
+
+```json
+{
+  "event": "Diligence.Repair.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-repair-agent" },
+  "payload": {}
+}
+```
+
+Quando um reparo individual fica bloqueado e não pode avançar sem decisão de produto, emitir:
+
+```json
+{
+  "event": "Diligence.Block.Declared",
+  "work-item-id": "<obc-work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-repair-agent" },
+  "payload": { "obc-id": "<obc-id>", "reason": "<motivo do bloqueio>" }
+}
+```
+
+Quando um bloqueio de Diligence é resolvido e o reparo pode continuar, emitir:
+
+```json
+{
+  "event": "Diligence.Block.Resolved",
+  "work-item-id": "<obc-work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-repair-agent" },
+  "payload": { "obc-id": "<obc-id>" }
+}
+```
+
+Após todos os reparos concluídos (ou explicitamente bloqueados), emitir:
+
+```json
+{
+  "event": "Diligence.Repair.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-repair-agent" },
+  "payload": {
+    "items-repaired": <número>,
+    "items-blocked": <número>
+  }
+}
+```
+
 ## Post-conditions
 
 Concluído quando:

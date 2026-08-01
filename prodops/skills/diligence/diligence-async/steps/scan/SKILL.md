@@ -151,6 +151,56 @@ Responsável sugerido: Diligence | Assessment | Delivery
 **Média:** OBC committed sem Work Item; Work Item aberto com OBC Operational
 **Baixa:** artefato de gestão desatualizado sem impacto em gate de Delivery
 
+## Eventos — emissão obrigatória
+
+Antes de qualquer trabalho de Scan, emitir:
+
+```json
+{
+  "event": "Diligence.Scan.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-scan-agent" },
+  "payload": {}
+}
+```
+
+Para cada divergência encontrada, emitir **individualmente** antes de avançar para Flag:
+
+```json
+{
+  "event": "Diligence.Divergence.Detected",
+  "work-item-id": "<obc-work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-scan-agent" },
+  "payload": {
+    "obc-id": "<obc-id>",
+    "gap": "<descrição do gap>",
+    "severity": "Alta | Média | Baixa"
+  }
+}
+```
+
+Após todas as verificações concluídas (mesmo sem divergências), emitir:
+
+```json
+{
+  "event": "Diligence.Scan.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-scan-agent" },
+  "payload": { "divergences-found": <número> }
+}
+```
+
+Não emitir `Scan.Completed` se algum check não pôde ser executado (ex.: ferramenta inacessível) — registrar o bloqueio explicitamente.
+
 ## Post-conditions
 
 Concluído quando:
