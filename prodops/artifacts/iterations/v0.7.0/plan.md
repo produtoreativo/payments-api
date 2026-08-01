@@ -1,12 +1,12 @@
-# Iteration Plan — v0.7.0 (Ativo)
+# Iteration Plan — v0.7.0
 
-> Status: 🔄 Em andamento
+> Status: ✅ Concluído — 2026-08-01
 
 ## Escopo
 
-| DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status |
-|---|---|---|---|---|---|---|---|
-| DS-44 | #115 | dependency-security-update: eliminar vulnerabilidades Dependabot (14H/11M/2L em 9 pacotes) | — | ✓ | ✓ | ✓ | Entrou |
+| DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status | PR |
+|---|---|---|---|---|---|---|---|---|
+| DS-44 | #115 | dependency-security-update: eliminar vulnerabilidades Dependabot (14H/11M/2L em 9 pacotes) | — | ✓ | ✓ | ✓ | Concluído | #116 |
 
 ## Mapeamento DS-ID → Issue
 
@@ -16,11 +16,13 @@
 
 ## Critérios de saída
 
-- [ ] PR merged em `master` para DS-44
-- [ ] `prodops.delivery.promote.completed` emitido para a issue de DS-44
-- [ ] 0 alertas Dependabot com severity `critical` ou `high` em estado `open`
-- [ ] Test suite 100% verde após atualização de dependências
-- [ ] Issue de DS-44 fechada no GitHub
+- [x] PR merged em `master` para DS-44 — PR #116
+- [x] `prodops.delivery.promote.completed` emitido para a issue de DS-44
+- [x] 0 alertas Dependabot com severity `critical` ou `high` em estado `open` (api/ scope — 0 critical, 0 high)
+- [x] Test suite 100% verde após atualização de dependências — 71/71 acceptance tests
+- [x] Issue de DS-44 fechada no GitHub — #115 CLOSED
+
+**Nota:** Alerta Dependabot #101 (postcss HIGH, `validation-workbench/package-lock.json`) permanece aberto mas está fora do escopo de DS-44 (api/ apenas). Follow-up necessário para o workspace `validation-workbench/`.
 
 ## Runtime
 

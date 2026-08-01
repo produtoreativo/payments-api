@@ -1,6 +1,6 @@
-# Iteration Plan — v0.7.0
+# Iteration Plan
 
-> **Iteração ativa.** Plano detalhado em [`prodops/artifacts/iterations/v0.7.0/plan.md`](../iterations/v0.7.0/plan.md).
+> Nenhuma iteração ativa. Próxima iteração a definir.
 >
 > Histórico completo de iterações em [`prodops/artifacts/iterations/`](../iterations/).
 
@@ -13,9 +13,4 @@
 | [v0.4.0](../iterations/v0.4.0/plan.md) | DS-38: create-invoice via Pix | ✅ Concluído — PR #89 |
 | [v0.5.0](../iterations/v0.5.0/plan.md) | DS-39 · DS-42 · DS-43 · DS-41 | ✅ Concluído |
 | [v0.6.0](../iterations/v0.6.0/plan.md) | DS-39 · DS-42 · DS-43 · DS-41 | ✅ Concluído — PRs #111–#114 |
-
-## Iteração corrente — v0.7.0
-
-| DS | Issue | Feature | Status |
-|---|---|---|---|
-| DS-44 | — | dependency-security-update: eliminar vulnerabilidades Dependabot | Entrou |
+| [v0.7.0](../iterations/v0.7.0/plan.md) | DS-44 | ✅ Concluído — PR #116 |
