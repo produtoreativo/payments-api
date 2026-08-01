@@ -19,8 +19,7 @@ Subagentes **não devem pausar para solicitar confirmação** dessas operações
   prescrito pelas Skills. A autorização por Skill (ver `CLAUDE.md`) cobre todas as
   ações instrumentadas pelo fluxo Downstream, Diligence e Workspace Reconciliation.
 
-Esta seção complementa o `CLAUDE.md#Autorização-por-Skill` e o `.claude/settings.json`
-do projeto. Em caso de conflito, `CLAUDE.md` prevalece.
+Esta seção complementa o `.claude/settings.json` do projeto.
 
 ---
 
@@ -88,6 +87,22 @@ Nunca implementar código de produção fora do ciclo Bootstrap → Hack → Syn
    (`prodops/artifacts/plans/iteration-plan.md` → `prodops/artifacts/iterations/<version>/plan.md`).
    Leia-a antes de alterar código de produção — e somente ela.
    Se não existir, execute o readiness do `/downstream` antes do `/bootstrap`.
+
+## Autorização por Skill
+
+As Skills do ProdOps são a fonte de autorização para ações neste repositório.
+Quando uma Skill instrui o agente a executar uma ação — merge de PR, push de
+branch, criação de issue, atualização de campo no GitHub Project, emissão de
+evento — essa instrução constitui autorização explícita do operador. O agente
+não deve interromper o fluxo para pedir confirmação adicional: a aprovação está
+embutida na Skill.
+
+**Regra operacional:** respeite as Skills, execute o que elas prescrevem, não
+adicione gates de confirmação que a Skill não prevê.
+
+Isso se aplica a todos os agentes que operam neste repositório.
+
+---
 
 ## Regras invioláveis
 
