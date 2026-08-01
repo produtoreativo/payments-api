@@ -1,12 +1,12 @@
 {
   "issue": "106",
-  "state": "VALIDATING",
-  "last-event-type": "prodops.delivery.validate.started",
+  "state": "DONE",
+  "last-event-type": "prodops.delivery.promote.completed",
   "runtime-correlation-id": "a0e86737-692c-4b3d-ad99-ae8ca7bba377",
   "restart-count": 0,
   "previous-correlation-ids": [],
   "runtime-version": "0.3.0",
   "framework-version": "1.0.0",
   "schema-version": "1",
-  "computed-at": "2026-08-01T05:19:48Z"
+  "computed-at": "2026-08-01T05:24:59Z"
 }
