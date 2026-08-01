@@ -16,10 +16,8 @@ Subagentes **não devem pausar para solicitar confirmação** dessas operações
   - `prodops/skills/**`
   - `prodops/framework/**`
 - **Bash** — comandos de leitura, git local, gh CLI e scripts do runtime, conforme
-  prescrito pelas Skills. A autorização por Skill (ver `CLAUDE.md`) cobre todas as
+  prescrito pelas Skills. A seção "Autorização por Skill" deste arquivo cobre todas as
   ações instrumentadas pelo fluxo Downstream, Diligence e Workspace Reconciliation.
-
-Esta seção complementa o `.claude/settings.json` do projeto.
 
 ---
 
