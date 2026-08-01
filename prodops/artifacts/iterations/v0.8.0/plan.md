@@ -1,6 +1,6 @@
 # Iteration Plan — v0.8.0
 
-> Status: 🟡 Em andamento — aberta em 2026-08-01
+> Status: ⏸ Suspenso — gates OBC/BDD/Risks ausentes para capabilities de infraestrutura ProdOps. Retomar quando artefatos forem criados ou gate for ajustado para itens infra.
 
 ## Objetivo
 
