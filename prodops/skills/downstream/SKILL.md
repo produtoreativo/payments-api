@@ -104,9 +104,10 @@ Antes de executar qualquer ciclo, avaliar a capability contra todos os pré-requ
 2. BDD Feature committed em `prodops/artifacts/bdd/`.
 3. Riscos documentados em `prodops/artifacts/risks/risks.md`.
 4. Item no Iteration Plan com status `Entrou`.
-5. Reliability Plan (quando há movimentação financeira, integração externa, mudança de SLO, risco alto/crítico ou alteração de persistência/segurança).
 
-Tratar como **Downstream Declared** enquanto houver pré-requisitos ausentes. Declarar **Downstream Ready** apenas após todos os gates passarem. **Delivery Started** começa somente quando o Bootstrap inicia.
+Tratar como **Downstream Declared** enquanto houver pré-requisitos ausentes. Declarar **Downstream Ready** apenas após os quatro gates passarem. **Delivery Started** começa somente quando o Bootstrap inicia.
+
+Reliability Plan (`prodops/artifacts/plans/reliability/<capability>.md`) é opcional. Se existir, incluir `reliability-path` na capsule e referenciar SLOs nas fases de Validate e Promote. Sua ausência não bloqueia o flow.
 
 Quando todos os pré-requisitos existirem:
 
@@ -141,7 +142,8 @@ Quando todos os pré-requisitos existirem:
 - `plan-bootstrap-path` — `ITERATION_DIR/runtime/plan-bootstrap.json`
 - `plan-validate-path` — `ITERATION_DIR/runtime/plan-validate.json`
 - `session-trail-dir` — `ITERATION_DIR/trails/`
-- `obc-path`, `bdd-path`, `reliability-path` — paths absolutos dos artefatos de produto
+- `obc-path`, `bdd-path` — paths absolutos dos artefatos de produto
+- `reliability-path` — path do Reliability Plan se existir, caso contrário `"none"`
 
 **Flow State** — deixar em branco; preenchido por Finish (`pr-number`) e Ship (`infra-scope`):
 - `pr-number: (preenchido pelo Finish)`
@@ -227,7 +229,7 @@ Isso seta `oem-state = PENDING` e permite que o Bootstrap inicie novamente.
 
 - Não iniciar uma fase de Delivery enquanto o readiness estiver incompleto.
 - Não tratar uma entrada no Iteration Plan sozinha como readiness.
-- Não inventar OBCs, cenários BDD, riscos, reliability targets ou critérios de aceite.
+- Não inventar OBCs, cenários BDD, riscos ou critérios de aceite.
 - Não fazer o Bootstrap executar Git flow ou trabalho de contexto de produto.
 - Não fazer ship de trabalho suportado apenas por evidência Upstream.
 - Não pular quality gates sem decisão explícita registrada e aceite de risco.

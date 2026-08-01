@@ -43,7 +43,7 @@ plan-validate-path:   prodops/artifacts/iterations/<version>/runtime/plan-valida
 session-trail-dir:    prodops/artifacts/iterations/<version>/trails/
 obc-path:             prodops/artifacts/obcs/<capability>.md
 bdd-path:             prodops/artifacts/bdd/<capability>.feature
-reliability-path:     prodops/artifacts/plans/reliability/<capability>.md   ← ou "none"
+reliability-path:     prodops/artifacts/plans/reliability/<capability>.md   ← ou "none" se não existir (opcional)
 ```
 
 ## Flow State
@@ -88,10 +88,10 @@ Entradas relevantes para este card, filtradas de `prodops/artifacts/risks/risks.
 
 - `<RISK-ID>` — <one-line description and mitigation status>
 
-## Reliability
+## Reliability (opcional)
 
-SLOs, timeouts e requisitos de idempotência para este card
-(source: `prodops/artifacts/plans/reliability/<capability>.md`):
+SLOs, timeouts e requisitos de idempotência para este card.
+Preencher se `reliability-path != "none"`, omitir caso contrário.
 
 - <SLO / timeout / idempotency requirement>
 

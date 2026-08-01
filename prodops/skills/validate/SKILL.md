@@ -18,9 +18,9 @@ Todos os campos abaixo devem estar disponíveis:
 - `actor-player` — campo `actor-player`
 - `obc-path` — campo `obc-path` (critérios de aceite para validação)
 - `bdd-path` — campo `bdd-path` (cenários BDD para validação no ambiente alvo)
-- `reliability-path` — campo `reliability-path` (SLOs e idempotência)
 - `plan-bootstrap-path` — campo `plan-bootstrap-path`
 - `plan-validate-path` — campo `plan-validate-path`
+- `reliability-path` — campo `reliability-path` (opcional; usar SLOs se `!= "none"`)
 
 Se invocado standalone (sem capsule), gerar novo `correlation-id`.
 

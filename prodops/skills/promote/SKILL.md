@@ -19,6 +19,7 @@ Todos os campos abaixo devem estar disponíveis na capsule:
 - `plan-bootstrap-path` — campo `plan-bootstrap-path`
 - `plan-validate-path` — campo `plan-validate-path`
 - `timeline-path` — campo `timeline-path` (para o cálculo de lead-time)
+- `reliability-path` — campo `reliability-path` (opcional; consultar riscos se `!= "none"`)
 
 Se invocado standalone (sem capsule), gerar novo `correlation-id`.
 

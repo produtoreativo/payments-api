@@ -19,8 +19,8 @@ Campos obrigatórios:
 - `correlation-id` — campo `correlation-id`
 - `actor-player` — campo `actor-player`
 - `pr-number` — campo `pr-number` da capsule (preenchido pelo Finish); se ausente, buscar via `gh pr list`
-- `reliability-path` — campo `reliability-path` (SLOs para verificação de changeset)
 - `session-trail-dir` — campo `session-trail-dir`
+- `reliability-path` — campo `reliability-path` (opcional; usar SLOs para verificar changeset se `!= "none"`)
 
 Se invocado standalone (sem capsule), gerar novo `correlation-id`.
 
