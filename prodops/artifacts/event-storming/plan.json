@@ -2096,6 +2096,42 @@
       "priority": "normal",
       "source_type_name": "odd-exception",
       "aggregation_key": "cartao_estorno_solicitado"
+    },
+    {
+      "title": "payment.received",
+      "text": "PAYMENT_RECEIVED webhook processed — invoice updated to RECEIVED for financial reconciliation. Does not trigger a second order release.",
+      "tags": [
+        "event_key:payment.received",
+        "env:dev",
+        "stage:webhook_recebimento",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:confirmacao_de_pagamento",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "success",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "pagamento_recebido"
+    },
+    {
+      "title": "payment.received_exception",
+      "text": "Exception during PAYMENT_RECEIVED webhook processing — invoice reconciliation state may be inconsistent.",
+      "tags": [
+        "event_key:payment.received_exception",
+        "env:dev",
+        "stage:webhook_recebimento",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:confirmacao_de_pagamento",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "pagamento_recebido"
     }
   ],
   "sloSuggestions": [
@@ -2271,6 +2307,21 @@
         "flow:confirmacao:step:1:event:pagamento.confirmacao.webhook.pagamento.confirmado"
       ],
       "queryHint": "tags:(event_key:pagamento.confirmacao.webhook.pagamento.confirmado env:dev)"
+    },
+    {
+      "id": "payment_received_reconciliation_availability",
+      "name": "Recebimentos Financeiros Registrados com Sucesso",
+      "objective": "Garantir que payment.received seja publicado para cada PAYMENT_RECEIVED do provedor, habilitando conciliação financeira.",
+      "sliType": "availability",
+      "target": "99.9%",
+      "rationale": "OBC DS-39: payment.received é o evento canônico para conciliação financeira. Ausência do evento impede rastreabilidade de liquidação.",
+      "sourceEventKeys": [
+        "payment.received"
+      ],
+      "sourceOccurrenceKeys": [
+        "flow:confirmacao:step:2:event:payment.received"
+      ],
+      "queryHint": "tags:(event_key:payment.received env:dev)"
     }
   ],
   "assumptions": [
@@ -2281,6 +2332,7 @@
     "Atualizar este arquivo sempre que um novo emit() de domínio for adicionado ao código ou um flow existente mudar de sequência.",
     "2026-07-29: adicionados eventos do fluxo Boleto (payment.boleto.created, payment.boleto.creation_failed, payment.boleto.idempotency_hit) conforme OBC create-invoice-boleto.",
     "2026-07-31: DS-43 webhook-configuration — adicionados eventos webhook.deleted, webhook.delivery.failed e sloSuggestion para falha de entrega observável.",
-    "2026-07-31: DS-41 credit-card-authorization-confirmation — adicionados eventos: payment.card.hosted_invoice.created, pagamento.cartao.webhook.pagamento.autorizado, pagamento.cartao.webhook.analise_risco.aguardando/aprovada/reprovada, pagamento.cartao.webhook.captura_recusada, payment.card.refund.requested, pagamento.estorno.cobranca.estorno.solicitado (e respectivos _exception). Novos sloSuggestions: cartao_hospedado_criado_availability, cartao_confirmacao_unica_availability."
+    "2026-07-31: DS-41 credit-card-authorization-confirmation — adicionados eventos: payment.card.hosted_invoice.created, pagamento.cartao.webhook.pagamento.autorizado, pagamento.cartao.webhook.analise_risco.aguardando/aprovada/reprovada, pagamento.cartao.webhook.captura_recusada, payment.card.refund.requested, pagamento.estorno.cobranca.estorno.solicitado (e respectivos _exception). Novos sloSuggestions: cartao_hospedado_criado_availability, cartao_confirmacao_unica_availability.",
+    "2026-08-01: DS-39 payment-confirmation — adicionado evento canônico payment.received (e payment.received_exception) emitido via eventEmitter no processamento de PAYMENT_RECEIVED webhook. Novo sloSuggestion: payment_received_reconciliation_availability. Evento garante conciliação financeira sem republicar payment.confirmed."
   ]
 }
