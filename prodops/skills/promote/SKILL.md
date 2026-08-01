@@ -22,6 +22,16 @@ Before starting, the agent must have:
 1. `prodops/skills/prodops-emit-event/SKILL.md` has been read.
 2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
 
+## Plan Promote gate — verificar antes de Promote.Started
+
+Se `prodops/artifacts/runtime/plan-bootstrap-<iteration-id>.json` existir (execução dentro de um Iteration Plan):
+
+1. Ler `prodops/artifacts/runtime/plan-validate-<iteration-id>.json`.
+2. Se o arquivo não existir ou `status != "all-validated"`: **bloquear**. Não emitir `Promote.Started`. Reportar quais issues do plano ainda não completaram Validate e aguardar.
+3. Se `status == "all-validated"`: prosseguir com o fluxo abaixo normalmente.
+
+Se o arquivo plan-bootstrap não existir (execução standalone): prosseguir sem verificação de plano.
+
 ## Phase: Promote.Started
 
 **Moment**: after input context is verified, before any promotion work begins.

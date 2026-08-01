@@ -80,6 +80,33 @@ Emit using the **same `correlation-id`**:
 
 Do not emit `Validate.Completed` if evidence is incomplete or any quality gate fails.
 
+## Plan Validate gate — após Validate.Completed
+
+Após emitir `Validate.Completed` com sucesso, verificar se há contexto de Iteration Plan:
+
+1. Ler `prodops/artifacts/runtime/plan-bootstrap-<iteration-id>.json` — se não existir, pular este bloco (execução standalone).
+2. Ler ou criar `prodops/artifacts/runtime/plan-validate-<iteration-id>.json`:
+   ```json
+   {
+     "iteration-id": "<iteration-id>",
+     "issues": {
+       "<work-item-id>": "validated"
+     }
+   }
+   ```
+3. Marcar `issues.<work-item-id>: "validated"` e gravar o arquivo.
+4. Verificar se **todos** os `issues` do plan-bootstrap estão marcados `"validated"`.
+5. Se sim — todos validados:
+   - Emitir `Delivery.Plan.Validated` com `subject: <iteration-id>` e `work-item-id: null` no payload, listando os issues no campo `"issues"`.
+   - Atualizar `plan-validate-<iteration-id>.json` com `"status": "all-validated"` e `"all-validated-at": <timestamp>`.
+   - Commitar o arquivo.
+   - Reportar ao caller: `Plan Validated — todos os itens aprovados; Promote desbloqueado.`
+6. Se não — ainda há issues pendentes:
+   - Commitar o arquivo atualizado.
+   - Reportar ao caller quais issues ainda não validaram (lista de pendentes).
+   - **Não emitir** `Delivery.Plan.Validated`.
+   - O Promote desta issue permanece bloqueado até o gate de plano passar.
+
 ## Inputs
 
 - `AGENTS.md`

@@ -121,10 +121,27 @@ O `correlation-id` gerado aqui é o correlation-id do flow inteiro — propagado
 
 ## CI Async
 
+O CI Async opera em três fases sequenciais sobre todos os itens do plano:
+
+**Fase 1 — Ship (por issue, em sequência)**
+Para cada issue na fila do plano, em ordem:
 1. Confirmar que evidências do CI Sync existem e foram aprovadas.
-2. **Ship** — build, publicação e deploy conforme a política de release atual. Acionar `staging-deploy.yml` via `gh workflow run` e aguardar conclusão antes de Validate.
-3. **Validate** — validar BDD, OBC, observabilidade, SLOs e riscos no ambiente alvo.
-4. **Promote** — aplicar gates de aprovação e registrar no Release Trail.
+2. Acionar `staging-deploy.yml` via `gh workflow run` e aguardar conclusão.
+3. Avançar para a próxima issue sem aguardar Validate.
+
+**Fase 2 — Validate (por issue, em sequência)**
+Para cada issue na fila do plano, em ordem:
+1. Validar BDD, OBC, observabilidade, SLOs e riscos no ambiente alvo.
+2. Após `Validate.Completed`: atualizar `plan-validate-<iteration-id>.json` marcando a issue como validada.
+3. Após a última issue validar: emitir `Delivery.Plan.Validated` — o gate de plano passa.
+4. Se qualquer Validate falhar: **parar toda a fase 3**. Nenhum Promote ocorre enquanto houver issues pendentes.
+
+**Fase 3 — Promote (por issue, em sequência — gate de plano obrigatório)**
+Só iniciada após `Delivery.Plan.Validated` emitido:
+1. Para cada issue na fila do plano, em ordem: aplicar gates de aprovação e registrar no Release Trail.
+2. O Promote de cada issue verifica `plan-validate-<iteration-id>.json` antes de emitir `Promote.Started`.
+
+**Nota sobre execuções standalone** (`/downstream ci-async DS-<n>`): sem contexto de Iteration Plan, o CI Async opera por issue de forma independente (Ship → Validate → Promote) sem gate de plano.
 
 ## Protocolo de exceção — bloqueios
 
