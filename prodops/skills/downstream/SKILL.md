@@ -47,9 +47,27 @@ Fila Downstream — Iteration Plan ativo
 ...
 ```
 
-4. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
+4. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
+   a. Verificar se `prodops/artifacts/runtime/plan-bootstrap-<iteration-id>.json` já existe com `"status": "completed"`. Se sim, pular para o passo 5 (ambiente já pronto).
+   b. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>` e `work-item-id: null`.
+   c. Executar o Bootstrap work: instalar dependências, verificar runtimes e serviços locais, confirmar variáveis de ambiente, executar o smoke gate do manifest.
+   d. Se qualquer etapa falhar: reportar o bloqueio e **parar toda a fila** — não iniciar nenhum issue.
+   e. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>`.
+   f. Escrever `prodops/artifacts/runtime/plan-bootstrap-<iteration-id>.json`:
+   ```json
+   {
+     "iteration-id": "<iteration-id>",
+     "status": "completed",
+     "correlation-id": "<uuid-gerado-no-started>",
+     "completed-at": "<timestamp-iso8601>",
+     "issues": ["<issue-1>", "<issue-2>", "..."]
+   }
+   ```
+   g. Commitar o arquivo no repositório antes de iniciar o loop.
+
+5. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
    a. Executar `/readiness <capability>` — se falhar, reportar blockers e **parar toda a fila**.
-   b. Executar CI Sync: Bootstrap → Hack → Sync → Finish.
+   b. Executar CI Sync: Bootstrap (fast path via plan-bootstrap) → Hack → Sync → Finish.
    c. Reportar evidências do item concluído e avançar automaticamente para o próximo.
 
 Parar apenas quando: (1) um readiness falhar, (2) um gate de qualidade não passar, (3) a fila se esgotar.
@@ -96,7 +114,7 @@ O `correlation-id` gerado aqui é o correlation-id do flow inteiro — propagado
 
 ## CI Sync
 
-1. **Bootstrap** — preparar dependências, infra local e smoke gate apenas.
+1. **Bootstrap** — quando invocado dentro do loop do `/downstream` (modo sem argumentos ou por DS-ID a partir de um plano), o Bootstrap opera em fast path se o Plan Bootstrap já completou: emite apenas os eventos Started/Completed sem re-executar dependências ou smoke gate. Em execuções isoladas (sem Plan Bootstrap), executa o fluxo completo.
 2. **Hack** — executar `start`, `tdd` e `commit`; `start` é dono do Git flow e da criação de branch.
 3. **Sync** — sincronizar a branch e alinhar artefatos ProdOps impactados.
 4. **Finish** — executar quality gates finais e preparar o PR.

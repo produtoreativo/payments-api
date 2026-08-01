@@ -19,6 +19,25 @@ Before starting, the agent must have:
 
 If any of these are absent, ask the caller to provide them before proceeding. Do not generate placeholder values.
 
+## Fast path — Plan Bootstrap already ran
+
+Before executing any Bootstrap work, check for a Plan Bootstrap artifact:
+
+```
+prodops/artifacts/runtime/plan-bootstrap-<iteration-id>.json
+```
+
+If the file exists and contains `"status": "completed"`:
+
+1. Emit `Delivery.Bootstrap.Started` with `"fast-path": true` in the payload.
+2. Emit `Delivery.Bootstrap.Completed` with `"fast-path": true` in the payload — using the same `correlation-id`.
+3. Report to caller: `Bootstrap fast path — environment ready from Plan Bootstrap (iteration: <iteration-id>)`.
+4. Stop. Do not run Bootstrap work below.
+
+If the file does not exist or `status != "completed"`: proceed with the full flow below.
+
+---
+
 ## Preconditions
 
 1. `prodops/skills/prodops-emit-event/SKILL.md` has been read and the agent understands how to invoke the tool.

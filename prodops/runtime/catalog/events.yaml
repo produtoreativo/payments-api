@@ -11,6 +11,24 @@ events:
     alters-state: true
     new-state: PENDING
 
+  Delivery.Plan.Bootstrap.Started:
+    cloud-event-type: prodops.delivery.plan.bootstrap.started
+    description: Marks the beginning of the Plan-level Bootstrap; environment preparation shared across all issues in the Iteration Plan. Subject is the iteration-id, not a work-item-id.
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/started/v1.0.0
+    journey: Delivery
+    cycle: Plan.Bootstrap
+    phase: Started
+    alters-state: false
+
+  Delivery.Plan.Bootstrap.Completed:
+    cloud-event-type: prodops.delivery.plan.bootstrap.completed
+    description: Marks successful completion of the Plan-level Bootstrap; environment is ready for all issues in the Iteration Plan. Subject is the iteration-id.
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/completed/v1.0.0
+    journey: Delivery
+    cycle: Plan.Bootstrap
+    phase: Completed
+    alters-state: false
+
   Delivery.Bootstrap.Started:
     cloud-event-type: prodops.delivery.bootstrap.started
     description: Marks the beginning of the Bootstrap cycle for a Feature in the Delivery Journey
