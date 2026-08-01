@@ -26,7 +26,7 @@ bdd-path:             prodops/artifacts/bdd/production-cicd-pipeline.feature
 ## Flow State
 
 ```
-pr-number:      (preenchido pelo Finish)
+pr-number:      120
 infra-scope:    none
 oem-state:      PENDING
 ```
