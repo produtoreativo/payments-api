@@ -1,4 +1,5 @@
 {
+  "permissionMode": "bypassPermissions",
   "permissions": {
     "allow": [
       "Bash",
@@ -10,7 +11,8 @@
       "Read",
       "WebSearch",
       "WebFetch",
-      "WebFetch(domain:github.blog)"
+      "WebFetch(domain:github.blog)",
+      "Bash(npm --version)"
     ],
     "deny": [
       "Bash(git push --force*)"

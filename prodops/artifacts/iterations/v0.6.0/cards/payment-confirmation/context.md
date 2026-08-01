@@ -6,21 +6,16 @@ Date: 2026-08-01
 
 ## Runtime Context
 
-Dados de execução propagados para todas as fases — Bootstrap, Hack, Sync, Finish, Ship,
-Validate, Promote. O agente não precisa reler iteration-plan.md nem plan.md durante o flow.
-
 ```
 ds-id:              DS-39
 work-item-id:       106
 iteration-id:       v0.6.0
 iteration-dir:      prodops/artifacts/iterations/v0.6.0/
-correlation-id:     a0e86737-692c-4b3d-ad99-ae8ca7bba377
+correlation-id:     4a4b3588-1052-4ef9-9631-ae3276dc9ea7
 actor-player:       claude
 ```
 
 ## Runtime Paths
-
-Paths pré-computados para eliminar derivação manual em cada fase.
 
 ```
 feature-branch:       feat/106-payment-confirmation
@@ -36,10 +31,8 @@ reliability-path:     none
 
 ## Flow State
 
-Campos preenchidos progressivamente durante o flow. Iniciam em branco.
-
 ```
-pr-number:      (preenchido pelo Finish)
+pr-number:      111
 infra-scope:    (preenchido pelo Ship — dynamo|lambda|both|none)
 oem-state:      PENDING
 ```
@@ -48,8 +41,7 @@ oem-state:      PENDING
 
 Path: `prodops/artifacts/obcs/payment-confirmation.md`
 
-Success criteria (verbatim — the 3–6 measurable lines from the OBC):
-
+Success criteria:
 - Eventos `payment.confirmed` publicados exatamente uma vez por pagamento aprovado. 100%
 - Webhooks com token inválido rejeitados sem alteração de invoice. 100%
 - Webhooks duplicados retornam sucesso técnico sem republicar `payment.confirmed`. 100%
@@ -64,13 +56,11 @@ Path: `prodops/artifacts/bdd/payment-confirmation.feature`
 Scenarios (full — Given/When/Then para uso direto no Red phase do Hack/tdd):
 
 ```gherkin
-Contexto:
+Cenário: Confirmar pagamento com evento PAYMENT_CONFIRMED
   Dado que a invoice "inv-100045" existe no gateway com status "OPEN"
   E a invoice esta associada ao provedor "ASAAS"
   E a invoice possui "providerPaymentId" igual a "pay_asaas_123"
   E o webhook da Asaas foi configurado com token de autenticacao
-
-Cenário: Confirmar pagamento com evento PAYMENT_CONFIRMED
   Quando a Asaas enviar um webhook "PAYMENT_CONFIRMED" para "pay_asaas_123"
   E o header "asaas-access-token" for valido
   Então o gateway deve persistir o evento bruto recebido
@@ -116,32 +106,27 @@ Cenário: Ignorar evento que nao libera pedido no MVP
 
 ## Risks
 
-Entradas relevantes para este card, filtradas de `prodops/artifacts/risks/risks.md`:
+Entradas relevantes filtradas de `prodops/artifacts/risks/risks.md`:
 
-- `Doom 2` — Atraso na ativação do novo Gateway: feature flag desativada por bug; risco de multa contratual R$ 500M. Mitigação: canary release, observabilidade, war room.
-- `Doom 4` — Falta de visibilidade operacional: MTTR aumentado sem instrumentação. Mitigação: OpenTelemetry, alertas SLO.
-- `Risco B3` — Confirmação assíncrona confundida com falha: sistema pode cancelar pedido prematuramente aguardando confirmação Boleto. Mitigação: status OPEN é correto; confirmação chega via webhook.
+- `Doom 2` — Atraso na ativação do novo Gateway (Feature Flag com bug conhecido); mitigação: Canary Release + Plano de Rollback
+- `Doom 4` — Falta de visibilidade operacional; mitigação: instrumentação OpenTelemetry + alertas SLO
+- `B3` — Confirmação assíncrona do Boleto confundida com falha; documentar que status OPEN é correto após criação
 
 ## Contract
 
-Endpoint(s) e essenciais de request/response:
+Endpoints:
 
-- `POST /webhooks/asaas` — header `asaas-access-token` required; body: providerPaymentId, eventType, externalReference → 200 OK (idempotent); 401 on invalid token; persists raw event before processing
-- Publishes: `payment.confirmed` event (exactly once per providerPaymentId), `payment.received` (for PAYMENT_RECEIVED), `webhook.received` (raw), `webhook.rejected`, `webhook.deduplicated`
+- `POST /webhooks/asaas` — header: asaas-access-token; body: {event, payment.id, payment.externalReference, ...} → 200 OK (success/deduplication) | 401 (token invalid)
 
 ## Commands
-
-Lidos de `prodops/exec/manifest.yaml` (seção `gates`). Preencher todos os gates aplicáveis.
 
 - `lint`:       cd api && npm run lint — expect: exit 0
 - `build`:      cd api && npm run build — expect: exit 0
 - `acceptance`: ./scripts/test-acceptance.sh — expect: exit 0
-- `no_mocks`:   grep jest.fn( .mockReturnValue( .overrideProvider( jest.mock( .mockRejectedValue( .mockResolvedValue( .mockImplementation( in api/test — expect: zero hits
+- `no_mocks`:   grep jest.fn( .mockReturnValue( etc. in api/test — expect: zero hits
 - `smoke`:      Bootstrap gate only
 
 ## Dependencies
-
-Issues que devem estar merged antes do Bootstrap deste card:
 
 - None
 

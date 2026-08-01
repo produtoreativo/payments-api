@@ -6,21 +6,16 @@ Date: 2026-08-01
 
 ## Runtime Context
 
-Dados de execução propagados para todas as fases — Bootstrap, Hack, Sync, Finish, Ship,
-Validate, Promote. O agente não precisa reler iteration-plan.md nem plan.md durante o flow.
-
 ```
 ds-id:              DS-42
 work-item-id:       107
 iteration-id:       v0.6.0
 iteration-dir:      prodops/artifacts/iterations/v0.6.0/
-correlation-id:     cd60c498-f1c9-4e50-b7f7-d7bab2d63f03
+correlation-id:     41b32103-2638-4ce7-b76b-1127f6259aa1
 actor-player:       claude
 ```
 
 ## Runtime Paths
-
-Paths pré-computados para eliminar derivação manual em cada fase.
 
 ```
 feature-branch:       feat/107-api-token-validation
@@ -36,8 +31,6 @@ reliability-path:     none
 
 ## Flow State
 
-Campos preenchidos progressivamente durante o flow. Iniciam em branco.
-
 ```
 pr-number:      (preenchido pelo Finish)
 infra-scope:    (preenchido pelo Ship — dynamo|lambda|both|none)
@@ -48,8 +41,7 @@ oem-state:      PENDING
 
 Path: `prodops/artifacts/obcs/api-token-validation.md`
 
-Success criteria (verbatim — the 3–6 measurable lines from the OBC):
-
+Success criteria:
 - Requisições com token válido autorizadas sem latência adicional > 5ms. 99.9%
 - Requisições com token ausente ou inválido rejeitadas com 401 e reason observável. 100%
 - Token de localhost válido em ambiente de desenvolvimento sem secrets externos. 100%
@@ -59,16 +51,14 @@ Success criteria (verbatim — the 3–6 measurable lines from the OBC):
 
 Path: `prodops/artifacts/bdd/api-token-validation.feature`
 
-Scenarios (full — Given/When/Then para uso direto no Red phase do Hack/tdd):
+Scenarios (full):
 
 ```gherkin
-Contexto:
+Cenário: Requisição autenticada com token válido
   Dado que a Payments API exige autenticação por token em todas as rotas de negócio
   E tokens são identificados pelo header "X-Api-Token"
   E cada token está associado a um tenant e possui um identificador observável
-
-Cenário: Requisição autenticada com token válido
-  Dado que o sistema cliente possui um token de API válido para o tenant "magazine-siara"
+  E o sistema cliente possui um token de API válido para o tenant "magazine-siara"
   Quando o cliente enviar "POST /invoices" com o header "X-Api-Token" preenchido
   Então a Payments API deve autorizar a requisição
   E deve registrar o evento "api.token.validated" com "tenantId", "tokenId" e "correlationId"
@@ -114,33 +104,23 @@ Cenário: Token não aparece em logs ou respostas de erro
 
 ## Risks
 
-Entradas relevantes para este card, filtradas de `prodops/artifacts/risks/risks.md`:
-
-- `Doom 3` — Complexidade da migração para microserviços: acoplamento de guard de token pode introduzir dependências cruzadas; mitigação via distributed tracing e health checks.
-- `Doom 4` — Falta de visibilidade operacional: rejeições de token sem observabilidade dificultam diagnóstico; mitigação via evento `api.token.rejected` com `reason`.
-- Riscos estruturais — Token de API não deve aparecer em logs, traces ou payloads de erro (alinhado com política de segurança do OBC).
+- `Doom 2` — Atraso na ativação do novo Gateway; token guard impacta todas as rotas de negócio
+- `Doom 4` — Falta de visibilidade operacional; evento `api.token.rejected` deve ser observável com reason
 
 ## Contract
 
-Endpoint(s) e essenciais de request/response:
-
-- Todas as rotas de negócio (ex.: `POST /invoices`, `GET /invoices`, `POST /webhooks`) — header `X-Api-Token` required; 401 `{ reason: "token_missing" | "token_invalid" | "token_revoked" }` on failure
-- `POST /webhooks/asaas` — exempt from X-Api-Token guard (uses asaas-access-token instead)
-- Token validated in-memory from config map; `API_TOKEN_LOCAL` env var for development tenant
+- `POST /invoices` — header: X-Api-Token (required) → 201 OK | 401 {reason: token_missing|token_invalid|token_revoked}
+- `POST /webhooks/asaas` — header: X-Api-Token NOT required; uses asaas-access-token instead
 
 ## Commands
-
-Lidos de `prodops/exec/manifest.yaml` (seção `gates`). Preencher todos os gates aplicáveis.
 
 - `lint`:       cd api && npm run lint — expect: exit 0
 - `build`:      cd api && npm run build — expect: exit 0
 - `acceptance`: ./scripts/test-acceptance.sh — expect: exit 0
-- `no_mocks`:   grep jest.fn( .mockReturnValue( .overrideProvider( jest.mock( .mockRejectedValue( .mockResolvedValue( .mockImplementation( in api/test — expect: zero hits
+- `no_mocks`:   grep jest.fn( .mockReturnValue( etc. in api/test — expect: zero hits
 - `smoke`:      Bootstrap gate only
 
 ## Dependencies
-
-Issues que devem estar merged antes do Bootstrap deste card:
 
 - None
 

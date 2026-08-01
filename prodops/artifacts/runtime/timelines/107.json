@@ -1,11 +1,11 @@
 [
   {
     "specversion": "1.0",
-    "id": "7dd095e3-0729-4ae3-bce3-0187c5319479",
+    "id": "7a73dfdf-0626-4c44-947b-f77985462221",
     "source": "https://github.com/produtoreativo/payments-api",
     "type": "prodops.delivery.plan.entered",
     "subject": "107",
-    "time": "2026-08-01T03:49:35Z",
+    "time": "2026-08-01T03:33:30Z",
     "datacontenttype": "application/json",
     "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/plan/entered/v1.0.0",
     "data": {
@@ -15,6 +15,28 @@
       "phase": "Entered",
       "alters-state": true,
       "new-state": "PENDING",
+      "runtime-correlation-id": "41b32103-2638-4ce7-b76b-1127f6259aa1",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "6c3121f5-2d81-4998-b2cb-15e2c035ee56",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.hack.started",
+    "subject": "107",
+    "time": "2026-08-01T04:22:54Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/hack/started/v1.0.0",
+    "data": {
+      "issue": "107",
+      "journey": "Delivery",
+      "cycle": "Hack",
+      "phase": "Started",
+      "alters-state": true,
+      "new-state": "HACKING",
       "runtime-correlation-id": "cd60c498-f1c9-4e50-b7f7-d7bab2d63f03",
       "runtime-version": "0.3.0",
       "framework-version": "1.0.0",

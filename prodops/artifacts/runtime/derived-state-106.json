@@ -1,12 +1,12 @@
 {
   "issue": "106",
-  "state": "HACKING",
-  "last-event-type": "prodops.delivery.hack.started",
-  "runtime-correlation-id": "a0e86737-692c-4b3d-ad99-ae8ca7bba377",
+  "state": "PENDING",
+  "last-event-type": "prodops.delivery.plan.entered",
+  "runtime-correlation-id": "4a4b3588-1052-4ef9-9631-ae3276dc9ea7",
   "restart-count": 0,
   "previous-correlation-ids": [],
   "runtime-version": "0.3.0",
   "framework-version": "1.0.0",
   "schema-version": "1",
-  "computed-at": "2026-08-01T04:03:43Z"
+  "computed-at": "2026-08-01T03:33:21Z"
 }
