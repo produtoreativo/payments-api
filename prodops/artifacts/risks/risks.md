@@ -10,6 +10,8 @@ O cenário descreve uma release crítica para habilitação de um novo gateway d
 
 # Doom 2 — Atraso na ativação do novo Gateway
 
+**Status:** Aberto — evidência Upstream pendente ([#48](https://github.com/produtoreativo/payments-api/issues/48), [#49](https://github.com/produtoreativo/payments-api/issues/49) no [Tracking List](../product/backlogs/tracking-list.md))
+
 ## Descrição
 
 A Feature Flag que habilita o novo Gateway permanece desativada devido a um bug conhecido. Caso a correção não seja concluída dentro da janela da release, existe risco de multa contratual e impacto significativo na margem do negócio.
@@ -48,6 +50,8 @@ promoção final:
 
 # Doom 3 — Complexidade da migração para microserviços
 
+**Status:** Aberto — sem mitigações formais implementadas até o momento.
+
 ## Descrição
 
 O desacoplamento do monólito aumenta significativamente a complexidade operacional e de integração entre serviços.
@@ -70,6 +74,8 @@ O desacoplamento do monólito aumenta significativamente a complexidade operacio
 ---
 
 # Doom 4 — Falta de visibilidade operacional
+
+**Status:** Aberto — instrumentação ProdOps runtime iniciada (Datadog metrics via `emit-event`), mas observabilidade de negócio plena ainda pendente.
 
 ## Descrição
 
@@ -101,6 +107,8 @@ Incidentes já ocorreram anteriormente e podem voltar a acontecer sem detecção
 - Dependências entre Ecommerce, Payments, Marketing, Vendas, Infraestrutura e Arquitetura.
 
 ## Riscos Upstream - Cartão de crédito Asaas
+
+**Status:** Aberto — experimento upstream em andamento. Issues abertas: [#50](https://github.com/produtoreativo/payments-api/issues/50), [#51](https://github.com/produtoreativo/payments-api/issues/51), [#52](https://github.com/produtoreativo/payments-api/issues/52), [#53](https://github.com/produtoreativo/payments-api/issues/53), [#54](https://github.com/produtoreativo/payments-api/issues/54). Ver [Tracking List](../product/backlogs/tracking-list.md).
 
 - Checkout hospedado no Asaas reduz risco de PCI porque Payments API não
   trafega dados sensíveis de cartão, mas depende da experiência de pagamento
@@ -134,6 +142,8 @@ Incidentes já ocorreram anteriormente e podem voltar a acontecer sem detecção
 
 ## Risco B1 — bankSlipUrl ausente ou expirada
 
+**Status:** Resolvido — boleto bancário entregue (v0.5.0/v0.6.0). Critérios de aceite validados em BDD Feature.
+
 ### Descrição
 
 O provedor Asaas pode retornar a cobrança sem `bankSlipUrl` em cenários de instabilidade ou de boleto em processamento. O cliente recebe invoice sem conseguir acessar o boleto para pagamento.
@@ -152,6 +162,8 @@ O provedor Asaas pode retornar a cobrança sem `bankSlipUrl` em cenários de ins
 
 ## Risco B2 — dueDate no passado ou ausente
 
+**Status:** Resolvido — validação de `dueDate` implementada e coberta por BDD.
+
 ### Descrição
 
 O ecommerce pode enviar `dueDate` no passado ou omiti-la. A Asaas rejeita cobranças com `dueDate` passada com erro 400, mas a falha ocorre após uma chamada desnecessária ao provedor.
@@ -168,6 +180,8 @@ O ecommerce pode enviar `dueDate` no passado ou omiti-la. A Asaas rejeita cobran
 ---
 
 ## Risco B3 — Confirmação assíncrona confundida com falha
+
+**Status:** Resolvido — fluxo assíncrono documentado no OBC e coberto por BDD Feature de payment-confirmation.
 
 ### Descrição
 
@@ -186,6 +200,8 @@ Diferente do Pix (confirmação imediata), o Boleto permanece em status `OPEN` p
 ---
 
 ## Risco B4 — identificationField ausente na resposta
+
+**Status:** Resolvido — `identificationField` adicionado ao contrato de resposta e coberto por BDD.
 
 ### Descrição
 
@@ -238,7 +254,7 @@ A linha digitável (`identificationField`) não está mapeada no `ProviderCharge
 **Capability:** dependency-security-update
 **Severidade:** Média
 **Probabilidade:** Média (multer 1.x → 2.x é upgrade de major; demais são minor/patch)
-**Status:** Resolvido — 2026-08-01 (hack DS-44, work-item #115)
+**Status:** Parcialmente resolvido — DS-44 entregue (PR #116, v0.7.0). `postcss` HIGH restante em `validation-workbench/` ([#117](https://github.com/produtoreativo/payments-api/issues/117)). `aws-sdk` moderate — aceite de risco registrado. Ver [Tracking List](../product/backlogs/tracking-list.md#55).
 
 ## Descrição
 
