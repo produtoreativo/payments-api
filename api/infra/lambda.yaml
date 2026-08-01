@@ -12,18 +12,25 @@ Parameters:
   # ── Observability ──────────────────────────────────────────────────────────
   DatadogEnabled:
     Type: String
-    Default: 'false'
+    Default: 'true'
     AllowedValues: ['true', 'false']
   DatadogSite:
     Type: String
     Default: datadoghq.com
-  DatadogApiKey:
-    Type: String
-    Default: ''
-    NoEcho: true
   DatadogExtensionLayerArn:
     Type: String
-    Default: ''
+    # Default ARN for us-east-1 — override with the ARN for your target region.
+    # Format: arn:aws:lambda:<REGION>:464622532012:layer:Datadog-Extension:97
+    Default: 'arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:97'
+    Description: >
+      Datadog Extension Layer ARN. Must be overridden for each target AWS region.
+      Use a pinned version (e.g. :97) — never use latest to avoid uncontrolled updates.
+  DatadogApiKeySSMPath:
+    Type: String
+    Default: '/payments-api/datadog/api-key'
+    Description: >
+      SSM Parameter Store path for the Datadog API key (SecureString).
+      The key is resolved at deploy time via {{resolve:ssm-secure:...}} — never stored in plain text.
   DatadogVersion:
     Type: String
     Default: 0.0.1
@@ -81,7 +88,6 @@ Parameters:
 
 Conditions:
   IsDatadogEnabled:         !Equals [!Ref DatadogEnabled, 'true']
-  HasDatadogApiKey:         !Not [!Equals [!Ref DatadogApiKey, '']]
   HasDatadogExtensionLayer: !Not [!Equals [!Ref DatadogExtensionLayerArn, '']]
   HasAwsDynamoDbEndpoint:   !Not [!Equals [!Ref AwsDynamoDbEndpoint, '']]
   HasAsaasToken:            !Not [!Equals [!Ref AsaasToken, '']]
@@ -113,9 +119,11 @@ Globals:
         DD_TRACE_ENABLED: !Ref DatadogEnabled
         DD_LOGS_INJECTION: !Ref DatadogEnabled
         DD_RUNTIME_METRICS_ENABLED: !Ref DatadogEnabled
+        # DatadogApiKey resolved from SSM Parameter Store at deploy time — never stored in plain text.
+        # Override DatadogApiKeySSMPath parameter to change the SSM path.
         DD_API_KEY: !If
-          - HasDatadogApiKey
-          - !Ref DatadogApiKey
+          - IsDatadogEnabled
+          - !Sub "{{resolve:ssm-secure:${DatadogApiKeySSMPath}:1}}"
           - !Ref AWS::NoValue
 
         # Storage
