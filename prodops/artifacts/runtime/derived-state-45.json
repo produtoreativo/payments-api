@@ -1,12 +1,12 @@
 {
   "issue": "45",
-  "state": "SYNCING",
-  "last-event-type": "prodops.delivery.sync.started",
-  "runtime-correlation-id": "14e0869e-7bbf-44d0-ac0c-403859a07edf",
+  "state": "FINISHING",
+  "last-event-type": "prodops.delivery.finish.started",
+  "runtime-correlation-id": "9906a36d-cc4e-4bbe-8a9e-79e570dc67d6",
   "restart-count": 0,
   "previous-correlation-ids": [],
   "runtime-version": "0.3.0",
   "framework-version": "1.0.0",
   "schema-version": "1",
-  "computed-at": "2026-08-01T20:41:04Z"
+  "computed-at": "2026-08-01T20:42:32Z"
 }
