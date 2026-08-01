@@ -1,93 +1,71 @@
-# Local OBC - <Nome da Capability>
+# OBC - <Nome da Capability>
 
 <!-- Renomeie este arquivo para o slug da capability: ex. split-payment-api.md -->
-<!-- Mova para prodops/artifacts/obcs/<slug>.md ao promover para Committed -->
+<!-- Mova para prodops/artifacts/obcs/<slug>.md quando o OBC estiver Committed -->
 <!-- Definição completa do formato: prodops/framework/obc.md -->
 <!-- Owner: Product Manager + Tech Lead do produto -->
 
 ## Status
 
-<!-- Declare o estado atual do contrato.
+<!-- Declare o estado atual e onde está rastreado.
      Estados possíveis: Draft | Refining | Committed | In Delivery | Operational | Archived
-     Localização por estado:
-       Draft/Refining: prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md
-       Committed+:     prodops/artifacts/obcs/<slug>.md -->
+     Exemplo: Downstream. Status `Entrou` em prodops/artifacts/plans/iteration-plan.md. -->
 
-Draft. Localizado em `prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md`.
+Draft. Localizado em `prodops/artifacts/obcs/<slug>.md`.
 
-## Global OBC
+## Business Outcome
 
-<!-- Campo obrigatório. Referencie o Global OBC do qual este Local OBC foi derivado.
-     Se este é um Local OBC de fluxo local (sem Global OBC), registre "Local — fluxo direto". -->
+<!-- Descreva em uma ou duas partes:
+     1. O que o produto entrega e quais garantias oferece (perspectiva técnica de negócio).
+     2. Opcional — "### Em linguagem executiva": analogia acessível para stakeholders não-técnicos.
+     Foque no RESULTADO observável, não na implementação. -->
 
-→ `<path-no-repo-portfolio>/obcs/<slug-global>.md` — <Nome da Intenção de Negócio>
+<Descreva o resultado de negócio que esta capability entrega, as garantias que oferece e os problemas que resolve.>
 
-## Produto / Repositório / Bounded Context
+### Em linguagem executiva
 
-<!-- Identifique claramente qual produto implementa este contrato e qual bounded context está envolvido. -->
+<!-- Opcional. Use quando o comportamento da capability não for intuitivo para stakeholders não-técnicos.
+     Escreva como uma analogia do mundo real, sem jargão técnico. -->
 
-- **Repositório:** `<nome-do-repositório>`
-- **Bounded Context:** <Nome do bounded context>
-- **Responsabilidade:** <O que este produto entrega como parte da intenção de negócio.>
+<Analogia simples que explica o comportamento para uma audiência executiva.>
 
-## APIs e Eventos (responsabilidade deste produto)
-
-<!-- Liste as APIs e eventos que ESTE produto é responsável por implementar.
-     Não duplique informações estratégicas do Global OBC — foque na responsabilidade técnica deste produto. -->
-
-### APIs
-
-| Endpoint | Método | Responsabilidade |
-|---|---|---|
-| `<path>` | `<HTTP método>` | <O que esta API faz.> |
-
-### Eventos Publicados
-
-| Evento | Tópico | Quando |
-|---|---|---|
-| `<dominio>.<acao>` | `<nome-do-tópico>` | <Condição de disparo.> |
-
-### Eventos Consumidos
-
-| Evento | Origem | Propósito |
-|---|---|---|
-| `<dominio>.<acao>` | `<repositório-origem>` | <Por que este produto consome este evento.> |
-
-## BDD / Critérios de Aceite
-
-<!-- Liste os critérios de aceite a nível de produto — comportamentos verificáveis.
-     Referência ao arquivo BDD Feature quando comprometido. -->
-
-- [ ] <Critério de aceite 1: comportamento esperado verificável.>
-- [ ] <Critério de aceite 2: comportamento em falha esperado.>
-
-**BDD Feature:** `prodops/artifacts/bdd/<slug>.feature` *(quando committed)*
-
-## Eventos Observáveis
+## Observable Events
 
 <!-- Liste todos os eventos observáveis que esta capability emite.
-     Inclua eventos de sucesso, falha, casos especiais e de segurança.
-     Cada evento deve ter nome canônico, significado e dimensões obrigatórias. -->
+     Inclua eventos de sucesso, falha, idempotência e casos especiais.
+     Cada evento deve ter nome canônico em snake_case, significado e dimensões obrigatórias.
+     `correlationId` é sempre obrigatório. -->
 
-| Evento | Significado | Dimensões obrigatórias |
+| Event | Meaning | Required dimensions |
 |---|---|---|
 | `<dominio>.<acao_sucesso>` | <O que representa este evento de sucesso.> | `<campo1>`, `<campo2>`, `correlationId` |
 | `<dominio>.<acao_falha>` | <O que representa este evento de falha.> | `<campo1>`, `reason`, `correlationId` |
 
-## Regras de Confiabilidade
+## Initial SLIs
+
+<!-- Liste os indicadores de nível de serviço iniciais com metas mensuráveis.
+     Use 100% para invariantes absolutos; use percentuais para metas de confiabilidade.
+     Estas metas são revisadas e evoluídas durante Operation. -->
+
+| SLI | Initial target |
+|---|---|
+| <Comportamento mensurável que o sistema deve garantir.> | <100% ou 99.x%> |
+
+## Reliability Rules
 
 <!-- Liste os invariantes que a implementação não pode violar.
-     Inclua regras de idempotência, falha segura, auditoria e isolamento. -->
+     Cobrir obrigatoriamente: idempotência, comportamento em falha transiente, isolamento de segredos, auditoria.
+     Cada regra é uma afirmação prescritiva — não uma sugestão. -->
 
-- <Regra de idempotência: o que acontece em retentativas com a mesma chave.>
-- <Regra de comportamento em falha transiente: o que o sistema faz quando um provider falha.>
+- <Regra de idempotência: o que acontece em retentativas com a mesma chave de idempotência.>
+- <Regra de comportamento em falha transiente: o que o sistema faz quando um provider externo falha.>
 - <Regra de isolamento: validações que ocorrem antes de chamar sistemas externos.>
-- <Regra de auditoria: o que é registrado e o que nunca deve ser exposto.>
+- <Regra de auditoria: o que é registrado e o que nunca deve ser exposto em logs ou respostas.>
 
-## Contrato de Resposta
+## Response Contract
 
-<!-- Defina o contrato de resposta: payload retornado ao consumidor, campos obrigatórios.
-     Use JSON se a capability é uma API. Use descrição narrativa se for um evento assíncrono. -->
+<!-- Opcional. Incluir quando a capability expõe uma API com contrato de resposta bem definido.
+     Use JSON para APIs REST. Omitir para capabilities puramente assíncronas (event-driven). -->
 
 ```json
 {
@@ -98,19 +76,12 @@ Draft. Localizado em `prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md`.
 }
 ```
 
-## Dependências Técnicas
+## Related Artifacts
 
-<!-- Liste as dependências técnicas: outros serviços, infraestrutura, integrações externas. -->
+<!-- Liste os artefatos relacionados a esta capability.
+     BDD e Iteration Plan são obrigatórios quando o OBC está In Delivery ou posterior.
+     OBCs relacionados listam capabilities que dependem ou são dependidas por esta. -->
 
-| Dependência | Tipo | Criticidade | Observação |
-|---|---|---|---|
-| `<nome-do-serviço>` | <Síncrono / Assíncrono / Infra> | <Alta / Média / Baixa> | <Observação relevante.> |
-
-## Evidências
-
-<!-- Preenchido durante e após Delivery.
-     Registre links para evidências de implementação e operação. -->
-
-- Release Trail: `prodops/artifacts/trails/sessions/<data>-<session-id>.md`
-- PR: *(link para o PR de implementação)*
-- Métricas em produção: *(link para dashboard de observabilidade)*
+- BDD: `prodops/artifacts/bdd/<slug>.feature`
+- Iteration Plan: `prodops/artifacts/plans/iteration-plan.md`
+- OBCs relacionados: *(links para OBCs de capabilities dependentes ou relacionadas)*

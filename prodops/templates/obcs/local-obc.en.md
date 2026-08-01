@@ -1,93 +1,71 @@
-# Local OBC - <Capability Name>
+# OBC - <Capability Name>
 
 <!-- Rename this file to the capability slug: e.g. split-payment-api.md -->
-<!-- Move to prodops/artifacts/obcs/<slug>.md when promoting to Committed -->
+<!-- Move to prodops/artifacts/obcs/<slug>.md when the OBC is Committed -->
 <!-- Full format definition: prodops/framework/obc.en.md -->
 <!-- Owner: Product Manager + Tech Lead of the product -->
 
 ## Status
 
-<!-- Declare the current state of the contract.
+<!-- Declare the current state and where it is tracked.
      Possible states: Draft | Refining | Committed | In Delivery | Operational | Archived
-     Location by state:
-       Draft/Refining: prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md
-       Committed+:     prodops/artifacts/obcs/<slug>.md -->
+     Example: Downstream. Status `Entered` in prodops/artifacts/plans/iteration-plan.md. -->
 
-Draft. Located at `prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md`.
+Draft. Located at `prodops/artifacts/obcs/<slug>.md`.
 
-## Global OBC
+## Business Outcome
 
-<!-- Mandatory field. Reference the Global OBC from which this Local OBC was derived.
-     If this is a local-flow Local OBC (no Global OBC), record "Local — direct flow". -->
+<!-- Describe in one or two parts:
+     1. What the product delivers and what guarantees it provides (technical business perspective).
+     2. Optional — "### In executive language": accessible analogy for non-technical stakeholders.
+     Focus on the observable OUTCOME, not the implementation. -->
 
-→ `<path-in-portfolio-repo>/obcs/<global-slug>.md` — <Intent Name>
+<Describe the business outcome this capability delivers, the guarantees it provides, and the problems it solves.>
 
-## Product / Repository / Bounded Context
+### In executive language
 
-<!-- Clearly identify which product implements this contract and which bounded context is involved. -->
+<!-- Optional. Use when the capability's behavior is not intuitive for non-technical stakeholders.
+     Write as a real-world analogy, without technical jargon. -->
 
-- **Repository:** `<repository-name>`
-- **Bounded Context:** <Bounded context name>
-- **Responsibility:** <What this product delivers as part of the business intent.>
-
-## APIs and Events (this product's responsibility)
-
-<!-- List the APIs and events THIS product is responsible for implementing.
-     Do not duplicate strategic information from the Global OBC — focus on this product's technical responsibility. -->
-
-### APIs
-
-| Endpoint | Method | Responsibility |
-|---|---|---|
-| `<path>` | `<HTTP method>` | <What this API does.> |
-
-### Published Events
-
-| Event | Topic | When |
-|---|---|---|
-| `<domain>.<action>` | `<topic-name>` | <Trigger condition.> |
-
-### Consumed Events
-
-| Event | Source | Purpose |
-|---|---|---|
-| `<domain>.<action>` | `<source-repository>` | <Why this product consumes this event.> |
-
-## BDD / Acceptance Criteria
-
-<!-- List the acceptance criteria at the product level — verifiable behaviors.
-     Reference to the BDD Feature file when committed. -->
-
-- [ ] <Acceptance criterion 1: verifiable expected behavior.>
-- [ ] <Acceptance criterion 2: expected failure behavior.>
-
-**BDD Feature:** `prodops/artifacts/bdd/<slug>.feature` *(when committed)*
+<Simple analogy that explains the behavior to an executive audience.>
 
 ## Observable Events
 
 <!-- List all observable events this capability emits.
-     Include success, failure, edge-case, and security events.
-     Each event must have a canonical name, meaning, and required dimensions. -->
+     Include success, failure, idempotency, and edge-case events.
+     Each event must have a canonical snake_case name, meaning, and required dimensions.
+     `correlationId` is always required. -->
 
 | Event | Meaning | Required dimensions |
 |---|---|---|
 | `<domain>.<success_action>` | <What this success event represents.> | `<field1>`, `<field2>`, `correlationId` |
 | `<domain>.<failure_action>` | <What this failure event represents.> | `<field1>`, `reason`, `correlationId` |
 
+## Initial SLIs
+
+<!-- List the initial service level indicators with measurable targets.
+     Use 100% for absolute invariants; use percentages for reliability targets.
+     These targets are reviewed and evolved during Operation. -->
+
+| SLI | Initial target |
+|---|---|
+| <Measurable behavior the system must guarantee.> | <100% or 99.x%> |
+
 ## Reliability Rules
 
 <!-- List the invariants the implementation cannot violate.
-     Include idempotency, safe failure, audit, and isolation rules. -->
+     Must cover: idempotency, transient failure behavior, secret isolation, audit.
+     Each rule is a prescriptive statement — not a suggestion. -->
 
-- <Idempotency rule: what happens on retries with the same key.>
-- <Transient failure rule: what the system does when a provider fails.>
+- <Idempotency rule: what happens on retries with the same idempotency key.>
+- <Transient failure rule: what the system does when an external provider fails.>
 - <Isolation rule: validations that occur before calling external systems.>
-- <Audit rule: what is recorded and what must never be exposed.>
+- <Audit rule: what is recorded and what must never be exposed in logs or responses.>
 
 ## Response Contract
 
-<!-- Define the response contract: payload returned to the consumer, required fields.
-     Use JSON if the capability is an API. Use narrative description if it's an async event. -->
+<!-- Optional. Include when the capability exposes an API with a well-defined response contract.
+     Use JSON for REST APIs. Omit for purely asynchronous (event-driven) capabilities. -->
 
 ```json
 {
@@ -98,19 +76,12 @@ Draft. Located at `prodops/artifacts/experiments/<NNN-slug>/obcs/<slug>.md`.
 }
 ```
 
-## Technical Dependencies
+## Related Artifacts
 
-<!-- List technical dependencies: other services, infrastructure, external integrations. -->
+<!-- List the artifacts related to this capability.
+     BDD and Iteration Plan are required when the OBC is In Delivery or later.
+     Related OBCs list capabilities that depend on or are depended upon by this one. -->
 
-| Dependency | Type | Criticality | Note |
-|---|---|---|---|
-| `<service-name>` | <Sync / Async / Infra> | <High / Medium / Low> | <Relevant note.> |
-
-## Evidence
-
-<!-- Filled in during and after Delivery.
-     Record links to implementation and operation evidence. -->
-
-- Release Trail: `prodops/artifacts/trails/sessions/<date>-<session-id>.md`
-- PR: *(link to the implementation PR)*
-- Production metrics: *(link to observability dashboard)*
+- BDD: `prodops/artifacts/bdd/<slug>.feature`
+- Iteration Plan: `prodops/artifacts/plans/iteration-plan.md`
+- Related OBCs: *(links to dependent or related capability OBCs)*
