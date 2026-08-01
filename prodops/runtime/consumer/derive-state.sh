@@ -50,29 +50,39 @@ DERIVED=$(jq \
   '
   ($issue) as $iss |
   ($computed_at) as $ts |
+
+  # Restart tracking: count Restart.Completed events; collect previous correlation-ids
+  ( [.[] | select(.type == "prodops.delivery.restart.completed")] ) as $restarts |
+  ($restarts | length) as $restart_count |
+  ( $restarts | map(.data["payload"]["previous-correlation-id"] // empty) | unique ) as $prev_corr_ids |
+
   [.[] | select(.data["alters-state"] == true)] |
   if length == 0 then
     {
-      "issue":                  $iss,
-      "state":                  "UNKNOWN",
-      "last-event-type":        null,
-      "runtime-correlation-id": null,
-      "runtime-version":        $runtime_version,
-      "framework-version":      $framework_version,
-      "schema-version":         $schema_version,
-      "computed-at":            $ts
+      "issue":                       $iss,
+      "state":                       "UNKNOWN",
+      "last-event-type":             null,
+      "runtime-correlation-id":      null,
+      "restart-count":               $restart_count,
+      "previous-correlation-ids":    $prev_corr_ids,
+      "runtime-version":             $runtime_version,
+      "framework-version":           $framework_version,
+      "schema-version":              $schema_version,
+      "computed-at":                 $ts
     }
   else
     last |
     {
-      "issue":                  $iss,
-      "state":                  .data["new-state"],
-      "last-event-type":        .type,
-      "runtime-correlation-id": .data["runtime-correlation-id"],
-      "runtime-version":        $runtime_version,
-      "framework-version":      $framework_version,
-      "schema-version":         $schema_version,
-      "computed-at":            $ts
+      "issue":                       $iss,
+      "state":                       .data["new-state"],
+      "last-event-type":             .type,
+      "runtime-correlation-id":      .data["runtime-correlation-id"],
+      "restart-count":               $restart_count,
+      "previous-correlation-ids":    $prev_corr_ids,
+      "runtime-version":             $runtime_version,
+      "framework-version":           $framework_version,
+      "schema-version":              $schema_version,
+      "computed-at":                 $ts
     }
   end
   ' "$TIMELINE_FILE")
