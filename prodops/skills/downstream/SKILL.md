@@ -9,15 +9,30 @@ Downstream é o modo de compromisso do Framework ProdOps. Toda entrega passa obr
 
 ## Downstream ID
 
-Cada item do Downstream possui um **Downstream ID** — o identificador canônico usado pelo skill e por humanos para referenciar um item específico. O Downstream ID é composto pelo número da GitHub Issue associada à capability:
+Cada item do Downstream possui um **Downstream ID** — o identificador estável da feature ao longo das iterações:
 
 ```
-DS-<issue-number>
+DS-<feature-slug-number>
 ```
 
-Exemplos: `DS-40` (create-invoice-boleto), `DS-76` (create-invoice-pix).
+O DS-ID identifica a **feature** (estável), não a GitHub Issue (efêmera — muda a cada iteração). O mapeamento `DS-ID → issue` é declarado no `plan.md` da iteração ativa. O agente resolve `DS-39 → issue #106` lendo a tabela de mapeamento do plano, nunca inferindo do número do DS-ID.
 
-O Downstream ID é resolvido pelo `/readiness` durante o gate de readiness e registrado no `context.md`. Humanos podem usá-lo diretamente nos comandos abaixo.
+## Iteration Directory
+
+Ao iniciar qualquer execução, o agente resolve o **ITERATION_DIR** a partir do `iteration-id` declarado no plano ativo:
+
+```
+ITERATION_DIR = prodops/artifacts/iterations/<iteration-id>/
+```
+
+Todos os artefatos de runtime desta iteração vivem exclusivamente dentro deste diretório:
+- Timelines: `ITERATION_DIR/runtime/timelines/<issue>.json`
+- Plan Bootstrap: `ITERATION_DIR/runtime/plan-bootstrap.json`
+- Plan Validate: `ITERATION_DIR/runtime/plan-validate.json`
+- Context capsules: `ITERATION_DIR/cards/<slug>/context.md`
+- Session trails: `ITERATION_DIR/trails/`
+
+O `--iteration-id` é propagado para todas as chamadas de `emit-event`, `append.sh`, `derive-state.sh` e `derive-diligence-state.sh`. Nenhum artefato de runtime é escrito fora do ITERATION_DIR da iteração corrente.
 
 ## Comandos
 
@@ -36,8 +51,8 @@ Use `/readiness` quando quiser verificar gates e preparar o context capsule sem 
 
 Quando invocado sem argumentos:
 
-1. Ler `prodops/artifacts/plans/iteration-plan.md`.
-2. Coletar todos os itens com status `Entrou` na tabela "Iteration Plan recomendado".
+1. Ler `prodops/artifacts/plans/iteration-plan.md` → identificar a versão ativa (ex: `v0.6.0`).
+2. Ler `prodops/artifacts/iterations/<version>/plan.md` → resolver `ITERATION_ID` e coletar todos os itens com status `Entrou` da tabela de escopo, usando a tabela de mapeamento DS-ID → Issue para obter os números de issue corretos.
 3. Apresentar a fila de execução na ordem em que aparecem no Iteration Plan (ordem de prioridade do PM/PO):
 
 ```
@@ -47,9 +62,27 @@ Fila Downstream — Iteration Plan ativo
 ...
 ```
 
-4. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
+4. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
+   a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` já existe com `"status": "completed"`. Se sim, pular para o passo 5 (ambiente já pronto).
+   b. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>`, `work-item-id: null` e `--iteration-id <iteration-id>`.
+   c. Executar o Bootstrap work: instalar dependências, verificar runtimes e serviços locais, confirmar variáveis de ambiente, executar o smoke gate do manifest.
+   d. Se qualquer etapa falhar: reportar o bloqueio e **parar toda a fila** — não iniciar nenhum issue.
+   e. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`.
+   f. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
+   ```json
+   {
+     "iteration-id": "<iteration-id>",
+     "status": "completed",
+     "correlation-id": "<uuid-gerado-no-started>",
+     "completed-at": "<timestamp-iso8601>",
+     "issues": ["<issue-1>", "<issue-2>", "..."]
+   }
+   ```
+   g. Commitar o arquivo no repositório antes de iniciar o loop.
+
+5. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
    a. Executar `/readiness <capability>` — se falhar, reportar blockers e **parar toda a fila**.
-   b. Executar CI Sync: Bootstrap → Hack → Sync → Finish.
+   b. Executar CI Sync: Bootstrap (fast path via plan-bootstrap) → Hack → Sync → Finish.
    c. Reportar evidências do item concluído e avançar automaticamente para o próximo.
 
 Parar apenas quando: (1) um readiness falhar, (2) um gate de qualidade não passar, (3) a fila se esgotar.
@@ -71,14 +104,14 @@ Antes de executar qualquer ciclo, avaliar a capability contra todos os pré-requ
 2. BDD Feature committed em `prodops/artifacts/bdd/`.
 3. Riscos documentados em `prodops/artifacts/risks/risks.md`.
 4. Item no Iteration Plan com status `Entrou`.
-5. Reliability Plan (quando há movimentação financeira, integração externa, mudança de SLO, risco alto/crítico ou alteração de persistência/segurança).
 
-Tratar como **Downstream Declared** enquanto houver pré-requisitos ausentes. Declarar **Downstream Ready** apenas após todos os gates passarem. **Delivery Started** começa somente quando o Bootstrap inicia.
+Tratar como **Downstream Declared** enquanto houver pré-requisitos ausentes. Declarar **Downstream Ready** apenas após os quatro gates passarem. **Delivery Started** começa somente quando o Bootstrap inicia.
+
+Reliability Plan (`prodops/artifacts/plans/reliability/<capability>.md`) é opcional. Se existir, incluir `reliability-path` na capsule e referenciar SLOs nas fases de Validate e Promote. Sua ausência não bloqueia o flow.
 
 Quando todos os pré-requisitos existirem:
 
-1. Gerar `prodops/exec/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md`. O capsule é gerado pelo readiness do Downstream, não pelo Bootstrap.
-2. Emitir o evento `Delivery.Plan.Entered` para a issue, definindo `oem-state = PENDING` no GitHub Project. Isso posiciona o item na coluna PENDING do board antes do Bootstrap iniciar.
+1. Emitir `Delivery.Plan.Entered` para a issue, gerando o `correlation-id` do flow inteiro:
 
 ```json
 {
@@ -92,21 +125,65 @@ Quando todos os pré-requisitos existirem:
 }
 ```
 
-O `correlation-id` gerado aqui é o correlation-id do flow inteiro — propagado para Bootstrap, Hack, Sync, Finish, Ship, Validate e Promote.
+2. Gerar `ITERATION_DIR/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md`. Preencher **todos** os campos do template, incluindo:
+
+**Runtime Context** — preenchido com dados da iteração ativa:
+- `ds-id` — identificador estável da feature (ex: `DS-39`)
+- `work-item-id` — número da issue da iteração corrente (resolvido via tabela DS-ID → Issue do `plan.md`)
+- `iteration-id` — versão da iteração (ex: `v0.6.0`)
+- `iteration-dir` — `prodops/artifacts/iterations/<version>/`
+- `correlation-id` — UUID gerado no `Delivery.Plan.Entered` acima
+- `actor-player` — player corrente (`claude`, `codex` ou `copilot`)
+
+**Runtime Paths** — pré-computados para eliminar derivação em cada fase:
+- `feature-branch` — `feat/<work-item-id>-<slug>`
+- `base-branch` — branch base do merge (normalmente `master`)
+- `timeline-path` — `ITERATION_DIR/runtime/timelines/<work-item-id>.json`
+- `plan-bootstrap-path` — `ITERATION_DIR/runtime/plan-bootstrap.json`
+- `plan-validate-path` — `ITERATION_DIR/runtime/plan-validate.json`
+- `session-trail-dir` — `ITERATION_DIR/trails/`
+- `obc-path`, `bdd-path` — paths absolutos dos artefatos de produto
+- `reliability-path` — path do Reliability Plan se existir, caso contrário `"none"`
+
+**Flow State** — deixar em branco; preenchido por Finish (`pr-number`) e Ship (`infra-scope`):
+- `pr-number: (preenchido pelo Finish)`
+- `infra-scope: (preenchido pelo Ship)`
+- `oem-state: PENDING`
+
+**BDD Scenarios** — incluir os steps completos (Given/When/Then), não apenas one-liners, para que o Hack/tdd possa executar o Red phase sem abrir o arquivo `.feature`.
+
+O capsule é o único artefato que o agente precisa carregar para executar o flow inteiro sem reler arquivos de infraestrutura. O `correlation-id` gerado aqui é propagado para Bootstrap, Hack, Sync, Finish, Ship, Validate e Promote.
 
 ## CI Sync
 
-1. **Bootstrap** — preparar dependências, infra local e smoke gate apenas.
+1. **Bootstrap** — quando invocado dentro do loop do `/downstream` (modo sem argumentos ou por DS-ID a partir de um plano), o Bootstrap opera em fast path se o Plan Bootstrap já completou: emite apenas os eventos Started/Completed sem re-executar dependências ou smoke gate. Em execuções isoladas (sem Plan Bootstrap), executa o fluxo completo.
 2. **Hack** — executar `start`, `tdd` e `commit`; `start` é dono do Git flow e da criação de branch.
 3. **Sync** — sincronizar a branch e alinhar artefatos ProdOps impactados.
 4. **Finish** — executar quality gates finais e preparar o PR.
 
 ## CI Async
 
+O CI Async opera em três fases sequenciais sobre todos os itens do plano:
+
+**Fase 1 — Ship (por issue, em sequência)**
+Para cada issue na fila do plano, em ordem:
 1. Confirmar que evidências do CI Sync existem e foram aprovadas.
-2. **Ship** — build, publicação e deploy conforme a política de release atual. Acionar `staging-deploy.yml` via `gh workflow run` e aguardar conclusão antes de Validate.
-3. **Validate** — validar BDD, OBC, observabilidade, SLOs e riscos no ambiente alvo.
-4. **Promote** — aplicar gates de aprovação e registrar no Release Trail.
+2. Acionar `staging-deploy.yml` via `gh workflow run` e aguardar conclusão.
+3. Avançar para a próxima issue sem aguardar Validate.
+
+**Fase 2 — Validate (por issue, em sequência)**
+Para cada issue na fila do plano, em ordem:
+1. Validar BDD, OBC, observabilidade, SLOs e riscos no ambiente alvo.
+2. Após `Validate.Completed`: atualizar `plan-validate-<iteration-id>.json` marcando a issue como validada.
+3. Após a última issue validar: emitir `Delivery.Plan.Validated` — o gate de plano passa.
+4. Se qualquer Validate falhar: **parar toda a fase 3**. Nenhum Promote ocorre enquanto houver issues pendentes.
+
+**Fase 3 — Promote (por issue, em sequência — gate de plano obrigatório)**
+Só iniciada após `Delivery.Plan.Validated` emitido:
+1. Para cada issue na fila do plano, em ordem: aplicar gates de aprovação e registrar no Release Trail.
+2. O Promote de cada issue verifica `plan-validate-<iteration-id>.json` antes de emitir `Promote.Started`.
+
+**Nota sobre execuções standalone** (`/downstream ci-async DS-<n>`): sem contexto de Iteration Plan, o CI Async opera por issue de forma independente (Ship → Validate → Promote) sem gate de plano.
 
 ## Protocolo de exceção — bloqueios
 
@@ -152,7 +229,7 @@ Isso seta `oem-state = PENDING` e permite que o Bootstrap inicie novamente.
 
 - Não iniciar uma fase de Delivery enquanto o readiness estiver incompleto.
 - Não tratar uma entrada no Iteration Plan sozinha como readiness.
-- Não inventar OBCs, cenários BDD, riscos, reliability targets ou critérios de aceite.
+- Não inventar OBCs, cenários BDD, riscos ou critérios de aceite.
 - Não fazer o Bootstrap executar Git flow ou trabalho de contexto de produto.
 - Não fazer ship de trabalho suportado apenas por evidência Upstream.
 - Não pular quality gates sem decisão explícita registrada e aceite de risco.

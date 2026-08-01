@@ -10,7 +10,7 @@ Committed BDD Features — promoted from Upstream to Downstream mode.
 | [cancel-invoice.feature](cancel-invoice.feature) | Invoice cancellation |
 | [create-invoice-boleto.feature](create-invoice-boleto.feature) | Invoice creation with Boleto |
 | [create-invoice.feature](create-invoice.feature) | Invoice creation |
-| [credit-card-payment.feature](credit-card-payment.feature) | Hosted credit card payment |
+| [credit-card-authorization-confirmation.feature](credit-card-authorization-confirmation.feature) | Hosted credit card payment |
 | [payment-confirmation.feature](payment-confirmation.feature) | Payment confirmation |
 | [webhook-configuration.feature](webhook-configuration.feature) | Webhook configuration |
 

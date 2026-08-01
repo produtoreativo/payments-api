@@ -10,7 +10,7 @@ BDD Features comprometidas — promovidas do modo Upstream para Downstream.
 | [cancel-invoice.feature](cancel-invoice.feature) | Cancelamento de invoice |
 | [create-invoice-boleto.feature](create-invoice-boleto.feature) | Criação de invoice com Boleto |
 | [create-invoice.feature](create-invoice.feature) | Criação de invoice |
-| [credit-card-payment.feature](credit-card-payment.feature) | Autorização e confirmação de pagamento com cartão de crédito (hosted) |
+| [credit-card-authorization-confirmation.feature](credit-card-authorization-confirmation.feature) | Autorização e confirmação de pagamento com cartão de crédito (hosted) |
 | [payment-confirmation.feature](payment-confirmation.feature) | Confirmação de pagamento |
 | [webhook-configuration.feature](webhook-configuration.feature) | Configuração de webhook |
 

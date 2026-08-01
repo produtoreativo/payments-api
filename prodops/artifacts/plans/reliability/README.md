@@ -23,7 +23,7 @@ Os maiores riscos de confiabilidade para esse escopo aprovado estão na diferen�
 | Criar invoice via Boleto | Entrou (revisado 2026-07-06) | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/create-invoice-boleto.md`; `prodops/artifacts/bdd/create-invoice-boleto.feature`. **Análise de risco pendente neste Reliability Plan.** |
 | Validação de acesso por token de API | Entrou | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/api-token-validation.md`; `prodops/artifacts/bdd/api-token-validation.feature`. **Análise de risco pendente neste Reliability Plan.** |
 | Configuração de webhook por token de API | Entrou | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/webhook-configuration.md`; `prodops/artifacts/bdd/webhook-configuration.feature`. **Análise de risco pendente neste Reliability Plan.** |
-| Criar invoice via Cartão de Crédito (Hosted) | Entrou (aprovado 2026-07-07) | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/credit-card-authorization-confirmation.md`; `prodops/artifacts/bdd/credit-card-payment.feature`. **Análise de risco pendente neste Reliability Plan.** |
+| Criar invoice via Cartão de Crédito (Hosted) | Entrou (aprovado 2026-07-07) | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/credit-card-authorization-confirmation.md`; `prodops/artifacts/bdd/credit-card-authorization-confirmation.feature`. **Análise de risco pendente neste Reliability Plan.** |
 
 Itens explicitamente ignorados por não terem decisão exatamente `Entrou`: `Notificação de status de pagamento` (`Entrou como MVP`), `Cancelar invoice pendente` (`Adiada`), `Integração corporativa de incidentes/ITSM` (`Saiu`) e `Gateway fallback/Itaú` (`Saiu`).
 

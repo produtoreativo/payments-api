@@ -11,13 +11,32 @@ Product readiness belongs to the `/downstream` orchestrator. Git flow belongs to
 
 ## Required input context
 
-Before starting, the agent must have:
+Before starting, read the context capsule at
+`prodops/artifacts/iterations/<iteration-id>/cards/<slug>/context.md`.
+All fields below must be available — either from the capsule or explicitly provided by the caller:
 
-- `work-item-id` — the GitHub issue number of the Feature (string, numeric)
-- `iteration-id` — the Iteration Plan identifier (e.g. `IP-RUNTIME-001`)
-- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
+- `work-item-id` — from capsule field `work-item-id` (issue number da iteração corrente)
+- `iteration-id` — from capsule field `iteration-id`
+- `correlation-id` — from capsule field `correlation-id` (gerado em `Delivery.Plan.Entered`)
+- `actor.player` — from capsule field `actor-player`
+- `plan-bootstrap-path` — from capsule field `plan-bootstrap-path`
 
-If any of these are absent, ask the caller to provide them before proceeding. Do not generate placeholder values.
+If the capsule is absent or any field is blank, ask the caller to provide them before proceeding. Do not generate placeholder values.
+
+## Fast path — Plan Bootstrap already ran
+
+Before executing any Bootstrap work, read `plan-bootstrap-path` da capsule (ou resolver `ITERATION_DIR/runtime/plan-bootstrap.json`) e verificar:
+
+If the file exists and contains `"status": "completed"`:
+
+1. Emit `Delivery.Bootstrap.Started` with `"fast-path": true` in the payload.
+2. Emit `Delivery.Bootstrap.Completed` with `"fast-path": true` in the payload — using the same `correlation-id`.
+3. Report to caller: `Bootstrap fast path — environment ready from Plan Bootstrap (iteration: <iteration-id>)`.
+4. Stop. Do not run Bootstrap work below.
+
+If the file does not exist or `status != "completed"`: proceed with the full flow below.
+
+---
 
 ## Preconditions
 

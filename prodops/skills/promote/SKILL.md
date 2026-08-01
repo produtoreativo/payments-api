@@ -9,18 +9,34 @@ Use this skill to move a release to the next stage or close it.
 
 ## Required input context
 
-Before starting, the agent must have:
+Ler a context capsule em `prodops/artifacts/iterations/<iteration-id>/cards/<slug>/context.md`.
+Todos os campos abaixo devem estar disponíveis na capsule:
 
-- `work-item-id` — the GitHub issue number of the Feature
-- `iteration-id` — the Iteration Plan identifier
-- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
-- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
-  invoked standalone, generate a new UUID.
+- `work-item-id` — campo `work-item-id` da capsule (issue da iteração corrente)
+- `iteration-id` — campo `iteration-id`
+- `correlation-id` — campo `correlation-id` (gerado em `Delivery.Plan.Entered`)
+- `actor-player` — campo `actor-player`
+- `plan-bootstrap-path` — campo `plan-bootstrap-path`
+- `plan-validate-path` — campo `plan-validate-path`
+- `timeline-path` — campo `timeline-path` (para o cálculo de lead-time)
+- `reliability-path` — campo `reliability-path` (opcional; consultar riscos se `!= "none"`)
+
+Se invocado standalone (sem capsule), gerar novo `correlation-id`.
 
 ## Preconditions
 
 1. `prodops/skills/prodops-emit-event/SKILL.md` has been read.
 2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
+
+## Plan Promote gate — verificar antes de Promote.Started
+
+Se `plan-bootstrap-path` da capsule existir com `"status": "completed"` (execução dentro de um Iteration Plan):
+
+1. Ler `plan-validate-path` da capsule.
+2. Se o arquivo não existir ou `status != "all-validated"`: **bloquear**. Não emitir `Promote.Started`. Reportar quais issues do plano ainda não completaram Validate e aguardar.
+3. Se `status == "all-validated"`: prosseguir com o fluxo abaixo normalmente.
+
+Se o arquivo plan-bootstrap não existir (execução standalone): prosseguir sem verificação de plano.
 
 ## Phase: Promote.Started
 
@@ -61,6 +77,21 @@ Emit using the **same `correlation-id`** as Promote.Started:
 ```
 
 Do not emit `Promote.Completed` if evidence is missing, risks are unresolved, or operational readiness is not confirmed.
+
+## Lead-time automático
+
+Ao emitir `Promote.Completed`, o `emit-event` tool calcula automaticamente o
+lead-time da Feature e envia a métrica `runtime.delivery.lead_time_days` para
+o Datadog — sem ação manual.
+
+Como funciona:
+1. Localiza o primeiro `Bootstrap.Started` no timeline da issue (`timelines/<issue>.json`)
+2. Calcula `delta = Promote.Completed.timestamp − Bootstrap.Started.timestamp` em dias
+3. Emite gauge `runtime.delivery.lead_time_days` via Datadog sync (não-fatal — falha silenciosa)
+
+O agente não precisa calcular nem enviar esta métrica manualmente. Basta garantir
+que `Bootstrap.Started` esteja presente no timeline (emitido corretamente pelo
+skill Bootstrap). Se ausente, o cálculo é ignorado e um warning é logado.
 
 ## Inputs
 

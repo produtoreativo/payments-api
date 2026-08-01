@@ -23,7 +23,7 @@ The greatest reliability risks for this approved scope are in the difference bet
 | Create invoice via Boleto | In (revised 2026-07-06) | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/create-invoice-boleto.md`; `prodops/artifacts/bdd/create-invoice-boleto.feature`. **Risk analysis pending in this Reliability Plan.** |
 | API token access validation | In | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/api-token-validation.md`; `prodops/artifacts/bdd/api-token-validation.feature`. **Risk analysis pending in this Reliability Plan.** |
 | Webhook configuration by API token | In | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/webhook-configuration.md`; `prodops/artifacts/bdd/webhook-configuration.feature`. **Risk analysis pending in this Reliability Plan.** |
-| Create invoice via Credit Card (Hosted) | In (approved 2026-07-07) | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/credit-card-authorization-confirmation.md`; `prodops/artifacts/bdd/credit-card-payment.feature`. **Risk analysis pending in this Reliability Plan.** |
+| Create invoice via Credit Card (Hosted) | In (approved 2026-07-07) | `prodops/artifacts/plans/iteration-plan.md`; `prodops/artifacts/obcs/credit-card-authorization-confirmation.md`; `prodops/artifacts/bdd/credit-card-authorization-confirmation.feature`. **Risk analysis pending in this Reliability Plan.** |
 
 Items explicitly ignored for not having a decision of exactly `In`: `Payment status notification` (`In as MVP`), `Cancel pending invoice` (`Deferred`), `Corporate incident/ITSM integration` (`Out`) and `Gateway fallback/Itaú` (`Out`).
 

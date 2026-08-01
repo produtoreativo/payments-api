@@ -88,20 +88,39 @@ emit_diligence_event() {
   ok "$event → status=$status"
 }
 
+# ── IMPORTANT — Signal events vs real work ────────────────────────────────────
+#
+# The events emitted below are LIFECYCLE SIGNALS, not evidence of completed work.
+# They mark that the Diligence cycle was triggered and is expected to run.
+#
+# Semantics:
+#   Diligence.Capture.Started   → Delivery event received; Diligence should capture
+#   Diligence.Capture.Completed → Signal only; actual OBC capture must be done by
+#                                  the agent executing diligence-sync/steps/capture/
+#
+# The agent executing the Diligence SKILL.md is responsible for:
+#   1. Doing the real work (reading OBC, updating state, creating Work Items)
+#   2. Emitting additional events (Scan, Flag, Repair, Close, Divergence.Detected)
+#      as instructed by each step's SKILL.md
+#
+# Audit note: presence of Diligence.Capture.Completed in the timeline does NOT
+# guarantee the OBC was updated — it guarantees the signal was sent.
+# ─────────────────────────────────────────────────────────────────────────────
+
 while IFS= read -r subscriber; do
   case "$subscriber" in
     diligence.capture)
-      log "Triggering Diligence Capture (reactive to $EVENT_TYPE)"
+      log "Signaling Diligence Capture (reactive to $EVENT_TYPE) — agent must execute real capture work"
       emit_diligence_event "Diligence.Capture.Started"    "diligence-capture-agent"
       emit_diligence_event "Diligence.Capture.Completed"  "diligence-capture-agent"
       ;;
     diligence.attach)
-      log "Triggering Diligence Attach (reactive to $EVENT_TYPE)"
+      log "Signaling Diligence Attach (reactive to $EVENT_TYPE) — agent must execute real attach work"
       emit_diligence_event "Diligence.Attach.Started"     "diligence-attach-agent"
       emit_diligence_event "Diligence.Attach.Completed"   "diligence-attach-agent"
       ;;
     diligence.promote)
-      log "Triggering Diligence Promote (reactive to $EVENT_TYPE)"
+      log "Signaling Diligence Promote (reactive to $EVENT_TYPE) — agent must execute real promote work"
       emit_diligence_event "Diligence.Promote.Started"    "diligence-promote-agent"
       emit_diligence_event "Diligence.Promote.Completed"  "diligence-promote-agent"
       ;;

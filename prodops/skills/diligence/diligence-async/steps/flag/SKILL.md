@@ -47,6 +47,39 @@ Para divergências que bloqueiam e exigem outra jornada, registrar com status `B
 
 Ordenar itens reparáveis pela Diligence por severidade: Alta → Média → Baixa.
 
+## Eventos — emissão obrigatória
+
+Antes de classificar qualquer divergência, emitir:
+
+```json
+{
+  "event": "Diligence.Flag.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-flag-agent" },
+  "payload": {}
+}
+```
+
+Após todas as divergências classificadas e lista de itens pendentes produzida, emitir:
+
+```json
+{
+  "event": "Diligence.Flag.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-flag-agent" },
+  "payload": {
+    "items-flagged": <número>,
+    "items-blocked": <número>
+  }
+}
+```
+
 ## Post-conditions
 
 Concluído quando:

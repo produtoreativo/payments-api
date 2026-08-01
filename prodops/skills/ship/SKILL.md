@@ -11,13 +11,26 @@ For detailed Codex submission mechanics, read `references/workflow.md`.
 
 ## Required input context
 
-Before starting, the agent must have:
+Ler a context capsule em `prodops/artifacts/iterations/<iteration-id>/cards/<slug>/context.md`.
+Campos obrigatórios:
 
-- `work-item-id` — the GitHub issue number of the Feature
-- `iteration-id` — the Iteration Plan identifier
-- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
-- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
-  invoked standalone, generate a new UUID.
+- `work-item-id` — campo `work-item-id` da capsule
+- `iteration-id` — campo `iteration-id`
+- `correlation-id` — campo `correlation-id`
+- `actor-player` — campo `actor-player`
+- `pr-number` — campo `pr-number` da capsule (preenchido pelo Finish); se ausente, buscar via `gh pr list`
+- `session-trail-dir` — campo `session-trail-dir`
+- `reliability-path` — campo `reliability-path` (opcional; usar SLOs para verificar changeset se `!= "none"`)
+
+Se invocado standalone (sem capsule), gerar novo `correlation-id`.
+
+## Capsule update — após deploy
+
+Após confirmar o `infra-scope` do PR (dynamo/lambda/both/none via diff), atualizar o campo na capsule:
+
+```
+infra-scope: <dynamo|lambda|both|none>
+```
 
 ## Preconditions
 
@@ -72,6 +85,25 @@ Do not emit `Ship.Completed` if security checks, quality gates, or PR preparatio
 - `prodops/framework/journeys/delivery/phases/finish/quality-gates.md`
 - Current branch diff and validation evidence
 
+## Infra scope declaration
+
+Before waiting for the merge, declare which infrastructure stacks the issue touches. Read the PR diff:
+
+```bash
+gh pr diff <number> --name-only
+```
+
+Map changed paths to stacks:
+
+| Changed path | Stack affected |
+|---|---|
+| `api/infra/dynamodb.yaml` | `dynamo` |
+| `api/infra/lambda.yaml` | `lambda` |
+| `api/src/**` | `lambda` |
+| None of the above | `none` |
+
+Record the declared scope in the Ship.Started payload under `"infra-scope"`: one of `dynamo`, `lambda`, `both`, or `none`. This is used in step 5 to verify that only expected stacks were deployed.
+
 ## Flow
 
 Ship observes — it does not execute the merge. The merge is performed
@@ -102,8 +134,22 @@ succeeded.
    ```bash
    gh run watch <run-id>
    ```
+5a. After deploy completes, verify the changeset matches the declared infra-scope:
+   ```bash
+   # For the DynamoDB stack (if dynamo scope):
+   aws cloudformation describe-stack-events \
+     --stack-name payments-api-dynamo-staging \
+     --query "StackEvents[?ResourceStatus=='UPDATE_COMPLETE'].[LogicalResourceId,ResourceType]" \
+     --output table
+   # For the Lambda stack (if lambda scope):
+   aws cloudformation describe-stack-events \
+     --stack-name payments-api-staging \
+     --query "StackEvents[?ResourceStatus=='UPDATE_COMPLETE'].[LogicalResourceId,ResourceType]" \
+     --output table
+   ```
+   If the declared scope is `none` but a stack was deployed, or if unexpected resources changed (e.g., SQS queue updated when the issue didn't modify queue configuration), flag it as a drift finding before emitting `Ship.Completed`.
 6. Confirm the staging environment is responsive after deploy.
-7. Record the merge SHA, deploy run ID and result in the Release Trail.
+7. Record the merge SHA, deploy run ID, infra-scope declared, and actual changed resources in the Release Trail.
 8. Append shipping evidence to the Release Trail.
 
 ## Guardrails

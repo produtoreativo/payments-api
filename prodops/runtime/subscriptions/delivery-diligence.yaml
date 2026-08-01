@@ -12,6 +12,12 @@
 #   diligence.capture → Diligence.Capture.Started + Diligence.Capture.Completed
 #   diligence.attach  → Diligence.Attach.Started  + Diligence.Attach.Completed
 #   diligence.promote → Diligence.Promote.Started  + Diligence.Promote.Completed
+#
+# NOTE: these subscriptions emit Diligence *signal* events (lifecycle markers).
+# They do NOT execute the actual Diligence work (OBC update, Work Item creation).
+# The signal events confirm that the Diligence cycle was triggered; the agent
+# executing the Diligence SKILL.md is responsible for the real work and for
+# emitting the corresponding Diligence events (Scan, Flag, Repair, Close).
 
 subscriptions:
   prodops.delivery.bootstrap.completed:
@@ -20,8 +26,14 @@ subscriptions:
   prodops.delivery.block.declared:
     - diligence.capture    # Diligence Sync reacts to delivery blocks automatically
 
+  prodops.delivery.block.resolved:
+    - diligence.capture    # Capture updated state after block resolution; keeps Diligence in sync
+
   prodops.delivery.validate.completed:
     - diligence.attach
 
   prodops.delivery.promote.completed:
     - diligence.promote
+
+  prodops.delivery.restart.completed:
+    - diligence.capture    # Capture context after restart; new correlation-id requires Diligence re-sync
