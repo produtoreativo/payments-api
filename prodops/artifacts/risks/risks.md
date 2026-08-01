@@ -238,25 +238,126 @@ A linha digitável (`identificationField`) não está mapeada no `ProviderCharge
 **Capability:** dependency-security-update
 **Severidade:** Média
 **Probabilidade:** Média (multer 1.x → 2.x é upgrade de major; demais são minor/patch)
-**Status:** Aberto — pendente de análise durante Hack
+**Status:** Resolvido — 2026-08-01 (hack DS-44, work-item #115)
 
 ## Descrição
 
-A resolução das 27 vulnerabilidades Dependabot envolve atualizar `axios` de `^1.13.2` para `>=1.18.0` (dependência direta) e resolver dependências transitivas via `npm audit fix`. O risco principal é `multer`: a versão patched (`2.2.0`) é um upgrade de major version (1.x → 2.x), o que pode introduzir breaking changes na API de upload de arquivos.
+A resolução das 27 vulnerabilidades Dependabot envolve atualizar `axios` de `^1.13.2` para `>=1.18.0` (dependência direta) e resolver dependências transitivas via `npm audit fix`. O risco principal era `multer`: a versão patched (`2.2.0`) é um upgrade de major version (1.x → 2.x), o que poderia introduzir breaking changes na API de upload de arquivos.
 
-## Impacto
+## Decisão (2026-08-01)
 
-- Regressão silenciosa em funcionalidades que usam `multer` para processamento de multipart
-- Build quebrado se a atualização transitiva for incompatível com o código existente
-- Delay na resolução dos alertas Dependabot enquanto a adequação é feita
+**multer é dependência puramente transitiva** — não há nenhum Version: ImageMagick 7.1.2-25 Q16-HDRI aarch64 037e46295:20260604 https://imagemagick.org
+Copyright: (C) 1999 ImageMagick Studio LLC
+License: https://imagemagick.org/license/
+Features: Cipher DPC HDRI Modules 
+Delegates (built-in): bzlib freetype heic jng jpeg lcms ltdl lzma png tiff webp xml zlib zstd
+Compiler: clang (17.0.0)
+Usage: import [options ...] [ file ]
 
-## Mitigações
+Image Settings:
+  -adjoin              join images into a single multi-image file
+  -border              include window border in the output image
+  -channel type        apply option to select image channels
+  -colorspace type     alternate image colorspace
+  -comment string      annotate image with comment
+  -compress type       type of pixel compression when writing the image
+  -define format:option
+                       define one or more image format options
+  -density geometry    horizontal and vertical density of the image
+  -depth value         image depth
+  -descend             obtain image by descending window hierarchy
+  -display server      X server to contact
+  -dispose method      layer disposal method
+  -dither method       apply error diffusion to image
+  -delay value         display the next image after pausing
+  -encipher filename   convert plain pixels to cipher pixels
+  -endian type         endianness (MSB or LSB) of the image
+  -encoding type       text encoding type
+  -filter type         use this filter when resizing an image
+  -format "string"     output formatted image characteristics
+  -frame               include window manager frame
+  -gravity direction   which direction to gravitate towards
+  -identify            identify the format and characteristics of the image
+  -interlace type      None, Line, Plane, or Partition
+  -interpolate method  pixel color interpolation method
+  -label string        assign a label to an image
+  -limit type value    Area, Disk, Map, or Memory resource limit
+  -monitor             monitor progress
+  -page geometry       size and location of an image canvas
+  -pause seconds       seconds delay between snapshots
+  -pointsize value     font point size
+  -quality value       JPEG/MIFF/PNG compression level
+  -quiet               suppress all warning messages
+  -regard-warnings     pay attention to warning messages
+  -repage geometry     size and location of an image canvas
+  -respect-parentheses settings remain in effect until parenthesis boundary
+  -sampling-factor geometry
+                       horizontal and vertical sampling factor
+  -scene value         image scene number
+  -screen              select image from root window
+  -seed value          seed a new sequence of pseudo-random numbers
+  -set property value  set an image property
+  -silent              operate silently, i.e. don't ring any bells 
+  -snaps value         number of screen snapshots
+  -support factor      resize support: > 1.0 is blurry, < 1.0 is sharp
+  -synchronize         synchronize image to storage device
+  -taint               declare the image as modified
+  -transparent-color color
+                       transparent color
+  -treedepth value     color tree depth
+  -verbose             print detailed information about the image
+  -virtual-pixel method
+                       Constant, Edge, Mirror, or Tile
+  -window id           select window with this id or name
+                       root selects whole screen
 
-- Verificar se `multer` é dependência direta ou puramente transitiva antes de aplicar `npm audit fix --force`
-- Executar o test suite completo localmente após cada atualização — antes de abrir PR
-- Se houver breaking change real: registrar aceite de risco aqui e abrir issue de follow-up em vez de bloquear a entrega
+Image Operators:
+  -annotate geometry text
+                       annotate the image with text
+  -colors value        preferred number of colors in the image
+  -crop geometry       preferred size and location of the cropped image
+  -encipher filename   convert plain pixels to cipher pixels
+  -extent geometry     set the image size
+  -geometry geometry   preferred size or location of the image
+  -help                print program options
+  -monochrome          transform image to black and white
+  -negate              replace every pixel with its complementary color 
+  -quantize colorspace reduce colors in this colorspace
+  -resize geometry     resize the image
+  -rotate degrees      apply Paeth rotation to the image
+  -strip               strip image of all profiles and comments
+  -thumbnail geometry  create a thumbnail of the image
+  -transparent color   make this color transparent within the image
+  -trim                trim image edges
+  -type type           image type
+
+Miscellaneous Options:
+  -debug events        display copious debugging information
+  -help                print program options
+  -list type           print a list of supported option arguments
+  -log format          format of debugging information
+  -version             print version information
+
+By default, 'file' is written in the MIFF image format.  To
+specify a particular image format, precede the filename with an image
+format name and a colon (i.e. ps:image) or specify the image type as
+the filename suffix (i.e. image.ps).  Specify 'file' as '-' for
+standard input or output. ou uso direto em `api/src/`. É apenas uma dependência transitiva de `@nestjs/platform-express`.
+
+O upgrade para multer >=2.2.0 foi aplicado via `npm audit fix` sem alteração em arquivos de código-fonte. O test suite completo (71 testes e2e + 7 suites de aceitação) passou sem regressões após a atualização.
+
+**Vulnerabilidades residuais (3 — nenhuma high/critical):**
+- `aws-sdk` + `uuid` (moderate) — dependências de `aws-lambda@1.0.7` (transitive). A correção requer `--force` que faria downgrade para `aws-lambda@1.0.6` (breaking change de major). **Decisão: aceite de risco.** As vulnerabilidades são de severidade moderada (sem CVE crítico) e a correção introduziria uma breaking change maior. Issue de follow-up registrado para avaliar migração de `aws-sdk` v2 → v3 nativa.
+
+## Impacto final
+
+- Zero vulnerabilidades high/critical restantes
+- 3 vulnerabilidades moderadas residuais (1 low + 2 moderate em aws-sdk chain) — aceite de risco registrado
+- Build de produção: zero erros
+- Test suite: 71/71 passando
 
 ## Referências
 
 - OBC: `prodops/artifacts/obcs/dependency-security-update.md`
 - Issue: [#55](https://github.com/produtoreativo/payments-api/issues/55)
+- Trail: `prodops/artifacts/trails/sessions/2026-08-01-a0e86737.md`
