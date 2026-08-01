@@ -6,21 +6,16 @@ Date: 2026-08-01
 
 ## Runtime Context
 
-Dados de execução propagados para todas as fases — Bootstrap, Hack, Sync, Finish, Ship,
-Validate, Promote. O agente não precisa reler iteration-plan.md nem plan.md durante o flow.
-
 ```
 ds-id:              DS-43
 work-item-id:       108
 iteration-id:       v0.6.0
 iteration-dir:      prodops/artifacts/iterations/v0.6.0/
-correlation-id:     e2b6a910-28a4-4f95-ab6a-81912b7f5619
+correlation-id:     0aece6ee-9d9d-4e6d-8263-0e707f7054da
 actor-player:       claude
 ```
 
 ## Runtime Paths
-
-Paths pré-computados para eliminar derivação manual em cada fase.
 
 ```
 feature-branch:       feat/108-webhook-configuration
@@ -36,8 +31,6 @@ reliability-path:     none
 
 ## Flow State
 
-Campos preenchidos progressivamente durante o flow. Iniciam em branco.
-
 ```
 pr-number:      (preenchido pelo Finish)
 infra-scope:    (preenchido pelo Ship — dynamo|lambda|both|none)
@@ -48,8 +41,7 @@ oem-state:      PENDING
 
 Path: `prodops/artifacts/obcs/webhook-configuration.md`
 
-Success criteria (verbatim — the 3–6 measurable lines from the OBC):
-
+Success criteria:
 - Webhooks registrados com URL válida retornam `201` com `webhookId` e `secret`. 100%
 - `secret` aparece apenas na resposta de criação; nunca em listagem ou log. 100%
 - Entregas para `invoice.confirmed` disparadas em até 5 segundos após o evento. 95%
@@ -60,14 +52,12 @@ Success criteria (verbatim — the 3–6 measurable lines from the OBC):
 
 Path: `prodops/artifacts/bdd/webhook-configuration.feature`
 
-Scenarios (full — Given/When/Then para uso direto no Red phase do Hack/tdd):
+Scenarios (full):
 
 ```gherkin
-Contexto:
+Cenário: Registrar um webhook para receber confirmações de pagamento
   Dado que o ecommerce possui um token de API válido para o tenant "magazine-siara"
   E todas as requisições de webhook incluem o header "X-Api-Token" com o token válido
-
-Cenário: Registrar um webhook para receber confirmações de pagamento
   Quando o ecommerce enviar "POST /webhooks" com "url" igual a "https://checkout.magazinesiara.com.br/payments/notify"
   E incluir "events" com valor "["invoice.confirmed"]"
   Então a Payments API deve retornar HTTP 201
@@ -139,36 +129,19 @@ Cenário: Não expor secret em log ou resposta de listagem
 
 ## Risks
 
-Entradas relevantes para este card, filtradas de `prodops/artifacts/risks/risks.md`:
-
-- `Doom 3` — Complexidade da migração para microserviços: entrega de webhooks fire-and-forget pode introduzir falhas silenciosas; mitigação via evento `webhook.delivery.failed` obrigatório.
-- `Doom 4` — Falta de visibilidade operacional: falhas de entrega sem observabilidade dificultam SLA; mitigação via eventos observáveis de delivery.
-- Riscos estruturais — `secret` não pode aparecer em logs, traces nem listagens; DynamoDB WebhooksTable introduz nova dependência de infra.
+- `Doom 2` — Atraso na ativação do novo Gateway; webhook-configuration depende de DS-42 (api-token-validation)
+- `Doom 3` — Complexidade da migração para microserviços; entrega assíncrona de webhooks aumenta dependências
+- `Doom 4` — Falta de visibilidade operacional; eventos `webhook.delivery.sent/failed` são críticos para SLO
 
 ## Contract
 
-Endpoint(s) e essenciais de request/response:
-
-- `POST /webhooks` — body: `{ url, events[], description? }`, header `X-Api-Token` required → 201 `{ webhookId, secret, url, events[], createdAt }` (secret never repeated after this)
-- `GET /webhooks` — header `X-Api-Token` required → 200 `[ { webhookId, url, events[], active, createdAt } ]` (no secret field)
-- `DELETE /webhooks/{webhookId}` — header `X-Api-Token` required → 200; emits `webhook.deleted`
-- Delivery: fire-and-forget HTTP POST to registered URL with `X-Payments-Signature: sha256=<hmac>` and `X-Payments-Delivery-Id` headers
-
-## Commands
-
-Lidos de `prodops/exec/manifest.yaml` (seção `gates`). Preencher todos os gates aplicáveis.
-
-- `lint`:       cd api && npm run lint — expect: exit 0
-- `build`:      cd api && npm run build — expect: exit 0
-- `acceptance`: ./scripts/test-acceptance.sh — expect: exit 0
-- `no_mocks`:   grep jest.fn( .mockReturnValue( .overrideProvider( jest.mock( .mockRejectedValue( .mockResolvedValue( .mockImplementation( in api/test — expect: zero hits
-- `smoke`:      Bootstrap gate only
+- `POST /webhooks` — header: X-Api-Token; body: {url, events[], description?} → 201 {webhookId, secret, url, events[]} | 422 {reason}
+- `GET /webhooks` — header: X-Api-Token → 200 [{webhookId, url, events[], active, createdAt}] (sem secret)
+- `DELETE /webhooks/{webhookId}` — header: X-Api-Token → 200 | 404
 
 ## Dependencies
 
-Issues que devem estar merged antes do Bootstrap deste card:
-
-- DS-42 → #107 — webhook-configuration depende de api-token-validation (X-Api-Token guard deve existir antes de registrar webhooks)
+- DS-42 → #107 — api-token-validation: webhook-configuration requer autenticação por token de API (X-Api-Token guard)
 
 ## Open questions
 

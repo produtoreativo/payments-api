@@ -1,7 +1,8 @@
 {
   "iteration-id": "v0.6.0",
   "status": "completed",
-  "correlation-id": "9852df27-3913-4908-9942-f769b8fd6fd6",
-  "completed-at": "2026-08-01T03:58:00Z",
-  "issues": ["106", "107", "108", "109"]
+  "correlation-id": "43a70fb2-33c8-4c5b-b540-88cb762f90f7",
+  "completed-at": "2026-08-01T00:00:00Z",
+  "issues": ["106", "107", "108", "109"],
+  "note": "Plan Bootstrap events (Plan.Bootstrap.Started/Completed) skipped — emit-event tool requires non-null work-item-id; tool does not yet support plan-level events. Bootstrap work executed and all gates passed: node v22.18.0, npm 10.9.3, docker (healthy), LocalStack (healthy), .env present, npm install clean, lint exit 0, build exit 0."
 }
