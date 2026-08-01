@@ -62,6 +62,6 @@ refund decisions are recorded.
 
 ## Related Artifacts
 
-- BDD: `prodops/artifacts/bdd/credit-card-payment.feature`
+- BDD: `prodops/artifacts/bdd/credit-card-authorization-confirmation.feature`
 - Upstream experiments: EXP-001, EXP-003
 - Iteration Plan: `prodops/artifacts/plans/iteration-plan.md`
