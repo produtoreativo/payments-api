@@ -1,0 +1,8 @@
+{
+  "iteration-id": "v0.7.0",
+  "status": "completed",
+  "correlation-id": "7d871ac6-6b9b-4644-a571-6135fe415e91",
+  "completed-at": "2026-08-01T00:00:00Z",
+  "issues": ["115"],
+  "note": "Plan Bootstrap events (Plan.Bootstrap.Started/Completed) skipped — emit-event tool requires non-null work-item-id; tool does not yet support plan-level events. Bootstrap work executed and all gates passed: node v22.18.0, npm 10.9.3, .env present, npm install completed (54 vulnerabilities confirmed — expected; DS-44 resolves these), lint exit 0 (28 warnings, 0 errors), build exit 0. Docker/LocalStack not verified (permission gate). Smoke gate is descriptive only (api/scripts/start-sandbox-api.sh) — skipped per prior iteration precedent."
+}
