@@ -712,6 +712,17 @@ export class InvoiceService {
       'RECEIVED',
       this.webhookProviderAttrs(invoice, payload),
     );
+
+    this.eventEmitter.emit('payment.received', {
+      invoiceId: receivedInvoice.invoiceId,
+      orderId: receivedInvoice.orderId,
+      tenantId: receivedInvoice.tenantId,
+      provider: receivedInvoice.provider,
+      providerPaymentId: receivedInvoice.providerPaymentId,
+      receivedAt: payload.payment?.paymentDate ?? receivedInvoice.updatedAt,
+      correlationId: `webhook-${receivedInvoice.providerPaymentId}`,
+    });
+
     this.emitObservable('pagamento.confirmacao.webhook.pagamento.recebido', {
       invoice: receivedInvoice,
       correlationId: `webhook-${receivedInvoice.providerPaymentId}`,
