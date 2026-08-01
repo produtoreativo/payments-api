@@ -226,6 +226,50 @@ Só iniciada após `Delivery.Plan.Validated` emitido:
 
 **Nota sobre execuções standalone** (`/downstream ci-async DS-<n>`): sem contexto de Iteration Plan, o CI Async opera por issue de forma independente (Ship → Validate → Promote) sem gate de plano.
 
+## Fechamento de iteração
+
+O fechamento é executado imediatamente após o último `Promote.Completed` da iteração — nunca antes, nunca postergado para a próxima sessão.
+
+### Gatilho
+
+Todas as condições abaixo devem ser verdadeiras:
+
+1. `ITERATION_DIR/runtime/plan-validate.json` tem `"status": "all-validated"`.
+2. Todas as issues do plano estão `CLOSED` no GitHub (`gh issue view <n> --json state`).
+3. Todos os PRs correspondentes estão `MERGED`.
+
+### Ações de fechamento (em ordem)
+
+1. **Atualizar `ITERATION_DIR/plan.md`:**
+   - Header: `# Iteration Plan — <iteration-id>` (remover sufixo `(Ativo)`)
+   - Status: `✅ Concluído — <YYYY-MM-DD>`
+   - Coluna `Status` de cada item: `Entrou` → `Concluído`
+   - Adicionar coluna `PR` com o número do PR mergeado por item
+   - Marcar critérios de saída cumpridos com `[x]`; critérios não cumpridos permanecem `[ ]` com nota explicativa
+
+2. **Atualizar `prodops/artifacts/plans/iteration-plan.md`:**
+   - Mover a linha da iteração ativa para a tabela de histórico
+   - Status: `✅ Concluído — PRs #<n>–#<m>`
+   - Substituir a seção "Iteração corrente" por: `Nenhuma iteração ativa. Próxima iteração a definir.`
+
+3. **Commitar:**
+   ```
+   chore(prodops): close iteration <iteration-id> — all <N> items promoted
+   ```
+
+### O que NÃO fazer no fechamento
+
+- Não criar nova iteração no mesmo commit de fechamento — são atos distintos.
+- Não apagar nem mover `runtime/` — os artefatos de runtime pertencem ao histórico da iteração.
+- Não marcar `[x]` em critérios que não foram satisfeitos — registrar a exceção em nota.
+
+### Iteração com critérios parciais
+
+Se ao menos um critério de saída não foi cumprido (ex.: timelines ausentes, Diligence pendente):
+- Fechar mesmo assim se todos os gates operacionais (PRs merged, issues closed, plan-validate all-validated) passaram.
+- Registrar a exceção em nota de fechamento no `plan.md` da iteração.
+- Abrir issue de follow-up se a exceção representa débito técnico ou operacional relevante.
+
 ## Protocolo de exceção — bloqueios
 
 Quando uma fase não pode avançar (permissão negada, gate falhou, timeout, bloqueio externo):

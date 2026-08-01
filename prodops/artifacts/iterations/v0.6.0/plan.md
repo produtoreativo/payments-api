@@ -1,15 +1,15 @@
-# Iteration Plan — v0.6.0 (Ativo)
+# Iteration Plan — v0.6.0
 
-> Status: 🔄 Em andamento
+> Status: ✅ Concluído — 2026-08-01
 
 ## Escopo
 
-| DS | Issue | Feature | Dependência | OBC | BDD | E2E | Status |
-|---|---|---|---|---|---|---|---|
-| DS-39 | [#106](https://github.com/produtoreativo/payments-api/issues/106) | payment-confirmation: confirmar pagamento aprovado via webhook do provedor | — | ✓ | ✓ | ✓ | Entrou |
-| DS-42 | [#107](https://github.com/produtoreativo/payments-api/issues/107) | api-token-validation: garantir acesso autenticado por token de API | — | ✓ | ✓ | ✓ | Entrou |
-| DS-43 | [#108](https://github.com/produtoreativo/payments-api/issues/108) | webhook-configuration: configurar webhook de notificação por token de API | DS-42 | ✓ | ✓ | ✓ | Entrou |
-| DS-41 | [#109](https://github.com/produtoreativo/payments-api/issues/109) | credit-card-authorization-confirmation: aceitar pagamento com cartão de crédito hospedado | — | ✓ | ✓ | ✓ | Entrou |
+| DS | Issue | Feature | Dependência | OBC | BDD | E2E | Status | PR |
+|---|---|---|---|---|---|---|---|---|
+| DS-39 | [#106](https://github.com/produtoreativo/payments-api/issues/106) | payment-confirmation: confirmar pagamento aprovado via webhook do provedor | — | ✓ | ✓ | ✓ | Concluído | [#111](https://github.com/produtoreativo/payments-api/pull/111) |
+| DS-42 | [#107](https://github.com/produtoreativo/payments-api/issues/107) | api-token-validation: garantir acesso autenticado por token de API | — | ✓ | ✓ | ✓ | Concluído | [#112](https://github.com/produtoreativo/payments-api/pull/112) |
+| DS-43 | [#108](https://github.com/produtoreativo/payments-api/issues/108) | webhook-configuration: configurar webhook de notificação por token de API | DS-42 | ✓ | ✓ | ✓ | Concluído | [#113](https://github.com/produtoreativo/payments-api/pull/113) |
+| DS-41 | [#109](https://github.com/produtoreativo/payments-api/issues/109) | credit-card-authorization-confirmation: aceitar pagamento com cartão de crédito hospedado | — | ✓ | ✓ | ✓ | Concluído | [#114](https://github.com/produtoreativo/payments-api/pull/114) |
 
 ## Mapeamento DS-ID → Issue
 
@@ -22,11 +22,14 @@
 
 ## Critérios de saída
 
-- [ ] PRs merged em `main` para cada issue (#106, #107, #108, #109)
-- [ ] `prodops.delivery.promote.completed` emitido para issues #106, #107, #108, #109
-- [ ] KPI Lead Time calculável: `Bootstrap.Started` presente nos timelines de cada issue
-- [ ] Issues #106, #107, #108, #109 fechadas no GitHub
-- [ ] Diligence concluída para cada item: evidence capturada, attached, promoted e closed
+- [x] PRs merged em `main` para cada issue (#106→#111, #107→#112, #108→#113, #109→#114)
+- [x] `prodops.delivery.promote.completed` emitido para issues #106, #107, #108, #109
+- [x] Issues #106, #107, #108, #109 fechadas no GitHub
+- [x] `plan-validate.json` com status `all-validated` em 2026-08-01T05:30:00Z
+- [ ] KPI Lead Time calculável: `Bootstrap.Started` ausente nos timelines (bug de path — ver nota abaixo)
+- [ ] Diligence concluída para cada item: pendente
+
+> **Nota de fechamento (2026-08-01):** Timelines não gerados nesta iteração — bug identificado: `--iteration-id` não propagado ao `append.sh` pelo downstream-agent. Todos os demais critérios operacionais foram satisfeitos. Iteração encerrada por decisão do operador.
 
 ## Runtime
 

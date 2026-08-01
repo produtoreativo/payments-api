@@ -226,6 +226,50 @@ Only started after `Delivery.Plan.Validated` is emitted:
 
 **Note on standalone executions** (`/downstream ci-async DS-<n>`): without an Iteration Plan context, CI Async operates per issue independently (Ship → Validate → Promote) without a plan gate.
 
+## Iteration closure
+
+Closure is executed immediately after the last `Promote.Completed` of the iteration — never before, never deferred to the next session.
+
+### Trigger
+
+All of the following conditions must be true:
+
+1. `ITERATION_DIR/runtime/plan-validate.json` has `"status": "all-validated"`.
+2. All issues in the plan are `CLOSED` on GitHub (`gh issue view <n> --json state`).
+3. All corresponding PRs are `MERGED`.
+
+### Closure actions (in order)
+
+1. **Update `ITERATION_DIR/plan.md`:**
+   - Header: `# Iteration Plan — <iteration-id>` (remove `(Active)` suffix)
+   - Status: `✅ Concluded — <YYYY-MM-DD>`
+   - `Status` column for each item: `Entered` → `Concluded`
+   - Add `PR` column with the merged PR number per item
+   - Mark satisfied exit criteria with `[x]`; unsatisfied criteria remain `[ ]` with an explanatory note
+
+2. **Update `prodops/artifacts/plans/iteration-plan.md`:**
+   - Move the active iteration row to the history table
+   - Status: `✅ Concluded — PRs #<n>–#<m>`
+   - Replace the "Current iteration" section with: `No active iteration. Next iteration to be defined.`
+
+3. **Commit:**
+   ```
+   chore(prodops): close iteration <iteration-id> — all <N> items promoted
+   ```
+
+### What NOT to do during closure
+
+- Do not create a new iteration in the same closure commit — they are distinct acts.
+- Do not delete or move `runtime/` — runtime artifacts belong to the iteration's history.
+- Do not mark `[x]` for criteria that were not satisfied — record the exception as a note.
+
+### Iteration with partial criteria
+
+If at least one exit criterion was not met (e.g., missing timelines, pending Diligence):
+- Close anyway if all operational gates passed (PRs merged, issues closed, plan-validate all-validated).
+- Record the exception as a closure note in the iteration's `plan.md`.
+- Open a follow-up issue if the exception represents relevant technical or operational debt.
+
 ## Exception protocol — blockers
 
 When a phase cannot advance (permission denied, gate failed, timeout, external blocker):
