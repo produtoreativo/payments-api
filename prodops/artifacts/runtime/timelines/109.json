@@ -20,5 +20,27 @@
       "framework-version": "1.0.0",
       "schema-version": "1"
     }
+  },
+  {
+    "specversion": "1.0",
+    "id": "6a0a3776-6655-4aaf-9eb8-4eabd876f9f9",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.hack.started",
+    "subject": "109",
+    "time": "2026-08-01T04:58:03Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/hack/started/v1.0.0",
+    "data": {
+      "issue": "109",
+      "journey": "Delivery",
+      "cycle": "Hack",
+      "phase": "Started",
+      "alters-state": true,
+      "new-state": "HACKING",
+      "runtime-correlation-id": "cc288a8b-3f66-49f3-9f8f-bc430105e947",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
   }
 ]
