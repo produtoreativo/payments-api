@@ -276,7 +276,41 @@ All of the following conditions must be true:
 If at least one exit criterion was not met (e.g., missing timelines, pending Diligence):
 - Close anyway if all operational gates passed (PRs merged, issues closed, plan-validate all-validated).
 - Record the exception as a closure note in the iteration's `plan.md`.
-- Open a follow-up issue if the exception represents relevant technical or operational debt.
+- Apply the follow-up issue protocol below.
+
+### Follow-up issues — inconsistencies and problems detected
+
+At the end of each phase and when closing the iteration, the agent must identify and register every inconsistency, residual problem, or debt detected during execution. For each item identified:
+
+**1. Create a GitHub Issue with:**
+- **Title:** objective description of the problem (`[follow-up]: <concise description>` or canonical Work Item Schema title)
+- **Body:** origin (phase where it was detected), impact, concrete next action
+- **Labels:** `journey:diligence`, `artifact-type:business-signal`, `operation:capture`
+- **References:** iteration issue that originated the problem, PR, iteration-id
+
+**2. Add an entry to the Tracking List** (`prodops/artifacts/product/backlogs/tracking-list.md`):
+- New row with: description, origin, dimension, owner, created issue number, status `Open`, next action
+
+**3. Post a comment on the iteration issue** that originated the problem, referencing the new follow-up issue.
+
+**When follow-up is mandatory:**
+
+| Situation | Example |
+|---|---|
+| Unsatisfied exit criterion | Missing timelines, pending Diligence |
+| Residual problem after delivery | Remaining Dependabot alert after update |
+| Technical debt identified during Hack | Bug worked around without fix, insufficient test coverage |
+| Partially satisfied gate | SLI below target after Validate |
+| Anomaly observed in operational phase | Duplicate Datadog event, inconsistent Project state |
+
+**When NOT to create follow-up:**
+- Explicit risk acceptance decision already recorded in `risks.md`
+- Item already tracked in an existing open issue
+
+**Commit the updates:**
+```
+chore(prodops): register follow-up issues from iteration <iteration-id>
+```
 
 ## Exception protocol — blockers
 

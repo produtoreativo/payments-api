@@ -277,7 +277,41 @@ Todas as condições abaixo devem ser verdadeiras:
 Se ao menos um critério de saída não foi cumprido (ex.: timelines ausentes, Diligence pendente):
 - Fechar mesmo assim se todos os gates operacionais (PRs merged, issues closed, plan-validate all-validated) passaram.
 - Registrar a exceção em nota de fechamento no `plan.md` da iteração.
-- Abrir issue de follow-up se a exceção representa débito técnico ou operacional relevante.
+- Aplicar o protocolo de issues de follow-up abaixo.
+
+### Issues de follow-up — inconsistências e problemas detectados
+
+Ao concluir cada fase e ao fechar a iteração, o agente deve identificar e registrar toda inconsistência, problema residual ou débito detectado durante a execução. Para cada item identificado:
+
+**1. Criar GitHub Issue com:**
+- **Título:** descrição objetiva do problema (`[follow-up]: <descrição concisa>` ou título canônico do Work Item Schema)
+- **Body:** origem (fase onde foi detectado), impacto, próxima ação concreta
+- **Labels:** `journey:diligence`, `artifact-type:business-signal`, `operation:capture`
+- **Referências:** issue da iteração que originou o problema, PR, iteration-id
+
+**2. Adicionar entrada na Tracking List** (`prodops/artifacts/product/backlogs/tracking-list.md`):
+- Nova linha na tabela com: descrição, origem, dimensão, dono, número da issue criada, status `Aberto`, próxima ação
+
+**3. Postar comentário na issue da iteração** que originou o problema, referenciando a nova issue de follow-up.
+
+**Quando criar follow-up obrigatoriamente:**
+
+| Situação | Exemplo |
+|---|---|
+| Critério de saída não satisfeito | Timelines ausentes, Diligence pendente |
+| Problema residual após entrega | Alerta Dependabot remanescente pós-atualização |
+| Débito técnico identificado durante Hack | Bug contornado sem fix, test coverage insuficiente |
+| Gate parcialmente satisfeito | SLI abaixo do target após Validate |
+| Anomalia observada em fase operacional | Evento duplicado no Datadog, estado inconsistente no Project |
+
+**Quando NÃO criar follow-up:**
+- Decisão explícita de aceite de risco já registrada em `risks.md`
+- Item já rastreado em issue existente aberta
+
+**Commit das atualizações:**
+```
+chore(prodops): register follow-up issues from iteration <iteration-id>
+```
 
 ## Protocolo de exceção — bloqueios
 
