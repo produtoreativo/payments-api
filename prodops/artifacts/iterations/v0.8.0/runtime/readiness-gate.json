@@ -1,0 +1,50 @@
+{
+  "iteration-id": "v0.8.0",
+  "checked-at": "2026-08-01T00:00:00Z",
+  "result": "blocked",
+  "capabilities": {
+    "DS-45": {
+      "slug": "timeline-iteration-scope",
+      "gates": {
+        "obc": false,
+        "bdd": false,
+        "risks": false,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": [
+        "prodops/artifacts/obcs/timeline-iteration-scope.md",
+        "prodops/artifacts/bdd/timeline-iteration-scope.feature"
+      ]
+    },
+    "DS-46": {
+      "slug": "runtime-lifecycle-protocol",
+      "gates": {
+        "obc": false,
+        "bdd": false,
+        "risks": false,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": [
+        "prodops/artifacts/obcs/runtime-lifecycle-protocol.md",
+        "prodops/artifacts/bdd/runtime-lifecycle-protocol.feature"
+      ]
+    },
+    "DS-47": {
+      "slug": "gate-result-model",
+      "gates": {
+        "obc": false,
+        "bdd": false,
+        "risks": false,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": [
+        "prodops/artifacts/obcs/gate-result-model.md",
+        "prodops/artifacts/bdd/gate-result-model.feature"
+      ]
+    }
+  },
+  "next-action": "Criar OBCs, BDD features e entradas de risco via /upstream antes de re-invocar /downstream. Alternativamente, se estes artefatos sao nao-aplicaveis para itens de infraestrutura, registrar aceite formal em risks.md com waiver explícito e atualizar plan.md com justificativa."
+}
