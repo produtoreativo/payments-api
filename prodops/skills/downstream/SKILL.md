@@ -154,7 +154,7 @@ Fila Downstream — Iteration Plan ativo
 
 7. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
    a. Executar `/readiness <capability>` — se falhar: gravar `readiness-gate.json` com `"result": "blocked"` (ver seção **Readiness Cache**) e **parar toda a fila**.
-   b. Executar CI Sync: Bootstrap → Hack → Sync → Finish. Após **cada fase concluída**:
+   b. Executar CI Sync: Bootstrap → Hack → Sync → Finish — **em sequência estrita e síncrona**. Cada fase é um sub-agente invocado com `run_in_background: false`. Nunca spawnar uma fase em background. Nunca iniciar a fase seguinte antes de receber o resultado da fase anterior. Após **cada fase concluída**:
 
       **7b-i — Verificar saída de cada emit-event:** o emit-event retorna JSON com campos `"datadog-sync"` e `"github-sync"`. Após **cada chamada** de emit-event (em qualquer fase), capturar o JSON e verificar:
       ```bash
@@ -467,6 +467,7 @@ Isso seta `oem-state = PENDING` e permite que o Bootstrap inicie novamente.
 - No modo sem argumentos, parar apenas em falha de readiness ou falha de gate — nunca aguardar confirmação entre itens.
 - Usar o padrão canônico de título de Work Item: `[Artifact ID]: descrição`.
 - Nunca parar silenciosamente — todo bloqueio deve emitir `Delivery.Block.Declared` antes de reportar ao caller.
+- **Nunca spawnar sub-agentes de fase (Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote) em background.** Todo sub-agente deve usar `run_in_background: false`. O downstream-agent aguarda o resultado antes de invocar a fase seguinte.
 
 ## Referências
 
