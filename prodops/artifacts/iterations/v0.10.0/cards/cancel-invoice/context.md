@@ -40,7 +40,7 @@ Campos preenchidos progressivamente durante o flow. Iniciam em branco.
 
 ```
 pr-number:      125
-infra-scope:    (preenchido pelo Ship — dynamo|lambda|both|none)
+infra-scope:    lambda
 oem-state:      PENDING
 ```
 
