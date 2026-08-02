@@ -1,0 +1,178 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "453604e4-8ec8-4f4e-8e94-8031d86180ff",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.plan.bootstrap.started",
+    "subject": "124",
+    "time": "2026-08-02T04:42:00Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/started/v1.0.0",
+    "data": {
+      "issue": "124",
+      "journey": "Delivery",
+      "cycle": "Plan.Bootstrap",
+      "phase": "Started",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "047f0869-2764-4468-8913-5193c885ed6d",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "2ed25f88-fa6e-44e6-9d08-9e595c6f2a0b",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.plan.bootstrap.project.cleaned",
+    "subject": "124",
+    "time": "2026-08-02T04:42:49Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/project/cleaned/v1.0.0",
+    "data": {
+      "issue": "124",
+      "journey": "Delivery",
+      "cycle": "Plan.Bootstrap",
+      "phase": "Project.Cleaned",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "047f0869-2764-4468-8913-5193c885ed6d",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "b3e0dc99-3399-4fd0-922b-144e470b9046",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.plan.bootstrap.issue.registered",
+    "subject": "124",
+    "time": "2026-08-02T04:43:08Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/issue/registered/v1.0.0",
+    "data": {
+      "issue": "124",
+      "journey": "Delivery",
+      "cycle": "Plan.Bootstrap",
+      "phase": "Issue.Registered",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "047f0869-2764-4468-8913-5193c885ed6d",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "7862eb9b-1577-4ddf-b171-945dc0db5b33",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.plan.bootstrap.issues.added",
+    "subject": "124",
+    "time": "2026-08-02T04:45:07Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/issues/added/v1.0.0",
+    "data": {
+      "issue": "124",
+      "journey": "Delivery",
+      "cycle": "Plan.Bootstrap",
+      "phase": "Issues.Added",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "047f0869-2764-4468-8913-5193c885ed6d",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "0675facb-54ac-4c8e-b005-1c68918330b9",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.plan.bootstrap.dependencies.installed",
+    "subject": "124",
+    "time": "2026-08-02T04:45:45Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/dependencies/installed/v1.0.0",
+    "data": {
+      "issue": "124",
+      "journey": "Delivery",
+      "cycle": "Plan.Bootstrap",
+      "phase": "Dependencies.Installed",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "047f0869-2764-4468-8913-5193c885ed6d",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "f14827f0-7785-4d41-95b2-601d6cb5dfe0",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.plan.bootstrap.services.ready",
+    "subject": "124",
+    "time": "2026-08-02T04:54:12Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/services/ready/v1.0.0",
+    "data": {
+      "issue": "124",
+      "journey": "Delivery",
+      "cycle": "Plan.Bootstrap",
+      "phase": "Services.Ready",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "047f0869-2764-4468-8913-5193c885ed6d",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "85a3dbf1-108c-406c-a734-fcd5297171c2",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.plan.bootstrap.smoke.passed",
+    "subject": "124",
+    "time": "2026-08-02T04:54:31Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/smoke/passed/v1.0.0",
+    "data": {
+      "issue": "124",
+      "journey": "Delivery",
+      "cycle": "Plan.Bootstrap",
+      "phase": "Smoke.Passed",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "047f0869-2764-4468-8913-5193c885ed6d",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "b01a3dcb-9bc3-4586-ade9-64be73ea03c9",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.plan.bootstrap.completed",
+    "subject": "124",
+    "time": "2026-08-02T04:54:51Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/completed/v1.0.0",
+    "data": {
+      "issue": "124",
+      "journey": "Delivery",
+      "cycle": "Plan.Bootstrap",
+      "phase": "Completed",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "047f0869-2764-4468-8913-5193c885ed6d",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  }
+]

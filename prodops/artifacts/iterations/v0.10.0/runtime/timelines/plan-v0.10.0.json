@@ -1,0 +1,24 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "7281f6a1-0cde-4644-90a9-7fad619d5f6f",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.plan.bootstrap.started",
+    "subject": "null",
+    "time": "2026-08-02T04:41:41Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/started/v1.0.0",
+    "data": {
+      "issue": "null",
+      "journey": "Delivery",
+      "cycle": "Plan.Bootstrap",
+      "phase": "Started",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "047f0869-2764-4468-8913-5193c885ed6d",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  }
+]
