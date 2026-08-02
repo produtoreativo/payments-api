@@ -95,9 +95,10 @@ Fila Downstream — Iteration Plan ativo
 ...
 ```
 
-6. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
-   a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` já existe com `"status": "completed"`. Se sim, pular para o passo 7 (ambiente já pronto).
-   b. **Project cleanup** — remover do Project 25 as issues da última iteração concluída antes de adicionar as novas:
+5. **Project Cleanup** — remover do Project 25 as issues da última iteração concluída. **Este passo é independente do Plan Bootstrap e sempre executa**, mesmo que `plan-bootstrap.json` já exista.
+
+   a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` tem o campo `"project-cleanup": "completed"`. Se tiver, pular este passo.
+   b. Se não tiver (campo ausente ou arquivo inexistente), executar:
       ```bash
       # 1. Identificar a última iteração com status "Concluido" no histórico
       LAST_DONE=$(grep -oP '\[v[\d.]+\]' prodops/artifacts/plans/iteration-plan.md \
@@ -116,9 +117,12 @@ Fila Downstream — Iteration Plan ativo
         [[ -n "$ITEM_ID" ]] && gh project item-delete 25 --owner produtoreativo --id "$ITEM_ID"
       done
       ```
-      - Não bloquear se o projeto estiver vazio, se nenhum item for encontrado ou se `LAST_DONE` for vazio.
-      - Não remover issues abertas de iterações em andamento.
-   c. **Issue de acompanhamento do Iteration Plan** — verificar se já existe uma issue com título `[Iteration <iteration-id>]:` no GitHub:
+   c. Após executar (com ou sem itens removidos), adicionar `"project-cleanup": "completed"` em `ITERATION_DIR/runtime/plan-bootstrap.json` (criar o arquivo com apenas esse campo se ele não existir ainda). Commitar.
+   d. Não bloquear se o projeto estiver vazio, se nenhum item for encontrado ou se `LAST_DONE` for vazio — registrar como `"project-cleanup": "completed"` mesmo assim.
+
+6. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
+   a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` já existe com `"status": "completed"`. Se sim, pular para o passo 7 (ambiente já pronto — cleanup já foi tratado no passo 5).
+   b. **Issue de acompanhamento do Iteration Plan** — verificar se já existe uma issue com título `[Iteration <iteration-id>]:` no GitHub:
       ```bash
       gh issue list --search "[Iteration <iteration-id>]" --state all --json number,title | jq '.[0].number // empty'
       ```
@@ -131,26 +135,37 @@ Fila Downstream — Iteration Plan ativo
         ```
       - Se já existir: anotar o número e continuar.
       - Registrar o número da issue no `plan-bootstrap.json` como `"plan-issue": <number>`.
-   d. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>`, `work-item-id: null` e `--iteration-id <iteration-id>`.
-   e. Executar o Bootstrap work: instalar dependências, verificar runtimes e serviços locais, confirmar variáveis de ambiente, executar o smoke gate do manifest.
-   f. Se qualquer etapa falhar: reportar o bloqueio e **parar toda a fila** — não iniciar nenhum issue.
-   g. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`.
-   h. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
+   c. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>`, `work-item-id: null` e `--iteration-id <iteration-id>`. Após emitir, verificar o JSON de saída do emit-event: se `"datadog-sync": "error"` ou `"github-sync": "error"`, exibir aviso visível ao usuário — não continuar silenciosamente.
+   d. Executar o Bootstrap work: instalar dependências, verificar runtimes e serviços locais, confirmar variáveis de ambiente, executar o smoke gate do manifest.
+   e. Se qualquer etapa falhar: reportar o bloqueio e **parar toda a fila** — não iniciar nenhum issue.
+   f. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`. Verificar `"datadog-sync"` e `"github-sync"` na saída — exibir aviso se erro.
+   g. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
    ```json
    {
      "iteration-id": "<iteration-id>",
      "status": "completed",
+     "project-cleanup": "completed",
      "correlation-id": "<uuid-gerado-no-started>",
      "completed-at": "<timestamp-iso8601>",
      "plan-issue": <número-da-issue-de-acompanhamento>,
      "issues": ["<issue-1>", "<issue-2>", "..."]
    }
    ```
-   i. Commitar o arquivo no repositório antes de iniciar o loop.
+   h. Commitar o arquivo no repositório antes de iniciar o loop.
 
 7. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
    a. Executar `/readiness <capability>` — se falhar: gravar `readiness-gate.json` com `"result": "blocked"` (ver seção **Readiness Cache**) e **parar toda a fila**.
-   b. Executar CI Sync: Bootstrap → Hack → Sync → Finish. Após **cada fase concluída**, postar obrigatoriamente um comentário na issue do item:
+   b. Executar CI Sync: Bootstrap → Hack → Sync → Finish. Após **cada fase concluída**:
+
+      **7b-i — Verificar saída de cada emit-event:** o emit-event retorna JSON com campos `"datadog-sync"` e `"github-sync"`. Após **cada chamada** de emit-event (em qualquer fase), capturar o JSON e verificar:
+      ```bash
+      RESULT=$(bash prodops/runtime/tools/emit-event/scripts/emit-event --input <event.json>)
+      echo "$RESULT" | jq -r '"datadog-sync: \(."datadog-sync") | github-sync: \(."github-sync")"'
+      ```
+      Se `"datadog-sync": "error"` → exibir: `⚠️ Datadog sync falhou — evento registrado na timeline local mas não enviado ao Datadog`.
+      Se `"github-sync": "error"` → exibir: `⚠️ GitHub sync falhou — oem-state NÃO foi atualizado no Project`. Neste caso **não avançar** para a próxima fase sem resolver, pois o estado do Project ficará inconsistente.
+
+      **7b-ii — Postar comentário obrigatório na issue:**
       ```bash
       gh issue comment <work-item-id> --body "## <Fase> — <YYYY-MM-DD HH:MM UTC>
 

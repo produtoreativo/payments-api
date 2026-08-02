@@ -95,12 +95,6 @@ Preencher se `reliability-path != "none"`, omitir caso contrário.
 
 - <SLO / timeout / idempotency requirement>
 
-## Contract
-
-Endpoint(s) e essenciais de request/response:
-
-- `<METHOD> <path>` — <request essentials → response essentials>
-
 ## Commands
 
 Lidos de `prodops/exec/manifest.yaml` (seção `gates`). Preencher todos os gates aplicáveis.
