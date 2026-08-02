@@ -1,0 +1,68 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "3af5f833-34a8-44d5-81aa-d1f0df9ee6fb",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.delivery.plan.bootstrap.issue.entered",
+    "subject": "47",
+    "time": "2026-08-02T04:43:34Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/issue/entered/v1.0.0",
+    "data": {
+      "issue": "47",
+      "journey": "Delivery",
+      "cycle": "Plan.Bootstrap",
+      "phase": "Issue.Entered",
+      "alters-state": true,
+      "new-state": "PENDING",
+      "runtime-correlation-id": "a8a66cdc-2361-4849-8a9c-700c56a12687",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "d8b68cd1-8473-49cb-9ffa-6227f65dad4b",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.diligence.capture.started",
+    "subject": "47",
+    "time": "2026-08-02T04:43:47Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/diligence/capture/started/v1.0.0",
+    "data": {
+      "issue": "47",
+      "journey": "Diligence",
+      "cycle": "Capture",
+      "phase": "Started",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "a8a66cdc-2361-4849-8a9c-700c56a12687",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "5ad0dce4-d9d1-493c-9db4-a9258061d17f",
+    "source": "https://github.com/produtoreativo/payments-api",
+    "type": "prodops.diligence.capture.completed",
+    "subject": "47",
+    "time": "2026-08-02T04:43:57Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://prodops.produtoreativo.io/schemas/events/diligence/capture/completed/v1.0.0",
+    "data": {
+      "issue": "47",
+      "journey": "Diligence",
+      "cycle": "Capture",
+      "phase": "Completed",
+      "alters-state": false,
+      "new-state": "",
+      "runtime-correlation-id": "a8a66cdc-2361-4849-8a9c-700c56a12687",
+      "runtime-version": "0.3.0",
+      "framework-version": "1.0.0",
+      "schema-version": "1"
+    }
+  }
+]

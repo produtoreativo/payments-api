@@ -105,6 +105,13 @@ export class AsaasService {
 
   async cancelCharge(providerPaymentId: string) {
     if (this.mockEnabled()) {
+      if (providerPaymentId.startsWith('pay_mock_force404_')) {
+        const err = new Error('invalid_action: Payment not found') as Error & {
+          status?: number;
+        };
+        err.status = 404;
+        throw err;
+      }
       return {
         id: providerPaymentId,
         status: 'DELETED',
