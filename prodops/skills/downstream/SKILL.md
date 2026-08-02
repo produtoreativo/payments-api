@@ -262,57 +262,48 @@ Nunca iniciar Bootstrap sem Issue mapeada — o `work-item-id` da capsule e dos 
 
 Quando todos os pré-requisitos existirem:
 
-### Resolução do `correlation-id` (Fix: nunca gerar novo UUID se a capsule já existe)
-
-**Antes de emitir qualquer evento**, verificar se a context capsule já existe:
-
-```bash
-CAPSULE="$ITERATION_DIR/cards/<card-slug>/context.md"
-```
-
-- **Capsule existe** → extrair `correlation-id` do campo `correlation-id:` da capsule. Usar esse UUID em todos os eventos desta execução. **Nunca gerar um novo UUID.**
-- **Capsule não existe** → gerar novo UUID. Usar em `Plan.Entered` e na capsule.
-
-Isso garante que, em caso de restart, o mesmo `correlation-id` seja reutilizado e o `emit-event` descarte eventos duplicados via idempotência (`correlation-id + event-type` já na timeline → exit 4 skipped).
-
 ### Protocolo de Restart (se a timeline já tem eventos)
 
-Após resolver o `correlation-id`, verificar se a timeline do item já existe:
+**Antes de emitir qualquer evento**, verificar se a timeline do item já existe com eventos de uma execução anterior:
 
 ```bash
 TIMELINE="$ITERATION_DIR/runtime/timelines/<work-item-id>.json"
 test -f "$TIMELINE" && jq -e 'length > 0' "$TIMELINE" >/dev/null 2>&1
 ```
 
-- **Timeline existe com eventos** → emitir os três eventos de Restart com o mesmo `correlation-id` **antes** de qualquer evento de fase. Isso registra o restart na timeline sem alterar estado:
+- **Timeline existe com eventos** → esta é uma execução de restart. Extrair o `correlation-id` anterior da timeline:
+  ```bash
+  PREV_CORR=$(jq -r '.[0].data["runtime-correlation-id"]' "$TIMELINE")
+  ```
+  Emitir os três eventos de Restart usando o `correlation-id` **anterior** (liga o histórico):
+  ```json
+  { "event": "Delivery.Restart.Requested", "work-item-id": "<work-item-id>", "iteration-id": "<iteration-id>", "correlation-id": "<PREV_CORR>", "execution-id": "<new-uuid>", "actor": { "player": "<player>", "agent": "downstream-agent" }, "payload": {} }
+  { "event": "Delivery.Restart.Started",   "correlation-id": "<PREV_CORR>", ... }
+  { "event": "Delivery.Restart.Completed", "correlation-id": "<PREV_CORR>", ... }
+  ```
+  Depois gerar um **novo UUID** para esta execução. Todos os eventos de fase seguintes usam o novo `correlation-id`.
 
-```json
-{ "event": "Delivery.Restart.Requested", "work-item-id": "<work-item-id>", "iteration-id": "<iteration-id>", "correlation-id": "<correlation-id-da-capsule>", "execution-id": "<new-uuid>", "actor": { "player": "<player>", "agent": "downstream-agent" }, "payload": {} }
-{ "event": "Delivery.Restart.Started",   ... }
-{ "event": "Delivery.Restart.Completed", ... }
-```
+- **Timeline não existe ou está vazia** → primeira execução. Gerar novo UUID diretamente. Nenhum evento de Restart.
 
-- **Timeline não existe ou está vazia** → nenhum evento de Restart. Continuar normalmente.
+Os eventos de Restart não alteram `oem-state` — são puramente auditáveis. Os eventos de fase seguintes (incluindo `Plan.Entered`) são re-emitidos normalmente com o novo `correlation-id`. **Eventos duplicados na timeline são esperados e intencionais em restart.**
 
 ### Emitir `Delivery.Plan.Entered`
 
-1. Emitir `Delivery.Plan.Entered` com o `correlation-id` resolvido acima:
+1. Emitir `Delivery.Plan.Entered` com o novo `correlation-id`:
 
 ```json
 {
   "event": "Delivery.Plan.Entered",
   "work-item-id": "<issue-number>",
   "iteration-id": "<iteration-id>",
-  "correlation-id": "<correlation-id-resolvido>",
+  "correlation-id": "<new-uuid>",
   "execution-id": "<new-uuid>",
   "actor": { "player": "<player>", "agent": "downstream-agent" },
   "payload": {}
 }
 ```
 
-Se o emit-event retornar `status: skipped` (exit 4) — o evento já foi emitido nesta execução anterior. Continuar normalmente; não gerar novo correlation-id.
-
-2. Gerar `ITERATION_DIR/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md` **apenas se a capsule não existir**. Se já existir, usar a capsule existente sem modificar. Preencher **todos** os campos do template:
+2. Gerar (ou **sobrescrever**) `ITERATION_DIR/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md` com o novo `correlation-id`. Preencher **todos** os campos do template:
 
 **Runtime Context** — preenchido com dados da iteração ativa:
 - `ds-id` — identificador estável da feature (ex: `DS-39`)
@@ -504,8 +495,8 @@ Isso seta `oem-state = PENDING` e permite que o Bootstrap inicie novamente.
 - Usar o padrão canônico de título de Work Item: `[Artifact ID]: descrição`.
 - Nunca parar silenciosamente — todo bloqueio deve emitir `Delivery.Block.Declared` antes de reportar ao caller.
 - **Nunca spawnar sub-agentes de fase (Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote) em background.** Todo sub-agente deve usar `run_in_background: false`. O downstream-agent aguarda o resultado antes de invocar a fase seguinte.
-- **Nunca gerar novo `correlation-id` para um item que já tem capsule.** Reusar sempre o `correlation-id` da capsule existente. Gerar novo UUID apenas quando a capsule ainda não existe.
-- **Em restart (timeline com eventos pré-existentes), emitir `Delivery.Restart.*` antes de qualquer evento de fase.** Nunca omitir o protocolo de Restart — ele é a evidência auditável de que a execução foi retomada.
+- **Em restart (timeline com eventos pré-existentes), sempre emitir `Delivery.Restart.*` com o `correlation-id` anterior antes de qualquer evento de fase.** Nunca omitir o protocolo de Restart — ele é a evidência auditável de que a execução foi retomada e o marcador que separa execuções na timeline.
+- **Eventos duplicados na timeline são esperados e corretos em restart.** Cada execução gera um novo `correlation-id`; os eventos de Restart com o correlation-id anterior ligam os históricos. Não tentar suprimir eventos de fase em restart.
 
 ## Referências
 
