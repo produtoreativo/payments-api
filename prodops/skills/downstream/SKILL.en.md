@@ -365,10 +365,17 @@ All of the following conditions must be true:
    - Status: `✅ Concluded — PRs #<n>–#<m>`
    - Replace the "Current iteration" section with: `No active iteration. Next iteration to be defined.`
 
-3. **Commit:**
+3. **Commit — stage all modified files before committing:**
+   ```bash
+   git add prodops/artifacts/iterations/<iteration-id>/plan.md
+   git add prodops/artifacts/plans/iteration-plan.md
+   git add prodops/artifacts/iterations/<iteration-id>/runtime/
+   git add prodops/artifacts/iterations/<iteration-id>/cards/
+   git add prodops/artifacts/trails/
+   git status  # verify no files are missing before committing
+   git commit -m "chore(prodops): close iteration <iteration-id> — all <N> items promoted"
    ```
-   chore(prodops): close iteration <iteration-id> — all <N> items promoted
-   ```
+   Run `git status` after `git add` and before `commit` — if any modified files remain unstaged, add them before proceeding.
 
 ### What NOT to do during closure
 
@@ -413,8 +420,10 @@ At the end of each phase and when closing the iteration, the agent must identify
 - Item already tracked in an existing open issue
 
 **Commit the updates:**
-```
-chore(prodops): register follow-up issues from iteration <iteration-id>
+```bash
+git add prodops/artifacts/product/backlogs/tracking-list.md
+git status  # verify no files are missing before committing
+git commit -m "chore(prodops): register follow-up issues from iteration <iteration-id>"
 ```
 
 ## Exception protocol — blockers

@@ -377,10 +377,17 @@ Todas as condições abaixo devem ser verdadeiras:
    - Status: `✅ Concluído — PRs #<n>–#<m>`
    - Substituir a seção "Iteração corrente" por: `Nenhuma iteração ativa. Próxima iteração a definir.`
 
-3. **Commitar:**
+3. **Commitar — adicionar todos os arquivos modificados antes do commit:**
+   ```bash
+   git add prodops/artifacts/iterations/<iteration-id>/plan.md
+   git add prodops/artifacts/plans/iteration-plan.md
+   git add prodops/artifacts/iterations/<iteration-id>/runtime/
+   git add prodops/artifacts/iterations/<iteration-id>/cards/
+   git add prodops/artifacts/trails/
+   git status  # verificar que não há arquivos faltando antes de commitar
+   git commit -m "chore(prodops): close iteration <iteration-id> — all <N> items promoted"
    ```
-   chore(prodops): close iteration <iteration-id> — all <N> items promoted
-   ```
+   Executar `git status` após o `git add` e antes do `commit` — se houver arquivos modificados não staged, adicioná-los antes de prosseguir.
 
 ### O que NÃO fazer no fechamento
 
@@ -425,8 +432,10 @@ Ao concluir cada fase e ao fechar a iteração, o agente deve identificar e regi
 - Item já rastreado em issue existente aberta
 
 **Commit das atualizações:**
-```
-chore(prodops): register follow-up issues from iteration <iteration-id>
+```bash
+git add prodops/artifacts/product/backlogs/tracking-list.md
+git status  # verificar que não há arquivos faltando antes de commitar
+git commit -m "chore(prodops): register follow-up issues from iteration <iteration-id>"
 ```
 
 ## Protocolo de exceção — bloqueios
