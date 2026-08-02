@@ -380,6 +380,47 @@ O upgrade para multer >=2.2.0 foi aplicado via `npm audit fix` sem alteração e
 
 ---
 
+# DS-51 — Cancelamento de invoice com idempotência (cancel-invoice)
+
+**Capability:** cancel-invoice
+**Severidade:** Baixa
+**Status:** Aceito
+
+## Riscos identificados
+
+- Cancelamento de invoice já `CONFIRMED` — mitigado por validação de estado antes de chamar o provedor; invoice confirmada não pode ser cancelada.
+- Chamada duplicada ao provedor Asaas — mitigado por idempotência: retry com mesma chave não gera segunda chamada.
+- Provedor retorna 404 para invoice já cancelada — mitigado por política explícita documentada no OBC; 404 não publica `payment.cancelled` sem decisão.
+- Publicação de `payment.cancelled` sem confirmação do provedor — mitigado por aguardar resposta de sucesso antes de emitir o evento canônico.
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/cancel-invoice.md`
+- BDD: `prodops/artifacts/bdd/cancel-invoice.feature`
+- Issue: [#47](https://github.com/produtoreativo/payments-api/issues/47)
+
+---
+
+# DS-52 — Resolução de vulnerabilidade postcss em validation-workbench (postcss-security)
+
+**Capability:** postcss-security
+**Severidade:** Baixa
+**Status:** Aceito
+
+## Riscos identificados
+
+- Upgrade de `vite` introduz breaking change no build de `validation-workbench/` — mitigado por verificar build local antes do PR; sem `--force`.
+- Override de `postcss` em `package.json` não é respeitado por alguma ferramenta — mitigado por verificar `package-lock.json` após `npm install` que postcss >= 8.5.18 foi resolvido.
+- api/ afetada inadvertidamente — mitigado por restringir alterações exclusivamente a `validation-workbench/`; CI de api/ valida ausência de regressão.
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/postcss-security.md`
+- BDD: `prodops/artifacts/bdd/postcss-security.feature`
+- Issue: [#117](https://github.com/produtoreativo/payments-api/issues/117)
+
+---
+
 # DS-48 — Pipeline CI/CD para produção (production-cicd-pipeline)
 
 **Capability:** production-cicd-pipeline
