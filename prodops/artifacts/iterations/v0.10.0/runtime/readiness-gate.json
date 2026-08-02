@@ -1,0 +1,30 @@
+{
+  "iteration-id": "v0.10.0",
+  "checked-at": "2026-08-01T00:00:00Z",
+  "result": "ready",
+  "capabilities": {
+    "DS-51": {
+      "slug": "cancel-invoice",
+      "gates": {
+        "obc": true,
+        "bdd": true,
+        "risks": true,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": []
+    },
+    "DS-52": {
+      "slug": "postcss-security",
+      "gates": {
+        "obc": true,
+        "bdd": true,
+        "risks": true,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": []
+    }
+  },
+  "next-action": "none"
+}
