@@ -257,7 +257,7 @@ fi
 # ── Step 3: Derive state ──────────────────────────────────────────────────────
 log "Deriving state..."
 DERIVE_ERR=$(mktemp)
-if ! DERIVED_JSON=$(bash "$DERIVE" --issue "$WORK_ITEM_ID" 2>"$DERIVE_ERR"); then
+if ! DERIVED_JSON=$(bash "$DERIVE" --issue "$WORK_ITEM_ID" ${ITERATION_ID:+--iteration-id "$ITERATION_ID"} 2>"$DERIVE_ERR"); then
   ERR_MSG=$(cat "$DERIVE_ERR"); rm -f "$DERIVE_ERR"
   error_output "$(jq -n --arg e "consumer/derive-state.sh failed: $ERR_MSG" '[$e]')"
   exit 3

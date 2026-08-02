@@ -1,0 +1,12 @@
+{
+  "iteration-id": "v0.10.0",
+  "status": "completed",
+  "project-cleanup": "completed",
+  "correlation-id": "1de4034c-c74d-4a0f-93cb-bfec1c1f283b",
+  "completed-at": "2026-08-02T02:29:46Z",
+  "plan-issue": 124,
+  "issues": [
+    "47",
+    "117"
+  ]
+}
