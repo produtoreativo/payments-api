@@ -118,25 +118,50 @@ Fila Downstream — Iteration Plan ativo
       ```
       - Não bloquear se o projeto estiver vazio, se nenhum item for encontrado ou se `LAST_DONE` for vazio.
       - Não remover issues abertas de iterações em andamento.
-   c. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>`, `work-item-id: null` e `--iteration-id <iteration-id>`.
-   d. Executar o Bootstrap work: instalar dependências, verificar runtimes e serviços locais, confirmar variáveis de ambiente, executar o smoke gate do manifest.
-   e. Se qualquer etapa falhar: reportar o bloqueio e **parar toda a fila** — não iniciar nenhum issue.
-   f. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`.
-   g. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
+   c. **Issue de acompanhamento do Iteration Plan** — verificar se já existe uma issue com título `[Iteration <iteration-id>]:` no GitHub:
+      ```bash
+      gh issue list --search "[Iteration <iteration-id>]" --state all --json number,title | jq '.[0].number // empty'
+      ```
+      - Se **não existir**: criar a issue de acompanhamento:
+        ```bash
+        gh issue create \
+          --title "[Iteration <iteration-id>]: <scope-summary>" \
+          --label "prodops,artifact-type:iteration-plan" \
+          --body "Iteration Plan: prodops/artifacts/iterations/<iteration-id>/plan.md\n\nCapabilities: <DS-IDs>\nIssues: <issue-numbers>"
+        ```
+      - Se já existir: anotar o número e continuar.
+      - Registrar o número da issue no `plan-bootstrap.json` como `"plan-issue": <number>`.
+   d. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>`, `work-item-id: null` e `--iteration-id <iteration-id>`.
+   e. Executar o Bootstrap work: instalar dependências, verificar runtimes e serviços locais, confirmar variáveis de ambiente, executar o smoke gate do manifest.
+   f. Se qualquer etapa falhar: reportar o bloqueio e **parar toda a fila** — não iniciar nenhum issue.
+   g. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`.
+   h. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
    ```json
    {
      "iteration-id": "<iteration-id>",
      "status": "completed",
      "correlation-id": "<uuid-gerado-no-started>",
      "completed-at": "<timestamp-iso8601>",
+     "plan-issue": <número-da-issue-de-acompanhamento>,
      "issues": ["<issue-1>", "<issue-2>", "..."]
    }
    ```
-   h. Commitar o arquivo no repositório antes de iniciar o loop.
+   i. Commitar o arquivo no repositório antes de iniciar o loop.
 
 7. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
    a. Executar `/readiness <capability>` — se falhar: gravar `readiness-gate.json` com `"result": "blocked"` (ver seção **Readiness Cache**) e **parar toda a fila**.
-   b. Executar CI Sync: Bootstrap (fast path via plan-bootstrap) → Hack → Sync → Finish.
+   b. Executar CI Sync: Bootstrap → Hack → Sync → Finish. Após **cada fase concluída**, postar obrigatoriamente um comentário na issue do item:
+      ```bash
+      gh issue comment <work-item-id> --body "## <Fase> — <YYYY-MM-DD HH:MM UTC>
+
+      **Status:** <Concluído | Bloqueado | Falhou>
+
+      <resumo em até 5 linhas: o que foi feito, evidências principais, próximo passo>
+
+      ---
+      *correlation-id: <uuid> · iteration: <iteration-id> · actor: <player>*"
+      ```
+      **Este passo é obrigatório e não pode ser omitido.** Postar mesmo em caso de falha ou bloqueio — o comentário deve descrever o motivo e a ação necessária.
    c. Reportar evidências do item concluído e avançar automaticamente para o próximo.
 
 Parar apenas quando: (1) um readiness falhar, (2) um gate de qualidade não passar, (3) a fila se esgotar.
@@ -220,29 +245,6 @@ Se o item estiver no Iteration Plan com status `Entrou` mas sem Issue mapeada:
 4. Commitar `plan.md` antes de continuar.
 
 Nunca iniciar Bootstrap sem Issue mapeada — o `work-item-id` da capsule e dos eventos depende desse número.
-
-### Registro automático por fase — Issue Trail
-
-Após cada fase concluída (Readiness, Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote), postar um comentário na Issue com o resultado da fase:
-
-```bash
-gh issue comment <work-item-id> --body "<resumo da fase>"
-```
-
-Formato do comentário:
-
-```
-## <Fase> — <YYYY-MM-DD HH:MM UTC>
-
-**Status:** <Concluído | Bloqueado | Falhou>
-
-<resumo em até 5 linhas: o que foi feito, evidências principais, próximo passo>
-
----
-*correlation-id: <uuid> · iteration: <iteration-id> · actor: <player>*
-```
-
-O registro é obrigatório mesmo em caso de falha ou bloqueio — o comentário de bloqueio deve descrever o motivo e a ação necessária para resolução. Isso garante rastreabilidade completa do trabalho diretamente na Issue, acessível a qualquer agente ou humano sem precisar ler timelines ou trails.
 
 Quando todos os pré-requisitos existirem:
 

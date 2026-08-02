@@ -118,25 +118,50 @@ Downstream Queue — Active Iteration Plan
       ```
       - Do not block if the project is empty, if no items are found, or if `LAST_DONE` is empty.
       - Do not remove open issues from ongoing iterations.
-   c. Emit `Delivery.Plan.Bootstrap.Started` with `subject: <iteration-id>`, `work-item-id: null` and `--iteration-id <iteration-id>`.
-   d. Execute Bootstrap work: install dependencies, verify runtimes and local services, confirm environment variables, run the manifest smoke gate.
-   e. If any step fails: report the blocker and **stop the entire queue** — do not start any issue.
-   f. Emit `Delivery.Plan.Bootstrap.Completed` with `subject: <iteration-id>` and `--iteration-id <iteration-id>`.
-   g. Write `ITERATION_DIR/runtime/plan-bootstrap.json`:
+   c. **Iteration Plan tracking issue** — check if an issue with title `[Iteration <iteration-id>]:` already exists:
+      ```bash
+      gh issue list --search "[Iteration <iteration-id>]" --state all --json number,title | jq '.[0].number // empty'
+      ```
+      - If **not found**: create the tracking issue:
+        ```bash
+        gh issue create \
+          --title "[Iteration <iteration-id>]: <scope-summary>" \
+          --label "prodops,artifact-type:iteration-plan" \
+          --body "Iteration Plan: prodops/artifacts/iterations/<iteration-id>/plan.md\n\nCapabilities: <DS-IDs>\nIssues: <issue-numbers>"
+        ```
+      - If already exists: record the number and continue.
+      - Record the issue number in `plan-bootstrap.json` as `"plan-issue": <number>`.
+   d. Emit `Delivery.Plan.Bootstrap.Started` with `subject: <iteration-id>`, `work-item-id: null` and `--iteration-id <iteration-id>`.
+   e. Execute Bootstrap work: install dependencies, verify runtimes and local services, confirm environment variables, run the manifest smoke gate.
+   f. If any step fails: report the blocker and **stop the entire queue** — do not start any issue.
+   g. Emit `Delivery.Plan.Bootstrap.Completed` with `subject: <iteration-id>` and `--iteration-id <iteration-id>`.
+   h. Write `ITERATION_DIR/runtime/plan-bootstrap.json`:
    ```json
    {
      "iteration-id": "<iteration-id>",
      "status": "completed",
      "correlation-id": "<uuid-generated-at-started>",
      "completed-at": "<iso8601-timestamp>",
+     "plan-issue": <tracking-issue-number>,
      "issues": ["<issue-1>", "<issue-2>", "..."]
    }
    ```
-   h. Commit the file to the repository before starting the loop.
+   i. Commit the file to the repository before starting the loop.
 
 7. For each item in the queue, in order, without requesting confirmation between them:
    a. Run `/readiness <capability>` — if it fails: write `readiness-gate.json` with `"result": "blocked"` (see **Readiness Cache** section) and **stop the entire queue**.
-   b. Execute CI Sync: Bootstrap (fast path via plan-bootstrap) → Hack → Sync → Finish.
+   b. Execute CI Sync: Bootstrap → Hack → Sync → Finish. After **each completed phase**, post a mandatory comment on the item's issue:
+      ```bash
+      gh issue comment <work-item-id> --body "## <Phase> — <YYYY-MM-DD HH:MM UTC>
+
+      **Status:** <Completed | Blocked | Failed>
+
+      <summary in up to 5 lines: what was done, key evidence, next step>
+
+      ---
+      *correlation-id: <uuid> · iteration: <iteration-id> · actor: <player>*"
+      ```
+      **This step is mandatory and must not be skipped.** Post even on failure or block — the comment must describe the reason and the action required to resolve it.
    c. Report evidence for the completed item and automatically advance to the next.
 
 Stop only when: (1) a readiness check fails, (2) a quality gate does not pass, (3) the queue is exhausted.
