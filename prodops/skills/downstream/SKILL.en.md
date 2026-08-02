@@ -17,19 +17,32 @@ DS-<feature-slug-number>
 
 The DS-ID identifies the **feature** (stable), not the GitHub Issue (ephemeral — changes each iteration). The mapping `DS-ID → issue` is declared in the active iteration's `plan.md`. The agent resolves `DS-39 → issue #106` by reading the mapping table from the plan, never inferring from the DS-ID number.
 
-## Skill resolution
+## Skill resolution and project configuration
 
-All skill paths are resolved from the index at `prodops/runtime/runtime.yaml`, section `skills:`. Read that file once at the start of execution — **never use `find` or `ls` to locate skill files**. Example:
+Read `prodops/runtime/runtime.yaml` **once** at the start of execution and extract:
+
+- **Skill paths** — section `skills:`. Never use `find` or `ls` to locate skill files.
+- **GitHub Project configuration** — section `github:`, fields `owner` and `project-number`.
 
 ```yaml
 # prodops/runtime/runtime.yaml
+github:
+  owner: produtoreativo
+  project-number: 25
 skills:
   bootstrap: prodops/skills/bootstrap/SKILL.md
   hack:      prodops/skills/hack/SKILL.md
   # ...
 ```
 
-To invoke a skill: read `runtime.yaml` → extract the path → read the file directly using the canonical path.
+Store the values as variables for use in all `gh project` commands:
+
+```bash
+PROJECT_OWNER=$(python3 -c "import yaml; d=yaml.safe_load(open('prodops/runtime/runtime.yaml')); print(d['github']['owner'])")
+PROJECT_NUMBER=$(python3 -c "import yaml; d=yaml.safe_load(open('prodops/runtime/runtime.yaml')); print(d['github']['project-number'])")
+```
+
+To invoke a skill: extract the path from the `skills:` section → read the file directly using the canonical path.
 
 ## Iteration Directory
 
@@ -97,27 +110,15 @@ Downstream Queue — Active Iteration Plan
 
 6. **Plan Bootstrap** — run once before the issue loop:
    a. Check if `ITERATION_DIR/runtime/plan-bootstrap.json` already exists with `"status": "completed"`. If so, skip to step 7 (environment already ready).
-   b. **Project cleanup** — remove the issues from the last completed iteration before adding the new ones:
+   b. **Project cleanup** — remove all current items from the Project before adding the new iteration's issues:
       ```bash
-      # 1. Find the last iteration with "Concluido" status in the history
-      LAST_DONE=$(grep -oP '\[v[\d.]+\]' prodops/artifacts/plans/iteration-plan.md \
-        | grep -oP 'v[\d.]+' | while read v; do
-            grep -q "Conclu" "prodops/artifacts/iterations/$v/plan.md" 2>/dev/null && echo "$v"
-          done | tail -1)
-
-      # 2. Extract issue numbers from the DS-ID → Issue mapping table of that iteration
-      CLOSED_ISSUES=$(grep -oP '#\d+' "prodops/artifacts/iterations/${LAST_DONE}/plan.md" \
-        | grep -oP '\d+' | sort -u)
-
-      # 3. For each issue, locate and remove the item from the Project
-      for ISSUE_NUM in $CLOSED_ISSUES; do
-        ITEM_ID=$(gh project item-list 25 --owner produtoreativo --format json \
-          | jq -r --argjson n "$ISSUE_NUM" '.items[] | select(.content.number == $n) | .id')
-        [[ -n "$ITEM_ID" ]] && gh project item-delete 25 --owner produtoreativo --id "$ITEM_ID"
-      done
+      gh project item-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json \
+        | jq -r '.items[].id' \
+        | while read ITEM_ID; do
+            gh project item-delete "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --id "$ITEM_ID"
+          done
       ```
-      - Do not block if the project is empty, if no items are found, or if `LAST_DONE` is empty.
-      - Do not remove open issues from ongoing iterations.
+      - Do not block if the project is empty — record `"project-cleanup": "completed"` regardless.
    c. **Iteration Plan tracking issue** — check if an issue with title `[Iteration <iteration-id>]:` already exists:
       ```bash
       gh issue list --search "[Iteration <iteration-id>]" --state all --json number,title | jq '.[0].number // empty'
@@ -237,7 +238,7 @@ If the item is in the Iteration Plan with status `Entrou` but without a mapped I
    - **Title:** `[DS-<n>]: <capability-description>`
    - **Body:** include DS-ID, iteration-id, OBC path, BDD path and link to plan.md
    - **Labels:** `journey:delivery`, `artifact-type:local-obc`, `operation:implement`
-2. Associate with Project 25:
+2. Associate with Project (`$PROJECT_NUMBER`):
    ```bash
    gh issue edit <number> --add-project "ProdOps Runtime"
    ```

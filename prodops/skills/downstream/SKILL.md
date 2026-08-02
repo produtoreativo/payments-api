@@ -17,19 +17,32 @@ DS-<feature-slug-number>
 
 O DS-ID identifica a **feature** (estável), não a GitHub Issue (efêmera — muda a cada iteração). O mapeamento `DS-ID → issue` é declarado no `plan.md` da iteração ativa. O agente resolve `DS-39 → issue #106` lendo a tabela de mapeamento do plano, nunca inferindo do número do DS-ID.
 
-## Resolução de skills
+## Resolução de skills e configuração do projeto
 
-Todos os paths de skill são resolvidos pelo índice em `prodops/runtime/runtime.yaml`, seção `skills:`. Ler esse arquivo uma única vez no início da execução — **nunca usar `find` ou `ls` para localizar arquivos de skill**. Exemplo:
+Ler `prodops/runtime/runtime.yaml` **uma única vez** no início da execução e extrair:
+
+- **Paths de skill** — seção `skills:`. Nunca usar `find` ou `ls` para localizar arquivos de skill.
+- **Configuração do GitHub Project** — seção `github:`, campos `owner` e `project-number`.
 
 ```yaml
 # prodops/runtime/runtime.yaml
+github:
+  owner: produtoreativo
+  project-number: 25
 skills:
   bootstrap: prodops/skills/bootstrap/SKILL.md
   hack:      prodops/skills/hack/SKILL.md
   # ...
 ```
 
-Para invocar um skill: ler `runtime.yaml` → extrair o path → ler o arquivo diretamente com o path canônico.
+Armazenar os valores como variáveis para uso em todos os comandos `gh project`:
+
+```bash
+PROJECT_OWNER=$(python3 -c "import yaml; d=yaml.safe_load(open('prodops/runtime/runtime.yaml')); print(d['github']['owner'])")
+PROJECT_NUMBER=$(python3 -c "import yaml; d=yaml.safe_load(open('prodops/runtime/runtime.yaml')); print(d['github']['project-number'])")
+```
+
+Para invocar um skill: extrair o path da seção `skills:` → ler o arquivo diretamente com o path canônico.
 
 ## Iteration Directory
 
@@ -95,15 +108,15 @@ Fila Downstream — Iteration Plan ativo
 ...
 ```
 
-5. **Project Cleanup** — remover do Project 25 as issues da última iteração concluída. **Este passo é independente do Plan Bootstrap e sempre executa**, mesmo que `plan-bootstrap.json` já exista.
+5. **Project Cleanup** — remover todos os items do GitHub Project antes de adicionar os da nova iteração. **Este passo é independente do Plan Bootstrap e sempre executa**, mesmo que `plan-bootstrap.json` já exista.
 
    a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` tem o campo `"project-cleanup": "completed"`. Se tiver, pular este passo.
-   b. Se não tiver (campo ausente ou arquivo inexistente), remover todos os items atualmente no Project 25:
+   b. Se não tiver (campo ausente ou arquivo inexistente), remover todos os items atualmente no Project (`$PROJECT_NUMBER`):
       ```bash
-      gh project item-list 25 --owner produtoreativo --format json \
+      gh project item-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json \
         | jq -r '.items[].id' \
         | while read ITEM_ID; do
-            gh project item-delete 25 --owner produtoreativo --id "$ITEM_ID"
+            gh project item-delete "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --id "$ITEM_ID"
           done
       ```
    c. Após executar (com ou sem itens removidos), adicionar `"project-cleanup": "completed"` em `ITERATION_DIR/runtime/plan-bootstrap.json` (criar o arquivo com apenas esse campo se ele não existir ainda). Commitar.
@@ -241,7 +254,7 @@ Se o item estiver no Iteration Plan com status `Entrou` mas sem Issue mapeada:
    - **Título:** `[DS-<n>]: <capability-description>`
    - **Body:** incluir DS-ID, iteration-id, OBC path, BDD path e link para o plan.md
    - **Labels:** `journey:delivery`, `artifact-type:local-obc`, `operation:implement`
-2. Associar ao Project 25:
+2. Associar ao Project (`$PROJECT_NUMBER`):
    ```bash
    gh issue edit <number> --add-project "ProdOps Runtime"
    ```
