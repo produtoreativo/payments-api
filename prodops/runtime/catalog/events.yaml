@@ -29,6 +29,60 @@ events:
     phase: Started
     alters-state: false
 
+  Delivery.Plan.Bootstrap.Project.Cleaned:
+    cloud-event-type: prodops.delivery.plan.bootstrap.project.cleaned
+    description: All previous items removed from the GitHub Project; board is clear and ready to receive the current iteration's issues
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/project/cleaned/v1.0.0
+    journey: Delivery
+    cycle: Plan.Bootstrap
+    phase: Project.Cleaned
+    alters-state: false
+
+  Delivery.Plan.Bootstrap.Issue.Registered:
+    cloud-event-type: prodops.delivery.plan.bootstrap.issue.registered
+    description: The iteration plan tracking issue was created or confirmed in GitHub; its number is recorded in plan-bootstrap.json
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/issue/registered/v1.0.0
+    journey: Delivery
+    cycle: Plan.Bootstrap
+    phase: Issue.Registered
+    alters-state: false
+
+  Delivery.Plan.Bootstrap.Issues.Added:
+    cloud-event-type: prodops.delivery.plan.bootstrap.issues.added
+    description: All iteration plan issues added to the GitHub Project board; board now shows every work item for this iteration
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/issues/added/v1.0.0
+    journey: Delivery
+    cycle: Plan.Bootstrap
+    phase: Issues.Added
+    alters-state: false
+
+  Delivery.Plan.Bootstrap.Dependencies.Installed:
+    cloud-event-type: prodops.delivery.plan.bootstrap.dependencies.installed
+    description: Package manager completed without errors at the plan level; all declared dependencies installed and available for the iteration
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/dependencies/installed/v1.0.0
+    journey: Delivery
+    cycle: Plan.Bootstrap
+    phase: Dependencies.Installed
+    alters-state: false
+
+  Delivery.Plan.Bootstrap.Services.Ready:
+    cloud-event-type: prodops.delivery.plan.bootstrap.services.ready
+    description: All required local services and infrastructure are reachable at the plan level; shared environment ready for all issues in the iteration
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/services/ready/v1.0.0
+    journey: Delivery
+    cycle: Plan.Bootstrap
+    phase: Services.Ready
+    alters-state: false
+
+  Delivery.Plan.Bootstrap.Smoke.Passed:
+    cloud-event-type: prodops.delivery.plan.bootstrap.smoke.passed
+    description: The smoke gate passed at the plan level; shared environment validated end-to-end and confirmed ready for all issues in the iteration
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/smoke/passed/v1.0.0
+    journey: Delivery
+    cycle: Plan.Bootstrap
+    phase: Smoke.Passed
+    alters-state: false
+
   Delivery.Plan.Bootstrap.Completed:
     cloud-event-type: prodops.delivery.plan.bootstrap.completed
     description: Marks successful completion of the Plan-level Bootstrap; environment is ready for all issues in the Iteration Plan. Subject is the iteration-id.

@@ -108,55 +108,63 @@ Fila Downstream — Iteration Plan ativo
 ...
 ```
 
-5. **Project Cleanup** — remover todos os items do GitHub Project antes de adicionar os da nova iteração. **Este passo é independente do Plan Bootstrap e sempre executa**, mesmo que `plan-bootstrap.json` já exista.
+5. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
+   a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` já existe com `"status": "completed"`. Se sim, pular para o passo 6 (ambiente já pronto).
+   b. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>`, `work-item-id: null` e `--iteration-id <iteration-id>`. Verificar `"datadog-sync"` e `"github-sync"` na saída — exibir aviso se erro.
 
-   a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` tem o campo `"project-cleanup": "completed"`. Se tiver, pular este passo.
-   b. Se não tiver (campo ausente ou arquivo inexistente), executar o script canônico:
-      ```bash
-      bash prodops/runtime/scripts/project-cleanup.sh
-      ```
-      O script lê `project-number` e `owner` de `prodops/runtime/runtime.yaml` e remove todos os items do Project. Suporta `--dry-run` para inspeção prévia. Seguro quando o projeto estiver vazio — sai com exit 0.
-   c. Após executar (com ou sem itens removidos), adicionar `"project-cleanup": "completed"` em `ITERATION_DIR/runtime/plan-bootstrap.json` (criar o arquivo com apenas esse campo se ele não existir ainda). Commitar.
-   d. Não bloquear se o projeto estiver vazio — registrar `"project-cleanup": "completed"` mesmo assim.
+   **Etapa 1 — Project Cleanup:** remover todos os items existentes do GitHub Project.
+   ```bash
+   bash prodops/runtime/scripts/project-cleanup.sh
+   ```
+   Seguro quando o projeto estiver vazio — exit 0. Após executar, emitir `Delivery.Plan.Bootstrap.Project.Cleaned`.
 
-6. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
-   a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` já existe com `"status": "completed"`. Se sim, pular para o passo 7 (ambiente já pronto — cleanup já foi tratado no passo 5).
-   b. **Issue de acompanhamento do Iteration Plan** — verificar se já existe uma issue com título `[Iteration <iteration-id>]:` no GitHub:
-      ```bash
-      gh issue list --search "[Iteration <iteration-id>]" --state all --json number,title | jq '.[0].number // empty'
-      ```
-      - Se **não existir**: criar a issue de acompanhamento:
-        ```bash
-        gh issue create \
-          --title "[Iteration <iteration-id>]: <scope-summary>" \
-          --label "prodops,artifact-type:iteration-plan" \
-          --body "Iteration Plan: prodops/artifacts/iterations/<iteration-id>/plan.md\n\nCapabilities: <DS-IDs>\nIssues: <issue-numbers>"
-        ```
-      - Se já existir: anotar o número e continuar.
-      - Registrar o número da issue no `plan-bootstrap.json` como `"plan-issue": <number>`.
-   c. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>`, `work-item-id: null` e `--iteration-id <iteration-id>`. Após emitir, verificar o JSON de saída do emit-event: se `"datadog-sync": "error"` ou `"github-sync": "error"`, exibir aviso visível ao usuário — não continuar silenciosamente.
-   d. Executar o Bootstrap work: instalar dependências, verificar runtimes e serviços locais, confirmar variáveis de ambiente, executar o smoke gate do manifest.
-   e. Se qualquer etapa falhar: reportar o bloqueio e **parar toda a fila** — não iniciar nenhum issue.
-   f. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`. Verificar `"datadog-sync"` e `"github-sync"` na saída — exibir aviso se erro.
-   g. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
+   **Etapa 2 — Issue de acompanhamento:** verificar se já existe uma issue com título `[Iteration <iteration-id>]:` no GitHub:
+   ```bash
+   gh issue list --search "[Iteration <iteration-id>]" --state all --json number,title | jq '.[0].number // empty'
+   ```
+   - Se **não existir**: criar:
+     ```bash
+     gh issue create \
+       --title "[Iteration <iteration-id>]: <scope-summary>" \
+       --label "prodops,artifact-type:iteration-plan" \
+       --body "Iteration Plan: prodops/artifacts/iterations/<iteration-id>/plan.md\n\nCapabilities: <DS-IDs>\nIssues: <issue-numbers>"
+     ```
+   - Se já existir: anotar o número e continuar.
+   Emitir `Delivery.Plan.Bootstrap.Issue.Registered` com o número registrado no payload.
+
+   **Etapa 3 — Adicionar issues ao Project:** para cada issue do Iteration Plan (todas as issues com status `Entrou`), adicionar ao GitHub Project:
+   ```bash
+   for ISSUE_NUMBER in <lista-de-issues>; do
+     gh project item-add "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --url "https://github.com/$PROJECT_OWNER/payments-api/issues/$ISSUE_NUMBER"
+   done
+   ```
+   Após adicionar todas, emitir `Delivery.Plan.Bootstrap.Issues.Added`.
+
+   **Etapa 4 — Instalar dependências:** instalar dependências com o gerenciador de pacotes declarado. Se falhar: parar toda a fila. Após instalar, emitir `Delivery.Plan.Bootstrap.Dependencies.Installed`.
+
+   **Etapa 5 — Infraestrutura local:** verificar runtimes e CLIs, subir serviços locais (Docker, LocalStack). Se qualquer serviço não estiver reachable: parar toda a fila. Após todos os serviços confirmados, emitir `Delivery.Plan.Bootstrap.Services.Ready`.
+
+   **Etapa 6 — Smoke gate:** executar o gate `smoke` definido em `prodops/exec/manifest.yaml`. Se falhar: parar toda a fila. Após passar, emitir `Delivery.Plan.Bootstrap.Smoke.Passed`.
+
+   c. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`. Verificar `"datadog-sync"` e `"github-sync"` na saída — exibir aviso se erro.
+   d. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
    ```json
    {
      "iteration-id": "<iteration-id>",
      "status": "completed",
-     "project-cleanup": "completed",
      "correlation-id": "<uuid-gerado-no-started>",
      "completed-at": "<timestamp-iso8601>",
      "plan-issue": <número-da-issue-de-acompanhamento>,
      "issues": ["<issue-1>", "<issue-2>", "..."]
    }
    ```
-   h. Commitar o arquivo no repositório antes de iniciar o loop.
+   e. Commitar o arquivo no repositório antes de iniciar o loop.
 
-7. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
+6. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
    a. Executar `/readiness <capability>` — se falhar: gravar `readiness-gate.json` com `"result": "blocked"` (ver seção **Readiness Cache**) e **parar toda a fila**.
    b. Executar CI Sync: Bootstrap → Hack → Sync → Finish — **em sequência estrita e síncrona**. Cada fase é um sub-agente invocado com `run_in_background: false`. Nunca spawnar uma fase em background. Nunca iniciar a fase seguinte antes de receber o resultado da fase anterior. Após **cada fase concluída**:
 
-      **7b-i — Verificar saída de cada emit-event:** o emit-event retorna JSON com campos `"datadog-sync"` e `"github-sync"`. Após **cada chamada** de emit-event (em qualquer fase), capturar o JSON e verificar:
+      **6b-i — Verificar saída de cada emit-event:** o emit-event retorna JSON com campos `"datadog-sync"` e `"github-sync"`. Após **cada chamada** de emit-event (em qualquer fase), capturar o JSON e verificar:
       ```bash
       RESULT=$(bash prodops/runtime/tools/emit-event/scripts/emit-event --input <event.json>)
       echo "$RESULT" | jq -r '"datadog-sync: \(."datadog-sync") | github-sync: \(."github-sync")"'
@@ -164,7 +172,7 @@ Fila Downstream — Iteration Plan ativo
       Se `"datadog-sync": "error"` → exibir: `⚠️ Datadog sync falhou — evento registrado na timeline local mas não enviado ao Datadog`.
       Se `"github-sync": "error"` → exibir: `⚠️ GitHub sync falhou — oem-state NÃO foi atualizado no Project`. Neste caso **não avançar** para a próxima fase sem resolver, pois o estado do Project ficará inconsistente.
 
-      **7b-ii — Postar comentário obrigatório na issue:**
+      **6b-ii — Postar comentário obrigatório na issue:**
       ```bash
       gh issue comment <work-item-id> --body "## <Fase> — <YYYY-MM-DD HH:MM UTC>
 
@@ -251,12 +259,10 @@ Se o item estiver no Iteration Plan com status `Entrou` mas sem Issue mapeada:
    - **Título:** `[DS-<n>]: <capability-description>`
    - **Body:** incluir DS-ID, iteration-id, OBC path, BDD path e link para o plan.md
    - **Labels:** `journey:delivery`, `artifact-type:local-obc`, `operation:implement`
-2. Associar ao Project (`$PROJECT_NUMBER`):
-   ```bash
-   gh issue edit <number> --add-project "ProdOps Runtime"
-   ```
-3. Atualizar a coluna `Issue` do `plan.md` com o número criado.
-4. Commitar `plan.md` antes de continuar.
+2. Atualizar a coluna `Issue` do `plan.md` com o número criado.
+3. Commitar `plan.md` antes de continuar.
+
+Não associar ao Project aqui — a adição de todas as issues ao Project ocorre de forma centralizada na Etapa 3 do Plan Bootstrap (`Plan.Bootstrap.Issues.Added`).
 
 Nunca iniciar Bootstrap sem Issue mapeada — o `work-item-id` da capsule e dos eventos depende desse número.
 

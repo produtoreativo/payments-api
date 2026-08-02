@@ -108,32 +108,46 @@ Downstream Queue — Active Iteration Plan
 ...
 ```
 
-6. **Plan Bootstrap** — run once before the issue loop:
-   a. Check if `ITERATION_DIR/runtime/plan-bootstrap.json` already exists with `"status": "completed"`. If so, skip to step 7 (environment already ready).
-   b. **Project cleanup** — remove all current items from the Project before adding the new iteration's issues:
-      ```bash
-      bash prodops/runtime/scripts/project-cleanup.sh
-      ```
-      The script reads `project-number` and `owner` from `prodops/runtime/runtime.yaml` and removes all items. Supports `--dry-run`. Safe when the project is empty — exits 0.
-      - Do not block if the project is empty — record `"project-cleanup": "completed"` regardless.
-   c. **Iteration Plan tracking issue** — check if an issue with title `[Iteration <iteration-id>]:` already exists:
-      ```bash
-      gh issue list --search "[Iteration <iteration-id>]" --state all --json number,title | jq '.[0].number // empty'
-      ```
-      - If **not found**: create the tracking issue:
-        ```bash
-        gh issue create \
-          --title "[Iteration <iteration-id>]: <scope-summary>" \
-          --label "prodops,artifact-type:iteration-plan" \
-          --body "Iteration Plan: prodops/artifacts/iterations/<iteration-id>/plan.md\n\nCapabilities: <DS-IDs>\nIssues: <issue-numbers>"
-        ```
-      - If already exists: record the number and continue.
-      - Record the issue number in `plan-bootstrap.json` as `"plan-issue": <number>`.
-   d. Emit `Delivery.Plan.Bootstrap.Started` with `subject: <iteration-id>`, `work-item-id: null` and `--iteration-id <iteration-id>`.
-   e. Execute Bootstrap work: install dependencies, verify runtimes and local services, confirm environment variables, run the manifest smoke gate.
-   f. If any step fails: report the blocker and **stop the entire queue** — do not start any issue.
-   g. Emit `Delivery.Plan.Bootstrap.Completed` with `subject: <iteration-id>` and `--iteration-id <iteration-id>`.
-   h. Write `ITERATION_DIR/runtime/plan-bootstrap.json`:
+5. **Plan Bootstrap** — run once before the issue loop:
+   a. Check if `ITERATION_DIR/runtime/plan-bootstrap.json` already exists with `"status": "completed"`. If so, skip to step 6 (environment already ready).
+   b. Emit `Delivery.Plan.Bootstrap.Started` with `subject: <iteration-id>`, `work-item-id: null` and `--iteration-id <iteration-id>`. Check `"datadog-sync"` and `"github-sync"` in the output — display a warning if error.
+
+   **Step 1 — Project Cleanup:** remove all existing items from the GitHub Project.
+   ```bash
+   bash prodops/runtime/scripts/project-cleanup.sh
+   ```
+   Safe when the project is empty — exits 0. After running, emit `Delivery.Plan.Bootstrap.Project.Cleaned`.
+
+   **Step 2 — Tracking issue:** check if an issue with title `[Iteration <iteration-id>]:` already exists:
+   ```bash
+   gh issue list --search "[Iteration <iteration-id>]" --state all --json number,title | jq '.[0].number // empty'
+   ```
+   - If **not found**: create the tracking issue:
+     ```bash
+     gh issue create \
+       --title "[Iteration <iteration-id>]: <scope-summary>" \
+       --label "prodops,artifact-type:iteration-plan" \
+       --body "Iteration Plan: prodops/artifacts/iterations/<iteration-id>/plan.md\n\nCapabilities: <DS-IDs>\nIssues: <issue-numbers>"
+     ```
+   - If already exists: record the number and continue.
+   Emit `Delivery.Plan.Bootstrap.Issue.Registered` with the registered number in the payload.
+
+   **Step 3 — Add issues to Project:** for each issue in the Iteration Plan (all issues with status `Entrou`), add to the GitHub Project:
+   ```bash
+   for ISSUE_NUMBER in <issue-list>; do
+     gh project item-add "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --url "https://github.com/$PROJECT_OWNER/payments-api/issues/$ISSUE_NUMBER"
+   done
+   ```
+   After adding all, emit `Delivery.Plan.Bootstrap.Issues.Added`.
+
+   **Step 4 — Install dependencies:** install dependencies with the declared package manager. If it fails: stop the entire queue. After installing, emit `Delivery.Plan.Bootstrap.Dependencies.Installed`.
+
+   **Step 5 — Local infrastructure:** verify runtimes and CLIs, start local services (Docker, LocalStack). If any service is not reachable: stop the entire queue. After all services confirmed, emit `Delivery.Plan.Bootstrap.Services.Ready`.
+
+   **Step 6 — Smoke gate:** run the `smoke` gate defined in `prodops/exec/manifest.yaml`. If it fails: stop the entire queue. After passing, emit `Delivery.Plan.Bootstrap.Smoke.Passed`.
+
+   c. Emit `Delivery.Plan.Bootstrap.Completed` with `subject: <iteration-id>` and `--iteration-id <iteration-id>`. Check `"datadog-sync"` and `"github-sync"` in the output — display a warning if error.
+   d. Write `ITERATION_DIR/runtime/plan-bootstrap.json`:
    ```json
    {
      "iteration-id": "<iteration-id>",
@@ -144,9 +158,9 @@ Downstream Queue — Active Iteration Plan
      "issues": ["<issue-1>", "<issue-2>", "..."]
    }
    ```
-   i. Commit the file to the repository before starting the loop.
+   e. Commit the file to the repository before starting the loop.
 
-7. For each item in the queue, in order, without requesting confirmation between them:
+6. For each item in the queue, in order, without requesting confirmation between them:
    a. Run `/readiness <capability>` — if it fails: write `readiness-gate.json` with `"result": "blocked"` (see **Readiness Cache** section) and **stop the entire queue**.
    b. Execute CI Sync: Bootstrap → Hack → Sync → Finish. After **each completed phase**, post a mandatory comment on the item's issue:
       ```bash
@@ -235,12 +249,10 @@ If the item is in the Iteration Plan with status `Entrou` but without a mapped I
    - **Title:** `[DS-<n>]: <capability-description>`
    - **Body:** include DS-ID, iteration-id, OBC path, BDD path and link to plan.md
    - **Labels:** `journey:delivery`, `artifact-type:local-obc`, `operation:implement`
-2. Associate with Project (`$PROJECT_NUMBER`):
-   ```bash
-   gh issue edit <number> --add-project "ProdOps Runtime"
-   ```
-3. Update the `Issue` column in `plan.md` with the created number.
-4. Commit `plan.md` before continuing.
+2. Update the `Issue` column in `plan.md` with the created number.
+3. Commit `plan.md` before continuing.
+
+Do not associate with the Project here — adding all issues to the Project is handled centrally in Step 3 of Plan Bootstrap (`Plan.Bootstrap.Issues.Added`).
 
 Never start Bootstrap without a mapped Issue — the `work-item-id` in the capsule and events depends on this number.
 
