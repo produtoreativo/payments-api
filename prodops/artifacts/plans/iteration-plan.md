@@ -1,8 +1,6 @@
 # Iteration Plan
 
-> **Iteração ativa: [v0.10.0](../iterations/v0.10.0/plan.md)** — DS-51 cancel-invoice · DS-52 postcss-security
->
-> Historico completo de iteracoes em [`prodops/artifacts/iterations/`](../iterations/).
+> Nenhuma iteração ativa. Próxima iteração a definir.
 
 ## Histórico
 
@@ -16,4 +14,4 @@
 | [v0.7.0](../iterations/v0.7.0/plan.md) | DS-44 | Concluido — PR #116 |
 | [v0.8.0](../iterations/v0.8.0/plan.md) | DS-45 · DS-46 · DS-47 | Suspenso — gates OBC/BDD/Risks ausentes para infraestrutura ProdOps |
 | [v0.9.0](../iterations/v0.9.0/plan.md) | DS-48 · DS-49 · DS-50 | Concluido — PRs #120 #121 #122 #123 |
-| [v0.10.0](../iterations/v0.10.0/plan.md) | DS-51 · DS-52 | 🟡 Em andamento |
+| [v0.10.0](../iterations/v0.10.0/plan.md) | DS-51 · DS-52 | ✅ Concluído — PRs #125 #126 |
