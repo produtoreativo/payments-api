@@ -124,6 +124,13 @@ if [[ -z "$WORK_ITEM_ID" && "$EVENT" == Delivery.Plan.* && -n "$ITERATION_ID" ]]
   WORK_ITEM_ID="plan-${ITERATION_ID}"
 fi
 
+# Recompute TIMELINES_DIR using iteration-scoped path when iteration-id is known.
+# Falls back to the global legacy path for standalone invocations without iteration context.
+if [[ -n "$ITERATION_ID" ]]; then
+  SAFE_ITER=$(echo "$ITERATION_ID" | tr '/ ' '--')
+  TIMELINES_DIR="$PRODOPS_DIR/artifacts/iterations/${SAFE_ITER}/runtime/timelines"
+fi
+
 log "player=$PLAYER agent=$AGENT_NAME iteration=${ITERATION_ID:-—} execution=${EXECUTION_ID:-—}${DRY_RUN:+ dry-run=true}"
 
 # ── Guard: reject catalog-owned fields ────────────────────────────────────────
@@ -242,7 +249,7 @@ fi
 
 # ── Step 2: Persist timeline ──────────────────────────────────────────────────
 log "Appending to timeline..."
-if ! bash "$TIMELINE" --issue "$WORK_ITEM_ID" --event-json "$CE_JSON" >/dev/null 2>&1; then
+if ! bash "$TIMELINE" --issue "$WORK_ITEM_ID" --event-json "$CE_JSON" ${ITERATION_ID:+--iteration-id "$ITERATION_ID"} >/dev/null 2>&1; then
   error_output '["timeline/append.sh failed — event not persisted"]'
   exit 3
 fi

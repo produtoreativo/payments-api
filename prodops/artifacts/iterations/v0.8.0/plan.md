@@ -10,7 +10,7 @@ Corrigir inconsistências e lacunas na infraestrutura do ProdOps runtime: path d
 
 | DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status | PR |
 |---|---|---|---|---|---|---|---|---|
-| DS-45 | #119 | timeline-iteration-scope: corrigir propagação de `--iteration-id` ao `append.sh` | — | — | — | — | Entrou | — |
+| DS-45 | #119 | timeline-iteration-scope: corrigir propagação de `--iteration-id` ao `append.sh` | — | — | — | — | Entregue fora do Iteration Plan | — |
 | DS-46 | #88 | runtime-lifecycle-protocol: definir política para Promote.Completed prematuro e reconciliar oem-state | — | — | — | — | Entrou | — |
 | DS-47 | #83 | gate-result-model: definir modelo canônico de resultado de gate (pass/fail/na + severity + evento NotApplicable) | — | — | — | — | Entrou | — |
 
@@ -24,8 +24,8 @@ Corrigir inconsistências e lacunas na infraestrutura do ProdOps runtime: path d
 
 ## Critérios de saída
 
-- [ ] DS-45: timelines gravadas em `prodops/artifacts/iterations/<id>/runtime/timelines/<issue>.json` — path legado não recebe novas entradas
-- [ ] DS-45: métrica `runtime.delivery.lead_time_days` enviada ao Datadog no Promote.Completed
+- [x] DS-45: timelines gravadas em `prodops/artifacts/iterations/<id>/runtime/timelines/<issue>.json` — path legado não recebe novas entradas (fix em `emit-event`, entregue fora do Iteration Plan — 2026-08-01)
+- [x] DS-45: métrica `runtime.delivery.lead_time_days` enviada ao Datadog no Promote.Completed (idem)
 - [ ] DS-46: política documentada para Promote.Completed prematuro; oem-state de v0.2.0 (PR #87) reconciliado
 - [ ] DS-47: modelo de gate result definido com suporte a `na` + severity; evento `Delivery.Gate.NotApplicable` especificado
 - [ ] Todos os PRs mergeados em `master`
