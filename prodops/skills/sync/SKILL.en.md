@@ -18,6 +18,41 @@ a PR (Finish), **does not** run the full pipeline (Ship), and **does not**
 rewrite upstream product decisions. When invoked with a step argument
 (`/sync <step>`), execute only that step. Otherwise run both in sequence.
 
+## Required input context
+
+Before starting, the agent must have:
+
+- `work-item-id` — the GitHub issue number of the Feature
+- `iteration-id` — the Iteration Plan identifier
+- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
+- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
+  invoked standalone, generate a new UUID.
+
+## Preconditions
+
+1. `prodops/skills/prodops-emit-event/SKILL.md` has been read.
+2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
+
+## Phase: Sync.Started
+
+**Moment**: after input context is verified, before any Sync work begins.
+
+Emit:
+
+```json
+{
+  "event": "Delivery.Sync.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "sync-agent" },
+  "payload": {}
+}
+```
+
+If the tool returns `status: error`: report the error, fix the input, do not proceed.
+
 ## Steps
 
 | Step | File | When to use |
@@ -42,6 +77,26 @@ When invoked without a step argument, execute both steps in sequence:
 2. **[align](steps/align/SKILL.md)** — identify stale artifacts, trace source of truth in `prodops/`, update only impacted files, record in Release Trail
 
 For detailed branch synchronization mechanics, read `references/workflow.md`.
+
+## Phase: Sync.Completed
+
+**Moment**: after both steps (rebase and align) succeed — before reporting success to the caller.
+
+Emit using the **same `correlation-id`** as Sync.Started:
+
+```json
+{
+  "event": "Delivery.Sync.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "sync-agent" },
+  "payload": {}
+}
+```
+
+Do not emit `Sync.Completed` if either rebase or align step failed.
 
 ## Guardrails
 

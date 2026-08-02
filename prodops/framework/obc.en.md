@@ -73,8 +73,8 @@ The **Local OBC** represents the responsibility of **a single product**. In the 
 ## Relationship between levels
 
 ```
-Global flow: Business Signal → Business Intent → Global OBC → N Local OBCs
-Local flow:  Business Signal → Business Intent + Product Tracking Item → Local OBC
+Global flow: 1 Global OBC → N Local OBCs
+Local flow:  1 local Intent → 1 Local OBC
 ```
 
 Never the inverse. Use the terms: **decomposition**, **specialization**, **partition**. NEVER use: parent, child, inheritance.
@@ -83,7 +83,7 @@ Never the inverse. Use the terms: **decomposition**, **specialization**, **parti
 
 ## OBC Partitioning
 
-**OBC Partitioning** is the capability responsible for transforming a Global OBC into Local OBCs. It occurs between Discovery in the BIB and the creation of items in the products' Product Backlogs.
+**OBC Partitioning** is the governance process responsible for partitioning a Global OBC into Local OBCs. It occurs between Discovery in the BIB and the creation of items in the products' Product Backlogs. It is not a Framework Capability — it is a one-time activity owned by the Portfolio PM + Tech Leads.
 
 **Partitioning responsibilities:**
 - Identify the products involved
