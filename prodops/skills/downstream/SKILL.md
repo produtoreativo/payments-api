@@ -98,27 +98,16 @@ Fila Downstream — Iteration Plan ativo
 5. **Project Cleanup** — remover do Project 25 as issues da última iteração concluída. **Este passo é independente do Plan Bootstrap e sempre executa**, mesmo que `plan-bootstrap.json` já exista.
 
    a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` tem o campo `"project-cleanup": "completed"`. Se tiver, pular este passo.
-   b. Se não tiver (campo ausente ou arquivo inexistente), executar:
+   b. Se não tiver (campo ausente ou arquivo inexistente), remover todos os items atualmente no Project 25:
       ```bash
-      # 1. Identificar a última iteração com status "Concluido" no histórico
-      LAST_DONE=$(grep -oP '\[v[\d.]+\]' prodops/artifacts/plans/iteration-plan.md \
-        | grep -oP 'v[\d.]+' | while read v; do
-            grep -q "Conclu" "prodops/artifacts/iterations/$v/plan.md" 2>/dev/null && echo "$v"
-          done | tail -1)
-
-      # 2. Extrair os números de issue do mapeamento DS-ID → Issue daquela iteração
-      CLOSED_ISSUES=$(grep -oP '#\d+' "prodops/artifacts/iterations/${LAST_DONE}/plan.md" \
-        | grep -oP '\d+' | sort -u)
-
-      # 3. Para cada issue, localizar e remover o item do Project
-      for ISSUE_NUM in $CLOSED_ISSUES; do
-        ITEM_ID=$(gh project item-list 25 --owner produtoreativo --format json \
-          | jq -r --argjson n "$ISSUE_NUM" '.items[] | select(.content.number == $n) | .id')
-        [[ -n "$ITEM_ID" ]] && gh project item-delete 25 --owner produtoreativo --id "$ITEM_ID"
-      done
+      gh project item-list 25 --owner produtoreativo --format json \
+        | jq -r '.items[].id' \
+        | while read ITEM_ID; do
+            gh project item-delete 25 --owner produtoreativo --id "$ITEM_ID"
+          done
       ```
    c. Após executar (com ou sem itens removidos), adicionar `"project-cleanup": "completed"` em `ITERATION_DIR/runtime/plan-bootstrap.json` (criar o arquivo com apenas esse campo se ele não existir ainda). Commitar.
-   d. Não bloquear se o projeto estiver vazio, se nenhum item for encontrado ou se `LAST_DONE` for vazio — registrar como `"project-cleanup": "completed"` mesmo assim.
+   d. Não bloquear se o projeto estiver vazio — registrar `"project-cleanup": "completed"` mesmo assim.
 
 6. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
    a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` já existe com `"status": "completed"`. Se sim, pular para o passo 7 (ambiente já pronto — cleanup já foi tratado no passo 5).
