@@ -1,30 +1,49 @@
 {
   "title": "ProdOps Runtime — Event Counters",
-  "description": "EXP-015 | Contadores granulares de todos os eventos do framework: Plan Bootstrap → CI Sync → CI Async → Promote → Diligence. Filtre por $issue para isolar uma feature ou por $demo_run_id para isolar uma execução.",
+  "description": "EXP-015 | Contadores granulares de todos os eventos do framework: Plan Bootstrap → CI Sync → CI Async → Promote → Diligence. Filtre por $issue para isolar uma feature.",
   "layout_type": "ordered",
   "reflow_type": "fixed",
-  "tags": ["team:prodops"],
+  "tags": [
+    "team:prodops"
+  ],
   "template_variables": [
-    {"name": "service",       "prefix": "service",          "available_values": [], "default": "payments-api"},
-    {"name": "env",           "prefix": "env",              "available_values": [], "default": "development"},
-    {"name": "issue",         "prefix": "issue",            "available_values": [], "default": "*"},
-    {"name": "demo_run_id",   "prefix": "demo-run-id",      "available_values": [], "default": "*"}
+    {
+      "name": "service",
+      "prefix": "service",
+      "available_values": [],
+      "default": "payments-api"
+    },
+    {
+      "name": "env",
+      "prefix": "env",
+      "available_values": [],
+      "default": "development"
+    },
+    {
+      "name": "issue",
+      "prefix": "issue",
+      "available_values": [],
+      "default": "*"
+    }
   ],
   "widgets": [
-
     {
       "definition": {
         "type": "note",
-        "content": "## ProdOps Runtime — Event Counters\n### EXP-015  |  Plan Bootstrap → CI Sync → CI Async → Promote → Diligence\n\nCada widget conta quantas vezes o evento foi recebido no período selecionado.\nFiltre por `$issue` para isolar uma feature ou por `$demo_run_id` para isolar uma execução.\n\nMétricas: `runtime.event.received` (Delivery) · `runtime.diligence.event.received` (Diligence)",
+        "content": "## ProdOps Runtime — Event Counters\n### EXP-015  |  Plan Bootstrap → CI Sync → CI Async → Promote → Diligence\n\nCada widget conta quantas vezes o evento foi recebido no período selecionado.\nFiltre por `$issue` para isolar uma feature.\n\nMétricas: `runtime.event.received` (Delivery) · `runtime.diligence.event.received` (Diligence)",
         "background_color": "vivid_blue",
         "font_size": "14",
         "text_align": "left",
         "vertical_align": "center",
         "show_tick": false
       },
-      "layout": {"x": 0, "y": 0, "width": 12, "height": 2}
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 2
+      }
     },
-
     {
       "definition": {
         "type": "note",
@@ -35,18 +54,39 @@
         "vertical_align": "center",
         "show_tick": false
       },
-      "layout": {"x": 0, "y": 2, "width": 12, "height": 1}
+      "layout": {
+        "x": 0,
+        "y": 2,
+        "width": 12,
+        "height": 1
+      }
     },
-
     {
       "definition": {
         "type": "query_value",
         "title": "Plan.BS\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.started,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 0, "y": 3, "width": 2, "height": 2}
+      "layout": {
+        "x": 0,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -54,9 +94,26 @@
         "title": "Project\nCleaned",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.project.cleaned,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.project.cleaned,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 2, "y": 3, "width": 2, "height": 2}
+      "layout": {
+        "x": 2,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -64,9 +121,26 @@
         "title": "Issue\nRegistered",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.issue.registered,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.issue.registered,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 4, "y": 3, "width": 2, "height": 2}
+      "layout": {
+        "x": 4,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -74,9 +148,26 @@
         "title": "Issue\nEntered",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.issue.entered,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.issue.entered,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 6, "y": 3, "width": 2, "height": 2}
+      "layout": {
+        "x": 6,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -84,9 +175,26 @@
         "title": "Issues\nAdded",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.issues.added,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.issues.added,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 8, "y": 3, "width": 2, "height": 2}
+      "layout": {
+        "x": 8,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -94,20 +202,53 @@
         "title": "Deps\nInstalled",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.dependencies.installed,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.dependencies.installed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 10, "y": 3, "width": 2, "height": 2}
+      "layout": {
+        "x": 10,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
     },
-
     {
       "definition": {
         "type": "query_value",
         "title": "Services\nReady",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.services.ready,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.services.ready,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 0, "y": 5, "width": 2, "height": 2}
+      "layout": {
+        "x": 0,
+        "y": 5,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -115,9 +256,26 @@
         "title": "Smoke\nPassed",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.smoke.passed,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.smoke.passed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 2, "y": 5, "width": 2, "height": 2}
+      "layout": {
+        "x": 2,
+        "y": 5,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -125,11 +283,27 @@
         "title": "Plan.BS\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.completed,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 4, "y": 5, "width": 2, "height": 2}
+      "layout": {
+        "x": 4,
+        "y": 5,
+        "width": 2,
+        "height": 2
+      }
     },
-
     {
       "definition": {
         "type": "note",
@@ -140,18 +314,39 @@
         "vertical_align": "center",
         "show_tick": false
       },
-      "layout": {"x": 0, "y": 7, "width": 12, "height": 1}
+      "layout": {
+        "x": 0,
+        "y": 7,
+        "width": 12,
+        "height": 1
+      }
     },
-
     {
       "definition": {
         "type": "query_value",
         "title": "Bootstrap\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.started,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 0, "y": 8, "width": 2, "height": 2}
+      "layout": {
+        "x": 0,
+        "y": 8,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -159,9 +354,26 @@
         "title": "Bootstrap\nDeps",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.dependencies.installed,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.dependencies.installed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 2, "y": 8, "width": 2, "height": 2}
+      "layout": {
+        "x": 2,
+        "y": 8,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -169,9 +381,26 @@
         "title": "Bootstrap\nServices",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.services.ready,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.services.ready,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 4, "y": 8, "width": 2, "height": 2}
+      "layout": {
+        "x": 4,
+        "y": 8,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -179,9 +408,26 @@
         "title": "Bootstrap\nSmoke",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.smoke.passed,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.smoke.passed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 6, "y": 8, "width": 2, "height": 2}
+      "layout": {
+        "x": 6,
+        "y": 8,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -189,20 +435,53 @@
         "title": "Bootstrap\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.completed,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 8, "y": 8, "width": 2, "height": 2}
+      "layout": {
+        "x": 8,
+        "y": 8,
+        "width": 2,
+        "height": 2
+      }
     },
-
     {
       "definition": {
         "type": "query_value",
         "title": "Hack\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.hack.started,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.hack.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 0, "y": 10, "width": 2, "height": 2}
+      "layout": {
+        "x": 0,
+        "y": 10,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -210,9 +489,26 @@
         "title": "Hack\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.hack.completed,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.hack.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 2, "y": 10, "width": 2, "height": 2}
+      "layout": {
+        "x": 2,
+        "y": 10,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -220,9 +516,26 @@
         "title": "Sync\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.sync.started,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.sync.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 4, "y": 10, "width": 2, "height": 2}
+      "layout": {
+        "x": 4,
+        "y": 10,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -230,9 +543,26 @@
         "title": "Sync\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.sync.completed,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.sync.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 6, "y": 10, "width": 2, "height": 2}
+      "layout": {
+        "x": 6,
+        "y": 10,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -240,9 +570,26 @@
         "title": "Finish\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.finish.started,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.finish.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 8, "y": 10, "width": 2, "height": 2}
+      "layout": {
+        "x": 8,
+        "y": 10,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -250,11 +597,27 @@
         "title": "Finish\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.finish.completed,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.finish.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 10, "y": 10, "width": 2, "height": 2}
+      "layout": {
+        "x": 10,
+        "y": 10,
+        "width": 2,
+        "height": 2
+      }
     },
-
     {
       "definition": {
         "type": "note",
@@ -265,18 +628,39 @@
         "vertical_align": "center",
         "show_tick": false
       },
-      "layout": {"x": 0, "y": 12, "width": 12, "height": 1}
+      "layout": {
+        "x": 0,
+        "y": 12,
+        "width": 12,
+        "height": 1
+      }
     },
-
     {
       "definition": {
         "type": "query_value",
         "title": "Ship\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.ship.started,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.ship.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 0, "y": 13, "width": 2, "height": 2}
+      "layout": {
+        "x": 0,
+        "y": 13,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -284,9 +668,26 @@
         "title": "Ship\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.ship.completed,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.ship.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 2, "y": 13, "width": 2, "height": 2}
+      "layout": {
+        "x": 2,
+        "y": 13,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -294,9 +695,26 @@
         "title": "Validate\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.validate.started,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.validate.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 4, "y": 13, "width": 2, "height": 2}
+      "layout": {
+        "x": 4,
+        "y": 13,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -304,11 +722,27 @@
         "title": "Validate\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.validate.completed,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.validate.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 6, "y": 13, "width": 2, "height": 2}
+      "layout": {
+        "x": 6,
+        "y": 13,
+        "width": 2,
+        "height": 2
+      }
     },
-
     {
       "definition": {
         "type": "note",
@@ -319,18 +753,39 @@
         "vertical_align": "center",
         "show_tick": false
       },
-      "layout": {"x": 0, "y": 15, "width": 12, "height": 1}
+      "layout": {
+        "x": 0,
+        "y": 15,
+        "width": 12,
+        "height": 1
+      }
     },
-
     {
       "definition": {
         "type": "query_value",
         "title": "Plan\nValidated",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.plan.validated,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.validated,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 0, "y": 16, "width": 2, "height": 2}
+      "layout": {
+        "x": 0,
+        "y": 16,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -338,9 +793,26 @@
         "title": "Promote\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.promote.started,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.promote.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 2, "y": 16, "width": 2, "height": 2}
+      "layout": {
+        "x": 2,
+        "y": 16,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -348,11 +820,27 @@
         "title": "Promote\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.event.received{event:prodops.delivery.promote.completed,service:$service.value,env:$env.value,issue:$issue.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.promote.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 4, "y": 16, "width": 2, "height": 2}
+      "layout": {
+        "x": 4,
+        "y": 16,
+        "width": 2,
+        "height": 2
+      }
     },
-
     {
       "definition": {
         "type": "note",
@@ -363,18 +851,39 @@
         "vertical_align": "center",
         "show_tick": false
       },
-      "layout": {"x": 0, "y": 18, "width": 12, "height": 1}
+      "layout": {
+        "x": 0,
+        "y": 18,
+        "width": 12,
+        "height": 1
+      }
     },
-
     {
       "definition": {
         "type": "query_value",
         "title": "Capture\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.capture.started,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.capture.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 0, "y": 19, "width": 2, "height": 2}
+      "layout": {
+        "x": 0,
+        "y": 19,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -382,9 +891,26 @@
         "title": "Capture\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.capture.completed,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.capture.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 2, "y": 19, "width": 2, "height": 2}
+      "layout": {
+        "x": 2,
+        "y": 19,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -392,9 +918,26 @@
         "title": "Attach\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.attach.started,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.attach.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 4, "y": 19, "width": 2, "height": 2}
+      "layout": {
+        "x": 4,
+        "y": 19,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -402,9 +945,26 @@
         "title": "Attach\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.attach.completed,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.attach.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 6, "y": 19, "width": 2, "height": 2}
+      "layout": {
+        "x": 6,
+        "y": 19,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -412,9 +972,26 @@
         "title": "Dil.Promote\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.promote.started,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.promote.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 8, "y": 19, "width": 2, "height": 2}
+      "layout": {
+        "x": 8,
+        "y": 19,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -422,20 +999,53 @@
         "title": "Dil.Promote\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.promote.completed,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.promote.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 10, "y": 19, "width": 2, "height": 2}
+      "layout": {
+        "x": 10,
+        "y": 19,
+        "width": 2,
+        "height": 2
+      }
     },
-
     {
       "definition": {
         "type": "query_value",
         "title": "Block\nDeclared",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.block.declared,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_yellow"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.block.declared,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 0, "y": 21, "width": 2, "height": 2}
+      "layout": {
+        "x": 0,
+        "y": 21,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -443,9 +1053,26 @@
         "title": "Block\nResolved",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.block.resolved,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.block.resolved,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 2, "y": 21, "width": 2, "height": 2}
+      "layout": {
+        "x": 2,
+        "y": 21,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -453,9 +1080,26 @@
         "title": "Scan\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.scan.started,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.scan.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 4, "y": 21, "width": 2, "height": 2}
+      "layout": {
+        "x": 4,
+        "y": 21,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -463,9 +1107,26 @@
         "title": "Scan\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.scan.completed,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.scan.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 6, "y": 21, "width": 2, "height": 2}
+      "layout": {
+        "x": 6,
+        "y": 21,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -473,20 +1134,53 @@
         "title": "Divergence\nDetected",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.divergence.detected,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_yellow"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.divergence.detected,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 8, "y": 21, "width": 2, "height": 2}
+      "layout": {
+        "x": 8,
+        "y": 21,
+        "width": 2,
+        "height": 2
+      }
     },
-
     {
       "definition": {
         "type": "query_value",
         "title": "Flag\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.flag.started,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.flag.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 0, "y": 23, "width": 2, "height": 2}
+      "layout": {
+        "x": 0,
+        "y": 23,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -494,9 +1188,26 @@
         "title": "Flag\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.flag.completed,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.flag.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 2, "y": 23, "width": 2, "height": 2}
+      "layout": {
+        "x": 2,
+        "y": 23,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -504,9 +1215,26 @@
         "title": "Repair\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.repair.started,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.repair.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 4, "y": 23, "width": 2, "height": 2}
+      "layout": {
+        "x": 4,
+        "y": 23,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -514,9 +1242,26 @@
         "title": "Repair\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.repair.completed,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.repair.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 6, "y": 23, "width": 2, "height": 2}
+      "layout": {
+        "x": 6,
+        "y": 23,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -524,9 +1269,26 @@
         "title": "Close\nStarted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.close.started,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.close.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 8, "y": 23, "width": 2, "height": 2}
+      "layout": {
+        "x": 8,
+        "y": 23,
+        "width": 2,
+        "height": 2
+      }
     },
     {
       "definition": {
@@ -534,10 +1296,26 @@
         "title": "Close\nCompleted",
         "precision": 0,
         "autoscale": true,
-        "requests": [{"q": "sum:runtime.diligence.event.received{event:prodops.diligence.close.completed,service:$service.value,env:$env.value,demo-run-id:$demo_run_id.value}.as_count()", "aggregator": "sum", "conditional_formats": [{"comparator": ">", "value": 0, "palette": "white_on_green"}]}]
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.close.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
       },
-      "layout": {"x": 10, "y": 23, "width": 2, "height": 2}
+      "layout": {
+        "x": 10,
+        "y": 23,
+        "width": 2,
+        "height": 2
+      }
     }
-
   ]
 }
