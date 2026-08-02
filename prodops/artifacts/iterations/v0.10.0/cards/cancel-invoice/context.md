@@ -39,7 +39,7 @@ reliability-path:     none
 Campos preenchidos progressivamente durante o flow. Iniciam em branco.
 
 ```
-pr-number:      (preenchido pelo Finish)
+pr-number:      125
 infra-scope:    (preenchido pelo Ship — dynamo|lambda|both|none)
 oem-state:      PENDING
 ```
