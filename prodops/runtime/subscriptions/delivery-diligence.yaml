@@ -8,10 +8,11 @@
 #   <event-cloud-type>:
 #     - <diligence-skill-name>    # triggers this skill when the event is processed
 #
-# The skill name maps to Diligence events:
+# The skill name maps to Diligence behavior:
 #   diligence.capture → Diligence.Capture.Started + Diligence.Capture.Completed
 #   diligence.attach  → Diligence.Attach.Started  + Diligence.Attach.Completed
 #   diligence.promote → Diligence.Promote.Started  + Diligence.Promote.Completed
+#   diligence.trail   → posts trail comment on plan-issue (no Diligence lifecycle events emitted)
 #
 # NOTE: these subscriptions emit Diligence *signal* events (lifecycle markers).
 # They do NOT execute the actual Diligence work (OBC update, Work Item creation).
@@ -20,23 +21,56 @@
 # emitting the corresponding Diligence events (Scan, Flag, Repair, Close).
 
 subscriptions:
+  # ── Plan Bootstrap ───────────────────────────────────────────────────────────
+
   prodops.delivery.plan.bootstrap.issue.entered:
-    - diligence.capture    # Capture initial state per issue at plan entry; triggers Diligence.Capture for each issue entering the plan
+    - diligence.capture    # Capture initial state per issue at plan entry
+    - diligence.trail      # Post "Issue entered plan" on tracking issue
+
+  prodops.delivery.plan.bootstrap.completed:
+    - diligence.trail      # Post plan bootstrap summary on tracking issue
+
+  # ── CI Sync ──────────────────────────────────────────────────────────────────
 
   prodops.delivery.bootstrap.completed:
-    - diligence.capture
+    - diligence.capture    # Capture delivery state after environment is ready
+    - diligence.trail      # Post bootstrap completion on tracking issue
+
+  prodops.delivery.hack.completed:
+    - diligence.trail      # Post implementation completion on tracking issue
+
+  prodops.delivery.sync.completed:
+    - diligence.trail      # Post PR merged on tracking issue
+
+  prodops.delivery.finish.completed:
+    - diligence.trail      # Post quality gates passed on tracking issue
+
+  # ── CI Async ─────────────────────────────────────────────────────────────────
+
+  prodops.delivery.ship.completed:
+    - diligence.trail      # Post staging deploy completion on tracking issue
+
+  prodops.delivery.validate.completed:
+    - diligence.attach     # Create or verify Work Item after validation evidence
+    - diligence.trail      # Post validation completion on tracking issue
+
+  prodops.delivery.plan.validated:
+    - diligence.trail      # Post Plan.Validated gate opened on tracking issue
+
+  prodops.delivery.promote.completed:
+    - diligence.promote    # Advance OBC through backlog hierarchy
+    - diligence.trail      # Post DONE on tracking issue
+
+  # ── Exception paths ───────────────────────────────────────────────────────────
 
   prodops.delivery.block.declared:
     - diligence.capture    # Diligence Sync reacts to delivery blocks automatically
+    - diligence.trail      # Post block alert on tracking issue
 
   prodops.delivery.block.resolved:
-    - diligence.capture    # Capture updated state after block resolution; keeps Diligence in sync
-
-  prodops.delivery.validate.completed:
-    - diligence.attach
-
-  prodops.delivery.promote.completed:
-    - diligence.promote
+    - diligence.capture    # Capture updated state after block resolution
+    - diligence.trail      # Post block resolved on tracking issue
 
   prodops.delivery.restart.completed:
-    - diligence.capture    # Capture context after restart; new correlation-id requires Diligence re-sync
+    - diligence.capture    # Capture context after restart; new correlation-id requires re-sync
+    - diligence.trail      # Post restart on tracking issue
