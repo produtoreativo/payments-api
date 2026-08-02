@@ -1,6 +1,6 @@
 # Iteration Plan
 
-> **Sem iteracao ativa no momento.** Abrir nova iteracao quando houver capacidade pronta para entrar.
+> **Sem iteração ativa no momento.** Próxima: v0.10.0 com DS-51 (cancel-invoice) e DS-52 (postcss-security) — ambos prontos para entrar.
 >
 > Historico completo de iteracoes em [`prodops/artifacts/iterations/`](../iterations/).
 

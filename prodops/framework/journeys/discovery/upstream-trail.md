@@ -554,3 +554,34 @@ operational source of truth.
 
 Historical trails may still mention legacy paths as migration evidence. New
 operational instructions should use `prodops/framework/canonical-paths.md`.
+
+---
+
+## 2026-08-01 19:30
+
+### Experiment
+
+Sem experimento formal — capability de natureza operacional conhecida (security fix), promovida diretamente com base em análise do Dependabot alert #101.
+
+### Activity
+
+- Experimento promovido para Downstream
+
+### Summary
+
+A vulnerabilidade HIGH `postcss < 8.5.18` em `validation-workbench/package-lock.json` foi identificada como follow-up de DS-44. A dependência direta `vite` é responsável por arrastar `postcss` como transitiva. OBC e BDD criados diretamente nas localizações committed (sem experimento exploratório, pois o fix é cirúrgico e bem compreendido). Promovido como DS-52 para v0.10.0.
+
+### Artifacts Updated
+
+- OBC: `prodops/artifacts/obcs/postcss-security.md`
+- BDD Feature: `prodops/artifacts/bdd/postcss-security.feature`
+- Repository Tracking List: entrada #117 atualizada para "Promovido para Downstream"
+- Iteration Plan: nota de DS-52 pronto para v0.10.0
+
+### Decision
+
+Avançar para Downstream — DS-52, v0.10.0.
+
+### Notes
+
+Issue de acompanhamento: [#117](https://github.com/produtoreativo/payments-api/issues/117). Dependabot alert #101. api/ não afetada.
