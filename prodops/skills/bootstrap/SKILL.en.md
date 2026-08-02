@@ -17,7 +17,7 @@ All fields below must be available — either from the capsule or explicitly pro
 
 - `work-item-id` — from capsule field `work-item-id` (issue number for the current iteration)
 - `iteration-id` — from capsule field `iteration-id`
-- `correlation-id` — from capsule field `correlation-id` (generated at `Delivery.Plan.Entered`)
+- `correlation-id` — from capsule field `correlation-id` (generated at `Delivery.Plan.Bootstrap.Issue.Entered`)
 - `actor.player` — from capsule field `actor-player`
 - `plan-bootstrap-path` — from capsule field `plan-bootstrap-path`
 

@@ -20,6 +20,9 @@
 # emitting the corresponding Diligence events (Scan, Flag, Repair, Close).
 
 subscriptions:
+  prodops.delivery.plan.bootstrap.issue.entered:
+    - diligence.capture    # Capture initial state per issue at plan entry; triggers Diligence.Capture for each issue entering the plan
+
   prodops.delivery.bootstrap.completed:
     - diligence.capture
 

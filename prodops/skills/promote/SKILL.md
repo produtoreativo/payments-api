@@ -14,7 +14,7 @@ Todos os campos abaixo devem estar disponíveis na capsule:
 
 - `work-item-id` — campo `work-item-id` da capsule (issue da iteração corrente)
 - `iteration-id` — campo `iteration-id`
-- `correlation-id` — campo `correlation-id` (gerado em `Delivery.Plan.Entered`)
+- `correlation-id` — campo `correlation-id` (gerado em `Delivery.Plan.Bootstrap.Issue.Entered`)
 - `actor-player` — campo `actor-player`
 - `plan-bootstrap-path` — campo `plan-bootstrap-path`
 - `plan-validate-path` — campo `plan-validate-path`

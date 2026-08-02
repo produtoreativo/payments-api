@@ -132,7 +132,25 @@ Fila Downstream — Iteration Plan ativo
    - Se já existir: anotar o número e continuar.
    Emitir `Delivery.Plan.Bootstrap.Issue.Registered` com o número registrado no payload.
 
-   **Etapa 3 — Adicionar issues ao Project:** para cada issue do Iteration Plan (todas as issues com status `Entrou`), adicionar ao GitHub Project:
+   **Etapa 3 — Registrar issues no plano:** para cada issue do Iteration Plan (todas com status `Entrou`), na ordem de prioridade:
+   1. Gerar um novo UUID — este será o `correlation-id` de toda a jornada desta issue.
+   2. Emitir `Delivery.Plan.Bootstrap.Issue.Entered` com `work-item-id: <issue-number>`:
+      ```json
+      {
+        "event": "Delivery.Plan.Bootstrap.Issue.Entered",
+        "work-item-id": "<issue-number>",
+        "iteration-id": "<iteration-id>",
+        "correlation-id": "<novo-uuid>",
+        "execution-id": "<new-uuid>",
+        "actor": { "player": "<player>", "agent": "downstream-agent" },
+        "payload": { "ds-id": "<DS-ID>", "slug": "<capability-slug>" }
+      }
+      ```
+   3. Escrever `ITERATION_DIR/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md` com o `correlation-id` gerado e todos os campos do template (ds-id, work-item-id, iteration-id, paths, BDD scenarios etc.).
+
+   O dispatcher reage a cada `Plan.Bootstrap.Issue.Entered` e dispara `Diligence.Capture` automaticamente para esta issue.
+
+   **Etapa 4 — Adicionar issues ao Project:** para cada issue do Iteration Plan (todas as issues com status `Entrou`), adicionar ao GitHub Project:
    ```bash
    for ISSUE_NUMBER in <lista-de-issues>; do
      gh project item-add "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --url "https://github.com/$PROJECT_OWNER/payments-api/issues/$ISSUE_NUMBER"
@@ -140,11 +158,11 @@ Fila Downstream — Iteration Plan ativo
    ```
    Após adicionar todas, emitir `Delivery.Plan.Bootstrap.Issues.Added`.
 
-   **Etapa 4 — Instalar dependências:** instalar dependências com o gerenciador de pacotes declarado. Se falhar: parar toda a fila. Após instalar, emitir `Delivery.Plan.Bootstrap.Dependencies.Installed`.
+   **Etapa 5 — Instalar dependências:** instalar dependências com o gerenciador de pacotes declarado. Se falhar: parar toda a fila. Após instalar, emitir `Delivery.Plan.Bootstrap.Dependencies.Installed`.
 
-   **Etapa 5 — Infraestrutura local:** verificar runtimes e CLIs, subir serviços locais (Docker, LocalStack). Se qualquer serviço não estiver reachable: parar toda a fila. Após todos os serviços confirmados, emitir `Delivery.Plan.Bootstrap.Services.Ready`.
+   **Etapa 6 — Infraestrutura local:** verificar runtimes e CLIs, subir serviços locais (Docker, LocalStack). Se qualquer serviço não estiver reachable: parar toda a fila. Após todos os serviços confirmados, emitir `Delivery.Plan.Bootstrap.Services.Ready`.
 
-   **Etapa 6 — Smoke gate:** executar o gate `smoke` definido em `prodops/exec/manifest.yaml`. Se falhar: parar toda a fila. Após passar, emitir `Delivery.Plan.Bootstrap.Smoke.Passed`.
+   **Etapa 7 — Smoke gate:** executar o gate `smoke` definido em `prodops/exec/manifest.yaml`. Se falhar: parar toda a fila. Após passar, emitir `Delivery.Plan.Bootstrap.Smoke.Passed`.
 
    c. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`. Verificar `"datadog-sync"` e `"github-sync"` na saída — exibir aviso se erro.
    d. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
@@ -291,52 +309,16 @@ test -f "$TIMELINE" && jq -e 'length > 0' "$TIMELINE" >/dev/null 2>&1
 
 - **Timeline não existe ou está vazia** → primeira execução. Gerar novo UUID diretamente. Nenhum evento de Restart.
 
-Os eventos de Restart não alteram `oem-state` — são puramente auditáveis. Os eventos de fase seguintes (incluindo `Plan.Entered`) são re-emitidos normalmente com o novo `correlation-id`. **Eventos duplicados na timeline são esperados e intencionais em restart.**
+Os eventos de Restart não alteram `oem-state` — são puramente auditáveis. O Restart não re-emite `Plan.Bootstrap.Issue.Entered` — esse evento é responsabilidade exclusiva do Plan Bootstrap. Em restart, sobrescrever a capsule com o novo `correlation-id` antes de invocar Bootstrap. **Eventos de Restart são puramente auditáveis; as fases seguintes usam o novo `correlation-id`.**
 
-### Emitir `Delivery.Plan.Entered`
+### Carregar capsule da issue
 
-1. Emitir `Delivery.Plan.Entered` com o novo `correlation-id`:
+A capsule foi escrita pelo Plan Bootstrap na Etapa 3 (`Delivery.Plan.Bootstrap.Issue.Entered`). Ler `ITERATION_DIR/cards/<card-slug>/context.md`:
 
-```json
-{
-  "event": "Delivery.Plan.Entered",
-  "work-item-id": "<issue-number>",
-  "iteration-id": "<iteration-id>",
-  "correlation-id": "<new-uuid>",
-  "execution-id": "<new-uuid>",
-  "actor": { "player": "<player>", "agent": "downstream-agent" },
-  "payload": {}
-}
-```
+- Se **restart**: sobrescrever o campo `correlation-id` na capsule com o novo UUID gerado no Protocolo de Restart acima e atualizar `oem-state: PENDING`.
+- Se **primeira execução**: usar a capsule sem modificação — o `correlation-id` já está correto.
 
-2. Gerar (ou **sobrescrever**) `ITERATION_DIR/cards/<card-slug>/context.md` a partir de `prodops/templates/delivery/context-capsule.md` com o novo `correlation-id`. Preencher **todos** os campos do template:
-
-**Runtime Context** — preenchido com dados da iteração ativa:
-- `ds-id` — identificador estável da feature (ex: `DS-39`)
-- `work-item-id` — número da issue da iteração corrente (resolvido via tabela DS-ID → Issue do `plan.md`)
-- `iteration-id` — versão da iteração (ex: `v0.6.0`)
-- `iteration-dir` — `prodops/artifacts/iterations/<version>/`
-- `correlation-id` — UUID resolvido acima (da capsule existente ou recém-gerado)
-- `actor-player` — player corrente (`claude`, `codex` ou `copilot`)
-
-**Runtime Paths** — pré-computados para eliminar derivação em cada fase:
-- `feature-branch` — `feat/<work-item-id>-<slug>`
-- `base-branch` — branch base do merge (normalmente `master`)
-- `timeline-path` — `ITERATION_DIR/runtime/timelines/<work-item-id>.json`
-- `plan-bootstrap-path` — `ITERATION_DIR/runtime/plan-bootstrap.json`
-- `plan-validate-path` — `ITERATION_DIR/runtime/plan-validate.json`
-- `session-trail-dir` — `ITERATION_DIR/trails/`
-- `obc-path`, `bdd-path` — paths absolutos dos artefatos de produto
-- `reliability-path` — path do Reliability Plan se existir, caso contrário `"none"`
-
-**Flow State** — deixar em branco; preenchido por Finish (`pr-number`) e Ship (`infra-scope`):
-- `pr-number: (preenchido pelo Finish)`
-- `infra-scope: (preenchido pelo Ship)`
-- `oem-state: PENDING`
-
-**BDD Scenarios** — incluir os steps completos (Given/When/Then), não apenas one-liners, para que o Hack/tdd possa executar o Red phase sem abrir o arquivo `.feature`.
-
-O capsule é o único artefato que o agente precisa carregar para executar o flow inteiro sem reler arquivos de infraestrutura. O `correlation-id` resolvido aqui é propagado para Bootstrap, Hack, Sync, Finish, Ship, Validate e Promote.
+O capsule é o único artefato que o agente precisa carregar para executar o flow inteiro sem reler arquivos de infraestrutura. O `correlation-id` propagado aqui é usado pelo Bootstrap, Hack, Sync, Finish, Ship, Validate e Promote.
 
 ## CI Sync
 

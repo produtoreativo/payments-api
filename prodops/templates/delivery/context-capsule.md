@@ -26,7 +26,7 @@ ds-id:              DS-<n>
 work-item-id:       <issue-number-da-iteração-corrente>   ← resolve DS-ID → issue via plan.md
 iteration-id:       <version>                              ← ex: v0.6.0
 iteration-dir:      prodops/artifacts/iterations/<version>/
-correlation-id:     <uuid-gerado-em-Delivery.Plan.Entered>
+correlation-id:     <uuid-gerado-em-Delivery.Plan.Bootstrap.Issue.Entered>
 actor-player:       <claude|codex|copilot>
 ```
 

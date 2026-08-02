@@ -3,13 +3,15 @@ catalog-version: "1"
 events:
   Delivery.Plan.Entered:
     cloud-event-type: prodops.delivery.plan.entered
-    description: Marks that a Feature passed the Downstream readiness gate and entered the Iteration Plan; sets state to PENDING until Bootstrap begins
+    description: "[DEPRECATED — use Delivery.Plan.Bootstrap.Issue.Entered] Marks that a Feature passed the Downstream readiness gate and entered the Iteration Plan; sets state to PENDING until Bootstrap begins"
     data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/plan/entered/v1.0.0
     journey: Delivery
     cycle: Plan
     phase: Entered
     alters-state: true
     new-state: PENDING
+    deprecated: true
+    replaced-by: Delivery.Plan.Bootstrap.Issue.Entered
 
   Delivery.Plan.Validated:
     cloud-event-type: prodops.delivery.plan.validated
@@ -46,6 +48,16 @@ events:
     cycle: Plan.Bootstrap
     phase: Issue.Registered
     alters-state: false
+
+  Delivery.Plan.Bootstrap.Issue.Entered:
+    cloud-event-type: prodops.delivery.plan.bootstrap.issue.entered
+    description: A Feature issue entered the Iteration Plan; correlation-id generated and context capsule written; oem-state set to PENDING. Emitted once per issue during Plan Bootstrap, before issues are added to the GitHub Project. Triggers Diligence.Capture.
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/plan/bootstrap/issue/entered/v1.0.0
+    journey: Delivery
+    cycle: Plan.Bootstrap
+    phase: Issue.Entered
+    alters-state: true
+    new-state: PENDING
 
   Delivery.Plan.Bootstrap.Issues.Added:
     cloud-event-type: prodops.delivery.plan.bootstrap.issues.added
