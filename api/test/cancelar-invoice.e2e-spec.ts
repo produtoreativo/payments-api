@@ -104,6 +104,35 @@ describe('Cancelar Invoice', () => {
     );
   });
 
+  it('mantém invoice para investigação operacional quando provedor retorna 404', async () => {
+    const created = await criarInvoice();
+
+    const existing = await repository.findInvoice(
+      TENANT_ID,
+      created.body.invoiceId,
+    );
+    await repository.updateInvoice(existing!, 'OPEN', {
+      providerPaymentId: 'pay_mock_force404_test',
+    });
+
+    const response = await request(app.getHttpServer())
+      .delete(`/invoices/${created.body.invoiceId}`)
+      .set('X-Api-Token', TEST_API_TOKEN)
+      .set('X-Tenant-Id', TENANT_ID)
+      .set('Idempotency-Key', 'MS-100045:cancel')
+      .expect(409);
+
+    expect(response.body.message).toBe(
+      'Payment provider cancellation requires operational reconciliation',
+    );
+
+    const reconciled = await repository.findInvoice(
+      TENANT_ID,
+      created.body.invoiceId,
+    );
+    expect(reconciled?.status).toBe('CANCEL_RECONCILIATION_REQUIRED');
+  });
+
   it('confirma cancelamento quando webhook PAYMENT_DELETED chega apos solicitacao', async () => {
     const created = await criarInvoice();
 
