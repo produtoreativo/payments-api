@@ -48,6 +48,33 @@ events:
     alters-state: true
     new-state: BOOTSTRAPPING
 
+  Delivery.Bootstrap.Dependencies.Installed:
+    cloud-event-type: prodops.delivery.bootstrap.dependencies.installed
+    description: Package manager completed without errors; all declared dependencies are installed and available
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/bootstrap/dependencies/installed/v1.0.0
+    journey: Delivery
+    cycle: Bootstrap
+    phase: Dependencies.Installed
+    alters-state: false
+
+  Delivery.Bootstrap.Services.Ready:
+    cloud-event-type: prodops.delivery.bootstrap.services.ready
+    description: All required local services and infrastructure are reachable; environment is ready for gate verification
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/bootstrap/services/ready/v1.0.0
+    journey: Delivery
+    cycle: Bootstrap
+    phase: Services.Ready
+    alters-state: false
+
+  Delivery.Bootstrap.Smoke.Passed:
+    cloud-event-type: prodops.delivery.bootstrap.smoke.passed
+    description: The smoke gate defined in manifest.yaml passed; environment is validated end-to-end and ready for Hack
+    data-schema: https://prodops.produtoreativo.io/schemas/events/delivery/bootstrap/smoke/passed/v1.0.0
+    journey: Delivery
+    cycle: Bootstrap
+    phase: Smoke.Passed
+    alters-state: false
+
   Delivery.Bootstrap.Completed:
     cloud-event-type: prodops.delivery.bootstrap.completed
     description: Marks successful completion of the Bootstrap cycle; environment is ready for Hack

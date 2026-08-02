@@ -1,6 +1,6 @@
 ---
 name: bootstrap
-description: Prepare the local environment required by a ProdOps execution before Git flow, tests, or implementation begin. Emits Bootstrap.Started and Bootstrap.Completed via prodops_emit_event.
+description: Prepare the local environment required by a ProdOps execution before Git flow, tests, or implementation begin. Emits Bootstrap.Started, Bootstrap.Dependencies.Installed, Bootstrap.Services.Ready, Bootstrap.Smoke.Passed, and Bootstrap.Completed via prodops_emit_event.
 ---
 
 # BOOTSTRAP
@@ -73,30 +73,88 @@ If the tool returns `status: accepted` (exit 0): record the `event-id` for traci
 
 ## Bootstrap work
 
-1. Identify the packages and local services required by the repository.
-2. Verify required runtimes and command-line tools are available.
-3. Install dependencies using the repository's declared package manager.
-4. Prepare local infrastructure through the repository setup scripts.
-5. Verify required environment variable names without reading or exposing secret values.
-6. Run the smoke gate defined in `prodops/exec/manifest.yaml`.
-7. Report the environment as ready or return a concrete blocker.
+Execute the steps below in order. Each step has a checkpoint event — do not emit the event if the step fails. On failure, emit `Delivery.Block.Declared` and stop.
 
-## Evidence
+### Step 1 — Verify runtimes and CLIs
 
-Bootstrap is complete when all of the following are true:
+Identify the packages and services required by the repository. Verify that required runtimes and command-line tools are available (e.g. `node`, `npm`, `docker`). This step does not emit an event — failures are covered by `Block.Declared`.
 
-- Package manager completed without errors.
-- Required local services are reachable.
-- All required environment variable names are confirmed (values never exposed).
-- The smoke gate in `prodops/exec/manifest.yaml` passed.
+### Step 2 — Install dependencies
 
-## Completion gate
+Install dependencies using the repository's declared package manager.
 
-Do not emit Bootstrap.Completed until all four evidence criteria are met. If any step fails, report the concrete blocker to the caller. Do not emit Bootstrap.Completed for a partial execution.
+**Moment**: after installation completes without errors.
+
+Emit `Delivery.Bootstrap.Dependencies.Installed`:
+
+```json
+{
+  "event": "Delivery.Bootstrap.Dependencies.Installed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": {
+    "player": "<player>",
+    "agent": "bootstrap-agent"
+  },
+  "payload": {}
+}
+```
+
+### Step 3 — Start local infrastructure
+
+Prepare local infrastructure through the repository setup scripts (e.g. Docker, LocalStack, local database). Verify that all required services are reachable.
+
+**Moment**: after all services are reachable.
+
+Emit `Delivery.Bootstrap.Services.Ready`:
+
+```json
+{
+  "event": "Delivery.Bootstrap.Services.Ready",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": {
+    "player": "<player>",
+    "agent": "bootstrap-agent"
+  },
+  "payload": {}
+}
+```
+
+### Step 4 — Verify environment variables
+
+Confirm that the required environment variable names are present. Do not read or expose values, tokens, credentials, or PII. This step does not emit an event — failures are covered by `Block.Declared`.
+
+### Step 5 — Run smoke gate
+
+Run the smoke gate defined in `prodops/exec/manifest.yaml`.
+
+**Moment**: after the smoke gate passes without errors.
+
+Emit `Delivery.Bootstrap.Smoke.Passed`:
+
+```json
+{
+  "event": "Delivery.Bootstrap.Smoke.Passed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": {
+    "player": "<player>",
+    "agent": "bootstrap-agent"
+  },
+  "payload": {}
+}
+```
 
 ## Phase: Bootstrap.Completed
 
-**Moment**: after the completion gate passes, before reporting success to the caller.
+**Moment**: after `Bootstrap.Smoke.Passed` is accepted — all steps completed successfully.
 
 Emit using the same `correlation-id` generated at Bootstrap.Started:
 
@@ -115,7 +173,7 @@ Emit using the same `correlation-id` generated at Bootstrap.Started:
 }
 ```
 
-If the tool returns `status: error` for Bootstrap.Completed: report the error explicitly. Do not invent a `Completed` event; the timeline will show only `Bootstrap.Started`.
+If the tool returns `status: error` for Bootstrap.Completed: report the error explicitly. Do not invent a `Completed` event; the timeline will show only `Bootstrap.Started` and the checkpoints reached so far.
 
 If the tool returns `status: skipped` (exit 4): the event was already recorded. This is acceptable if Bootstrap ran twice with the same correlation ID; continue.
 
@@ -138,6 +196,6 @@ If the tool returns `status: skipped` (exit 4): the event was already recorded. 
 - Required local services are available.
 - Environment configuration requirements are known without secrets being exposed.
 - The smoke gate passes, or the environment blocker is explicit.
-- Timeline for `work-item-id` contains `Delivery.Bootstrap.Started` and `Delivery.Bootstrap.Completed`.
+- Timeline for `work-item-id` contains `Delivery.Bootstrap.Started`, `Bootstrap.Dependencies.Installed`, `Bootstrap.Services.Ready`, `Bootstrap.Smoke.Passed`, and `Delivery.Bootstrap.Completed`.
 - GitHub Project shows `oem-state: BOOTSTRAPPING` updated after Started; last-event updated after Completed.
 - `/hack start` can establish the Git flow after Downstream readiness is reached.
