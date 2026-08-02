@@ -1,6 +1,9 @@
 {
   "iteration-id": "v0.10.0",
   "issues": {
-    "47": "validated"
-  }
+    "47": "validated",
+    "117": "validated"
+  },
+  "status": "all-validated",
+  "all-validated-at": "2026-08-02T00:00:00Z"
 }
