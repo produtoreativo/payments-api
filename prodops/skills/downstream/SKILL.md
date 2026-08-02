@@ -111,14 +111,11 @@ Fila Downstream — Iteration Plan ativo
 5. **Project Cleanup** — remover todos os items do GitHub Project antes de adicionar os da nova iteração. **Este passo é independente do Plan Bootstrap e sempre executa**, mesmo que `plan-bootstrap.json` já exista.
 
    a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` tem o campo `"project-cleanup": "completed"`. Se tiver, pular este passo.
-   b. Se não tiver (campo ausente ou arquivo inexistente), remover todos os items atualmente no Project (`$PROJECT_NUMBER`):
+   b. Se não tiver (campo ausente ou arquivo inexistente), executar o script canônico:
       ```bash
-      gh project item-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json \
-        | jq -r '.items[].id' \
-        | while read ITEM_ID; do
-            gh project item-delete "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --id "$ITEM_ID"
-          done
+      bash prodops/runtime/scripts/project-cleanup.sh
       ```
+      O script lê `project-number` e `owner` de `prodops/runtime/runtime.yaml` e remove todos os items do Project. Suporta `--dry-run` para inspeção prévia. Seguro quando o projeto estiver vazio — sai com exit 0.
    c. Após executar (com ou sem itens removidos), adicionar `"project-cleanup": "completed"` em `ITERATION_DIR/runtime/plan-bootstrap.json` (criar o arquivo com apenas esse campo se ele não existir ainda). Commitar.
    d. Não bloquear se o projeto estiver vazio — registrar `"project-cleanup": "completed"` mesmo assim.
 

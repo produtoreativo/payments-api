@@ -112,12 +112,9 @@ Downstream Queue — Active Iteration Plan
    a. Check if `ITERATION_DIR/runtime/plan-bootstrap.json` already exists with `"status": "completed"`. If so, skip to step 7 (environment already ready).
    b. **Project cleanup** — remove all current items from the Project before adding the new iteration's issues:
       ```bash
-      gh project item-list "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --format json \
-        | jq -r '.items[].id' \
-        | while read ITEM_ID; do
-            gh project item-delete "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --id "$ITEM_ID"
-          done
+      bash prodops/runtime/scripts/project-cleanup.sh
       ```
+      The script reads `project-number` and `owner` from `prodops/runtime/runtime.yaml` and removes all items. Supports `--dry-run`. Safe when the project is empty — exits 0.
       - Do not block if the project is empty — record `"project-cleanup": "completed"` regardless.
    c. **Iteration Plan tracking issue** — check if an issue with title `[Iteration <iteration-id>]:` already exists:
       ```bash
