@@ -124,6 +124,15 @@ while IFS= read -r subscriber; do
       emit_diligence_event "Diligence.Promote.Started"    "diligence-promote-agent"
       emit_diligence_event "Diligence.Promote.Completed"  "diligence-promote-agent"
       ;;
+    diligence.trail)
+      log "Executing Diligence Trail — posting phase comment on plan-issue"
+      bash "$SCRIPT_DIR/trail.sh" \
+        --event-type     "$EVENT_TYPE" \
+        --work-item-id   "$WORK_ITEM_ID" \
+        --iteration-id   "${ITERATION_ID:-}" \
+        --correlation-id "$CORRELATION_ID" \
+        --player         "$PLAYER" || log "Warning: trail.sh failed (non-fatal)"
+      ;;
     *)
       log "Warning: unknown subscriber '$subscriber' — skipped"
       ;;
