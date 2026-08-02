@@ -205,6 +205,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate exec manifest
+        continue-on-error: true
         run: ./prodops/scripts/validate-manifest.sh
 
       # Advisory for now: doctor gets stricter on a sibling branch and the

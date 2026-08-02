@@ -97,15 +97,27 @@ Fila Downstream — Iteration Plan ativo
 
 6. **Plan Bootstrap** — executar uma única vez antes do loop de issues:
    a. Verificar se `ITERATION_DIR/runtime/plan-bootstrap.json` já existe com `"status": "completed"`. Se sim, pular para o passo 7 (ambiente já pronto).
-   b. **Project cleanup** — remover do Project 25 todas as issues com estado `closed` antes de adicionar as novas da iteração corrente:
+   b. **Project cleanup** — remover do Project 25 as issues da última iteração concluída antes de adicionar as novas:
       ```bash
-      # listar items do projeto e remover os fechados
-      gh project item-list 25 --owner produtoreativo --format json \
-        | jq -r '.items[] | select(.content.state == "CLOSED") | .id' \
-        | xargs -I{} gh project item-delete 25 --owner produtoreativo --id {}
+      # 1. Identificar a última iteração com status "Concluido" no histórico
+      LAST_DONE=$(grep -oP '\[v[\d.]+\]' prodops/artifacts/plans/iteration-plan.md \
+        | grep -oP 'v[\d.]+' | while read v; do
+            grep -q "Conclu" "prodops/artifacts/iterations/$v/plan.md" 2>/dev/null && echo "$v"
+          done | tail -1)
+
+      # 2. Extrair os números de issue do mapeamento DS-ID → Issue daquela iteração
+      CLOSED_ISSUES=$(grep -oP '#\d+' "prodops/artifacts/iterations/${LAST_DONE}/plan.md" \
+        | grep -oP '\d+' | sort -u)
+
+      # 3. Para cada issue, localizar e remover o item do Project
+      for ISSUE_NUM in $CLOSED_ISSUES; do
+        ITEM_ID=$(gh project item-list 25 --owner produtoreativo --format json \
+          | jq -r --argjson n "$ISSUE_NUM" '.items[] | select(.content.number == $n) | .id')
+        [[ -n "$ITEM_ID" ]] && gh project item-delete 25 --owner produtoreativo --id "$ITEM_ID"
+      done
       ```
-      - Não bloquear se o projeto estiver vazio ou se nenhuma issue fechada for encontrada.
-      - Não remover issues abertas de outras iterações que eventualmente estejam no projeto.
+      - Não bloquear se o projeto estiver vazio, se nenhum item for encontrado ou se `LAST_DONE` for vazio.
+      - Não remover issues abertas de iterações em andamento.
    c. Emitir `Delivery.Plan.Bootstrap.Started` com `subject: <iteration-id>`, `work-item-id: null` e `--iteration-id <iteration-id>`.
    d. Executar o Bootstrap work: instalar dependências, verificar runtimes e serviços locais, confirmar variáveis de ambiente, executar o smoke gate do manifest.
    e. Se qualquer etapa falhar: reportar o bloqueio e **parar toda a fila** — não iniciar nenhum issue.

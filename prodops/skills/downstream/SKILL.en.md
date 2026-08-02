@@ -97,14 +97,27 @@ Downstream Queue — Active Iteration Plan
 
 6. **Plan Bootstrap** — run once before the issue loop:
    a. Check if `ITERATION_DIR/runtime/plan-bootstrap.json` already exists with `"status": "completed"`. If so, skip to step 7 (environment already ready).
-   b. **Project cleanup** — remove all closed issues from Project 25 before adding the new iteration's issues:
+   b. **Project cleanup** — remove the issues from the last completed iteration before adding the new ones:
       ```bash
-      gh project item-list 25 --owner produtoreativo --format json \
-        | jq -r '.items[] | select(.content.state == "CLOSED") | .id' \
-        | xargs -I{} gh project item-delete 25 --owner produtoreativo --id {}
+      # 1. Find the last iteration with "Concluido" status in the history
+      LAST_DONE=$(grep -oP '\[v[\d.]+\]' prodops/artifacts/plans/iteration-plan.md \
+        | grep -oP 'v[\d.]+' | while read v; do
+            grep -q "Conclu" "prodops/artifacts/iterations/$v/plan.md" 2>/dev/null && echo "$v"
+          done | tail -1)
+
+      # 2. Extract issue numbers from the DS-ID → Issue mapping table of that iteration
+      CLOSED_ISSUES=$(grep -oP '#\d+' "prodops/artifacts/iterations/${LAST_DONE}/plan.md" \
+        | grep -oP '\d+' | sort -u)
+
+      # 3. For each issue, locate and remove the item from the Project
+      for ISSUE_NUM in $CLOSED_ISSUES; do
+        ITEM_ID=$(gh project item-list 25 --owner produtoreativo --format json \
+          | jq -r --argjson n "$ISSUE_NUM" '.items[] | select(.content.number == $n) | .id')
+        [[ -n "$ITEM_ID" ]] && gh project item-delete 25 --owner produtoreativo --id "$ITEM_ID"
+      done
       ```
-      - Do not block if the project is empty or no closed issues are found.
-      - Do not remove open issues from other iterations that may be in the project.
+      - Do not block if the project is empty, if no items are found, or if `LAST_DONE` is empty.
+      - Do not remove open issues from ongoing iterations.
    c. Emit `Delivery.Plan.Bootstrap.Started` with `subject: <iteration-id>`, `work-item-id: null` and `--iteration-id <iteration-id>`.
    d. Execute Bootstrap work: install dependencies, verify runtimes and local services, confirm environment variables, run the manifest smoke gate.
    e. If any step fails: report the blocker and **stop the entire queue** — do not start any issue.

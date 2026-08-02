@@ -118,6 +118,12 @@ ITERATION_ID=$(echo "$INPUT_JSON"   | jq -r '."iteration-id"    // empty')
 PLAYER=$(echo "$INPUT_JSON"         | jq -r '.actor.player      // "unknown"')
 AGENT_NAME=$(echo "$INPUT_JSON"     | jq -r '.actor.agent       // "unknown"')
 
+# Plan-scoped events (Delivery.Plan.*) have no work-item-id by design.
+# Use "plan-<iteration-id>" as a synthetic key so the pipeline can proceed.
+if [[ -z "$WORK_ITEM_ID" && "$EVENT" == Delivery.Plan.* && -n "$ITERATION_ID" ]]; then
+  WORK_ITEM_ID="plan-${ITERATION_ID}"
+fi
+
 log "player=$PLAYER agent=$AGENT_NAME iteration=${ITERATION_ID:-—} execution=${EXECUTION_ID:-—}${DRY_RUN:+ dry-run=true}"
 
 # ── Guard: reject catalog-owned fields ────────────────────────────────────────
