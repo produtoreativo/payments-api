@@ -1,0 +1,4 @@
+# consumers.yaml — list of repositories that consume the prodops-framework
+# Each entry receives a workflow_dispatch when a new framework release is published.
+consumers:
+  - repo: produtoreativo/payments-api

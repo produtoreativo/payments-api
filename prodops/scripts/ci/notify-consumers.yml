@@ -1,0 +1,75 @@
+name: Notify Consumers
+
+# Simulates the prodops-framework repo workflow.
+# Triggers when a new version tag is pushed, reads consumers.yaml,
+# and dispatches workflow_dispatch to each registered consumer repo.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq \
+            https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Dispatch workflow_dispatch to each consumer
+        env:
+          GH_TOKEN: ${{ secrets.FRAMEWORK_DISPATCH_TOKEN }}
+          FRAMEWORK_VERSION: ${{ github.ref_name }}
+        run: |
+          set +e
+
+          CONSUMERS_FILE="prodops/exec/consumers.yaml"
+          failed_repos=()
+          FAILED_REPOS=()
+          error_count=0
+
+          repos=$(yq '.consumers[].repo' "$CONSUMERS_FILE")
+
+          for repo in $repos; do
+            echo "Dispatching to $repo (version: $FRAMEWORK_VERSION)"
+
+            http_code=$(gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/$repo/actions/workflows/sync-prodops.yml/dispatches" \
+              -f ref=main \
+              -f "inputs[framework_version]=$FRAMEWORK_VERSION" \
+              --silent --output /dev/null \
+              -w "%{http_code}" 2>/dev/null || echo "000")
+
+            if [ "$http_code" = "404" ]; then
+              echo "ERROR: $repo — workflow sync-prodops.yml not found (404). Skipping."
+              failed_repos+=("$repo")
+              FAILED_REPOS+=("$repo")
+              error_count=$((error_count + 1))
+            elif [ "$http_code" != "204" ]; then
+              echo "ERROR: $repo — dispatch failed with HTTP $http_code"
+              failed_repos+=("$repo")
+              FAILED_REPOS+=("$repo")
+              error_count=$((error_count + 1))
+            else
+              echo "OK: $repo dispatched successfully"
+            fi
+          done
+
+          if [ "${#failed_repos[@]}" -gt 0 ]; then
+            echo ""
+            echo "Failed repos (${#failed_repos[@]}):"
+            for r in "${failed_repos[@]}"; do
+              echo "  - $r"
+            done
+            exit 1
+          fi
+
+          exit 0
