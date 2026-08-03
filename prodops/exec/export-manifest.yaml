@@ -33,6 +33,8 @@ export:
     - scripts/validate-export-manifest.sh
     - scripts/README.md
     - scripts/README.en.md
+    - LICENSE
+    - CHANGELOG.md
   exclude:
     - skills/local/**
     - skills/references/local/**
