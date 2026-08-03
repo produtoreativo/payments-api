@@ -71,6 +71,13 @@ AGENT_NAME=$(echo "$INPUT_JSON"     | jq -r '.actor.agent       // "unknown"')
 
 log "player=$PLAYER agent=$AGENT_NAME iteration=$ITERATION_ID execution=$EXECUTION_ID"
 
+# ── Resolve subject ───────────────────────────────────────────────────────────
+# Plan-level events (Delivery.Plan.*) use iteration-id as subject.
+# Guard against the agent serializing JSON null as the string "null".
+if [[ ( -z "$WORK_ITEM_ID" || "$WORK_ITEM_ID" == "null" ) && -n "$ITERATION_ID" ]]; then
+  WORK_ITEM_ID="$ITERATION_ID"
+fi
+
 # ── Validate required fields ──────────────────────────────────────────────────
 declare -a ERRORS=()
 [[ -z "$EVENT" ]]          && ERRORS+=("missing required field: event")

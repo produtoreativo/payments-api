@@ -120,7 +120,8 @@ AGENT_NAME=$(echo "$INPUT_JSON"     | jq -r '.actor.agent       // "unknown"')
 
 # Plan-scoped events (Delivery.Plan.*) have no work-item-id by design.
 # Use "plan-<iteration-id>" as a synthetic key so the pipeline can proceed.
-if [[ -z "$WORK_ITEM_ID" && "$EVENT" == Delivery.Plan.* && -n "$ITERATION_ID" ]]; then
+# Guard: also catch the string "null" produced when an agent serializes JSON null incorrectly.
+if [[ ( -z "$WORK_ITEM_ID" || "$WORK_ITEM_ID" == "null" ) && "$EVENT" == Delivery.Plan.* && -n "$ITERATION_ID" ]]; then
   WORK_ITEM_ID="plan-${ITERATION_ID}"
 fi
 

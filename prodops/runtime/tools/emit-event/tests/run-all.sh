@@ -53,7 +53,8 @@ run_test "02 missing-required-fields"           "$TESTS_DIR/02-missing-required.
 run_test "03 unknown-event"                     "$TESTS_DIR/03-unknown-event.sh"
 run_test "04 catalog-field-rejection"           "$TESTS_DIR/04-catalog-field-rejection.sh"
 run_test "05 partial-runtime-failure (datadog)" "$TESTS_DIR/05-partial-runtime-failure.sh"
-run_test "06 idempotency (same correlation-id)" "$TESTS_DIR/06-idempotency.sh"
+run_test "06 idempotency (same correlation-id)"         "$TESTS_DIR/06-idempotency.sh"
+run_test "07 plan-level null work-item-id → iteration-id" "$TESTS_DIR/07-plan-level-null-work-item-id.sh"
 
 echo "────────────────────────────────────────────────"
 echo "Results: $PASSED passed, $FAILED failed"
