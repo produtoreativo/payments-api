@@ -1,0 +1,16 @@
+{
+  "id": "iyd-tq8-jdh",
+  "title": "ProdOps Runtime — Event Counters v2",
+  "url": "/dashboard/iyd-tq8-jdh/prodops-runtime--event-counters-v2",
+  "created_at": "2026-08-03",
+  "description": "Versão refinada da dashboard de contadores. Sub-quadros por fase dentro de cada grupo: CI SYNC tem Bootstrap/Hack/Sync/Finish; CI ASYNC tem Ship/Validate; Promote tem Plan Gate/Promote; Diligence tem Capture/Attach/Promote/Block/Scan/Flag/Repair/Close. Labels sem prefixos redundantes.",
+  "previous_dashboard_id": "p38-i2h-ied",
+  "widget_count": 66,
+  "groups": {
+    "PLAN BOOTSTRAP": { "color": "vivid_blue", "events": 9, "sub_groups": false },
+    "CI SYNC":        { "color": "vivid_orange", "events": 11, "sub_groups": ["Bootstrap", "Hack", "Sync", "Finish"] },
+    "CI ASYNC":       { "color": "vivid_yellow", "events": 4, "sub_groups": ["Ship", "Validate"] },
+    "PROMOTE":        { "color": "vivid_purple", "events": 3, "sub_groups": ["Plan Gate", "Promote"] },
+    "DILIGENCE":      { "color": "vivid_green", "events": 14, "sub_groups": ["Capture", "Attach", "Promote", "Block", "Scan", "Flag", "Repair", "Close"] }
+  }
+}

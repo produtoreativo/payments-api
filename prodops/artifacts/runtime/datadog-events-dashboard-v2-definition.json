@@ -1,0 +1,1593 @@
+{
+  "title": "ProdOps Runtime — Event Counters v2",
+  "description": "EXP-015 | Sub-quadros por fase: Plan Bootstrap → CI Sync (Bootstrap/Hack/Sync/Finish) → CI Async (Ship/Validate) → Promote → Diligence. Filtre por $issue para isolar uma feature.",
+  "layout_type": "ordered",
+  "reflow_type": "fixed",
+  "tags": [
+    "team:prodops"
+  ],
+  "template_variables": [
+    {
+      "name": "service",
+      "prefix": "service",
+      "available_values": [],
+      "default": "payments-api"
+    },
+    {
+      "name": "env",
+      "prefix": "env",
+      "available_values": [],
+      "default": "development"
+    },
+    {
+      "name": "issue",
+      "prefix": "issue",
+      "available_values": [],
+      "default": "*"
+    }
+  ],
+  "widgets": [
+    {
+      "definition": {
+        "type": "note",
+        "content": "## ProdOps Runtime — Event Counters\n### EXP-015  |  Plan Bootstrap → CI Sync → CI Async → Promote → Diligence\n\nCada widget conta quantas vezes o evento foi recebido no período selecionado.\nFiltre por `$issue` para isolar uma feature.\n\nMétricas: `runtime.event.received` (Delivery) · `runtime.diligence.event.received` (Diligence)",
+        "background_color": "vivid_blue",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**PLAN BOOTSTRAP** — executa uma única vez por iteração | `subject: iteration-id` | `runtime.event.received`",
+        "background_color": "vivid_blue",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 2,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Project\nCleaned",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.project.cleaned,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Issue\nRegistered",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.issue.registered,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Issue\nEntered",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.issue.entered,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Issues\nAdded",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.issues.added,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 8,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Deps\nInstalled",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.dependencies.installed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 10,
+        "y": 3,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Services\nReady",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.services.ready,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 5,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Smoke\nPassed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.smoke.passed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 5,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.bootstrap.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 5,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**CI SYNC** — por issue | Bootstrap → Hack → Sync → Finish | `runtime.event.received`",
+        "background_color": "vivid_orange",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 7,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Bootstrap**",
+        "background_color": "orange",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 8,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 9,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Deps\nInstalled",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.dependencies.installed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 9,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Services\nReady",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.services.ready,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 9,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Smoke\nPassed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.smoke.passed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 9,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.bootstrap.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 8,
+        "y": 9,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Hack**",
+        "background_color": "orange",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 11,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.hack.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 12,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.hack.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 12,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Sync**",
+        "background_color": "orange",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 14,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.sync.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 15,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.sync.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 15,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Finish**",
+        "background_color": "orange",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 17,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.finish.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 18,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.finish.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 18,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**CI ASYNC** — por issue | Ship → Validate | `runtime.event.received`",
+        "background_color": "vivid_yellow",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 20,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Ship**",
+        "background_color": "yellow",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 21,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.ship.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 22,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.ship.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 22,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Validate**",
+        "background_color": "yellow",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 24,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.validate.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 25,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.validate.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 25,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**PROMOTE** — gate de plano + promoção por issue | Plan.Validated → Promote | `runtime.event.received`",
+        "background_color": "vivid_purple",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 27,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Plan Gate**",
+        "background_color": "purple",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 28,
+        "width": 4,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Promote**",
+        "background_color": "purple",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 4,
+        "y": 28,
+        "width": 8,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Validated",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.plan.validated,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 29,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.promote.started,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 29,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.event.received{event:prodops.delivery.promote.completed,service:$service.value,env:$env.value,issue:$issue.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 29,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**DILIGENCE** — Capture → Attach → Promote · Block · Scan → Flag → Repair → Close | `runtime.diligence.event.received`",
+        "background_color": "vivid_green",
+        "font_size": "14",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 31,
+        "width": 12,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Capture**",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 32,
+        "width": 4,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Attach**",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 4,
+        "y": 32,
+        "width": 4,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Promote**",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 8,
+        "y": 32,
+        "width": 4,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.capture.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 33,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.capture.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 33,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.attach.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 33,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.attach.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 33,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.promote.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 8,
+        "y": 33,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.promote.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 10,
+        "y": 33,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Block**",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 35,
+        "width": 4,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Scan**",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 4,
+        "y": 35,
+        "width": 8,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Declared",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.block.declared,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 36,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Resolved",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.block.resolved,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 36,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.scan.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 36,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.scan.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 36,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Divergence\nDetected",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.divergence.detected,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_yellow"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 8,
+        "y": 36,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Flag**",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 0,
+        "y": 38,
+        "width": 4,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Repair**",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 4,
+        "y": 38,
+        "width": 4,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Close**",
+        "background_color": "green",
+        "font_size": "12",
+        "text_align": "center",
+        "vertical_align": "center",
+        "show_tick": false
+      },
+      "layout": {
+        "x": 8,
+        "y": 38,
+        "width": 4,
+        "height": 1
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.flag.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 39,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.flag.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 2,
+        "y": 39,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.repair.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 39,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.repair.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 39,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Started",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.close.started,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 8,
+        "y": 39,
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "definition": {
+        "type": "query_value",
+        "title": "Completed",
+        "precision": 0,
+        "autoscale": true,
+        "requests": [
+          {
+            "q": "sum:runtime.diligence.event.received{event:prodops.diligence.close.completed,service:$service.value,env:$env.value}.as_count()",
+            "aggregator": "sum",
+            "conditional_formats": [
+              {
+                "comparator": ">",
+                "value": 0,
+                "palette": "white_on_green"
+              }
+            ]
+          }
+        ]
+      },
+      "layout": {
+        "x": 10,
+        "y": 39,
+        "width": 2,
+        "height": 2
+      }
+    }
+  ]
+}
