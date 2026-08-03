@@ -1,0 +1,60 @@
+{
+  "iteration-id": "v0.11.0",
+  "checked-at": "2026-08-03T00:00:00Z",
+  "result": "blocked",
+  "capabilities": {
+    "DS-53": {
+      "slug": "prodops-framework-export",
+      "gates": {
+        "obc": true,
+        "bdd": true,
+        "risks": false,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": [
+        "prodops/artifacts/risks/risks.md#DS-53-prodops-framework-export"
+      ]
+    },
+    "DS-54": {
+      "slug": "prodops-framework-install",
+      "gates": {
+        "obc": true,
+        "bdd": true,
+        "risks": false,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": [
+        "prodops/artifacts/risks/risks.md#DS-54-prodops-framework-install"
+      ]
+    },
+    "DS-55": {
+      "slug": "prodops-framework-sync",
+      "gates": {
+        "obc": true,
+        "bdd": true,
+        "risks": false,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": [
+        "prodops/artifacts/risks/risks.md#DS-55-prodops-framework-sync"
+      ]
+    },
+    "DS-56": {
+      "slug": "prodops-framework-ci",
+      "gates": {
+        "obc": true,
+        "bdd": true,
+        "risks": false,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": [
+        "prodops/artifacts/risks/risks.md#DS-56-prodops-framework-ci"
+      ]
+    }
+  },
+  "next-action": "Adicionar secoes de risco para DS-53, DS-54, DS-55 e DS-56 em prodops/artifacts/risks/risks.md — os riscos ja estao documentados no Premortem do OBC (prodops/artifacts/obcs/prodops-framework-distribution.md) e podem ser transcritos ou referenciados la. Apos adicionar, re-invocar /downstream ou /downstream recheck."
+}
