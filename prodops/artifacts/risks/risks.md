@@ -459,6 +459,89 @@ O upgrade para multer >=2.2.0 foi aplicado via `npm audit fix` sem alteração e
 
 ---
 
+# DS-53 — Extração canônica do Framework (prodops-framework-export)
+
+**Capability:** prodops-framework-export
+**Severidade:** Média
+**Status:** Aceito
+
+## Riscos identificados
+
+- Export script sobrescreve áreas do consumidor (`artifacts/`, `skills/local/`) — mitigado por `.prodopsignore` obrigatório e invariantes no sync script; `validate-export-manifest.sh` valida a fronteira antes de qualquer push.
+- Links relativos quebram após cópia para `prodops-framework` — mitigado por `doctor.sh` antes e depois; validação de links em `validate-export-manifest.sh`.
+- Conteúdo produto-específico de `payments-api` exportado como canônico — mitigado por `validate-export-manifest.sh` + transforms declaradas no manifest; risco baixo pois transforms já foram aplicadas internamente.
+- `prodops-framework` publicado sem LICENSE bloqueia adoção legal — mitigado por incluir LICENSE como critério de entrada da Camada 1 (critério de saída do DS-53).
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/prodops-framework-distribution.md`
+- BDD: `prodops/artifacts/bdd/prodops-framework-export.feature`
+- Issue: [#130](https://github.com/produtoreativo/payments-api/issues/130)
+
+---
+
+# DS-54 — Instalação do Framework em repositório consumidor (prodops-framework-install)
+
+**Capability:** prodops-framework-install
+**Severidade:** Baixa
+**Status:** Aceito
+
+## Riscos identificados
+
+- Install script sobrescreve artefatos existentes em repo que já tem `prodops/` parcialmente inicializado — mitigado por verificar existência de `.prodopsignore` e `artifacts/` antes de copiar; instalação subsequente não sobrescreve paths protegidos.
+- `framework-lock.yaml` gerado com campos incorretos (versão errada, `status` inválido) — mitigado por template validado + verificação de schema após geração; `doctor.sh` falha se campos obrigatórios ausentes.
+- Versão solicitada não existe no `prodops-framework` — mitigado por verificar existência da tag antes de qualquer operação; script termina com exit 1 e mensagem clara sem criar arquivos.
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/prodops-framework-distribution.md`
+- BDD: `prodops/artifacts/bdd/prodops-framework-install.feature`
+- Issue: [#131](https://github.com/produtoreativo/payments-api/issues/131)
+
+---
+
+# DS-55 — Atualização do Framework em repositório consumidor (prodops-framework-sync)
+
+**Capability:** prodops-framework-sync
+**Severidade:** Média
+**Status:** Aceito
+
+## Riscos identificados
+
+- Sync sobrescreve artefatos do produto (`artifacts/`, `skills/local/`, `exec/`) — mitigado por `.prodopsignore` obrigatório lido antes de qualquer cópia; invariante: nenhum path protegido é tocado.
+- Versão instalada fica fora de sync silenciosamente sem detecção — mitigado por `framework-lock.yaml` com `drift.status`; flag `--check` retorna exit 1 se drift detectado; CI notifica via workflow.
+- Links relativos quebram após atualização de conteúdo do framework — mitigado por `doctor.sh` antes e depois da cópia; falha bloqueia abertura do PR.
+- Divergência local em conteúdo canônico sobrescrita sem revisão — mitigado por detecção de divergência antes de copiar; PR revisável como única saída possível (nunca commit direto).
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/prodops-framework-distribution.md`
+- BDD: `prodops/artifacts/bdd/prodops-framework-sync.feature`
+- Issue: [#132](https://github.com/produtoreativo/payments-api/issues/132)
+
+---
+
+# DS-56 — Propagação automática de releases via CI (prodops-framework-ci)
+
+**Capability:** prodops-framework-ci
+**Severidade:** Média
+**Status:** Aceito
+
+## Riscos identificados
+
+- CI propaga versão quebrada para todos os consumidores simultaneamente — mitigado por PR revisável por repo; nunca commit direto em `main`; consumidor pode rejeitar o PR.
+- Falha em um consumidor bloqueia os demais — mitigado por tratamento de erro por repo; `notify-consumers.yml` continua os demais mesmo se um dispatch falhar; falha parcial registrada no log.
+- Token de acesso entre repositórios com permissão excessiva — mitigado por usar escopo mínimo necessário (`workflow` scope); token não persiste além do workflow.
+- Consumidor sem `sync-prodops.yml` configurado recebe dispatch que falha silenciosamente — mitigado por registrar erro 404 no log do `notify-consumers.yml` com identificação do repo; `consumers.yaml` deve ser auditado periodicamente.
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/prodops-framework-distribution.md`
+- BDD: `prodops/artifacts/bdd/prodops-framework-ci.feature`
+- Issue: [#133](https://github.com/produtoreativo/payments-api/issues/133)
+
+---
+
 # DS-50 — Instrumentação Datadog em produção (observability-datadog)
 
 **Capability:** observability-datadog
