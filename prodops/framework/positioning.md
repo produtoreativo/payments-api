@@ -45,6 +45,9 @@ O framework opera em dois **modos de execução**:
 
 **Upstream** — modo de exploração. Sem compromisso de entrega. O time experimenta livremente,
 valida hipóteses, descobre o que não sabe. Pode parar, pivotar ou descartar sem custo.
+Isso inclui escrever código, prototipar integrações e, quando o ambiente local não é suficiente,
+fazer deploy em um ambiente de sandbox real na nuvem — tudo sem gates, sem Release Trail,
+sem OBC committed. O objetivo é aprender, não entregar.
 
 **Downstream** — modo de compromisso. Gates obrigatórios, fases sequenciais, evidência em cada
 passo. O time só entra aqui quando tem clareza suficiente para assumir a entrega.
@@ -60,8 +63,31 @@ até a operação em produção. Nada entra em Downstream sem OBC committed.
 
 ### Frase de encerramento
 
-> ProdOps dá ao time a liberdade de explorar sem amarras e a disciplina de entregar com
-> evidência — e o time decide quando mudar de um modo para o outro.
+> ProdOps dá ao time a liberdade de explorar sem amarras — até em ambiente real na nuvem —
+> e a disciplina de entregar com evidência quando o compromisso é assumido.
+> O time decide quando mudar de um modo para o outro.
+
+---
+
+## Upstream chega em ambiente deployado
+
+Este ponto é frequentemente omitido e gera a percepção equivocada de que Upstream é apenas
+"código local descartável". Não é.
+
+Um experimento Upstream pode ser implantado em AWS real — stack efêmera, recursos isolados,
+ativado manualmente — para validar comportamento contra um provedor externo que não pode
+ser exercitado localmente. O deploy de sandbox é parte do repertório de exploração.
+
+**O que o distingue do Downstream:**
+- Sem gate de aprovação ou Release Trail
+- Stack destruída ao final (`teardown` obrigatório)
+- Recursos prefixados `experiment-*`, isolados de staging e production
+- Nenhum artefato produzido aqui é considerado entregável
+
+**Quando mencionar:** sempre que a conversa sugerir que Upstream é limitado ao ambiente local
+ou que "precisaria ir para Downstream" para validar contra um provedor real.
+
+→ Referência técnica: [`execution-model/upstream.md — Sandbox Deploy`](execution-model/upstream.md#sandbox-deploy-upstream)
 
 ---
 
@@ -73,6 +99,8 @@ até a operação em produção. Nada entra em Downstream sem OBC committed.
 | "Downstream é onde acontece a Delivery" | Downstream é um modo; Delivery existe nos dois | "Downstream é o modo de compromisso" |
 | "Primeiro vai para Upstream, depois para Downstream" | Itens podem nascer direto em Downstream | "O time decide o modo conforme a clareza da ideia" |
 | "ProdOps é um processo de desenvolvimento" | Limita a visão ao ciclo técnico | "ProdOps é um framework que conecta intenção de negócio à evidência de entrega" |
+| "No Upstream não tem deploy" | Upstream tem sandbox deploy em AWS real | "Upstream pode chegar em ambiente real — sem gates, com stack efêmera" |
+| "Para validar contra o provedor, precisa ir para Downstream" | O step `deploy-to-sandbox` existe exatamente para isso no Upstream | "Upstream tem deploy de sandbox para validar provedores reais sem compromisso" |
 
 ---
 
