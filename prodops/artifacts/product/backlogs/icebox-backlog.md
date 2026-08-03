@@ -79,11 +79,32 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 
 | ID | Título | Tipo | Outcome esperado | Status | Score inicial | Fonte |
 | --- | --- | --- | --- | --- | --- | --- |
+| POPS-ICE-001 | Mecanismo de distribuição do ProdOps Framework | Plataforma | Qualquer repo produto instala e mantém o Framework atualizado a partir do `prodops-framework`, sem sobrescrever artefatos locais. | Icebox | — | [#129](https://github.com/produtoreativo/payments-api/issues/129) |
 | PAY-ICE-001 | Criar invoice via gateway com contrato único | Feature | Ecommerce emite cobranças sem acoplamento direto ao provedor Asaas. | Done | 16.4 | [create-invoice.feature](../../bdd/create-invoice.feature) |
 | PAY-ICE-002 | Confirmar pagamento por webhook confiável | Feature | Pedido e ecommerce recebem confirmação uma única vez, com eventos auditáveis. | Done | 20.8 | [payment-confirmation.feature](../../bdd/payment-confirmation.feature) |
 | PAY-ICE-003 | Cancelar invoice pendente com idempotência | Feature | Cobranças abertas podem ser canceladas sem pagamento indevido ou evento duplicado. | Ready for Delivery | 13.7 | [cancel-invoice.feature](../../bdd/cancel-invoice.feature) |
 
 ## 7. Itens detalhados
+
+### POPS-ICE-001 - Mecanismo de distribuição do ProdOps Framework
+
+| Campo | Conteúdo |
+| --- | --- |
+| Tipo | Plataforma |
+| Problema/oportunidade | O ProdOps Framework evolui em `payments-api` mas qualquer equipe que queira adotá-lo precisa copiar arquivos manualmente — sem saber o que copiar, sem garantia de integridade e sem como receber melhorias futuras. |
+| Usuário/cliente | Equipes de produto que adotam o ProdOps Framework (Context Engineers, Tech Leads, agentes). |
+| Outcome esperado | Qualquer repositório produto instala o Framework com um script, recebe atualizações via PR automático e nunca perde artefatos locais em um sync. |
+| Evidência atual | `framework-lock.yaml` declara `synchronization_mechanism: null`. Script de sync anterior desabilitado. `export-manifest.yaml` completo e validado. Business Signal #129. |
+| Escopo MVP | 4 camadas: Export (`export-framework.sh` + v0.1.0), Install (`install-prodops.sh`), Sync (`sync-from-framework.sh`), CI (`notify-consumers.yml` + `sync-prodops.yml`). |
+| Fora de escopo | Resolução automática de conflitos em conteúdo canônico divergente; publicação NPM; suporte a múltiplas versões simultâneas. |
+| Dependências | Repositório `prodops-framework` acessível; `export-manifest.yaml` válido; `doctor.sh` passando com exit 0. |
+| Riscos | Sobrescrita de artefatos do consumidor; links quebrados após cópia; versão desatualizada sem detecção; conteúdo produto-específico exportado como canônico. Ver Premortem em OBC. |
+| Telemetria mínima | `framework-lock.yaml` atualizado a cada sync com versão e drift status; PR de sync como evidência auditável de cada atualização. |
+| Critérios de aceite | Export passa `validate-export-manifest.sh`; Install gera lock com `status: consumer`; Sync abre PR sem tocar em `.prodopsignore` paths; `doctor.sh` passa antes e depois de cada operação. |
+| Score | — |
+| Status | Icebox — OBC Draft em `prodops/artifacts/obcs/prodops-framework-distribution.md`. Próximo: refinar até Committed (BDD + risks formalizados + owner approval para Iteration Backlog). |
+
+---
 
 ### PAY-ICE-001 - Criar invoice via gateway com contrato único
 
