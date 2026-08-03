@@ -1,0 +1,69 @@
+name: Sync ProdOps Framework
+
+# Consumer repo workflow.
+# Triggered by notify-consumers.yml in the prodops-framework repo via workflow_dispatch.
+# Runs sync-from-framework.sh and opens a PR with the changes.
+# Never commits directly to main.
+
+on:
+  workflow_dispatch:
+    inputs:
+      framework_version:
+        description: 'Framework version to sync (e.g. v0.3.0)'
+        required: true
+        type: string
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up git identity
+        run: |
+          git config user.name "prodops-bot"
+          git config user.email "prodops-bot@users.noreply.github.com"
+
+      - name: Create sync branch
+        run: |
+          BRANCH="prodops/sync-${{ inputs.framework_version }}"
+          git checkout -b "$BRANCH"
+          echo "SYNC_BRANCH=$BRANCH" >> "$GITHUB_ENV"
+
+      - name: Run sync-from-framework.sh
+        run: |
+          chmod +x prodops/scripts/sync-from-framework.sh
+          prodops/scripts/sync-from-framework.sh --version ${{ inputs.framework_version }}
+
+      - name: Commit sync changes
+        run: |
+          git add prodops/
+          if git diff --cached --quiet; then
+            echo "No changes to commit — framework is already up to date."
+            echo "NO_CHANGES=true" >> "$GITHUB_ENV"
+          else
+            git commit -m "chore(prodops): sync framework to ${{ inputs.framework_version }}"
+          fi
+
+      - name: Push sync branch
+        if: env.NO_CHANGES != 'true'
+        run: git push origin "$SYNC_BRANCH"
+
+      - name: Open PR
+        if: env.NO_CHANGES != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --title "chore(prodops): sync framework to ${{ inputs.framework_version }}" \
+            --body "Automated sync of ProdOps Framework to version \`${{ inputs.framework_version }}\`.
+
+          Triggered by the prodops-framework release pipeline.
+
+          **Review checklist:**
+          - [ ] No product-specific artifacts overwritten
+          - [ ] \`.prodopsignore\` paths untouched
+          - [ ] \`prodops/exec/framework-lock.yaml\` updated with new version" \
+            --base main \
+            --head "$SYNC_BRANCH"
