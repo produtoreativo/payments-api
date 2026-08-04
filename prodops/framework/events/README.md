@@ -224,13 +224,13 @@ de eventos são snapshots opacos sem causalidade rastreável.
 ```
 Timeline                          Derived State resultante
 ────────────────────────────────  ──────────────────────────────
-Bootstrap.Started  (t₁)          → Delivery Phase: Bootstrapping
-Bootstrap.Completed (t₂)         → Delivery Phase: Hacking
-Hack.PROpened      (t₃)          → Delivery Phase: Finishing
-Finish.ChangesRequested (t₄)     → Delivery Status: Rework
-Hack.PROpened      (t₅)          → Delivery Phase: Finishing
-Finish.ReviewApproved (t₆)       → Delivery Phase: Shipping
-                                     Rework Count: 1
+Bootstrap.Started   (t₁)         → BOOTSTRAPPING
+Bootstrap.Completed (t₂)         → HACKING
+Hack.Completed      (t₃)         → SYNCING
+Rework.Declared     (t₄)         → HACKING        (rework_count: 1)
+Rework.Completed    (t₅)         → SYNCING
+Sync.Completed      (t₆)         → FINISHING
+Finish.Completed    (t₇)         → SHIPPING
 ```
 
 A regra de derivação é direta: o Derived State é determinado pelo último evento que altera
