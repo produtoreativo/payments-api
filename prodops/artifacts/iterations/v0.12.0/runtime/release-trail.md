@@ -77,3 +77,7 @@ All 5 BDD scenarios are covered:
 | 4 | Auto-close blocked when any issue not at Promote.Completed | Gatilho guard block (lines 377–383) | PASS |
 
 **Finish.Started:** `Delivery.Finish.Started` emitted — event-id `da47a0c9-7fc8-4b95-aefb-1201ef1ffaad`, derived-state FINISHING, github-sync success, datadog-sync success.
+
+**PR:** #152 — https://github.com/produtoreativo/payments-api/pull/152 — state: MERGED (squash, auto-merge)
+
+**Finish.Completed:** `Delivery.Finish.Completed` emitted — event-id `034e7bf1-27b4-4c20-826d-06ed7b5a9d81`, github-sync success, datadog-sync success.
