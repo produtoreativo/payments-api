@@ -163,3 +163,75 @@ All 5 BDD scenarios satisfied. All 4 OBC acceptance criteria met.
 | emit-event tests | `bash prodops/runtime/tools/emit-event/tests/run-all.sh` | 10/10 PASS |
 
 **Finish.Started:** `Delivery.Finish.Started` emitted — event-id `ed29c6b3-af65-4726-b5f9-091ee776f5ee`, derived-state FINISHING, github-sync success, datadog-sync success.
+
+---
+
+## DS-60 — RT Dashboard Evolution
+
+**Date:** 2026-08-04
+**Actor:** claude
+**Branch:** feat/149-rt-dashboard-evolution
+**Correlation-ID:** 8fd9297d-4751-47ef-8cc5-d16d2d12ade9
+
+---
+
+### RED — Gap Evidence
+
+`prodops/runtime/datadog/` before DS-60:
+
+1. **No dashboard JSON:** no Datadog dashboard existed for runtime observability.
+2. **No template variable for iteration filtering:** no way to filter metrics by iteration ID in the dashboard.
+3. **No cycle time widgets:** no widgets showing average duration per delivery phase.
+4. **No documentation:** no README explaining dashboard import/usage.
+
+---
+
+### GREEN — Changes Applied
+
+**New files created:**
+
+1. **`prodops/runtime/datadog/runtime-dashboard.json`** — Datadog dashboard JSON with:
+   - Template variable `$iteration_id` (prefix `iteration`, default `*`)
+   - Template variables `$service` and `$env` for additional filtering
+   - Group "Cycle Time per Delivery Phase": 7 `query_value` widgets — Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote — each showing average `prodops.delivery.cycle_time` for the phase
+   - Group "Cycle Time Timeseries — All Phases": 7 `timeseries` widgets for same 7 phases
+   - Widget labels use canonical phase names
+
+2. **`prodops/runtime/datadog/README.md`** — Documentation covering dashboard import, template variable usage, and dependency on DS-57 (send.sh iteration tag).
+
+**Dependency satisfied:** DS-57 (issue #151) confirmed on master: `send.sh` accepts `--iteration-id` parameter and appends `iteration:<id>` tag to Datadog metric payload (line 109 of send.sh).
+
+---
+
+### YELLOW — Gate Results
+
+| Gate | Command | Result |
+|---|---|---|
+| lint | `cd api && npm run lint` | EXIT 0 (30 pre-existing warnings, 0 errors — no api/src changes) |
+| build | `cd api && npm run build` | EXIT 0 |
+| no_mocks | `grep jest.fn( api/test` | 0 hits |
+| emit-event tests | `bash prodops/runtime/tools/emit-event/tests/run-all.sh` | 10/10 PASS |
+
+**Security:** diff contains only JSON and Markdown files under `prodops/runtime/datadog/` — no secrets, tokens, PII, or credentials.
+
+**Quality:** no api/src changes. No jest.fn(), no .overrideProvider(), no .only.
+
+---
+
+### OBC Evaluation — Finish Agent
+
+| OBC | Criterion | Evidence | Result |
+|---|---|---|---|
+| 1 | `send.sh` sends tag `iteration:<id>` | `send.sh` line 109: `("iteration:" + $iteration_id)` — conditional on `--iteration-id` arg | PASS (DS-57 on master) |
+| 2 | Template variable `$iteration_id` defined in dashboard | `runtime-dashboard.json` lines 10–16: `"name": "iteration_id"`, `"prefix": "iteration"` | PASS |
+| 3 | Cycle time widget shows average duration for 7 phases | 7 `query_value` widgets: Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote; each queries `avg:prodops.delivery.cycle_time{...phase:<name>...}` | PASS |
+| 4 | Widget labels use canonical names | Titles: "Bootstrap Cycle Time", "Hack Cycle Time", "Sync Cycle Time", "Finish Cycle Time", "Ship Cycle Time", "Validate Cycle Time", "Promote Cycle Time" | PASS |
+| 5 | Dashboard exported as JSON in `prodops/runtime/datadog/` | `prodops/runtime/datadog/runtime-dashboard.json` present | PASS |
+
+**Finish.Started:** `Delivery.Finish.Started` emitted — event-id `f8d580f4-c2b8-411e-aadf-303a58386187`, derived-state FINISHING, github-sync success, datadog-sync success.
+
+**PR:** #154 — https://github.com/produtoreativo/payments-api/pull/154 — auto-merge enabled; state: MERGED.
+
+**Finish.Completed:** `Delivery.Finish.Completed` emitted — event-id `25e6e96f-d42c-4773-a39f-b9e8edd17ccf`, derived-state FINISHING, github-sync success, datadog-sync success.
+
+**Next steps:** Ship phase (DS-60 / issue #149) — validate merged artifacts on master and promote to product backlog.
