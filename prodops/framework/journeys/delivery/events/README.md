@@ -122,7 +122,7 @@ Dois grupos de eventos podem ocorrer em qualquer Phase, interrompendo o fluxo no
 
 **Rework:** retorno a uma fase anterior por qualidade insuficiente.
 - `Rework.Declared` → HACKING (retorno ao desenvolvimento)
-- `Rework.Completed` → SYNCING (novo PR aberto após rework)
+- `Rework.Resolved` → SYNCING (novo PR aberto após rework)
 
 ---
 
@@ -164,7 +164,7 @@ PascalCase em todos os componentes. Nomes livres de referências a tecnologia ou
 | Versão do catálogo | 1.0.0 (MVP) |
 | Todos os tipos | Active |
 | Shared Types utilizados | Nenhum neste MVP |
-| Shared Types candidatos | Gate.Passed, Gate.Failed, Impediment.Declared, Impediment.Resolved, Rework.Declared, Rework.Completed |
+| Shared Types candidatos | Gate.Passed, Gate.Failed, Impediment.Declared, Impediment.Resolved, Rework.Declared, Rework.Resolved |
 
 ---
 

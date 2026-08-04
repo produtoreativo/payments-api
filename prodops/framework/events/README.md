@@ -228,7 +228,7 @@ Bootstrap.Started   (t₁)         → BOOTSTRAPPING
 Bootstrap.Completed (t₂)         → HACKING
 Hack.Completed      (t₃)         → SYNCING
 Rework.Declared     (t₄)         → HACKING        (rework_count: 1)
-Rework.Completed    (t₅)         → SYNCING
+Rework.Resolved     (t₅)         → SYNCING
 Sync.Completed      (t₆)         → FINISHING
 Finish.Completed    (t₇)         → SHIPPING
 ```

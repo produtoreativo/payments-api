@@ -28,7 +28,8 @@
 | 12 | Impediment.Declared | Blocking | true | BLOCKED | Human, Agent | **Deprecated** → Shared.Impediment.Declared |
 | 13 | Impediment.Resolved | Blocking | false | — (Lookback) | Human | Active — convergido v2 |
 | 14 | Rework.Declared | Rework | true | HACKING | Human, Agent | Active |
-| 15 | Rework.Completed | Rework | true | SYNCING | Human, Agent | Active |
+| 15 | Rework.Completed | Rework | true | SYNCING | Human, Agent | **Deprecated** → Rework.Resolved |
+| 16 | Rework.Resolved | Rework | true | SYNCING | Human, Agent | Active |
 
 ---
 
@@ -589,7 +590,7 @@ revisão e entrega.
 
 **notes:**
 Candidato a Shared Type — a semântica de retorno ao desenvolvimento por qualidade
-insuficiente é genérica. Par complementar: Rework.Completed.
+insuficiente é genérica. Par complementar: Rework.Resolved.
 
 **owner_journey:** Delivery
 
@@ -604,30 +605,53 @@ insuficiente é genérica. Par complementar: Rework.Completed.
 | **alters_state** | `true` |
 | **new_state** | `SYNCING` |
 | **producer_subtypes** | `[Human, Agent]` |
-| **lifecycle_status** | Active |
+| **lifecycle_status** | Deprecated |
 | **introduced_in** | 1.0.0 |
+| **deprecated_in** | 2.1.0 |
+| **deprecation_reason** | Nome não segue REG-09 da Taxonomia (par complementar deve usar `.Resolved`, não `.Completed`). Usar Rework.Resolved. |
+| **replacement_type** | `Rework.Resolved` |
 
 **description:**
-O ciclo de rework foi concluído. O Work Item está pronto para uma nova tentativa de revisão
-de código. Um novo Pull Request foi aberto (ou o PR existente foi atualizado com as
-correções).
+Deprecated. Ver Rework.Resolved.
+
+**notes:**
+Timelines históricas que referenciam este tipo continuam válidas — interpretadas como
+`alters_state=true, new_state=SYNCING`. Novas emissões devem usar `Rework.Resolved`.
+
+**owner_journey:** Delivery
+
+---
+
+### Rework.Resolved
+
+| Campo | Valor |
+|---|---|
+| **name** | `Rework.Resolved` |
+| **category** | Rework |
+| **alters_state** | `true` |
+| **new_state** | `SYNCING` |
+| **producer_subtypes** | `[Human, Agent]` |
+| **lifecycle_status** | Active |
+| **introduced_in** | 2.1.0 |
+
+**description:**
+O ciclo de rework foi resolvido. As correções necessárias foram implementadas e o Work
+Item retoma o fluxo normal a partir do Sync — rebase + align antes de seguir para Finish.
 
 **preconditions:**
 - O Work Item está no estado HACKING após um Rework.Declared
-- As correções necessárias foram implementadas
-- Um Pull Request está disponível para revisão
+- As correções necessárias foram implementadas e commitadas
 
 **postconditions:**
 - O Work Item transita para o estado SYNCING
-- Um novo ciclo de revisão de código começa
-- A Timeline contém Rework.Declared antes de Rework.Completed
+- A Timeline contém Rework.Declared antes de Rework.Resolved
 
 **payload_shape:**
-- `pr_number` (integer, obrigatório): número do Pull Request disponível para revisão após o rework
 - `changes_description` (string, obrigatório): descrição das mudanças realizadas durante o rework
+- `origin_event_id` (string, opcional): id do Rework.Declared que iniciou este ciclo
 
 **notes:**
-Candidato a Shared Type — par complementar de Rework.Declared.
+Substitui Rework.Completed (Deprecated em v2.1.0). Par complementar canônico: Rework.Declared / Rework.Resolved.
 
 **owner_journey:** Delivery
 
@@ -672,7 +696,7 @@ Timeline: WI-099
   4. Hack.Completed       → SYNCING
   5. Gate.Failed          (lint)
   6. Rework.Declared      → HACKING   [retorno por lint failure]
-  7. Rework.Completed     → SYNCING   [correções aplicadas]
+  7. Rework.Resolved      → SYNCING   [correções aplicadas]
   8. Gate.Passed          (lint)
   9. Gate.Passed          (unit-tests)
  10. Sync.Completed       → FINISHING

@@ -652,11 +652,11 @@ ReworkCycles(W) = count(Rework.Declared in Timeline(W))
 
 ### 8.6 Rework Time
 
-Tempo total gasto em ciclos de rework (do Rework.Declared ao Rework.Completed):
+Tempo total gasto em ciclos de rework (do Rework.Declared ao Rework.Resolved):
 
 ```
 ReworkTime(W) = sum(
-  Rework.Completed.timestamp - Rework.Declared.timestamp
+  Rework.Resolved.timestamp - Rework.Declared.timestamp
   for each pair in timeline
 )
 ```
