@@ -18,21 +18,22 @@
 | 2 | Collect.Completed | Phase Lifecycle | true | COLLECTED | Human, Agent | Active |
 | 3 | Analyze.Started | Phase Lifecycle | true | ANALYZING | Human, Agent | Active |
 | 4 | Analyze.Completed | Phase Lifecycle | true | ANALYZED | Human, Agent | Active |
-| 5 | Synthesize.Completed | Phase Lifecycle | true | SYNTHESIZED | Human, Agent | Active |
-| 6 | Report.Published | Phase Lifecycle | true | DONE | Human, Agent, System | Active |
-| 7 | Monitor.Activated | Phase Lifecycle | true | MONITORING | System, Agent | Active |
-| 8 | Alert.Raised | Phase Lifecycle | true | ALERTED | System, Agent | Active |
-| 9 | Report.Approved | Human Decision | true | REPORTING | Human | Active |
-| 10 | Report.Rejected | Human Decision | true | SYNTHESIZED | Human | Active |
-| 11 | Recommendation.Issued | Human Decision | false | — | Human, Agent | Active |
-| 12 | Risk.Identified | Human Decision | false | — | Human, Agent | Active |
-| 13 | Opportunity.Identified | Human Decision | false | — | Human, Agent | Active |
-| 14 | Gate.Passed | Gate | false | — | System, Agent | **Deprecated** → Shared.Gate.Passed |
-| 15 | Gate.Failed | Gate | false | — | System, Agent | **Deprecated** → Shared.Gate.Failed |
-| 16 | Impediment.Declared | Blocking | true | BLOCKED | Human, Agent | **Deprecated** → Shared.Impediment.Declared |
-| 17 | Impediment.Resolved | Blocking | false | — | Human | Active — aguarda Shared.Impediment.Resolved (shared-types v1.1.0) |
-| 18 | Threshold.Crossed | System | false | — | System, Agent | Active |
-| 19 | Evolve.Proposed | System | false | — | System, Agent | Active |
+| 5 | Synthesize.Started | Phase Lifecycle | true | SYNTHESIZING | Human, Agent | Active |
+| 6 | Synthesize.Completed | Phase Lifecycle | true | SYNTHESIZED | Human, Agent | Active |
+| 7 | Report.Published | Phase Lifecycle | true | DONE | Human, Agent, System | Active |
+| 8 | Monitor.Activated | Phase Lifecycle | true | MONITORING | System, Agent | Active |
+| 9 | Alert.Raised | Phase Lifecycle | true | ALERTED | System, Agent | Active |
+| 10 | Report.Approved | Human Decision | true | REPORTING | Human | Active |
+| 11 | Report.Rejected | Human Decision | true | SYNTHESIZED | Human | Active |
+| 12 | Recommendation.Issued | Human Decision | false | — | Human, Agent | Active |
+| 13 | Risk.Identified | Human Decision | false | — | Human, Agent | Active |
+| 14 | Opportunity.Identified | Human Decision | false | — | Human, Agent | Active |
+| 15 | Gate.Passed | Gate | false | — | System, Agent | **Deprecated** → Shared.Gate.Passed |
+| 16 | Gate.Failed | Gate | false | — | System, Agent | **Deprecated** → Shared.Gate.Failed |
+| 17 | Impediment.Declared | Blocking | true | BLOCKED | Human, Agent | **Deprecated** → Shared.Impediment.Declared |
+| 18 | Impediment.Resolved | Blocking | false | — | Human | Active — aguarda Shared.Impediment.Resolved (shared-types v1.1.0) |
+| 19 | Threshold.Crossed | System | false | — | System, Agent | Active |
+| 20 | Evolve.Proposed | System | false | — | System, Agent | Active |
 
 ---
 
@@ -191,6 +192,39 @@ foram emitidos durante esta fase.
 ---
 
 ## Assessment Sync — Synthesize
+
+---
+
+### Synthesize.Started
+
+| Campo | Valor |
+|---|---|
+| **name** | `Synthesize.Started` |
+| **category** | Phase Lifecycle |
+| **alters_state** | `true` |
+| **new_state** | `SYNTHESIZING` |
+| **producer_subtypes** | `[Human, Agent]` |
+| **lifecycle_status** | Active |
+| **introduced_in** | 2.1.0 |
+
+**description:**
+A Phase de Synthesize foi iniciada. Os resultados da análise estão sendo consolidados em
+insights de alto nível e recomendações priorizadas para compor o rascunho do Assessment
+Report.
+
+**preconditions:**
+- O Work Item está no estado ANALYZED
+- Analyze.Completed foi registrado na Timeline
+
+**postconditions:**
+- O Work Item transita para o estado SYNTHESIZING
+- A síntese está em andamento
+
+**payload_shape:**
+- `inputs_count` (integer, obrigatório): número de findings e recomendações recebidos da Phase Analyze
+- `synthesis_scope` (string, obrigatório): escopo da síntese (ex.: `full`, `partial`, `delta`)
+
+**owner_journey:** Assessment
 
 ---
 
@@ -802,14 +836,15 @@ Assessment Sync
      [Gate Failure Rate decrescente — padrão positivo]
   7. Analyze.Completed    → ANALYZED
      [4 métricas calculadas, 3 padrões, 2 findings correlacionados]
-  8. Synthesize.Completed → SYNTHESIZED
+  8. Synthesize.Started   → SYNTHESIZING
+  9. Synthesize.Completed → SYNTHESIZED
      [3 insights, 2 recommendations, trend=mixed]
-  9. Gate.Passed          (recommendation-evidence)
- 10. Report.Approved      → REPORTING
- 11. Report.Published     → DONE
+ 10. Gate.Passed          (recommendation-evidence)
+ 11. Report.Approved      → REPORTING
+ 12. Report.Published     → DONE
 ────────────────────────────────────────────────────
 Derived State final: DONE
-Events alters_state=true: 7 | false: 4
+Events alters_state=true: 8 | false: 4
 ```
 
 ### Fluxo com rejeição de Report
@@ -821,15 +856,17 @@ Timeline: Assessment-2026-Q3
   2. Collect.Completed    → COLLECTED
   3. Analyze.Started      → ANALYZING
   4. Analyze.Completed    → ANALYZED
-  5. Synthesize.Completed → SYNTHESIZED
-  6. Gate.Failed          (recommendation-evidence)
+  5. Synthesize.Started   → SYNTHESIZING
+  6. Synthesize.Completed → SYNTHESIZED
+  7. Gate.Failed          (recommendation-evidence)
      [2 recommendations sem evidência citada]
-  7. Report.Rejected      → SYNTHESIZED [rejeição: evidências insuficientes]
+  8. Report.Rejected      → SYNTHESIZED [rejeição: evidências insuficientes]
   [re-síntese com evidências complementadas]
-  8. Synthesize.Completed → SYNTHESIZED
-  9. Gate.Passed          (recommendation-evidence)
- 10. Report.Approved      → REPORTING
- 11. Report.Published     → DONE
+  9. Synthesize.Started   → SYNTHESIZING
+ 10. Synthesize.Completed → SYNTHESIZED
+ 11. Gate.Passed          (recommendation-evidence)
+ 12. Report.Approved      → REPORTING
+ 13. Report.Published     → DONE
 ────────────────────────────────────────────────────
 Ciclos de síntese: 2
 ```
