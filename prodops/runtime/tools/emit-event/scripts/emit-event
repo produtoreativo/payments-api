@@ -304,6 +304,7 @@ if ! bash "$DATADOG" \
     --event          "$CE_TYPE" \
     --state          "$DERIVED_STATE" \
     --correlation-id "$CORRELATION_ID" \
+    ${ITERATION_ID:+--iteration-id "$ITERATION_ID"} \
     "${LEAD_TIME_ARG[@]+"${LEAD_TIME_ARG[@]}"}" >/dev/null 2>&1; then
   warn "Datadog sync failed (non-fatal)"
   DD_STATUS="error"

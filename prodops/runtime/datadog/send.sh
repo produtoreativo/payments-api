@@ -40,6 +40,7 @@ EVENT=""
 STATE=""
 CORRELATION_ID=""
 LEAD_TIME_DAYS=""
+ITERATION_ID=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -48,6 +49,7 @@ while [[ $# -gt 0 ]]; do
     --state)            STATE="$2"; shift 2 ;;
     --correlation-id)   CORRELATION_ID="$2"; shift 2 ;;
     --lead-time-days)   LEAD_TIME_DAYS="$2"; shift 2 ;;
+    --iteration-id)     ITERATION_ID="$2"; shift 2 ;;
     *) echo "Unknown arg: $1" >&2; exit 1 ;;
   esac
 done
@@ -78,6 +80,7 @@ fi
 
 NOW=$(date +%s)
 
+# Build base tags array; append iteration:<id> tag when iteration-id is known.
 PAYLOAD=$(jq -n \
   --argjson now "$NOW" \
   --arg metric         "$METRIC" \
@@ -87,20 +90,24 @@ PAYLOAD=$(jq -n \
   --arg correlation_id "$CORR" \
   --arg service        "$DD_SERVICE" \
   --arg env            "$DD_ENV_VALUE" \
+  --arg iteration_id   "${ITERATION_ID:-}" \
+  --argjson has_iter   "$([ -n "${ITERATION_ID:-}" ] && echo true || echo false)" \
   '{
     series: [{
       metric: $metric,
       type: 1,
       points: [{ timestamp: $now, value: 1 }],
-      tags: [
-        ("issue:" + $issue),
-        ("event:" + $event),
-        ("delivery-state:" + $state),
-        ("delivery-correlation-id:" + $correlation_id),
-        ("service:" + $service),
-        ("env:" + $env),
-        "runtime:prodops"
-      ]
+      tags: (
+        [
+          ("issue:" + $issue),
+          ("event:" + $event),
+          ("delivery-state:" + $state),
+          ("delivery-correlation-id:" + $correlation_id),
+          ("service:" + $service),
+          ("env:" + $env),
+          "runtime:prodops"
+        ] + (if $has_iter then [("iteration:" + $iteration_id)] else [] end)
+      )
     }]
   }')
 
