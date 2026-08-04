@@ -876,6 +876,20 @@ See [`prodops/framework/execution-model/downstream.en.md`](execution-model/downs
 
 ---
 
+## Assessment
+
+**Definition:** Journey of the ProdOps Framework responsible for evaluating the operational model over time. Consumes evidence produced by Delivery and Diligence to assess maturity, identify trends, and produce evolution recommendations.
+
+**Purpose:** Close the continuous improvement cycle of the Framework. While Delivery executes and Diligence organizes, Assessment evaluates — answering the central question: "Are we continuously improving our operational model?"
+
+**Cycles:** Assessment Sync (Collect → Analyze → Synthesize → Report — structured, on demand) and Assessment Async (Monitor → Alert — continuous, proactive).
+
+**What it does not do:** Does not execute Delivery. Does not execute Diligence. Does not write to other Journeys' Timelines. Does not prioritize the backlog — it informs, it does not decide.
+
+**Relationship with other concepts:** Consumes outputs from Delivery and Diligence; its recommendations feed Discovery and Diligence. See [`journeys/assessment/README.en.md`](journeys/assessment/README.en.md).
+
+---
+
 ## Diligence
 
 **Definition:** Cross-cutting journey of the ProdOps Framework responsible for keeping the work system synchronized and consistent throughout the product lifecycle.

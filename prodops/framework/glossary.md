@@ -874,6 +874,20 @@ Ver [`prodops/framework/execution-model/downstream.md`](execution-model/downstre
 
 ---
 
+## Assessment
+
+**Definição:** Jornada do Framework ProdOps responsável por avaliar o modelo operacional ao longo do tempo. Consome evidências produzidas pela Delivery e pela Diligence para avaliar maturidade, identificar tendências e produzir recomendações de evolução.
+
+**Propósito:** Fechar o ciclo de melhoria contínua do Framework. Enquanto a Delivery executa e a Diligence organiza, o Assessment avalia — respondendo à pergunta central: "Estamos melhorando continuamente o nosso modelo operacional?"
+
+**Cycles:** Assessment Sync (Collect → Analyze → Synthesize → Report — estruturado, por demanda) e Assessment Async (Monitor → Alert — contínuo, proativo).
+
+**O que não faz:** Não executa Delivery. Não executa Diligence. Não escreve nas Timelines de outras Journeys. Não prioriza o backlog — informa, não decide.
+
+**Relação com outros conceitos:** Consome saídas da Delivery e da Diligence; suas recomendações alimentam o Discovery e a Diligence. Ver [`journeys/assessment/README.md`](journeys/assessment/README.md).
+
+---
+
 ## Diligence
 
 **Definição:** Jornada transversal do Framework ProdOps responsável por manter o sistema de trabalho sincronizado e consistente ao longo do ciclo de vida do produto.
