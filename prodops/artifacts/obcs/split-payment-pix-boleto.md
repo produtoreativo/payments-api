@@ -90,7 +90,7 @@ O sistema garante rastreabilidade completa de cada porção do pagamento indepen
 
 | Decisão | Racional |
 |---|---|
-| Boleto vencido não cancela automaticamente | Comportamento ainda indefinido pelo negócio — operação investiga manualmente. Decisão revisada no próximo ciclo de Assessment. |
+| Boleto vencido mantém pedido pendente com prazo máximo | Decidido por Eugenio (PM) em 2026-08-04. Não cancela nem estorna automaticamente. Operação investiga manualmente dentro de prazo máximo a definir antes do go-live. Política revisada em Assessment após 30 dias em produção. |
 | Cartão de crédito fora do escopo | Entra em fase posterior ao lançamento com o fornecedor parceiro. |
 | Limite de meios por compra: 2 | Pix + Boleto apenas. Combinações adicionais fora deste OBC. |
 

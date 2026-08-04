@@ -12,25 +12,22 @@
 
 ## RISK-SP-001 — Política de Boleto vencido indefinida
 
-**Status:** Aberto — decisão de negócio pendente com Eugenio (PM)
+**Status:** ✅ Decidido em 2026-08-04 — Eugenio (PM)
 **Criticidade:** Alta
-**Probabilidade:** Certa (ainda não foi decidida)
+**Probabilidade:** N/A — decisão tomada
 
-### Descrição
+### Decisão
 
-O comportamento quando o Boleto vence com Pix já pago está documentado como "investigação manual" — uma decisão temporária. Sem uma política definitiva, a operação não tem procedimento claro e o cliente fica sem resposta automática.
+Quando o Boleto vencer sem pagamento (com Pix pago ou não): **manter pedido pendente com prazo máximo para investigação manual**. Não cancelar automaticamente. Não estornar o Pix automaticamente.
 
-### Impacto
+Prazo máximo de investigação: **a definir pelo time de operação antes do go-live**.
 
-- Operação sobrecarregada com casos manuais sem runbook
-- Cliente sem comunicação sobre o que aconteceu com o Pix pago
-- Risco financeiro: Pix pago fica retido sem prazo de resolução
+### Ações decorrentes
 
-### Mitigações sugeridas
-
-- Definir política antes do go-live: cancelar + estornar Pix automaticamente, ou reemitir Boleto, ou manter pendente com prazo máximo
-- Criar runbook para investigação manual enquanto a política não é automatizada
-- Alerta imediato para operação quando `split_payment.boleto.expired` com `pixStatus: confirmed` for emitido
+- Criar runbook para investigação manual de `PENDING_INVESTIGATION` antes do Ship
+- Definir prazo máximo de investigação com o time de operação
+- Alerta imediato para operação quando `split_payment.boleto.expired` for emitido
+- Revisar política em Assessment após primeiros 30 dias em produção — avaliar automatização do estorno
 
 ---
 
@@ -132,25 +129,9 @@ O OBC menciona que Checkout e Notification Service precisam estar envolvidos, ma
 
 ## RISK-SP-006 — Lançamento com fornecedor parceiro sem homologação prévia
 
-**Status:** Aberto
-**Criticidade:** Média
-**Probabilidade:** Média
-
-### Descrição
-
-O lançamento está vinculado a um fornecedor parceiro com prazo fixo. Se o fornecedor tiver requisitos técnicos específicos sobre o contrato de Split Payment que ainda não foram levantados, descobri-los tarde pode inviabilizar o prazo.
-
-### Impacto
-
-- Retrabalho de última hora no contrato de API
-- Atraso no lançamento ou lançamento degradado
-- Relacionamento com fornecedor comprometido
-
-### Mitigações sugeridas
-
-- Coletar requisitos técnicos do fornecedor esta semana — antes do início da Delivery
-- Validar se o Response Contract atual é compatível com o que o fornecedor espera
-- Incluir homologação com o fornecedor como gate antes do Promote
+**Status:** ✅ Fechado em 2026-08-04
+**Criticidade:** N/A
+**Resolução:** O fornecedor parceiro é exclusivamente fornecedor de mercadoria — sem requisitos técnicos sobre o contrato de Split Payment. Nenhuma homologação técnica necessária. Risco eliminado.
 
 ## Resumo
 
