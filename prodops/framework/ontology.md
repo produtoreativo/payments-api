@@ -106,8 +106,10 @@ flowchart TD
 | Delivery | CI Async | Assíncrono — trabalho conduzido pela plataforma |
 | Diligence | diligence-sync | Reativo — acionado por evento externo |
 | Diligence | diligence-async | Proativo — iniciado por varredura periódica |
+| Assessment | Assessment Sync | Estruturado — coleta, análise e síntese por demanda |
+| Assessment | Assessment Async | Contínuo — monitoramento e alerta proativo |
 
-**Nota:** Discovery, Operation e Assessment não têm Cycles formais — operam como sequências fluidas de Phases ou de atividades sem agrupamento explícito. Workspace Reconciliation é uma **Capability** do Diligence — não é um Cycle. É invocada por Bootstrap, Diligence Async e Diligence Sync como sub-rotina. Ver seção Capability abaixo.
+**Nota:** Discovery e Operation não têm Cycles formais — operam como sequências fluidas de Phases ou de atividades sem agrupamento explícito. Workspace Reconciliation é uma **Capability** do Diligence — não é um Cycle. É invocada por Bootstrap, Diligence Async e Diligence Sync como sub-rotina. Ver seção Capability abaixo.
 
 **Nunca representa:** A Journey que o contém, uma Phase individual, uma Capability.
 
@@ -127,6 +129,8 @@ flowchart TD
 | CI Async | Ship → Validate → Promote |
 | diligence-sync | Capture → Attach → Promote → Close |
 | diligence-async | Scan → Flag → Repair |
+| Assessment Sync | Collect → Analyze → Synthesize → Report |
+| Assessment Async | Monitor → Alert |
 
 **Nível de abstração:** A menor unidade estrutural do modelo conceitual. A implementação de uma Phase pertence à camada de agentes (Skill e Steps).
 
@@ -273,7 +277,7 @@ Origin Streams e Product Topology são conceitos completamente distintos. Um OBC
 
 ### Ciclos formais vs. jornadas fluidas
 
-Nem toda Journey tem Cycles formais. Delivery e Diligence têm Cycles explícitos com names e responsabilidades distintas. Discovery, Operation e Assessment operam de forma mais fluida — têm atividades e práticas, mas sem agrupamento formal em Cycles nomeados.
+Nem toda Journey tem Cycles formais. Delivery, Diligence e Assessment têm Cycles explícitos com nomes e responsabilidades distintas. Discovery e Operation operam de forma mais fluida — têm atividades e práticas, mas sem agrupamento formal em Cycles nomeados.
 
 ### "Agrupamento" vs. "Cycle"
 

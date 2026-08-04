@@ -106,9 +106,10 @@ flowchart TD
 | Delivery | CI Async | Asynchronous — platform-driven work |
 | Diligence | diligence-sync | Reactive — triggered by external event |
 | Diligence | diligence-async | Proactive — initiated by periodic scan |
-| Diligence | workspace-reconciliation | On-demand — Inspect → Reconcile → Verify |
+| Assessment | Assessment Sync | Structured — collect, analyze and synthesize on demand |
+| Assessment | Assessment Async | Continuous — proactive monitoring and alerting |
 
-**Note:** Discovery, Operation, and Assessment have no formal Cycles — they operate as fluid sequences of Phases or activities without explicit grouping.
+**Note:** Discovery and Operation have no formal Cycles — they operate as fluid sequences of Phases or activities without explicit grouping.
 
 **Never represents:** The Journey that contains it, an individual Phase, or a Capability.
 
@@ -128,7 +129,8 @@ flowchart TD
 | CI Async | Ship → Validate → Promote |
 | diligence-sync | Capture → Attach → Promote → Close |
 | diligence-async | Scan → Flag → Repair |
-| workspace-reconciliation | Inspect → Reconcile → Verify |
+| Assessment Sync | Collect → Analyze → Synthesize → Report |
+| Assessment Async | Monitor → Alert |
 
 **Abstraction level:** The smallest structural unit of the conceptual model. The implementation of a Phase belongs to the agent layer (Skill and Steps).
 
@@ -275,7 +277,7 @@ Origin Streams and Product Topology are entirely distinct concepts. An OBC origi
 
 ### Formal cycles vs. fluid journeys
 
-Not every Journey has formal Cycles. Delivery and Diligence have explicit Cycles with names and distinct responsibilities. Discovery, Operation, and Assessment operate more fluidly — they have activities and practices, but without formal grouping into named Cycles.
+Not every Journey has formal Cycles. Delivery, Diligence, and Assessment have explicit Cycles with names and distinct responsibilities. Discovery and Operation operate more fluidly — they have activities and practices, but without formal grouping into named Cycles.
 
 ### "Grouping" vs. "Cycle"
 
