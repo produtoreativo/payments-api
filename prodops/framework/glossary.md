@@ -688,11 +688,21 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ## Execution Model
 
-**Definição:** O par de modos de execução que define o nível de compromisso, quality gates e critérios de qualidade aplicados quando qualquer Journey é executada — Upstream (exploração) e Downstream (compromisso). Não é uma Journey, não é uma Phase.
+**Definição:** O framework transversal que define o nível de compromisso, quality gates e critérios de qualidade aplicados quando qualquer Journey é executada. Composto por dois Execution Modes: Upstream (exploração) e Downstream (compromisso). Não é uma Journey, não é uma Phase.
 
 **Regra fundamental:** O Execution Model define *como* as Journeys executam — não *o que* elas são. Qualquer Journey pode operar em qualquer modo.
 
+**Distinção:** _Execution Model_ é o framework; _Execution Mode_ é um dos dois modos individuais (Upstream ou Downstream). "Modo de execução" é a tradução de Execution Mode — não de Execution Model.
+
 → Definição completa: [`ontology.md — Execution Model`](ontology.md#modificador-transversal-execution-model) · [`execution-model/README.md`](execution-model/README.md)
+
+---
+
+## Execution Mode
+
+**Definição:** Um dos dois modos individuais do Execution Model — Upstream ou Downstream. Define o nível de compromisso e os quality gates aplicados a um item durante sua execução em qualquer Journey.
+
+**Distinção:** _Execution Mode_ é o modo individual; _Execution Model_ é o framework que os define e governa. Ver: Upstream, Downstream.
 
 ---
 

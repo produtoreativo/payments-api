@@ -730,6 +730,26 @@ See [`flow.en.md`](flow.en.md), [`journeys/discovery/README.en.md`](journeys/dis
 
 ---
 
+## Execution Model
+
+**Definition:** The transversal framework that defines the commitment level, quality gates, and quality criteria applied when any Journey is executed. Composed of two Execution Modes: Upstream (exploration) and Downstream (commitment). Not a Journey, not a Phase.
+
+**Fundamental rule:** The Execution Model defines *how* Journeys execute — not *what* they are. Any Journey can operate in either mode.
+
+**Distinction:** _Execution Model_ is the framework; _Execution Mode_ is one of the two individual modes (Upstream or Downstream). "Execution mode" translates Execution Mode — not Execution Model.
+
+→ Full definition: [`ontology.md — Execution Model`](ontology.md#cross-cutting-modifier-execution-model) · [`execution-model/README.en.md`](execution-model/README.en.md)
+
+---
+
+## Execution Mode
+
+**Definition:** One of the two individual modes of the Execution Model — Upstream or Downstream. Defines the commitment level and quality gates applied to an item during its execution in any Journey.
+
+**Distinction:** _Execution Mode_ is the individual mode; _Execution Model_ is the framework that defines and governs them. See: Upstream, Downstream.
+
+---
+
 ## Bootstrap
 
 **Definition:** The first stage of CI Sync. Installs dependencies, prepares local infrastructure, verifies configuration, and runs the smoke gate. Does not read code, tests, or product artifacts, and does not create a branch — Git flow belongs to Hack Start. See [`journeys/delivery/phases/bootstrap/README.en.md`](journeys/delivery/phases/bootstrap/README.en.md).
