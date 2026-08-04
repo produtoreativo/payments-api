@@ -720,13 +720,13 @@ See [`flow.en.md`](flow.en.md), [`journeys/discovery/README.en.md`](journeys/dis
 
 ## CI Sync
 
-**Definition:** The synchronous grouping of ProdOps Delivery. Represents local, collaborative work driven by the engineer. Includes Bootstrap, Hack, Sync, and Finish. Produces: closed task, PR with narrative, evidence, organized commits, local validations executed. See [`journeys/delivery/README.md`](journeys/delivery/README.en.md).
+**Definition:** The synchronous Cycle of ProdOps Delivery. Represents local, collaborative work driven by the engineer. Includes Bootstrap, Hack, Sync, and Finish. Produces: closed task, PR with narrative, evidence, organized commits, local validations executed. See [`journeys/delivery/README.md`](journeys/delivery/README.en.md).
 
 ---
 
 ## CI Async
 
-**Definition:** The asynchronous grouping of ProdOps Delivery. Represents work driven by the platform, pipelines, and environments. Includes Ship, Validate, and Promote. Produces: published artifact, deploy completed, runtime validation, controlled promotion. See [`journeys/delivery/README.md`](journeys/delivery/README.en.md).
+**Definition:** The asynchronous Cycle of ProdOps Delivery. Represents work driven by the platform, pipelines, and environments. Includes Ship, Validate, and Promote. Produces: published artifact, deploy completed, runtime validation, controlled promotion. See [`journeys/delivery/README.md`](journeys/delivery/README.en.md).
 
 ---
 
