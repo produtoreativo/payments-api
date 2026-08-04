@@ -1,13 +1,19 @@
 # Iteration Plan
 
-> **Iteração ativa: v0.12.0** — Qualidade operacional do Runtime (DS-57 · DS-58 · DS-59 · DS-60)
-> Status: Ready for Delivery — todos os gates cumpridos. Aprovado pelo Context Engineer em 2026-08-04.
+> **Iteração ativa: v0.13.0** — Split Payment Pix + Boleto (PI-001)
+> Status: Em abertura — Bootstrap iniciando.
 
 ## Iteração ativa
 
 | Versão | Escopo | Status |
 |---|---|---|
-| [v0.12.0](../iterations/v0.12.0/plan.md) | DS-57 · DS-58 · DS-59 · DS-60 | Ready for Delivery |
+| [v0.13.0](../iterations/v0.13.0/plan.md) | Split Payment — PI-001 | Bootstrap |
+
+## Suspenso
+
+| Versão | Escopo | Status | Motivo |
+|---|---|---|---|
+| [v0.12.0](../iterations/v0.12.0/plan.md) | DS-57 · DS-58 · DS-59 · DS-60 | **Suspenso** em 2026-08-04 | Prioridade cedida a v0.13.0 — prazo de fornecedor parceiro para Split Payment (PI-001). Retoma após conclusão de v0.13.0. |
 
 ## Pipeline — Entrou (aguardando iteração)
 
