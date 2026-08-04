@@ -317,19 +317,19 @@ o Work Item entra no CI Async.
 | **introduced_in** | 1.0.0 |
 
 **description:**
-O Work Item foi implantado com sucesso em ambiente de homologação. A Phase de Ship foi
-concluída. O Work Item está disponível para validação no ambiente de homologação.
+O Work Item foi implantado com sucesso em Staging. A Phase de Ship foi concluída. O Work
+Item está disponível para validação em Staging.
 
 **preconditions:**
 - O Work Item está no estado SHIPPING
-- O pipeline de implantação em homologação foi executado com sucesso
+- O pipeline de implantação em Staging foi executado com sucesso
 
 **postconditions:**
 - O Work Item transita para o estado VALIDATING
-- O Work Item está acessível em ambiente de homologação para validação
+- O Work Item está acessível em Staging para validação
 
 **payload_shape:**
-- `environment` (string, obrigatório): identificador do ambiente de homologação em que foi implantado
+- `environment` (string, obrigatório): identificador do ambiente de Staging em que foi implantado
 - `deploy_version` (string, obrigatório): versão ou tag implantada
 
 **owner_journey:** Delivery
