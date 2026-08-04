@@ -32,7 +32,7 @@ emit_event() {
 # Step 1: Bootstrap.Started — anchors state to BOOTSTRAPPING
 CORR_START=$(uuidgen | tr '[:upper:]' '[:lower:]')
 set +e
-OUT=$(emit_event "Delivery.Bootstrap.Started" "$CORR_START" | bash "$TOOL" 2>/dev/null)
+OUT=$(emit_event "Delivery.Bootstrap.Started" "$CORR_START" | GITHUB_SYNC_DRY_RUN=1 bash "$TOOL" 2>/dev/null)
 EXIT=$?
 set -e
 [[ "$EXIT" == "0" ]] || { echo "FAIL: Bootstrap.Started exit=$EXIT"; exit 1; }
@@ -46,7 +46,7 @@ for EVT in \
 
   CORR_EVT=$(uuidgen | tr '[:upper:]' '[:lower:]')
   set +e
-  OUT=$(emit_event "$EVT" "$CORR_EVT" | bash "$TOOL" 2>/dev/null)
+  OUT=$(emit_event "$EVT" "$CORR_EVT" | GITHUB_SYNC_DRY_RUN=1 bash "$TOOL" 2>/dev/null)
   EXIT=$?
   set -e
 

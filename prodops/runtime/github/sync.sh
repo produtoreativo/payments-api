@@ -60,6 +60,12 @@ done
 
 log() { echo "[$(date -u +"%Y-%m-%dT%H:%M:%SZ")] $*" | tee -a "$LOG_FILE"; }
 
+# Dry-run mode: skip all GitHub API calls (used in emit-event tests to avoid polluting real projects)
+if [[ "${GITHUB_SYNC_DRY_RUN:-0}" == "1" ]]; then
+  echo '{"result":"dry-run","issue":"'"${ISSUE_NUMBER}"'","state":"'"${STATE}"'"}'
+  exit 0
+fi
+
 CORR="${CORRELATION_ID:-no-correlation-id}"
 log "GitHub sync — issue=#${ISSUE_NUMBER} state=${STATE} correlation-id=${CORR}"
 

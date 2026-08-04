@@ -30,7 +30,7 @@ emit_event() {
 for EVT in "Delivery.Bootstrap.Started" "Delivery.Hack.Started"; do
   CORR=$(uuidgen | tr '[:upper:]' '[:lower:]')
   set +e
-  OUT=$(emit_event "$EVT" "$CORR" | bash "$TOOL" 2>/dev/null)
+  OUT=$(emit_event "$EVT" "$CORR" | GITHUB_SYNC_DRY_RUN=1 bash "$TOOL" 2>/dev/null)
   EXIT=$?
   set -e
   [[ "$EXIT" == "0" ]] || { echo "FAIL: $EVT exit=$EXIT"; exit 1; }
@@ -39,7 +39,7 @@ done
 # Now emit Finish.Started — must derive FINISHING
 CORR_FINISH=$(uuidgen | tr '[:upper:]' '[:lower:]')
 set +e
-OUTPUT=$(emit_event "Delivery.Finish.Started" "$CORR_FINISH" | bash "$TOOL" 2>/dev/null)
+OUTPUT=$(emit_event "Delivery.Finish.Started" "$CORR_FINISH" | GITHUB_SYNC_DRY_RUN=1 bash "$TOOL" 2>/dev/null)
 EXIT_CODE=$?
 set -e
 

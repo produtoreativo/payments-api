@@ -20,7 +20,7 @@ INPUT=$(jq -n \
     "actor":{"player":$player,"agent":$agent},"payload":{}}')
 
 set +e
-OUTPUT=$(echo "$INPUT" | bash "$TOOL" 2>/dev/null)
+OUTPUT=$(echo "$INPUT" | GITHUB_SYNC_DRY_RUN=1 bash "$TOOL" 2>/dev/null)
 EXIT_CODE=$?
 set -e
 

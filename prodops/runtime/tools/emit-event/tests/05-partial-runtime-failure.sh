@@ -17,7 +17,7 @@ INPUT=$(jq -n \
     "actor":{"player":$player,"agent":"test-agent"},"payload":{}}')
 
 set +e
-OUTPUT=$(echo "$INPUT" | DD_API_KEY="invalid-key-for-test-05" bash "$TOOL" 2>/dev/null)
+OUTPUT=$(echo "$INPUT" | DD_API_KEY="invalid-key-for-test-05" GITHUB_SYNC_DRY_RUN=1 bash "$TOOL" 2>/dev/null)
 EXIT_CODE=$?
 set -e
 
