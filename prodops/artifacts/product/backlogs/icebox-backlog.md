@@ -80,6 +80,10 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 | ID | Título | Tipo | Outcome esperado | Status | Score inicial | Fonte |
 | --- | --- | --- | --- | --- | --- | --- |
 | POPS-ICE-001 | Mecanismo de distribuição do ProdOps Framework | Plataforma | Qualquer repo produto instala e mantém o Framework atualizado a partir do `prodops-framework`, sem sobrescrever artefatos locais. | Icebox | — | [#129](https://github.com/produtoreativo/payments-api/issues/129) |
+| RT-ICE-001 | Event Pipeline Completeness — Bootstrap intermediários e oem-state | Observabilidade/Runtime | Todos os eventos do ciclo de Bootstrap chegam ao Datadog e o oem-state é transitado automaticamente no GitHub Project. | Icebox | — | [#142](https://github.com/produtoreativo/payments-api/issues/142) |
+| RT-ICE-002 | Continuous Operational Trail — trail por phase durante execução | Runtime/Processo | Trail de cada Feature é uma narrativa contínua — auditável em tempo real, não apenas ao final. | Icebox | — | [#143](https://github.com/produtoreativo/payments-api/issues/143) |
+| RT-ICE-003 | Dashboard Evolution — cycle time, iteration filter e labels | Observabilidade/Dashboard | Dashboard Datadog exibe cycle time por phase, filtro por Iteration ID e labels canônicos. | Icebox | — | [#144](https://github.com/produtoreativo/payments-api/issues/144) |
+| RT-ICE-004 | Iteration Lifecycle Automation — auto-close e assignees | Runtime/Processo | Encerramento de Iteration é completamente automático: tracking issue fechada, assignees preenchidos, sem ação manual. | Icebox | — | [#145](https://github.com/produtoreativo/payments-api/issues/145) |
 | PAY-ICE-001 | Criar invoice via gateway com contrato único | Feature | Ecommerce emite cobranças sem acoplamento direto ao provedor Asaas. | Done | 16.4 | [create-invoice.feature](../../bdd/create-invoice.feature) |
 | PAY-ICE-002 | Confirmar pagamento por webhook confiável | Feature | Pedido e ecommerce recebem confirmação uma única vez, com eventos auditáveis. | Done | 20.8 | [payment-confirmation.feature](../../bdd/payment-confirmation.feature) |
 | PAY-ICE-003 | Cancelar invoice pendente com idempotência | Feature | Cobranças abertas podem ser canceladas sem pagamento indevido ou evento duplicado. | Ready for Delivery | 13.7 | [cancel-invoice.feature](../../bdd/cancel-invoice.feature) |
@@ -177,6 +181,88 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 - O evento `payment.cancelled` deve ser publicado no comando de cancelamento ou apenas após webhook `PAYMENT_DELETED`?
 - Qual política operacional deve ser aplicada quando o Asaas retorna 404?
 - Quais status permitem cancelamento e quais exigem fluxo de estorno?
+
+---
+
+### RT-ICE-001 - Event Pipeline Completeness
+
+| Campo | Conteúdo |
+| --- | --- |
+| Tipo | Observabilidade / Runtime |
+| Problema/oportunidade | Eventos intermediários de Bootstrap (Dependencies.Installed, Services.Ready, Smoke.Passed) somem silenciosamente no Datadog; oem-state ficou preso durante v0.11.0 e exigiu correção manual. |
+| Usuário/cliente | Tech Lead Payments, Context Engineer, qualquer stakeholder que usa o dashboard Datadog para monitorar entregas. |
+| Outcome esperado | Pipeline emit-event entrega todos os 5 eventos de Bootstrap com tags corretas e o GitHub Project Board reflete o estado atual sem intervenção manual. |
+| Evidência atual | Business Signal #135 (itens 2 e 3); DS-53 ficou preso em FINISHING durante v0.11.0; logs de Datadog confirmam ausência dos eventos intermediários. |
+| Escopo MVP | Investigar gap (skill vs pipeline) e corrigir na camada correta; corrigir mapeamento oem-state FINISHING em `github/sync.sh`. |
+| Fora de escopo | Mudanças no schema CloudEvents; alterações nos dashboards (RT-ICE-003). |
+| Dependências | Acesso a logs Datadog de v0.11.0; entendimento do código de emit-event e github/sync.sh. |
+| Riscos | Fix pode ser no skill (não no pipeline) — exige mudança em camada diferente da prevista. Ver Premortem no OBC. |
+| Telemetria mínima | `emit-event` retorna `"github-sync": "success"` para todos os eventos de phase; 5 eventos Bootstrap visíveis no Datadog. |
+| Critérios de aceite | Ver OBC `prodops/artifacts/obcs/rt-event-pipeline-completeness.md`. |
+| Score | — |
+| Status | Icebox — OBC Draft em `prodops/artifacts/obcs/rt-event-pipeline-completeness.md`. Perguntas abertas: onde está o gap (skill ou pipeline)? |
+
+---
+
+### RT-ICE-002 - Continuous Operational Trail
+
+| Campo | Conteúdo |
+| --- | --- |
+| Tipo | Runtime / Processo |
+| Problema/oportunidade | O downstream-agent não documenta ações durante o loop e o trail de cada issue só aparece ao final da iteração — sem rastro de qual phase completou em caso de falha mid-flight. |
+| Usuário/cliente | Context Engineer, Tech Lead, qualquer auditor da execução de uma Iteration. |
+| Outcome esperado | Trail de cada Feature é uma narrativa contínua: cada phase deixa uma entry antes de avançar, e o agent registra o que está executando no GitHub Issue em tempo real. |
+| Evidência atual | Business Signal #135 (itens 1 e 5); trail de v0.11.0 vazio durante execução. |
+| Escopo MVP | Instrução ao downstream-agent em `SKILL.md` para registrar entry por phase; entry escrita via `gh issue comment` antes de avançar. |
+| Fora de escopo | Integração do trail com Datadog (RT-ICE-003); trail para fases de plan. |
+| Dependências | GitHub Issue existente por work-item (criada no Plan Bootstrap). |
+| Riscos | Entries duplicadas em restart; rate limit do GitHub. Ver Premortem no OBC. |
+| Telemetria mínima | Comments no GitHub Issue com entries por phase. |
+| Critérios de aceite | Ver OBC `prodops/artifacts/obcs/rt-continuous-operational-trail.md`. |
+| Score | — |
+| Status | Icebox — OBC Draft em `prodops/artifacts/obcs/rt-continuous-operational-trail.md`. Pergunta aberta: trail em arquivo ou GitHub Issue ou ambos? |
+
+---
+
+### RT-ICE-003 - Dashboard Evolution
+
+| Campo | Conteúdo |
+| --- | --- |
+| Tipo | Observabilidade / Dashboard |
+| Problema/oportunidade | Dashboard Datadog sem cycle time por phase, sem filtro por Iteration ID e com labels que usam nomes internos de CloudEvents em vez dos nomes canônicos das phases. |
+| Usuário/cliente | Tech Lead Payments, PM Payments, stakeholders executivos que acompanham entregas. |
+| Outcome esperado | Dashboard Runtime mostra cycle time por phase, permite filtrar por iteração ativa e usa labels legíveis por qualquer stakeholder. |
+| Evidência atual | Business Signal #135 (item 4); dashboard atual sem template variable de iteração; labels como `prodops.delivery.bootstrap.started`. |
+| Escopo MVP | Tag `iteration:<id>` em `send.sh`; template variable no dashboard; widget de cycle time; labels canônicos. |
+| Fora de escopo | Alertas; dados históricos anteriores à implementação; outros produtos. |
+| Dependências | PI-RT-001 / RT-ICE-001 deve estar concluído — pipeline completo antes de medir cycle time. Tag `iteration` nos eventos (verificar `send.sh`). |
+| Riscos | Tag `iteration` ausente (bloqueante); cycle time com latência em log-based metric. Ver Premortem no OBC. |
+| Telemetria mínima | Tag `iteration:<id>` presente em todos os eventos; gauge `prodops.phase.duration_seconds` opcional. |
+| Critérios de aceite | Ver OBC `prodops/artifacts/obcs/rt-dashboard-evolution.md`. |
+| Score | — |
+| Status | Icebox — OBC Draft em `prodops/artifacts/obcs/rt-dashboard-evolution.md`. Bloqueado por RT-ICE-001. Pergunta aberta: tag `iteration` já existe em `send.sh`? |
+
+---
+
+### RT-ICE-004 - Iteration Lifecycle Automation
+
+| Campo | Conteúdo |
+| --- | --- |
+| Tipo | Runtime / Processo |
+| Problema/oportunidade | Ao concluir uma Iteration, o Context Engineer fecha manualmente a tracking issue e preenche assignees um a um — etapas que podem ser automatizadas com `gh` CLI. |
+| Usuário/cliente | Context Engineer — elimina steps manuais repetitivos após cada iteração. |
+| Outcome esperado | Tracking issue fechada automaticamente após o último Promote.Completed, com comment de encerramento; assignees preenchidos em todas as issues desde o Plan Bootstrap. |
+| Evidência atual | Business Signal #135 (itens 6 e 7); v0.11.0 encerrada manualmente sem assignees. |
+| Escopo MVP | `gh api user --jq '.login'` para assignees no Bootstrap; auto-close + comment no Iteration Closure. |
+| Fora de escopo | Auto-close em falha parcial; notificações externas; assignees variáveis por DS-ID. |
+| Dependências | `gh` CLI autenticado com permissão de escrita nas issues; tracking issue criada no Plan Bootstrap. |
+| Riscos | Race condition se fechamento disparar antes de todos os Promotes; falha não-fatal de assignee. Ver Premortem no OBC. |
+| Telemetria mínima | GitHub Issue fechada com comment; assignee visível nas issues. |
+| Critérios de aceite | Ver OBC `prodops/artifacts/obcs/rt-iteration-lifecycle-automation.md`. |
+| Score | — |
+| Status | Icebox — OBC Draft em `prodops/artifacts/obcs/rt-iteration-lifecycle-automation.md`. Pergunta aberta: auto-close no downstream-agent ou no dispatcher via `Plan.Bootstrap.Completed`? |
+
+---
 
 ## 8. Definition of Ready
 

@@ -15,7 +15,7 @@
 | **Business Signal de origem** | [#135](https://github.com/produtoreativo/payments-api/issues/135) — Qualidade operacional Runtime v0.11.0 |
 | **Produto** | payments-api |
 | **Dono de produto** | Tech Lead Payments |
-| **Status** | Em Discovery |
+| **Status** | Promovido para Product Backlog — 2026-08-04 |
 
 ---
 
@@ -70,3 +70,4 @@ Completar a automação do ciclo de vida de uma Iteration — fechando automatic
 |---|---|---|
 | Business Signal | [#135](https://github.com/produtoreativo/payments-api/issues/135) | Aberto |
 | Business Intent | `prodops/artifacts/business-intents/PI-RT-004.md` | Este arquivo |
+| OBC Draft | `prodops/artifacts/obcs/rt-iteration-lifecycle-automation.md` | Draft |
