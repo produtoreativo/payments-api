@@ -93,6 +93,24 @@ gates:
     requires_secret: SNYK_TOKEN
     blocks: auto_merge_only
     note: "sem SNYK_TOKEN o gate não roda e o auto-merge fica desarmado (motivo registrado no PR); o merge manual segue livre. Criar o secret é ação de admin — como allow_auto_merge."
+  # SAST (Static Application Security Testing) — análise estática do código-fonte
+  # em api/src. Complementa o gate `dependencies`, que é SCA (bibliotecas de
+  # terceiros). Roda LOCALMENTE via container SonarQube efêmero, no molde do
+  # LocalStack em `acceptance`: falhar aqui custa menos que falhar na pipeline
+  # remota depois do push. No CI o SAST remoto segue coberto pelo CodeQL (job
+  # `Analyze (javascript-typescript)`) — não há job Sonar em pr-gates.yml, para
+  # não ter duas ferramentas de SAST fazendo o mesmo trabalho.
+  #
+  # Gate de AUTO-MERGE, não de merge — mesmo desenho de coverage/dependencies:
+  # um resultado vermelho impede que `finish request` arme o `gh pr merge --auto`,
+  # mas o PR continua aberto e mergeável à mão por um humano.
+  sast:
+    cmd: "./scripts/check-sast.sh"
+    expect: exit0
+    tool: sonarqube
+    project_key: payments-api
+    blocks: auto_merge_only
+    note: "servidor SonarQube efêmero em container; o script provisiona o token sozinho — não requer secret. Veredito lido da API (/api/qualitygates/project_status), não do exit code do scanner, que não é documentado. Sem Docker o gate não roda (exit 2) e o auto-merge fica desarmado; o merge manual segue livre."
   no_mocks:
     # fonte: prodops/skills/hack/references/workflow.md (No Mocks Rule)
     # Aplica-se apenas a api/test/ (testes de aceitação devem usar implementações reais).
