@@ -144,6 +144,20 @@
 
 ---
 
+## GAP-015 — hack-start stasha mudanças não commitadas, descartando alterações de skills e framework feitas durante o readiness
+
+**Contexto:** Durante a preparação do DS-40, foram feitas alterações em `prodops/skills/downstream/SKILL.md` (Downstream ID, modo sem argumentos, tabela de comandos) e `prodops/skills/readiness/SKILL.md` (novo skill). Essas mudanças ficaram no working tree sem commit. Quando o `hack-start` agent executou, fez `git stash` das mudanças não commitadas antes de criar o branch `feat/40-create-invoice-boleto`, preservando-as no stash mas tornando-as invisíveis no branch de feature. O arquivo `framework-gaps.md` também foi perdido (não estava no stash).
+
+**O que o Framework não diz:** Skills e artefatos de framework alterados durante Readiness/Downstream devem ser commitados antes de `hack-start` rodar. Não há instrução explícita sobre o que fazer com mudanças no working tree que não fazem parte do escopo da feature.
+
+**O que deveria dizer:** O skill `/readiness` deve incluir: "commite quaisquer alterações de skills, framework ou ProdOps no branch atual antes de invocar `/downstream ci-sync`. O `hack-start` vai fazer stash de qualquer mudança pendente." Adicionalmente, mudanças em `prodops/skills/` e `prodops/framework/` realizadas durante a sessão devem ser commitadas em um commit separado antes do hack-start.
+
+**Impacto se omitido:** Alterações de framework ficam no stash (recuperáveis mas invisíveis), enquanto arquivos criados mas não versionados pelo git (como `framework-gaps.md`) são perdidos permanentemente.
+
+**Status:** Mitigado nesta sessão via `git show stash@{0}:<path> > <path>` para restaurar arquivos individuais. Requer adição de instrução explícita no skill `/readiness` e no skill `hack-start`.
+
+---
+
 ## GAP-016 — Não existe Event Type para falha durante o Ship (Ship.Failed ausente no catálogo)
 
 **Contexto:** O modelo operacional consolidado define que Ship detecta falhas durante a observação do fluxo autônomo do PR (check de CI, merge, deploy em Staging) e interrompe a progressão. No entanto, o catálogo de eventos da Delivery Journey (`prodops/framework/journeys/delivery/events/catalog.md`) e o catálogo de eventos do runtime (`prodops/runtime/catalog/events.yaml`) não definem nenhum `Ship.Failed` ou equivalente.
@@ -183,17 +197,3 @@
 **Impacto se omitido:** Ambiguidade entre o catálogo de eventos e o modelo operacional. Agentes que leem o catálogo podem inferir que Promote leva para Production, contradizendo o modelo operacional consolidado que coloca Production fora da Delivery Journey.
 
 **Status:** Lacuna aberta. Não alterar o catálogo de eventos neste ciclo — documentar apenas. Candidato a próxima versão do catálogo.
-
----
-
-## GAP-015 — hack-start stasha mudanças não commitadas, descartando alterações de skills e framework feitas durante o readiness
-
-**Contexto:** Durante a preparação do DS-40, foram feitas alterações em `prodops/skills/downstream/SKILL.md` (Downstream ID, modo sem argumentos, tabela de comandos) e `prodops/skills/readiness/SKILL.md` (novo skill). Essas mudanças ficaram no working tree sem commit. Quando o `hack-start` agent executou, fez `git stash` das mudanças não commitadas antes de criar o branch `feat/40-create-invoice-boleto`, preservando-as no stash mas tornando-as invisíveis no branch de feature. O arquivo `framework-gaps.md` também foi perdido (não estava no stash).
-
-**O que o Framework não diz:** Skills e artefatos de framework alterados durante Readiness/Downstream devem ser commitados antes de `hack-start` rodar. Não há instrução explícita sobre o que fazer com mudanças no working tree que não fazem parte do escopo da feature.
-
-**O que deveria dizer:** O skill `/readiness` deve incluir: "commite quaisquer alterações de skills, framework ou ProdOps no branch atual antes de invocar `/downstream ci-sync`. O `hack-start` vai fazer stash de qualquer mudança pendente." Adicionalmente, mudanças em `prodops/skills/` e `prodops/framework/` realizadas durante a sessão devem ser commitadas em um commit separado antes do hack-start.
-
-**Impacto se omitido:** Alterações de framework ficam no stash (recuperáveis mas invisíveis), enquanto arquivos criados mas não versionados pelo git (como `framework-gaps.md`) são perdidos permanentemente.
-
-**Status:** Mitigado nesta sessão via `git show stash@{0}:<path> > <path>` para restaurar arquivos individuais. Requer adição de instrução explícita no skill `/readiness` e no skill `hack-start`.
