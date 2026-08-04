@@ -542,6 +542,90 @@ O upgrade para multer >=2.2.0 foi aplicado via `npm audit fix` sem alteração e
 
 ---
 
+# DS-57 — Event Pipeline Completeness (rt-event-pipeline-completeness)
+
+**Capability:** rt-event-pipeline-completeness
+**Severidade:** Média
+**Status:** Aceito
+
+## Riscos identificados
+
+- Gap nos eventos intermediários de Bootstrap localizado no skill, não no pipeline — exige mudança em camada diferente da prevista; mitigado por investigação explícita antes de implementar a correção.
+- Fix em `github/sync.sh` introduz regressão em estados já funcionando — mitigado por testes unitários em `emit-event/tests/run-all.sh` executados antes do merge.
+- oem-state FINISHING requer campo customizado ausente no Project #25 — mitigado por validar campos existentes via `gh project field-list` antes de qualquer alteração em `sync.sh`.
+- Correção resolve o sintoma mas não a causa raiz (ex: evento emitido com work-item-id errado) — mitigado pelos critérios de aceite exigirem validação em execução real, não só em teste unitário.
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/rt-event-pipeline-completeness.md`
+- BDD: `prodops/artifacts/bdd/rt-event-pipeline-completeness.feature`
+- Issue: [#146](https://github.com/produtoreativo/payments-api/issues/146)
+
+---
+
+# DS-58 — Iteration Lifecycle Automation (rt-iteration-lifecycle-automation)
+
+**Capability:** rt-iteration-lifecycle-automation
+**Severidade:** Baixa
+**Status:** Aceito
+
+## Riscos identificados
+
+- Auto-close disparado prematuramente se o contador de Promotes concluídos não for verificado contra o total do plano — mitigado pelo critério de aceite explícito: close só ocorre após todas as issues chegarem a `Promote.Completed`.
+- `gh api user` retorna login inesperado em ambientes CI (bot, token de serviço) — mitigado por logar o login antes de usá-lo; fácil de inspecionar no trail da execução.
+- Comment de encerramento duplicado se o Iteration Closure for executado mais de uma vez — mitigado por verificar estado da issue antes de fechar; idempotente se já fechada.
+- Falha ao adicionar assignee interrompe o Plan Bootstrap — mitigado por tratar como operação não-bloqueante com aviso no trail.
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/rt-iteration-lifecycle-automation.md`
+- BDD: `prodops/artifacts/bdd/rt-iteration-lifecycle-automation.feature`
+- Issue: [#147](https://github.com/produtoreativo/payments-api/issues/147)
+
+---
+
+# DS-59 — Continuous Operational Trail (rt-continuous-operational-trail)
+
+**Capability:** rt-continuous-operational-trail
+**Severidade:** Baixa
+**Status:** Aceito
+
+## Riscos identificados
+
+- GitHub API rate limit ao comentar em muitas issues em rápida sequência — mitigado por tratar erro de rate limit como não-fatal; entry é omitida com aviso, execução não é bloqueada.
+- Entries duplicadas em restart do downstream (phase já tem entry da execução anterior) — mitigado por prefixar entry com timestamp e correlation-id; duplicatas são rastreáveis, não corrompem o trail.
+- Instrução em SKILL.md não seguida pelo agent em todas as phases — mitigado por especificar como requisito explícito, não sugestão; validado nos critérios de aceite do BDD.
+- Trail no GitHub Issue diverge de trail em arquivo se ambos forem usados — mitigado pela decisão explícita no OBC: trail canônico no GitHub Issue comment; arquivo é opcional.
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/rt-continuous-operational-trail.md`
+- BDD: `prodops/artifacts/bdd/rt-continuous-operational-trail.feature`
+- Issue: [#148](https://github.com/produtoreativo/payments-api/issues/148)
+
+---
+
+# DS-60 — Dashboard Evolution (rt-dashboard-evolution)
+
+**Capability:** rt-dashboard-evolution
+**Severidade:** Média
+**Status:** Aceito
+
+## Riscos identificados
+
+- Tag `iteration:<id>` ausente nos eventos atuais — bloqueante para o filtro; mitigado por verificar `send.sh` antes de qualquer alteração no dashboard; adicionar tag é pré-requisito do DS-60 (depende de DS-57).
+- Cycle time calculado por log-based metric tem latência de até 15 min no Datadog — mitigado por documentar a limitação no dashboard; alternativa: enviar gauge explícito via `send.sh` ao completar cada phase.
+- Alterações no dashboard Datadog divergem do JSON commitado após edição manual posterior — mitigado por exportar o dashboard como JSON e commitar em `prodops/runtime/datadog/` como critério de saída obrigatório.
+- Dados históricos sem tag `iteration` tornam o filtro inútil para iterações passadas — mitigado por documentar que o filtro funciona a partir da data de implementação; aceite de risco explícito para dados anteriores.
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/rt-dashboard-evolution.md`
+- BDD: `prodops/artifacts/bdd/rt-dashboard-evolution.feature`
+- Issue: [#149](https://github.com/produtoreativo/payments-api/issues/149)
+
+---
+
 # DS-50 — Instrumentação Datadog em produção (observability-datadog)
 
 **Capability:** observability-datadog
