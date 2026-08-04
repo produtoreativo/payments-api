@@ -2,6 +2,156 @@
 
 > Baseado no documento de Premortem enviado pelo usuário.
 
+---
+
+# Split Payment — Pix + Boleto (PI-001)
+
+> OBC: `prodops/artifacts/obcs/split-payment-pix-boleto.md` · Prazo: 15 dias · Lançamento: fornecedor parceiro
+
+---
+
+## RISK-SP-001 — Política de Boleto vencido indefinida
+
+**Status:** Aberto — decisão de negócio pendente com Eugenio (PM)
+**Criticidade:** Alta
+**Probabilidade:** Certa (ainda não foi decidida)
+
+### Descrição
+
+O comportamento quando o Boleto vence com Pix já pago está documentado como "investigação manual" — uma decisão temporária. Sem uma política definitiva, a operação não tem procedimento claro e o cliente fica sem resposta automática.
+
+### Impacto
+
+- Operação sobrecarregada com casos manuais sem runbook
+- Cliente sem comunicação sobre o que aconteceu com o Pix pago
+- Risco financeiro: Pix pago fica retido sem prazo de resolução
+
+### Mitigações sugeridas
+
+- Definir política antes do go-live: cancelar + estornar Pix automaticamente, ou reemitir Boleto, ou manter pendente com prazo máximo
+- Criar runbook para investigação manual enquanto a política não é automatizada
+- Alerta imediato para operação quando `split_payment.boleto.expired` com `pixStatus: confirmed` for emitido
+
+---
+
+## RISK-SP-002 — Cobrança duplicada por falta de idempotência no provedor
+
+**Status:** Aberto — requer validação técnica
+**Criticidade:** Alta
+**Probabilidade:** Média
+
+### Descrição
+
+Em cenários de timeout ou retry do Checkout, o sistema pode criar mais de uma cobrança Pix ou Boleto para o mesmo pedido no provedor externo, gerando cobranças duplicadas ao cliente.
+
+### Impacto
+
+- Cliente cobrado duas vezes pelo mesmo pedido
+- Risco regulatório e de chargeback
+- Dano à reputação da Magazine Siará
+
+### Mitigações sugeridas
+
+- Implementar idempotência por `orderId` + meio de pagamento antes de qualquer chamada ao provedor
+- Validar se o provedor (Asaas) suporta chave de idempotência nativa
+- Testes automatizados cobrindo retry com mesma chave
+- Monitorar `splitPaymentId` duplicado por `orderId` em produção
+
+---
+
+## RISK-SP-003 — Soma dos valores não validada antes de chamar o provedor
+
+**Status:** Aberto — requer gate de validação explícito
+**Criticidade:** Alta
+**Probabilidade:** Baixa
+
+### Descrição
+
+Se `pixAmount + boletoAmount ≠ totalAmount` do pedido e o sistema não validar antes de chamar o provedor, cobranças com valores incorretos são criadas — difíceis de estornar e reconciliar.
+
+### Impacto
+
+- Cobrança com valor errado no provedor
+- Inconsistência financeira entre Payments e Checkout
+- Trabalho de conciliação manual
+
+### Mitigações sugeridas
+
+- Validação de soma como primeiro gate — antes de qualquer I/O
+- Teste de cenário de rejeição explícito na BDD Feature (já coberto)
+- Log de auditoria com `pixAmount`, `boletoAmount` e `totalAmount` em toda criação
+
+---
+
+## RISK-SP-004 — Prazo de 15 dias sem Reliability Plan formal
+
+**Status:** Aberto — Reliability Plan a criar
+**Criticidade:** Alta
+**Probabilidade:** Alta se não resolvido
+
+### Descrição
+
+Split Payment envolve movimentação financeira — o Reliability Plan é obrigatório pelo framework antes de iniciar a Delivery. Com 15 dias de prazo, existe risco de o time começar a construir sem esse artefato e chegar ao go-live sem os critérios de observabilidade, alertas e runbook definidos.
+
+### Impacto
+
+- Go-live sem dashboard de monitoramento
+- Falhas silenciosas sem alerta
+- Time sem runbook para incidentes de Split Payment
+
+### Mitigações sugeridas
+
+- Criar Reliability Plan imediatamente — é o próximo artefato obrigatório
+- Incluir critérios de observabilidade como parte do Definition of Done de cada história
+
+---
+
+## RISK-SP-005 — Times adjacentes não alinhados (Checkout, Notification)
+
+**Status:** Aberto — alinhamento pendente
+**Criticidade:** Média
+**Probabilidade:** Alta
+
+### Descrição
+
+O OBC menciona que Checkout e Notification Service precisam estar envolvidos, mas esses times ainda não foram formalmente alinhados. O Checkout precisa saber como apresentar a interface de Split e consumir o Response Contract. O Notification precisa saber quando e como comunicar o cliente sobre cada evento do Split.
+
+### Impacto
+
+- Checkout entrega sem suporte à interface de Split no prazo
+- Cliente não recebe comunicação de confirmação parcial ou vencimento
+- Lançamento com o fornecedor incompleto ou degradado
+
+### Mitigações sugeridas
+
+- Reunião de alinhamento com Checkout e Notification antes do início da Delivery
+- Definir responsabilidade: quem comunica o cliente quando apenas um meio é pago?
+- Compartilhar Response Contract e Observable Events com os times dependentes
+
+---
+
+## RISK-SP-006 — Lançamento com fornecedor parceiro sem homologação prévia
+
+**Status:** Aberto
+**Criticidade:** Média
+**Probabilidade:** Média
+
+### Descrição
+
+O lançamento está vinculado a um fornecedor parceiro com prazo fixo. Se o fornecedor tiver requisitos técnicos específicos sobre o contrato de Split Payment que ainda não foram levantados, descobri-los tarde pode inviabilizar o prazo.
+
+### Impacto
+
+- Retrabalho de última hora no contrato de API
+- Atraso no lançamento ou lançamento degradado
+- Relacionamento com fornecedor comprometido
+
+### Mitigações sugeridas
+
+- Coletar requisitos técnicos do fornecedor esta semana — antes do início da Delivery
+- Validar se o Response Contract atual é compatível com o que o fornecedor espera
+- Incluir homologação com o fornecedor como gate antes do Promote
+
 ## Resumo
 
 O cenário descreve uma release crítica para habilitação de um novo gateway de pagamentos e estabilização do serviço de notificações. O principal risco de negócio é uma multa contratual de **R$ 500 milhões** caso a ativação não ocorra dentro do prazo.
