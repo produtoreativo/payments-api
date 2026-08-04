@@ -363,21 +363,22 @@ validação automatizada são candidatos ao catálogo v2.*
 | **introduced_in** | 1.0.0 |
 
 **description:**
-Um responsável humano aprovou a promoção do Work Item para produção após validação em
-homologação. A aprovação é a decisão formal de que o Work Item está pronto para entrar
-em produção.
+Um responsável humano aprovou a promoção do Work Item para Sandbox após validação em
+Staging. A aprovação é a decisão formal de que o Work Item está pronto para entrar no
+Sandbox (Release Candidate). Production está fora da Delivery Journey — o deploy em
+Production é acionado manualmente via GitHub Actions.
 
 **preconditions:**
 - O Work Item está no estado VALIDATING
-- A validação em homologação foi concluída satisfatoriamente
+- A validação em Staging foi concluída satisfatoriamente
 
 **postconditions:**
 - O Work Item transita para o estado PROMOTING
-- O pipeline de implantação em produção pode ser iniciado
+- O pipeline de implantação em Sandbox pode ser iniciado
 
 **payload_shape:**
 - `approver` (string, obrigatório): identidade de quem aprovou a promoção
-- `environment_validated` (string, obrigatório): ambiente em que a validação foi realizada
+- `environment_validated` (string, obrigatório): ambiente em que a validação foi realizada (Staging)
 
 **owner_journey:** Delivery
 
@@ -396,18 +397,18 @@ em produção.
 | **introduced_in** | 1.0.0 |
 
 **description:**
-Um responsável humano rejeitou a promoção do Work Item para produção. O Work Item retorna
-ao estado VALIDATING — novas validações devem ser realizadas antes de uma nova decisão
-de promoção.
+Um responsável humano rejeitou a promoção do Work Item para Sandbox. O Work Item retorna
+ao estado VALIDATING — novas validações em Staging devem ser realizadas antes de uma
+nova decisão de promoção.
 
 **preconditions:**
 - O Work Item está no estado VALIDATING
-- Uma avaliação do Work Item em homologação foi realizada
+- Uma avaliação do Work Item em Staging foi realizada
 
 **postconditions:**
 - O Work Item retorna ao estado VALIDATING
 - O motivo da rejeição está registrado na Timeline
-- Uma nova aprovação será necessária para promover
+- Uma nova aprovação será necessária para promover para Sandbox
 
 **payload_shape:**
 - `rejector` (string, obrigatório): identidade de quem rejeitou a promoção
@@ -430,22 +431,24 @@ de promoção.
 | **introduced_in** | 1.0.0 |
 
 **description:**
-O Work Item foi implantado com sucesso em produção. O ciclo CI Async está encerrado. O
-Work Item atingiu seu estado final — está entregue.
+O Work Item foi implantado com sucesso no Sandbox (Release Candidate). O ciclo CI Async
+está encerrado. O Work Item atingiu seu estado final na Delivery Journey — está entregue
+e disponível no Sandbox para validação de release. O deploy em Production é um passo
+separado, acionado manualmente via GitHub Actions, fora da Delivery Journey.
 
 **preconditions:**
 - O Work Item está no estado PROMOTING
 - O Promote.Approved foi registrado na Timeline
-- O pipeline de implantação em produção foi executado com sucesso
+- O pipeline de implantação em Sandbox foi executado com sucesso
 
 **postconditions:**
 - O Work Item transita para o estado DONE
-- O Work Item está disponível em produção
+- O Work Item está disponível no Sandbox
 - Nenhum novo evento de state é esperado para este Work Item (exceto Correction)
 
 **payload_shape:**
-- `environment` (string, obrigatório): identificador do ambiente de produção
-- `deploy_version` (string, obrigatório): versão ou tag implantada em produção
+- `environment` (string, obrigatório): identificador do ambiente de destino (`sandbox`)
+- `deploy_version` (string, obrigatório): versão ou tag implantada
 - `deploy_commit` (string, obrigatório): hash do commit implantado
 
 **owner_journey:** Delivery
