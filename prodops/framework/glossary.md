@@ -788,9 +788,11 @@ Ver [`prodops/framework/execution-model/downstream.md`](execution-model/downstre
 
 ---
 
-## Hack Flow
+## Hack
 
 **Definição:** A fase de codificação em Upstream e Downstream. Segundo estágio do CI Sync, sucede o Bootstrap. Definido em [`journeys/delivery/phases/hack/README.md`](journeys/delivery/phases/hack/README.md). Mecânica de execução em [`skills/hack/`](../skills/hack/).
+
+**Alias informal:** "Hack Flow" — não usar em documentação canônica; o termo correto é "Hack" (Phase).
 
 ---
 
