@@ -77,3 +77,89 @@ All 5 BDD scenarios are covered:
 | 4 | Auto-close blocked when any issue not at Promote.Completed | Gatilho guard block (lines 377–383) | PASS |
 
 **Finish.Started:** `Delivery.Finish.Started` emitted — event-id `da47a0c9-7fc8-4b95-aefb-1201ef1ffaad`, derived-state FINISHING, github-sync success, datadog-sync success.
+
+---
+
+## DS-59 — RT Continuous Operational Trail
+
+**Date:** 2026-08-04
+**Actor:** claude
+**Branch:** feat/148-rt-continuous-operational-trail
+**Correlation-ID:** fec27d19-6f0f-436d-8d2f-21938f7602b2
+
+---
+
+### RED — Gap Evidence
+
+`prodops/skills/downstream/SKILL.md` section 6b-ii before DS-59:
+
+1. **No "started" entry:** only one trail entry per phase (completion), making mid-flight partial trail insufficient to identify which phase was in progress at interruption.
+2. **Missing `work-item-id` as body field:** only used as the `gh issue comment <work-item-id>` target, not listed as a mandatory body field.
+3. **No non-fatal rule for trail failure:** the section described trail as mandatory with no fallback guidance if `gh issue comment` returned an error.
+4. **No "before advancing" language:** no explicit sequencing constraint requiring the completion entry before moving to the next phase.
+
+---
+
+### GREEN — Changes Applied
+
+**File changed:** `prodops/skills/downstream/SKILL.md` (section 6b-ii)
+
+1. **Two-entry trail structure per phase:** "started" entry (before invoking the sub-agent) and "completed/failed" entry (after receiving the result and before advancing).
+2. **Explicit mandatory fields:** `phase-name`, `work-item-id`, `status`, `timestamp` — listed in both prose and comment body template for both entries.
+3. **"Before advancing" enforcement:** "A entry de conclusão deve ser postada **antes de avançar à próxima phase ou issue** — nunca após."
+4. **Non-fatal rule:** "Falha ao postar trail é não-fatal: se `gh issue comment` retornar erro, registrar aviso interno e continuar a execução normalmente."
+5. **Partial trail diagnostic note:** trail with "started" entries but no "completed" entries is sufficient to diagnose the last phase executed at interruption.
+
+All 5 BDD scenarios satisfied. All 4 OBC acceptance criteria met.
+
+---
+
+### YELLOW — Gate Results
+
+| Gate | Command | Result |
+|---|---|---|
+| lint | `cd api && npm run lint` | EXIT 0 (30 pre-existing warnings, 0 errors) |
+| build | `cd api && npm run build` | EXIT 0 |
+| no_mocks | `grep jest.fn( api/test` | 0 hits |
+| emit-event tests | `bash prodops/runtime/tools/emit-event/tests/run-all.sh` | 10/10 PASS |
+
+**Security:** diff is SKILL.md instruction text only — no secrets, tokens, PII, or credentials.
+
+---
+
+### Sync Alignment — 2026-08-04
+
+**Rebase:** Branch `feat/148-rt-continuous-operational-trail` is 0 commits behind master, 1 ahead. No rebase needed. All 10 emit-event tests pass (10 passed, 0 failed).
+
+**Artifacts reviewed:**
+
+| Artifact | Path | Status |
+|---|---|---|
+| BDD Feature | `prodops/artifacts/bdd/rt-continuous-operational-trail.feature` | Consistent — all 5 scenarios satisfied by SKILL.md changes |
+| OBC | `prodops/artifacts/obcs/rt-continuous-operational-trail.md` | Consistent — all 4 acceptance criteria met |
+| Event Storming | `prodops/artifacts/event-storming/plan.json` | Not impacted — no domain events added or removed |
+| Architecture | `prodops/artifacts/architecture/overview.md` | Not impacted — no structural changes |
+
+**Sync.Started:** correlation-id `fec27d19-6f0f-436d-8d2f-21938f7602b2`, derived-state SYNCING, github-sync success, datadog-sync success.
+
+---
+
+### OBC Evaluation — Finish Agent
+
+| OBC | Criterion | Location in SKILL.md | Result |
+|---|---|---|---|
+| 1 | At end of each phase, entry added before advancing | 6b-ii: "A entry de conclusão deve ser postada **antes de avançar à próxima phase ou issue** — nunca após." | PASS |
+| 2 | Entry contains phase-name, work-item-id, status, timestamp | 6b-ii: "**Campos obrigatórios em toda entry de trail:** `phase-name`, `work-item-id`, `status`, `timestamp`" | PASS |
+| 3 | Partial trail allows mid-flight diagnosis | 6b-ii: "O trail parcial (entries de início sem entries de conclusão) é suficiente para diagnosticar a última phase executada em caso de interrupção mid-flight." | PASS |
+| 4 | SKILL.md explicitly instructs trail per phase | 6b-ii: two-entry structure (started + completed/failed) explicitly defined per phase | PASS |
+
+### YELLOW — Gate Results (Finish Agent)
+
+| Gate | Command | Result |
+|---|---|---|
+| lint | `cd api && npm run lint` | EXIT 0 (30 pre-existing warnings, 0 errors) |
+| build | `cd api && npm run build` | EXIT 0 |
+| no_mocks | `grep jest.fn( api/test` | 0 hits |
+| emit-event tests | `bash prodops/runtime/tools/emit-event/tests/run-all.sh` | 10/10 PASS |
+
+**Finish.Started:** `Delivery.Finish.Started` emitted — event-id `ed29c6b3-af65-4726-b5f9-091ee776f5ee`, derived-state FINISHING, github-sync success, datadog-sync success.
