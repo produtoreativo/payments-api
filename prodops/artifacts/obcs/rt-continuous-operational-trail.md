@@ -2,7 +2,7 @@
 
 ## Status
 
-Draft. Business Intent: PI-RT-002. Business Signal: #135. GitHub Issue: #143.
+Committed. Business Intent: PI-RT-002. Business Signal: #135. GitHub Issue: #143. DS-59. Owner Approval: Context Engineer — 2026-08-04.
 
 ## Business Outcome
 

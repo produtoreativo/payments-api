@@ -1,6 +1,6 @@
 # Iteration Plan — v0.12.0
 
-> Status: Em planejamento — OBCs em Draft, BDD Features pendentes
+> Status: Ready for Delivery — OBCs Committed, BDD Features criadas, Owner Approval: Context Engineer — 2026-08-04
 
 ## Objetivo
 
@@ -10,10 +10,10 @@ Elevar a qualidade operacional do Runtime: fechar os gaps de observabilidade do 
 
 | DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status |
 |---|---|---|---|---|---|---|---|
-| DS-57 | #146 | rt-event-pipeline-completeness: Bootstrap intermediários no Datadog + oem-state sync | — | Draft | — | ✓ | Planejado |
-| DS-58 | #147 | rt-iteration-lifecycle-automation: auto-close tracking issue + assignees no Bootstrap | — | Draft | — | ✓ | Planejado |
-| DS-59 | #148 | rt-continuous-operational-trail: trail por phase durante execução do downstream | — | Draft | — | ✓ | Planejado |
-| DS-60 | #149 | rt-dashboard-evolution: cycle time, iteration filter e labels canônicos no Datadog | DS-57 | Draft | — | ✓ | Planejado |
+| DS-57 | #146 | rt-event-pipeline-completeness: Bootstrap intermediários no Datadog + oem-state sync | — | ✓ | ✓ | ✓ | Ready |
+| DS-58 | #147 | rt-iteration-lifecycle-automation: auto-close tracking issue + assignees no Bootstrap | — | ✓ | ✓ | ✓ | Ready |
+| DS-59 | #148 | rt-continuous-operational-trail: trail por phase durante execução do downstream | — | ✓ | ✓ | ✓ | Ready |
+| DS-60 | #149 | rt-dashboard-evolution: cycle time, iteration filter e labels canônicos no Datadog | DS-57 | ✓ | ✓ | ✓ | Ready |
 
 ## Mapeamento DS-ID → Issue
 
@@ -28,18 +28,14 @@ Elevar a qualidade operacional do Runtime: fechar os gaps de observabilidade do 
 
 DS-57, DS-58, DS-59 em paralelo → DS-60 (bloqueado por DS-57)
 
-## Gates pendentes antes de iniciar Delivery
+## Gates de entrada
 
-| DS | Gate | Ação necessária |
-|---|---|---|
-| DS-57 | BDD Feature | Criar `prodops/artifacts/bdd/rt-event-pipeline-completeness.feature` |
-| DS-57 | OBC Committed | Owner Approval (Tech Lead Payments) |
-| DS-58 | BDD Feature | Criar `prodops/artifacts/bdd/rt-iteration-lifecycle-automation.feature` |
-| DS-58 | OBC Committed | Owner Approval |
-| DS-59 | BDD Feature | Criar `prodops/artifacts/bdd/rt-continuous-operational-trail.feature` |
-| DS-59 | OBC Committed | Owner Approval |
-| DS-60 | BDD Feature | Criar `prodops/artifacts/bdd/rt-dashboard-evolution.feature` |
-| DS-60 | OBC Committed | Owner Approval |
+| DS | OBC | BDD Feature | Owner Approval |
+|---|---|---|---|
+| DS-57 | [rt-event-pipeline-completeness.md](../../../obcs/rt-event-pipeline-completeness.md) | [rt-event-pipeline-completeness.feature](../../../bdd/rt-event-pipeline-completeness.feature) | ✅ Context Engineer — 2026-08-04 |
+| DS-58 | [rt-iteration-lifecycle-automation.md](../../../obcs/rt-iteration-lifecycle-automation.md) | [rt-iteration-lifecycle-automation.feature](../../../bdd/rt-iteration-lifecycle-automation.feature) | ✅ Context Engineer — 2026-08-04 |
+| DS-59 | [rt-continuous-operational-trail.md](../../../obcs/rt-continuous-operational-trail.md) | [rt-continuous-operational-trail.feature](../../../bdd/rt-continuous-operational-trail.feature) | ✅ Context Engineer — 2026-08-04 |
+| DS-60 | [rt-dashboard-evolution.md](../../../obcs/rt-dashboard-evolution.md) | [rt-dashboard-evolution.feature](../../../bdd/rt-dashboard-evolution.feature) | ✅ Context Engineer — 2026-08-04 |
 
 ## Critérios de saída
 

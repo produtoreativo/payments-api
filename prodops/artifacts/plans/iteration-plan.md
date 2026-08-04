@@ -1,13 +1,13 @@
 # Iteration Plan
 
 > **Iteração ativa: v0.12.0** — Qualidade operacional do Runtime (DS-57 · DS-58 · DS-59 · DS-60)
-> Status: Em planejamento — BDD Features e Owner Approval pendentes antes de iniciar Delivery.
+> Status: Ready for Delivery — todos os gates cumpridos. Aprovado pelo Context Engineer em 2026-08-04.
 
 ## Iteração ativa
 
 | Versão | Escopo | Status |
 |---|---|---|
-| [v0.12.0](../iterations/v0.12.0/plan.md) | DS-57 · DS-58 · DS-59 · DS-60 | Em planejamento |
+| [v0.12.0](../iterations/v0.12.0/plan.md) | DS-57 · DS-58 · DS-59 · DS-60 | Ready for Delivery |
 
 ## Histórico
 
