@@ -501,9 +501,23 @@ See [`flow.en.md`](flow.en.md), [`journeys/discovery/README.en.md`](journeys/dis
 
 ---
 
+## Framework Capability
+
+**Definition:** Reusable ProdOps process mechanism — can be consumed by any Journey or Phase that needs it. Not associated with a specific product; it is process infrastructure, not a product feature.
+
+**Groups by area of origin** (not exclusive ownership):
+- *Delivery area:* Commit Workflow, Contract Management, Evidence Management, Observability, Reliability
+- *Diligence area:* Backlog Synchronization, Work Item Management, Readiness Verification, Divergence Detection, Artifact Evolution, Workspace Reconciliation
+
+**Distinction:** _Framework Capability_ is the canonical concept. "Delivery Capability" and "Diligence Capability" are area qualifiers — they remain Framework Capabilities. "Product Capability" is the opposite concept: the object of work, not the mechanism.
+
+→ Full definition: [`ontology.md — Capability`](ontology.md)
+
+---
+
 ## Delivery Capability
 
-**Definition:** Reusable technical competency consumed by the phases of the Delivery journey. Examples: Commit Workflow, Contract Management, Evidence Management, Observability, Reliability.
+**Definition:** **Framework Capability** of the Delivery area — reusable mechanism consumed by the Phases of the Delivery journey. Examples: Commit Workflow, Contract Management, Evidence Management, Observability, Reliability.
 
 **Purpose:** Encapsulate cross-cutting technical practices that can be invoked by multiple phases without duplication.
 
@@ -511,7 +525,7 @@ See [`flow.en.md`](flow.en.md), [`journeys/discovery/README.en.md`](journeys/dis
 
 **When not to use:** Do not confuse with "Product Capability". A Delivery Capability is a Framework mechanism, not a product feature.
 
-**Relationship with other concepts:** Used by the Phases of the Delivery journey. See [`journeys/delivery/capabilities/`](journeys/delivery/capabilities/).
+**Relationship with other concepts:** It is a Framework Capability specialized for the Delivery area. See [`journeys/delivery/capabilities/`](journeys/delivery/capabilities/).
 
 ---
 

@@ -464,9 +464,23 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 ---
 
+## Framework Capability
+
+**Definição:** Mecanismo reutilizável do processo ProdOps — pode ser consumido por qualquer Journey ou Phase que o necessite. Não está associada a um produto específico; é infraestrutura do processo, não funcionalidade de produto.
+
+**Grupos por área de origem** (não de propriedade exclusiva):
+- *Área Delivery:* Commit Workflow, Contract Management, Evidence Management, Observability, Reliability
+- *Área Diligence:* Backlog Synchronization, Work Item Management, Readiness Verification, Divergence Detection, Artifact Evolution, Workspace Reconciliation
+
+**Distinção:** _Framework Capability_ é o conceito canônico. "Delivery Capability" e "Diligence Capability" são qualificadores de área — continuam sendo Framework Capabilities. "Product Capability" é o conceito oposto: o objeto do trabalho, não o mecanismo.
+
+→ Definição completa: [`ontology.md — Capability`](ontology.md)
+
+---
+
 ## Delivery Capability
 
-**Definição:** Competência técnica reutilizável consumida pelas fases da jornada Delivery. Exemplos: Commit Workflow, Contract Management, Evidence Management, Observability, Reliability.
+**Definição:** **Framework Capability** da área Delivery — mecanismo reutilizável consumido pelas Phases da jornada Delivery. Exemplos: Commit Workflow, Contract Management, Evidence Management, Observability, Reliability.
 
 **Propósito:** Encapsular práticas técnicas transversais que podem ser invocadas por múltiplas fases sem duplicação.
 
@@ -474,7 +488,7 @@ Ver [`flow.md`](flow.md), [`journeys/discovery/README.md`](journeys/discovery/RE
 
 **Quando não usar:** Não confundir com "Product Capability". Uma Delivery Capability é um mecanismo do Framework, não uma funcionalidade do produto.
 
-**Relação com outros conceitos:** Usada pelas Phases da jornada Delivery. Ver [`journeys/delivery/capabilities/`](journeys/delivery/capabilities/).
+**Relação com outros conceitos:** É uma Framework Capability especializada para a área Delivery. Ver [`journeys/delivery/capabilities/`](journeys/delivery/capabilities/).
 
 ---
 
