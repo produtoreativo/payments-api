@@ -23,8 +23,8 @@
 | 7 | Promote.Completed | Phase Lifecycle | true | DONE | System | Active |
 | 8 | Gate.Passed | Gate | false | — | System, Agent | **Deprecated** → Shared.Gate.Passed |
 | 9 | Gate.Failed | Gate | false | — | System, Agent | **Deprecated** → Shared.Gate.Failed |
-| 10 | Review.Approved | Human Decision | false | — | Human | Active |
-| 11 | Review.ChangesRequested | Human Decision | false | — | Human | Active |
+| 10 | Review.Approved | Human Decision | false | — | Human | Active — Phase não definida |
+| 11 | Review.ChangesRequested | Human Decision | false | — | Human | Active — Phase não definida |
 | 12 | Promote.Approved | Human Decision | true | PROMOTING | Human | Active |
 | 13 | Promote.Rejected | Human Decision | true | VALIDATING | Human | Active |
 | 14 | Impediment.Declared | Blocking | true | BLOCKED | Human, Agent | **Deprecated** → Shared.Impediment.Declared |
@@ -143,7 +143,7 @@ revisão de código. O Work Item aguarda revisão pelos peers.
 
 ---
 
-## CI Sync — Sync (Code Review)
+## CI Sync — Sync
 
 ---
 
@@ -230,6 +230,51 @@ v2.0.0 do catálogo. Timelines históricas continuam válidas. Novas emissões d
 
 ---
 
+### Sync.Completed
+
+| Campo | Valor |
+|---|---|
+| **name** | `Sync.Completed` |
+| **category** | Phase Lifecycle |
+| **alters_state** | `true` |
+| **new_state** | `FINISHING` |
+| **producer_subtypes** | `[System]` |
+| **lifecycle_status** | Active |
+| **introduced_in** | 1.0.0 |
+
+**description:**
+A Phase de Sync foi concluída. O rebase da feature branch sobre a base foi executado com
+sucesso e os artefatos ProdOps foram alinhados com a implementação (BDD Features, Event
+Storming, arquitetura, Release Trail). O Work Item está pronto para as checagens finais
+do CI Sync (Finish).
+
+**preconditions:**
+- O Work Item está no estado SYNCING
+- O rebase da feature branch foi executado sem conflitos não resolvidos
+- Os artefatos ProdOps foram verificados e estão alinhados com o estado atual da implementação
+
+**postconditions:**
+- O Work Item transita para o estado FINISHING
+- A feature branch está atualizada em relação ao branch base
+- Os artefatos ProdOps refletem o estado atual da implementação
+
+**payload_shape:**
+- `rebase_commit` (string, obrigatório): hash do commit de HEAD após o rebase
+- `base_branch` (string, obrigatório): branch base usado no rebase (ex.: `master`)
+- `aligned_artifacts` (array, opcional): lista de artefatos ProdOps verificados (ex.: `["bdd", "event-storming", "release-trail"]`)
+
+**owner_journey:** Delivery
+
+---
+
+## Human Decision — Phase não definida
+
+> Estes eventos existem no catálogo mas não estão atribuídos a nenhuma Phase corrente.
+> A Phase de Code Review não está implementada no modelo atual — o CI usa auto-merge.
+> Estes tipos ficam reservados para uso futuro quando uma Phase de Review for definida.
+
+---
+
 ### Review.Approved
 
 | Campo | Valor |
@@ -238,22 +283,12 @@ v2.0.0 do catálogo. Timelines históricas continuam válidas. Novas emissões d
 | **category** | Human Decision |
 | **alters_state** | `false` |
 | **producer_subtypes** | `[Human]` |
-| **lifecycle_status** | Active |
+| **lifecycle_status** | Active — Phase não definida |
 | **introduced_in** | 1.0.0 |
 
 **description:**
-Um revisor humano aprovou o Pull Request após análise do código. A aprovação é um pré-requisito
-para o merge do PR, mas não altera o estado do Work Item — o estado transita para FINISHING
-somente quando o merge ocorre (Sync.Completed).
-
-**preconditions:**
-- O Work Item está no estado SYNCING
-- Um Pull Request está aberto e foi analisado pelo revisor
-
-**postconditions:**
-- A aprovação do revisor está registrada na Timeline
-- O Derived State permanece SYNCING
-- O PR pode ser mergeado quando os critérios de merge estiverem satisfeitos
+Um revisor humano aprovou o Pull Request após análise do código. Reservado para uso quando
+uma Phase de Code Review for definida no CI Sync ou CI Async.
 
 **payload_shape:**
 - `reviewer` (string, obrigatório): identidade do revisor que aprovou
@@ -271,62 +306,18 @@ somente quando o merge ocorre (Sync.Completed).
 | **category** | Human Decision |
 | **alters_state** | `false` |
 | **producer_subtypes** | `[Human]` |
-| **lifecycle_status** | Active |
+| **lifecycle_status** | Active — Phase não definida |
 | **introduced_in** | 1.0.0 |
 
 **description:**
-Um revisor humano solicitou alterações no Pull Request após análise do código. A solicitação
-de mudanças indica que o PR não está pronto para merge. O Derived State permanece SYNCING
-— o Producer deve declarar Rework.Declared se as mudanças exigirem retorno ao desenvolvimento.
-
-**preconditions:**
-- O Work Item está no estado SYNCING
-- Um Pull Request está aberto e foi analisado pelo revisor
-
-**postconditions:**
-- A solicitação de mudanças está registrada na Timeline
-- O Derived State permanece SYNCING
-- O PR não pode ser mergeado até que as mudanças sejam implementadas e uma nova aprovação seja obtida
+Um revisor humano solicitou alterações no Pull Request. Reservado para uso quando uma Phase
+de Code Review for definida. O Producer deve declarar Rework.Declared se as mudanças
+exigirem retorno ao desenvolvimento.
 
 **payload_shape:**
 - `reviewer` (string, obrigatório): identidade do revisor que solicitou mudanças
 - `pr_number` (integer, obrigatório): número do Pull Request
 - `reason` (string, obrigatório): descrição das mudanças solicitadas
-
-**owner_journey:** Delivery
-
----
-
-### Sync.Completed
-
-| Campo | Valor |
-|---|---|
-| **name** | `Sync.Completed` |
-| **category** | Phase Lifecycle |
-| **alters_state** | `true` |
-| **new_state** | `FINISHING` |
-| **producer_subtypes** | `[System]` |
-| **lifecycle_status** | Active |
-| **introduced_in** | 1.0.0 |
-
-**description:**
-O Pull Request foi mergeado com sucesso no branch base. A Phase de Sync foi concluída.
-O Work Item está pronto para as checagens finais antes de entrar no ciclo CI Async.
-
-**preconditions:**
-- O Work Item está no estado SYNCING
-- O Pull Request foi aprovado por pelo menos um revisor (Review.Approved na Timeline)
-- O merge foi executado com sucesso pelo sistema
-
-**postconditions:**
-- O Work Item transita para o estado FINISHING
-- O branch de trabalho foi mergeado ao branch base
-- A Timeline contém Review.Approved antes de Sync.Completed
-
-**payload_shape:**
-- `pr_number` (integer, obrigatório): número do Pull Request mergeado
-- `merge_commit` (string, obrigatório): hash do commit de merge gerado
-- `approvals_count` (integer, obrigatório): número de aprovações obtidas antes do merge
 
 **owner_journey:** Delivery
 
@@ -710,19 +701,18 @@ CI Sync
   4. Hack.Completed       → SYNCING
   5. Gate.Passed          (lint)
   6. Gate.Passed          (unit-tests)
-  7. Review.Approved
-  8. Sync.Completed       → FINISHING
-  9. Gate.Passed          (integration-tests)
- 10. Finish.Completed     → SHIPPING
+  7. Sync.Completed       → FINISHING
+  8. Gate.Passed          (integration-tests)
+  9. Finish.Completed     → SHIPPING
 CI Async
- 11. Ship.Completed       → VALIDATING
- 12. Gate.Passed          (e2e-tests)
- 13. Promote.Approved     → PROMOTING
- 14. Promote.Completed    → DONE
+ 10. Ship.Completed       → VALIDATING
+ 11. Gate.Passed          (e2e-tests)
+ 12. Promote.Approved     → PROMOTING
+ 13. Promote.Completed    → DONE
 ────────────────────────────────────────────────────────────────
 Derived State final: DONE
 Events com alters_state = true: 7
-Events com alters_state = false: 7
+Events com alters_state = false: 6
 ```
 
 ### Fluxo com rework
@@ -739,13 +729,7 @@ Timeline: WI-099
   7. Rework.Completed     → SYNCING   [correções aplicadas]
   8. Gate.Passed          (lint)
   9. Gate.Passed          (unit-tests)
- 10. Review.ChangesRequested
- 11. Rework.Declared      → HACKING   [retorno por review]
- 12. Rework.Completed     → SYNCING   [mudanças implementadas]
- 13. Gate.Passed          (lint)
- 14. Gate.Passed          (unit-tests)
- 15. Review.Approved
- 16. Sync.Completed       → FINISHING
+ 10. Sync.Completed       → FINISHING
  ...continua...
 ────────────────────────────────────────────────────────────────
 Ciclos de rework: 2
