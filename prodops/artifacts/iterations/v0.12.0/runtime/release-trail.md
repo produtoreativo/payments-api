@@ -53,8 +53,9 @@ All 5 BDD scenarios are covered:
 | Gate | Command | Result |
 |---|---|---|
 | lint | `cd api && npm run lint` | EXIT 0 (30 warnings, 0 errors — pre-existing, no api/src changes) |
+| build | `cd api && npm run build` | EXIT 0 (nest build — no api/src changes) |
 | no_mocks | `grep jest.fn( api/test` | 0 hits |
-| emit-event tests | `bash prodops/runtime/tools/emit-event/tests/run-all.sh` | 7/7 PASS |
+| emit-event tests | `bash prodops/runtime/tools/emit-event/tests/run-all.sh` | 10/10 PASS |
 
 **Security:** diff contains only instruction text in SKILL.md — no secrets, tokens, PII, or credentials.
 
@@ -63,3 +64,16 @@ All 5 BDD scenarios are covered:
 **Event Storming:** no new domain events added — no update required.
 
 **Architecture:** no structural change (new module, route, table, external dependency) — no update required.
+
+---
+
+### OBC Evaluation — Finish Agent
+
+| OBC | Criterion | Location in SKILL.md | Result |
+|---|---|---|---|
+| 1 | Tracking issue auto-closed with comment containing DS-IDs, PRs, date | Ação 0 (lines 386–412) | PASS |
+| 2 | Feature issue (Gate 5) has assignee filled | Gate 5 (lines 281–295) | PASS |
+| 3 | Tracking issue (Etapa 2) has assignee filled | Etapa 2 (lines 125–139) | PASS |
+| 4 | Auto-close blocked when any issue not at Promote.Completed | Gatilho guard block (lines 377–383) | PASS |
+
+**Finish.Started:** `Delivery.Finish.Started` emitted — event-id `da47a0c9-7fc8-4b95-aefb-1201ef1ffaad`, derived-state FINISHING, github-sync success, datadog-sync success.
