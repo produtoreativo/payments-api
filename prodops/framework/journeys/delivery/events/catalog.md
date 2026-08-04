@@ -90,7 +90,7 @@ desenvolvimento ativo.
 **preconditions:**
 - O Work Item está no estado BOOTSTRAPPING
 - O branch de trabalho foi criado com sucesso
-- O smoke gate inicial passou (Gate.Passed foi registrado na Timeline antes deste evento)
+- O smoke gate inicial passou (Shared.Gate.Passed foi registrado na Timeline antes deste evento)
 
 **postconditions:**
 - O Work Item transita para o estado HACKING
