@@ -1,6 +1,6 @@
 # Iteration Plan
 
-> **Iteração ativa: v0.11.0** — DS-53 · DS-54 · DS-55 · DS-56 — Mecanismo de distribuição do ProdOps Framework
+> Nenhuma iteração ativa. Próxima iteração a definir.
 
 ## Histórico
 
@@ -15,4 +15,4 @@
 | [v0.8.0](../iterations/v0.8.0/plan.md) | DS-45 · DS-46 · DS-47 | Suspenso — gates OBC/BDD/Risks ausentes para infraestrutura ProdOps |
 | [v0.9.0](../iterations/v0.9.0/plan.md) | DS-48 · DS-49 · DS-50 | Concluido — PRs #120 #121 #122 #123 |
 | [v0.10.0](../iterations/v0.10.0/plan.md) | DS-51 · DS-52 | ✅ Concluído — PRs #125 #126 |
-| [v0.11.0](../iterations/v0.11.0/plan.md) | DS-53 · DS-54 · DS-55 · DS-56 | 🟡 Planejada |
+| [v0.11.0](../iterations/v0.11.0/plan.md) | DS-53 · DS-54 · DS-55 · DS-56 | ✅ Concluído — PRs #136 #137 #138 #139 |
