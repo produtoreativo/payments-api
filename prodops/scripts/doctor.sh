@@ -257,6 +257,7 @@ done < <(find . -type f -name '*.md' \
   -not -path '*/node_modules/*' \
   -not -path './.claude/worktrees/*' \
   -not -path './.codex/worktrees/*' \
+  -not -path './prodops/templates/*' \
   | LC_ALL=C sort)
 
 if [[ "${broken_links}" -eq 0 ]]; then

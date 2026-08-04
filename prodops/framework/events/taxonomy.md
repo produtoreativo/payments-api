@@ -761,9 +761,9 @@ corrigida nas Skills, não na Timeline.
 - [Fundação OEM](README.md)
 - [Ontologia OEM](ontology.md)
 - [Ontologia do Framework](../ontology.md)
-- [Análise de eventos da Delivery](../../documentation-review-delivery-event-model.md)
-- [Refinamento da fundação OEM](../../documentation-review-operational-event-foundation-refinement.md)
-- [Relatório da ontologia OEM](../../documentation-review-operational-event-ontology.md)
+- Análise de eventos da Delivery
+- Refinamento da fundação OEM
+- Relatório da ontologia OEM
 
 ---
 

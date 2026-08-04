@@ -507,8 +507,8 @@ documentos específicos, à medida que cada Journey e domínio os formaliza:
 - [Knowledge Space vs. Execution Space](../knowledge-vs-execution.md)
 - [Canonical Operational Representation](../knowledge-vs-execution.md#representação-operacional-canônica)
 - [Glossário](../glossary.md)
-- [Modelo de estados da Delivery](../../documentation-review-delivery-operational-representation.md) — análise que precedeu este domínio
-- [Modelo de eventos da Delivery](../../documentation-review-delivery-event-model.md) — análise que gerou a hipótese OEM
+- Modelo de estados da Delivery — análise que precedeu este domínio
+- Modelo de eventos da Delivery — análise que gerou a hipótese OEM
 
 ---
 

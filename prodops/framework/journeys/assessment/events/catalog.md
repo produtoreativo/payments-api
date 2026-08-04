@@ -5,7 +5,7 @@
 > **Status:** Active
 > **Namespace:** `Assessment`
 > **Journey:** Assessment
-> **Schema:** [Event Type Schema v1.0.0](../../../../events/event-type-schema.md)
+> **Schema:** [Event Type Schema v1.0.0](../../../events/event-type-schema.md)
 > **Changelog v2.0.0:** Gate.Passed, Gate.Failed, Impediment.Declared → Deprecated (promovidos a Shared Types Active). Impediment.Resolved → aguarda shared-types v1.1.0 para deprecação formal.
 
 ---
@@ -548,7 +548,7 @@ observação formal que pode originar New Business Intents ou Evolution Plans.
 | **introduced_in** | 1.0.0 |
 | **deprecated_in** | 2.0.0 |
 | **deprecation_reason** | Promovido a Shared Type. Não emitir novos eventos com este tipo Journey — usar Shared.Gate.Passed. |
-| **replacement_type** | `Shared.Gate.Passed` — ver [shared-types.md](../../../../events/shared-types.md) |
+| **replacement_type** | `Shared.Gate.Passed` — ver [shared-types.md](../../../events/shared-types.md) |
 
 **description:**
 Um gate automatizado de qualidade passou com sucesso. Na Jornada Assessment, gates verificam
@@ -589,7 +589,7 @@ permanece no catálogo como referência histórica somente leitura. Novas emiss�
 | **introduced_in** | 1.0.0 |
 | **deprecated_in** | 2.0.0 |
 | **deprecation_reason** | Promovido a Shared Type. Não emitir novos eventos com este tipo Journey — usar Shared.Gate.Failed. |
-| **replacement_type** | `Shared.Gate.Failed` — ver [shared-types.md](../../../../events/shared-types.md) |
+| **replacement_type** | `Shared.Gate.Failed` — ver [shared-types.md](../../../events/shared-types.md) |
 
 **description:**
 Um gate automatizado de qualidade falhou. O critério verificado não foi satisfeito. O Work
@@ -635,7 +635,7 @@ v2.0.0 do catálogo. Timelines históricas continuam válidas. Novas emissões d
 | **introduced_in** | 1.0.0 |
 | **deprecated_in** | 2.0.0 |
 | **deprecation_reason** | Promovido a Shared Type. Não emitir novos eventos com este tipo Journey — usar Shared.Impediment.Declared. |
-| **replacement_type** | `Shared.Impediment.Declared` — ver [shared-types.md](../../../../events/shared-types.md) |
+| **replacement_type** | `Shared.Impediment.Declared` — ver [shared-types.md](../../../events/shared-types.md) |
 
 **description:**
 Um impedimento externo foi declarado para o ciclo de Assessment. O trabalho não pode

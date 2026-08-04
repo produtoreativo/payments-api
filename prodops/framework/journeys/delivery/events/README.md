@@ -4,7 +4,7 @@
 > **Domínio:** Journey — Delivery
 > **Status:** Canônico
 > **Versão:** 1.0.0 (MVP)
-> **Depende de:** [OEM README](../../../../events/README.md) · [Event Type Schema](../../../../events/event-type-schema.md) · [Taxonomy](../../../../events/taxonomy.md) · [Lifecycle](../../../../events/lifecycle.md)
+> **Depende de:** [OEM README](../../../events/README.md) · [Event Type Schema](../../../events/event-type-schema.md) · [Taxonomy](../../../events/taxonomy.md) · [Lifecycle](../../../events/lifecycle.md)
 
 ---
 
@@ -187,10 +187,10 @@ Limitações documentadas intencionalmente:
 
 ## Referências
 
-- [OEM Fundação](../../../../events/README.md)
-- [Ontologia OEM](../../../../events/ontology.md)
-- [Taxonomia OEM](../../../../events/taxonomy.md)
-- [Lifecycle OEM](../../../../events/lifecycle.md)
-- [Event Type Schema](../../../../events/event-type-schema.md)
-- [Event Instance Schema](../../../../events/event-instance-schema.md)
+- [OEM Fundação](../../../events/README.md)
+- [Ontologia OEM](../../../events/ontology.md)
+- [Taxonomia OEM](../../../events/taxonomy.md)
+- [Lifecycle OEM](../../../events/lifecycle.md)
+- [Event Type Schema](../../../events/event-type-schema.md)
+- [Event Instance Schema](../../../events/event-instance-schema.md)
 - [Catálogo Delivery MVP](catalog.md)

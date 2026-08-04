@@ -4,7 +4,7 @@
 > **Domínio:** Journey — Diligence
 > **Status:** Canônico
 > **Versão:** 1.0.0 (MVP)
-> **Depende de:** [OEM README](../../../../events/README.md) · [Event Type Schema](../../../../events/event-type-schema.md) · [Timeline OEM](../../../../events/timeline.md) · [Delivery Catalog](../../delivery/events/catalog.md)
+> **Depende de:** [OEM README](../../../events/README.md) · [Event Type Schema](../../../events/event-type-schema.md) · [Timeline OEM](../../../events/timeline.md) · [Delivery Catalog](../../delivery/events/catalog.md)
 
 ---
 
@@ -221,12 +221,12 @@ quando pelo menos duas Journeys confirmarem uso ativo com semântica equivalente
 
 ## Referências
 
-- [OEM Fundação](../../../../events/README.md)
-- [Ontologia OEM](../../../../events/ontology.md)
-- [Taxonomia OEM](../../../../events/taxonomy.md)
-- [Lifecycle OEM](../../../../events/lifecycle.md)
-- [Event Type Schema](../../../../events/event-type-schema.md)
-- [Event Instance Schema](../../../../events/event-instance-schema.md)
-- [Timeline OEM](../../../../events/timeline.md)
+- [OEM Fundação](../../../events/README.md)
+- [Ontologia OEM](../../../events/ontology.md)
+- [Taxonomia OEM](../../../events/taxonomy.md)
+- [Lifecycle OEM](../../../events/lifecycle.md)
+- [Event Type Schema](../../../events/event-type-schema.md)
+- [Event Instance Schema](../../../events/event-instance-schema.md)
+- [Timeline OEM](../../../events/timeline.md)
 - [Delivery Event Catalog](../../delivery/events/catalog.md)
 - [Catálogo Diligence MVP](catalog.md)

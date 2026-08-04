@@ -232,4 +232,4 @@ Severidade Critical **não** implica automaticamente impossibilidade de Waiver. 
 → [`../diligence-sync.md`](../diligence-sync.md) — ciclo síncrono
 → [`../diligence-async.md`](../diligence-async.md) — ciclo assíncrono
 → [`../workspace-reconciliation.md`](../workspace-reconciliation.md) — capability de reconciliação
-→ [`../../knowledge-vs-execution.md`](../../knowledge-vs-execution.md) — princípio KS vs. ES
+→ [`../../../knowledge-vs-execution.md`](../../../knowledge-vs-execution.md) — princípio KS vs. ES

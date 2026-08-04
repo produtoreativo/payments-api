@@ -677,7 +677,7 @@ payload_shape:
 - [Ontologia OEM](ontology.md)
 - [Taxonomia OEM](taxonomy.md)
 - [Lifecycle OEM](lifecycle.md)
-- [Decisão de separação dos Schemas](../../documentation-review-operational-event-schema-decision.md)
+- Decisão de separação dos Schemas
 
 ---
 

@@ -464,4 +464,4 @@ pode ter sua própria Timeline para registrar ciclos formalmente via OEM.
 - [Event Type Schema](../../events/event-type-schema.md)
 - [Delivery Journey](../delivery/README.md)
 - [Diligence Journey](../diligence/README.md)
-- [Cross-Journey Event Analysis](../../../../documentation-review-cross-journey-event-analysis.md)
+- Cross-Journey Event Analysis

@@ -677,8 +677,8 @@ descartados com justificativa:
 - [Ontologia do Framework](../ontology.md)
 - [Knowledge Space vs. Execution Space](../knowledge-vs-execution.md)
 - [Glossário](../glossary.md)
-- [Análise de eventos da Delivery](../../documentation-review-delivery-event-model.md)
-- [Refinamento da fundação OEM](../../documentation-review-operational-event-foundation-refinement.md)
+- Análise de eventos da Delivery
+- Refinamento da fundação OEM
 
 ---
 

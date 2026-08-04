@@ -670,7 +670,7 @@ Derived State atual: HACKING (last alters_state = true → Bootstrap.Completed)
 - [Taxonomia OEM](taxonomy.md)
 - [Lifecycle OEM](lifecycle.md)
 - [Event Type Schema](event-type-schema.md)
-- [Decisão de separação dos Schemas](../../documentation-review-operational-event-schema-decision.md)
+- Decisão de separação dos Schemas
 
 ---
 

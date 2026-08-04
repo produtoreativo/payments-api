@@ -4,7 +4,7 @@
 > **Domínio:** Journey — Assessment
 > **Status:** Canônico
 > **Versão:** 1.0.0 (MVP)
-> **Depende de:** [OEM README](../../../../events/README.md) · [Event Type Schema](../../../../events/event-type-schema.md) · [Timeline OEM](../../../../events/timeline.md) · [Delivery Catalog](../../delivery/events/catalog.md) · [Diligence Catalog](../../diligence/events/catalog.md)
+> **Depende de:** [OEM README](../../../events/README.md) · [Event Type Schema](../../../events/event-type-schema.md) · [Timeline OEM](../../../events/timeline.md) · [Delivery Catalog](../../delivery/events/catalog.md) · [Diligence Catalog](../../diligence/events/catalog.md)
 
 ---
 
@@ -210,13 +210,13 @@ específicos desta Journey que precisariam de confirmação em pelo menos uma se
 
 ## Referências
 
-- [OEM Fundação](../../../../events/README.md)
-- [Ontologia OEM](../../../../events/ontology.md)
-- [Taxonomia OEM](../../../../events/taxonomy.md)
-- [Lifecycle OEM](../../../../events/lifecycle.md)
-- [Event Type Schema](../../../../events/event-type-schema.md)
-- [Event Instance Schema](../../../../events/event-instance-schema.md)
-- [Timeline OEM](../../../../events/timeline.md)
+- [OEM Fundação](../../../events/README.md)
+- [Ontologia OEM](../../../events/ontology.md)
+- [Taxonomia OEM](../../../events/taxonomy.md)
+- [Lifecycle OEM](../../../events/lifecycle.md)
+- [Event Type Schema](../../../events/event-type-schema.md)
+- [Event Instance Schema](../../../events/event-instance-schema.md)
+- [Timeline OEM](../../../events/timeline.md)
 - [Delivery Event Catalog](../../delivery/events/catalog.md)
 - [Diligence Event Catalog](../../diligence/events/catalog.md)
 - [Catálogo Assessment MVP](catalog.md)

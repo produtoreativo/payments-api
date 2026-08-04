@@ -5,7 +5,7 @@
 > **Status:** Canônico
 > **Versão:** 1.0.0
 > **Depende de:** [Event Type Schema](event-type-schema.md) · [Lifecycle](lifecycle.md) · [Taxonomy](taxonomy.md)
-> **Evidências de promoção:** [Cross-Journey Analysis](../../documentation-review-cross-journey-event-analysis.md)
+> **Evidências de promoção:** Cross-Journey Analysis
 
 ---
 
@@ -179,8 +179,8 @@ são obrigatórios em qualquer implementação.
 
 | Data | Evento | Referência |
 |---|---|---|
-| 2026-07-24 | Identificado como candidato em cross-journey analysis | [Cross-Journey Analysis](../../documentation-review-cross-journey-event-analysis.md) |
-| 2026-07-25 | Confirmado pela terceira Journey (Assessment) | [Assessment Event Catalog](../../documentation-review-assessment-event-catalog.md) |
+| 2026-07-24 | Identificado como candidato em cross-journey analysis | Cross-Journey Analysis |
+| 2026-07-25 | Confirmado pela terceira Journey (Assessment) | Assessment Event Catalog |
 | 2026-07-25 | Promovido a Shared Type — todos os CRTs satisfeitos | Este documento v1.0.0 |
 
 ---
@@ -245,8 +245,8 @@ apropriada (Diligence, Assessment) se a falha exigir retorno ao passo anterior.
 
 | Data | Evento | Referência |
 |---|---|---|
-| 2026-07-24 | Identificado como candidato | [Cross-Journey Analysis](../../documentation-review-cross-journey-event-analysis.md) |
-| 2026-07-25 | Confirmado pela terceira Journey | [Assessment Event Catalog](../../documentation-review-assessment-event-catalog.md) |
+| 2026-07-24 | Identificado como candidato | Cross-Journey Analysis |
+| 2026-07-25 | Confirmado pela terceira Journey | Assessment Event Catalog |
 | 2026-07-25 | Promovido a Shared Type | Este documento v1.0.0 |
 
 ---
@@ -311,8 +311,8 @@ até que Impediment.Resolved seja emitido.
 
 | Data | Evento | Referência |
 |---|---|---|
-| 2026-07-24 | Identificado como candidato | [Cross-Journey Analysis](../../documentation-review-cross-journey-event-analysis.md) |
-| 2026-07-25 | Confirmado pela terceira Journey | [Assessment Event Catalog](../../documentation-review-assessment-event-catalog.md) |
+| 2026-07-24 | Identificado como candidato | Cross-Journey Analysis |
+| 2026-07-25 | Confirmado pela terceira Journey | Assessment Event Catalog |
 | 2026-07-25 | Promovido a Shared Type | Este documento v1.0.0 |
 
 ---
@@ -380,8 +380,8 @@ A promoção pode ser completada quando:
 
 | Data | Evento | Referência |
 |---|---|---|
-| 2026-07-24 | Identificado como candidato com confiança Média | [Cross-Journey Analysis](../../documentation-review-cross-journey-event-analysis.md) |
-| 2026-07-25 | Confirmado pela Assessment (alters_state=false) — confiança elevada para Alta | [Assessment Event Catalog](../../documentation-review-assessment-event-catalog.md) |
+| 2026-07-24 | Identificado como candidato com confiança Média | Cross-Journey Analysis |
+| 2026-07-25 | Confirmado pela Assessment (alters_state=false) — confiança elevada para Alta | Assessment Event Catalog |
 | 2026-07-25 | Status Proposed registrado — bloqueado por Delivery v2 | Este documento v1.0.0 |
 
 ---
@@ -398,7 +398,7 @@ Candidatos analisados e descartados (não são candidatos a Shared Type):
 | `Promote.Rejected` | Colisão de naming + alters_state conflitante. CRT-02 não satisfeito. |
 | `Promote.Completed` | Colisão de naming + new_state incompatível (DONE vs. PROMOTED). CRT-02 não satisfeito. |
 
-Referência da análise: [Cross-Journey Event Analysis](../../documentation-review-cross-journey-event-analysis.md) seção 4.
+Referência da análise: Cross-Journey Event Analysis seção 4.
 
 ---
 
@@ -438,7 +438,7 @@ são permitidos desde que não conflitem com os campos mínimos do Shared Type.
 - [Lifecycle OEM](lifecycle.md)
 - [Taxonomy OEM](taxonomy.md)
 - [Timeline OEM](timeline.md)
-- [Cross-Journey Event Analysis](../../documentation-review-cross-journey-event-analysis.md)
+- Cross-Journey Event Analysis
 - [Delivery Event Catalog](../journeys/delivery/events/catalog.md)
 - [Diligence Event Catalog](../journeys/diligence/events/catalog.md)
 - [Assessment Event Catalog](../journeys/assessment/events/catalog.md)

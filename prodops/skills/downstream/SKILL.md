@@ -497,7 +497,7 @@ Isso seta `oem-state = PENDING` e permite que o Bootstrap inicie novamente.
 
 ## Referências
 
-→ [Readiness SKILL.md](../readiness/SKILL.md)
+→ Readiness SKILL
 → [Execution Mapping](../../framework/execution-mapping/README.md)
 → [Work Item Schema](../../framework/execution-mapping/work-item-schema.md)
 → [Mapping Matrix](../../framework/execution-mapping/matrix.md)

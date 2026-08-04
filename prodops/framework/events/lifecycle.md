@@ -785,7 +785,7 @@ Cada catálogo de Journey depende deste Lifecycle para:
 - [Ontologia OEM](ontology.md)
 - [Taxonomia OEM](taxonomy.md)
 - [Ontologia do Framework](../ontology.md)
-- [Relatório da taxonomia OEM](../../documentation-review-operational-event-taxonomy.md)
+- Relatório da taxonomia OEM
 
 ---
 

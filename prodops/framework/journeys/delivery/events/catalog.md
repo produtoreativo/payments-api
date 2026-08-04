@@ -5,7 +5,7 @@
 > **Status:** Active
 > **Namespace:** `Delivery`
 > **Journey:** Delivery
-> **Schema:** [Event Type Schema v1.0.0](../../../../events/event-type-schema.md)
+> **Schema:** [Event Type Schema v1.0.0](../../../events/event-type-schema.md)
 > **Changelog v2.0.0:** Gate.Passed, Gate.Failed, Impediment.Declared → Deprecated (promovidos a Shared Types Active). Impediment.Resolved → convergência técnica: alters_state=false, Lookback. Cutover: 2026-07-25. Preparado para deprecação após shared-types v1.1.0.
 
 ---
@@ -159,7 +159,7 @@ revisão de código. O Work Item aguarda revisão pelos peers.
 | **introduced_in** | 1.0.0 |
 | **deprecated_in** | 2.0.0 |
 | **deprecation_reason** | Promovido a Shared Type. Não emitir novos eventos com este tipo Journey — usar Shared.Gate.Passed. |
-| **replacement_type** | `Shared.Gate.Passed` — ver [shared-types.md](../../../../events/shared-types.md) |
+| **replacement_type** | `Shared.Gate.Passed` — ver [shared-types.md](../../../events/shared-types.md) |
 
 **description:**
 Um gate automatizado de qualidade passou com sucesso. O gate verifica um critério específico
@@ -200,7 +200,7 @@ permanece no catálogo como referência histórica somente leitura. Novas emiss�
 | **introduced_in** | 1.0.0 |
 | **deprecated_in** | 2.0.0 |
 | **deprecation_reason** | Promovido a Shared Type. Não emitir novos eventos com este tipo Journey — usar Shared.Gate.Failed. |
-| **replacement_type** | `Shared.Gate.Failed` — ver [shared-types.md](../../../../events/shared-types.md) |
+| **replacement_type** | `Shared.Gate.Failed` — ver [shared-types.md](../../../events/shared-types.md) |
 
 **description:**
 Um gate automatizado de qualidade falhou. O gate verificou um critério de qualidade que
@@ -535,7 +535,7 @@ Work Item atingiu seu estado final — está entregue.
 | **introduced_in** | 1.0.0 |
 | **deprecated_in** | 2.0.0 |
 | **deprecation_reason** | Promovido a Shared Type. Não emitir novos eventos com este tipo Journey — usar Shared.Impediment.Declared. |
-| **replacement_type** | `Shared.Impediment.Declared` — ver [shared-types.md](../../../../events/shared-types.md) |
+| **replacement_type** | `Shared.Impediment.Declared` — ver [shared-types.md](../../../events/shared-types.md) |
 
 **description:**
 Um impedimento externo foi declarado para o Work Item. O Work Item está bloqueado —
