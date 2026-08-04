@@ -71,6 +71,17 @@ que o gate **não pôde rodar** (sem `SNYK_TOKEN`) — trate como não-liberado:
 mantenha o auto-merge desarmado e registre o motivo. Cadastrar o secret é ação
 de admin, como `allow_auto_merge`.
 
+**SAST** (`gates.sast` no manifest — SonarQube local sobre `api/src`):
+
+```bash
+./scripts/check-sast.sh
+```
+
+Exit 0 libera; exit 1 **bloqueia** (quality gate vermelho). Exit 2 significa que
+o gate **não pôde rodar** (sem Docker, token inválido, servidor fora do ar) —
+trate como não-liberado, igual ao gate de dependências. Já rodado no `validate`;
+aqui apenas se confirma o veredito.
+
 ### 3. Abrir o PR
 
 Primeiro verifique se **já existe** um PR aberto para esta branch — o passo é
@@ -95,7 +106,8 @@ apenas para **automatizar** o merge.
 ### 4. Armar o auto-merge — somente se todos os gates do passo 2 liberaram
 
 ```bash
-# apenas quando check-coverage-threshold.sh E check-dependencies.sh saíram 0
+# apenas quando check-coverage-threshold.sh, check-dependencies.sh E
+# check-sast.sh saíram 0
 gh pr merge --auto --squash
 ```
 
@@ -104,9 +116,9 @@ ficam verdes. `--squash` mantém o histórico linear na branch de destino,
 coerente com o fluxo do repositório.
 
 **Se qualquer gate do passo 2 não liberou** (cobertura abaixo do limiar,
-vulnerabilidade >= high, ou o gate de dependências não pôde rodar por falta de
-`SNYK_TOKEN`), não execute `gh pr merge --auto`. Em vez disso, registre no PR o
-motivo — específico ao gate que barrou:
+vulnerabilidade >= high, quality gate do SAST vermelho, ou um gate que não pôde
+rodar por falta de `SNYK_TOKEN`/Docker), não execute `gh pr merge --auto`. Em vez
+disso, registre no PR o motivo — específico ao gate que barrou:
 
 ```bash
 gh pr comment <n> --body "Auto-merge não armado: <motivo>. O merge manual segue
@@ -115,12 +127,15 @@ disponível após review."
 #   cobertura de branches abaixo do limiar de 100% (gates.coverage)
 #   vulnerabilidades de severidade >= high nas dependências (gates.dependencies)
 #   SNYK_TOKEN ausente — gate de dependências não pôde rodar (gates.dependencies)
+#   quality gate do SonarQube vermelho em api/src (gates.sast)
+#   Docker indisponível — gate de SAST não pôde rodar (gates.sast)
 ```
 
 O PR fica aberto, verde e **mergeável à mão** por um humano. Os gates governam
-apenas a automação — nunca a capacidade de mergear. Por isso `gates.coverage` e
-`gates.dependencies` **não** são required status checks: como required checks
-bloqueariam também o merge manual, que é justamente o que se quer preservar.
+apenas a automação — nunca a capacidade de mergear. Por isso `gates.coverage`,
+`gates.dependencies` e `gates.sast` **não** são required status checks: como
+required checks bloqueariam também o merge manual, que é justamente o que se
+quer preservar.
 
 ### 5. Atualizar o Release Trail
 
@@ -141,10 +156,13 @@ antes de criar, `gh pr list --head <branch>` confirma que não há outro aberto.
 - Não abrir o PR sem `validate` limpo e `review` sem bloqueadores.
 - Não abrir PR com auto-merge quando a branch protection não está configurada
   (o `review` já teria sinalizado — respeite o bloqueador).
-- Não armar o auto-merge com a cobertura abaixo do limiar — e não deixar de
-  abrir o PR por causa disso: cobertura baixa desarma a automação, não o PR.
-- Não transformar `gates.coverage` em required status check: isso bloquearia o
-  merge manual, contrariando o propósito do gate.
+- Não armar o auto-merge quando um gate do passo 2 não liberou (cobertura abaixo
+  do limiar, vulnerabilidade >= high, SAST vermelho, ou um gate que não pôde
+  rodar) — e não deixar de abrir o PR por causa disso: isso desarma a automação,
+  não o PR.
+- Não transformar `gates.coverage`, `gates.dependencies` ou `gates.sast` em
+  required status check: isso bloquearia o merge manual, contrariando o
+  propósito do gate.
 - Não fazer push, não commitar, não validar aqui — apenas abrir o PR.
 - Não abrir PRs duplicados: rode `gh pr list --head <branch>` antes de criar; se
   já houver um PR aberto para a branch, opere sobre ele. Um Finish abre um PR.
