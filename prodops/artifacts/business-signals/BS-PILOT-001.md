@@ -14,9 +14,9 @@
 | **Título** | Executar o Piloto Operacional ProdOps com Features Reais do payments-api |
 | **Data de registro** | 2026-07-26 |
 | **Origem** | Team · Technology |
-| **Status** | Ativo — gerou PI-PILOT-001 a PI-PILOT-006 |
+| **Status** | Ativo — gerou PI-PILOT-001 a PI-PILOT-003 |
 | **Antecedente** | [BS-RUNTIME-001](./BS-RUNTIME-001.md) — valida o Runtime; este sinal foca na execução com Work Items reais |
-| **Intents geradas** | [PI-PILOT-001](../business-intents/PI-PILOT-001.md) · [PI-PILOT-002](../business-intents/PI-PILOT-002.md) · [PI-PILOT-003](../business-intents/PI-PILOT-003.md) · [PI-PILOT-004](../business-intents/PI-PILOT-004.md) · [PI-PILOT-005](../business-intents/PI-PILOT-005.md) · [PI-PILOT-006](../business-intents/PI-PILOT-006.md) |
+| **Intents geradas** | [PI-PILOT-001](../business-intents/PI-PILOT-001.md) · [PI-PILOT-002](../business-intents/PI-PILOT-002.md) · [PI-PILOT-003](../business-intents/PI-PILOT-003.md) |
 
 ---
 

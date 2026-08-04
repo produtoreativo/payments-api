@@ -40,7 +40,7 @@ O Roadmap é composto por **uma única Release candidata (REL-PILOT-v1)** com 6 
 | **Objetivo** | Produzir evidência de realizabilidade do Runtime com Work Items reais antes de qualquer OBC |
 | **Status** | Draft — aguarda Downstream |
 | **Pré-condição** | Discovery Report aprovado (Opção A) |
-| **Critério de conclusão** | Todas as 6 Features com `Promote.Completed` registrado e Derived State = DONE |
+| **Critério de conclusão** | Todas as 3 Features com `Promote.Completed` registrado e Derived State = DONE |
 
 **Features incluídas (em ordem de execução):**
 
@@ -49,9 +49,6 @@ O Roadmap é composto por **uma única Release candidata (REL-PILOT-v1)** com 6 
 | 1 | Invoice PIX | [PI-PILOT-001](../business-intents/PI-PILOT-001.md) | Happy Path puro |
 | 2 | Invoice Cartão | [PI-PILOT-002](../business-intents/PI-PILOT-002.md) | Happy Path + Gate de Compliance |
 | 3 | Confirmação de Pagamento | [PI-PILOT-003](../business-intents/PI-PILOT-003.md) | Happy Path + Evento de Sistema |
-| 4 | Split Payment (conflito Sync) | [PI-PILOT-004](../business-intents/PI-PILOT-004.md) | Gate.Failed + resolução |
-| 5 | Split Payment Reversal | [PI-PILOT-005](../business-intents/PI-PILOT-005.md) | Rework.Started → Completed |
-| 6 | Split Payment Settlement | [PI-PILOT-006](../business-intents/PI-PILOT-006.md) | Blocking + Lookback |
 
 ---
 
@@ -69,32 +66,15 @@ As 3 Features de happy path são sequenciadas por complexidade crescente de Even
 
 Cada Feature do bloco é independente — pode ser executada em qualquer ordem dentro do bloco, mas o bloco como um todo precede o Bloco 2.
 
-#### Bloco 2 — Exceções (PI-PILOT-004 → 005 → 006)
-
-As 3 Features de exceção são sequenciadas por complexidade crescente do OSE:
-
-- **004** exercita `Gate.Failed` — o mais simples dos padrões de exceção; envolve apenas o OSE seguindo o caminho normal (sem `preBlockState` ou `reworkStack`)
-- **005** exercita `Rework` — usa o `reworkStack` do OSE; requer que o equipe saiba como emitir `Rework.Started` e `Rework.Completed` com payload correto
-- **006** exercita `Blocking + Lookback` — o mais complexo; usa `preBlockState`, `blocked_since`, e exige validação do Lookback temporal
-
-#### Dependências entre blocos
+#### Dependências entre Features
 
 ```
-Bloco 1 (Happy Path) → estabelece → Bloco 2 (Exceções)
-
-PI-001 → PI-002 → PI-003 → PI-004 → PI-005 → PI-006
-                            ↑                    ↑
-                     Gate.Failed           Blocking
-                     (base simples)     (complexidade máxima)
+PI-001 → PI-002 → PI-003
 ```
 
 ---
 
-## 4. Critérios de gate entre blocos
-
-### Gate para iniciar Bloco 2 (exceções)
-
-O Bloco 2 só inicia após:
+## 4. Critérios de conclusão do Piloto
 
 - [ ] PI-PILOT-001: Timeline completa, Promote.Completed registrado, Derived State = DONE
 - [ ] PI-PILOT-002: Gate.Passed de compliance registrado e verificado
@@ -111,9 +91,6 @@ O Bloco 2 só inicia após:
 | PI-PILOT-001 | Lead Time (Bootstrap → Promote) | Baseline do ciclo de entrega mais simples |
 | PI-PILOT-002 | Lead Time + Gate Time (Validate) | Overhead de compliance gate |
 | PI-PILOT-003 | Cycle Time (Hack → Ship) | Cycle Time com evento de sistema assíncrono |
-| PI-PILOT-004 | Conflict Resolution Time (Gate.Failed → Gate.Passed) | Tempo de resolução de conflito |
-| PI-PILOT-005 | Rework Time (Rework.Started → Rework.Completed) | Overhead de um ciclo de revisão |
-| PI-PILOT-006 | Block Time (Impediment.Raised → Resolved) | Impacto de impedimento externo no Lead Time |
 
 ---
 
@@ -121,10 +98,8 @@ O Bloco 2 só inicia após:
 
 | Risco | Probabilidade | Impacto | Mitigação |
 |---|---|---|---|
-| Gap de Event Type descoberto em PI-PILOT-003 (webhook) | Média | Alto — bloqueia Bloco 2 | Evolution Plan imediato para catálogo Delivery v2 |
-| Gap de Shared Type em PI-PILOT-006 (Impediment vs Gate.Blocked) | Média | Médio — ambiguidade endereçável | Decisão de nomenclatura no Discovery antes de executar PI-006 |
-| RT-01 ou RT-02 revelam limitação em condição real | Baixa | Alto — bloqueia o piloto | Testes de regressão no início de cada Feature |
-| Rework aninhado (PI-PILOT-005) não testado com eventos reais | Baixa | Médio — reworkStack funciona em teste, pode ter edge case real | Checar `rework_count` manualmente após execução |
+| Gap de Event Type descoberto em PI-PILOT-003 (webhook) | Média | Alto | Evolution Plan imediato para catálogo Delivery v2 |
+| RT-01 ou RT-02 revelam limitação em condição real | Baixa | Alto | Testes de regressão no início de cada Feature |
 
 ---
 
@@ -150,6 +125,3 @@ O Bloco 2 só inicia após:
 | PI-PILOT-001 | [PI-PILOT-001.md](../business-intents/PI-PILOT-001.md) |
 | PI-PILOT-002 | [PI-PILOT-002.md](../business-intents/PI-PILOT-002.md) |
 | PI-PILOT-003 | [PI-PILOT-003.md](../business-intents/PI-PILOT-003.md) |
-| PI-PILOT-004 | [PI-PILOT-004.md](../business-intents/PI-PILOT-004.md) |
-| PI-PILOT-005 | [PI-PILOT-005.md](../business-intents/PI-PILOT-005.md) |
-| PI-PILOT-006 | [PI-PILOT-006.md](../business-intents/PI-PILOT-006.md) |
