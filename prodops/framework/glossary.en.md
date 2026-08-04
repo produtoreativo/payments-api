@@ -902,7 +902,7 @@ See [`prodops/framework/execution-model/downstream.en.md`](execution-model/downs
 
 **What it does not do:** Does not implement software. Does not create implementation Pull Requests. Does not modify product code. Does not make product decisions that belong to Assessment.
 
-**Relationship with other concepts:** Cross-cutting journey. Consumes Assessment artifacts and feeds Delivery with organized, traceable work. See [`journeys/diligence/README.md`](journeys/diligence/README.en.md) and [`backlogs.md`](backlogs.en.md).
+**Relationship with other concepts:** Cross-cutting journey. Consumes Assessment recommendations and feeds Delivery with organized, traceable work. In turn, it produces execution and synchronization evidence that Assessment consumes to evaluate operational maturity — the relationship is bidirectional. See [`journeys/diligence/README.md`](journeys/diligence/README.en.md) and [`backlogs.md`](backlogs.en.md).
 
 ---
 

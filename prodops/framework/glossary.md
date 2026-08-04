@@ -900,7 +900,7 @@ Ver [`prodops/framework/execution-model/downstream.md`](execution-model/downstre
 
 **O que não faz:** Não implementa software. Não cria Pull Requests de implementação. Não modifica código do produto. Não toma decisões de produto que competem ao Assessment.
 
-**Relação com outros conceitos:** Jornada transversal. Consome artefatos do Assessment e alimenta a Delivery com trabalho organizado e rastreável. Ver [`journeys/diligence/README.md`](journeys/diligence/README.md) e [`backlogs.md`](backlogs.md).
+**Relação com outros conceitos:** Jornada transversal. Consome recomendações do Assessment e alimenta a Delivery com trabalho organizado e rastreável. Por sua vez, produz evidências de execução e sincronização que o Assessment consome para avaliar maturidade operacional — a relação é bidirecional. Ver [`journeys/diligence/README.md`](journeys/diligence/README.md) e [`backlogs.md`](backlogs.md).
 
 ---
 
