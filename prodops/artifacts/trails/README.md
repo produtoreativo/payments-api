@@ -10,6 +10,7 @@ Cada sessão de agente produz seu próprio arquivo de trail em `sessions/`.
 
 | Arquivo | Sessão | Aberta em | Status |
 |---|---|---|---|
+| [2026-08-04-da1b2d2a.md](sessions/2026-08-04-da1b2d2a.md) | `da1b2d2a` | 2026-08-04 | open |
 | [2026-07-13-08117eda.md](sessions/2026-07-13-08117eda.md) | `08117eda` | 2026-07-13 | open |
 
 ---

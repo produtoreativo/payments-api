@@ -55,6 +55,9 @@ run_test "04 catalog-field-rejection"           "$TESTS_DIR/04-catalog-field-rej
 run_test "05 partial-runtime-failure (datadog)" "$TESTS_DIR/05-partial-runtime-failure.sh"
 run_test "06 idempotency (same correlation-id)"         "$TESTS_DIR/06-idempotency.sh"
 run_test "07 plan-level null work-item-id → iteration-id" "$TESTS_DIR/07-plan-level-null-work-item-id.sh"
+run_test "08 bootstrap-intermediate-events (pipeline completeness)" "$TESTS_DIR/08-bootstrap-intermediate-events.sh"
+run_test "09 finish-started → FINISHING derived-state"              "$TESTS_DIR/09-finish-started-finishing-state.sh"
+run_test "10 send-sh iteration tag in Datadog payload"              "$TESTS_DIR/10-send-sh-iteration-tag.sh"
 
 echo "────────────────────────────────────────────────"
 echo "Results: $PASSED passed, $FAILED failed"

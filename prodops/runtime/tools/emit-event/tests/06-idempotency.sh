@@ -10,10 +10,11 @@ if [[ -z "$CORR" ]]; then
   exit 0
 fi
 
+# iteration-id must match test 01 so both use the same iteration-scoped timeline directory
 INPUT=$(jq -n \
   --arg player "$PLAYER" \
   --arg corr   "$CORR" \
-  '{"event":"Delivery.Bootstrap.Started","work-item-id":"76",
+  '{"event":"Delivery.Bootstrap.Started","work-item-id":"76","iteration-id":"EXP-015-I2",
     "correlation-id":$corr,
     "actor":{"player":$player,"agent":"delivery-agent"},"payload":{}}')
 
