@@ -122,13 +122,20 @@ Fila Downstream — Iteration Plan ativo
    ```bash
    gh issue list --search "[Iteration <iteration-id>]" --state all --json number,title | jq '.[0].number // empty'
    ```
-   - Se **não existir**: criar:
+   - Se **não existir**: criar. Antes da criação, obter o login do usuário autenticado:
+     ```bash
+     CE_LOGIN=$(gh api user --jq '.login')
+     ```
+     Criar a issue incluindo o assignee (falha não-fatal — se o GitHub rejeitar o assignee, criar sem ele e registrar aviso no trail):
      ```bash
      gh issue create \
        --title "[Iteration <iteration-id>]: <scope-summary>" \
        --label "prodops,artifact-type:iteration-plan" \
+       --assignee "$CE_LOGIN" \
        --body "Iteration Plan: prodops/artifacts/iterations/<iteration-id>/plan.md\n\nCapabilities: <DS-IDs>\nIssues: <issue-numbers>"
      ```
+     Se o comando falhar apenas por causa do `--assignee`, repetir sem `--assignee` e registrar aviso:
+     `⚠️ Assignee não pôde ser adicionado à tracking issue — issue criada sem assignee`.
    - Se já existir: anotar o número e continuar.
    Emitir `Delivery.Plan.Bootstrap.Issue.Registered` com o número registrado no payload.
 
@@ -273,12 +280,17 @@ Para evitar consumo de tokens em invocações repetidas com gates bloqueados, o 
 
 Se o item estiver no Iteration Plan com status `Entrou` mas sem Issue mapeada:
 
-1. Criar Issue via `gh issue create`:
+1. Obter o login do usuário autenticado (reutilizar `CE_LOGIN` se já capturado no Plan Bootstrap, ou capturar agora):
+   ```bash
+   CE_LOGIN=$(gh api user --jq '.login')
+   ```
+2. Criar Issue via `gh issue create` incluindo o assignee (falha não-fatal — se o GitHub rejeitar o `--assignee`, criar sem ele e registrar aviso no trail: `⚠️ Assignee não pôde ser adicionado à issue DS-<n> — issue criada sem assignee`):
    - **Título:** `[DS-<n>]: <capability-description>`
    - **Body:** incluir DS-ID, iteration-id, OBC path, BDD path e link para o plan.md
    - **Labels:** `journey:delivery`, `artifact-type:local-obc`, `operation:implement`
-2. Atualizar a coluna `Issue` do `plan.md` com o número criado.
-3. Commitar `plan.md` antes de continuar.
+   - **Assignee:** `--assignee "$CE_LOGIN"`
+3. Atualizar a coluna `Issue` do `plan.md` com o número criado.
+4. Commitar `plan.md` antes de continuar.
 
 Não associar ao Project aqui — a adição de todas as issues ao Project ocorre de forma centralizada na Etapa 3 do Plan Bootstrap (`Plan.Bootstrap.Issues.Added`).
 
@@ -363,7 +375,41 @@ Todas as condições abaixo devem ser verdadeiras:
 2. Todas as issues do plano estão `CLOSED` no GitHub (`gh issue view <n> --json state`).
 3. Todos os PRs correspondentes estão `MERGED`.
 
+Se **qualquer** issue do plano ainda não atingiu `Promote.Completed`, o step de Iteration Closure **não** fecha a tracking issue. Registrar aviso listando as issues pendentes:
+```
+⚠️ Iteration Closure bloqueado — issues ainda pendentes de Promote.Completed: <lista de issue-numbers>
+Tracking issue NÃO fechada. Re-invocar após todos os Promotes.
+```
+
 ### Ações de fechamento (em ordem)
+
+0. **Fechar tracking issue da iteração (auto-close):**
+   Resolver o número da tracking issue a partir de `ITERATION_DIR/runtime/plan-bootstrap.json` (campo `plan-issue`).
+   Verificar se a tracking issue já está fechada (idempotência):
+   ```bash
+   TRACKING_STATE=$(gh issue view <plan-issue> --json state --jq '.state')
+   ```
+   - Se `TRACKING_STATE == "CLOSED"`: nenhuma ação — não reabrir, não postar comment duplicado. Registrar no trail: `ℹ️ Tracking issue #<plan-issue> já estava fechada — nenhuma ação executada.` e continuar.
+   - Se `TRACKING_STATE == "OPEN"`:
+     a. Postar comment de encerramento:
+        ```bash
+        gh issue comment <plan-issue> --body "## Iteração <iteration-id> — Encerramento Automático
+
+        **Data:** <YYYY-MM-DD>
+
+        **DS-IDs entregues:** <lista DS-IDs, ex: DS-57, DS-58, DS-59, DS-60>
+
+        **PRs mergeados:** <lista de PRs, ex: #148, #149, #150, #151>
+
+        Todos os Promotes concluídos. Iteração encerrada pelo downstream-agent.
+
+        ---
+        *iteration: <iteration-id> · actor: <player>*"
+        ```
+     b. Fechar a tracking issue:
+        ```bash
+        gh issue close <plan-issue>
+        ```
 
 1. **Atualizar `ITERATION_DIR/plan.md`:**
    - Header: `# Iteration Plan — <iteration-id>` (remover sufixo `(Ativo)`)
