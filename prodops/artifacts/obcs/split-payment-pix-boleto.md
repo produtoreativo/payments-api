@@ -99,9 +99,11 @@ O sistema garante rastreabilidade completa de cada porção do pagamento indepen
 ## Perguntas em aberto
 
 - [ ] Valor mínimo e máximo permitido por porção de pagamento
-- [ ] Política definitiva para Boleto vencido com Pix pago (cancelar + estornar vs. reemitir Boleto vs. manter pendente)
-- [ ] Interface no Checkout para o cliente definir a divisão dos valores
-- [ ] Times envolvidos além do Payments: Checkout, Notification Service
+- [ ] Prazo máximo para estado `PENDING_INVESTIGATION` (a definir com operação antes do go-live)
+- [x] ~~Política para Boleto vencido com Pix pago~~ → mantém pendente com prazo máximo, investigação manual. Decidido em 2026-08-04.
+- [x] ~~Interface no Checkout~~ → Checkout é responsabilidade de outro time; este time entrega apenas a API com Response Contract e Observable Events documentados.
+- [x] ~~Times envolvidos além do Payments~~ → Checkout (outro time, consome a API) e Notification (outro time, reage aos Observable Events). Escopo do time de Payments: API apenas.
+- [x] ~~Requisitos técnicos do fornecedor~~ → fornecedor fornece apenas mercadoria; sem requisitos técnicos. Fechado em 2026-08-04.
 
 ---
 

@@ -9,6 +9,16 @@
 |---|---|---|
 | [v0.12.0](../iterations/v0.12.0/plan.md) | DS-57 · DS-58 · DS-59 · DS-60 | Ready for Delivery |
 
+## Pipeline — Entrou (aguardando iteração)
+
+| Funcionalidade | Intent | OBC | BDD | Reliability Plan | Status |
+|---|---|---|---|---|---|
+| Split Payment — Pix + Boleto | [PI-001](../business-intents/PI-001.md) | ✅ Committed | ✅ Criado | ✅ Criado | **Entrou** — aguarda início de iteração pós v0.12.0 |
+
+> **Entrou** em 2026-08-04. Gates de Downstream Ready cumpridos: OBC Committed, BDD Feature, Riscos documentados, Reliability Plan criado. Prazo alvo: 15 dias a partir de 2026-08-04 (fornecedor parceiro).
+
+---
+
 ## Histórico
 
 | Versão | Escopo | Status |

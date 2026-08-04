@@ -103,27 +103,31 @@ Split Payment envolve movimentação financeira — o Reliability Plan é obriga
 
 ---
 
-## RISK-SP-005 — Times adjacentes não alinhados (Checkout, Notification)
+## RISK-SP-005 — Times adjacentes (Checkout, Notification) sem acesso ao contrato da API
 
-**Status:** Aberto — alinhamento pendente
+**Status:** Parcialmente mitigado — responsabilidade de entrega delimitada
 **Criticidade:** Média
-**Probabilidade:** Alta
+**Probabilidade:** Média
 
-### Descrição
+### Contexto atualizado
 
-O OBC menciona que Checkout e Notification Service precisam estar envolvidos, mas esses times ainda não foram formalmente alinhados. O Checkout precisa saber como apresentar a interface de Split e consumir o Response Contract. O Notification precisa saber quando e como comunicar o cliente sobre cada evento do Split.
+O time de Payments é responsável exclusivamente pela API. A tela de Checkout e as notificações ao cliente são responsabilidade de outros times. O risco não é de coordenação de construção — é de contrato: os times consumidores precisam ter acesso claro ao Response Contract e aos Observable Events antes de integrarem.
 
-### Impacto
+### Impacto se não mitigado
 
-- Checkout entrega sem suporte à interface de Split no prazo
-- Cliente não recebe comunicação de confirmação parcial ou vencimento
-- Lançamento com o fornecedor incompleto ou degradado
+- Checkout integra com payload ou endpoint incorreto e a funcionalidade não funciona no lançamento
+- Notification não sabe quais eventos ouvir e o cliente não recebe comunicação após Split criado ou concluído
 
-### Mitigações sugeridas
+### O que o time de Payments precisa garantir
 
-- Reunião de alinhamento com Checkout e Notification antes do início da Delivery
-- Definir responsabilidade: quem comunica o cliente quando apenas um meio é pago?
-- Compartilhar Response Contract e Observable Events com os times dependentes
+- Response Contract documentado e acessível no OBC (`prodops/artifacts/obcs/split-payment-pix-boleto.md`)
+- Observable Events documentados com nomes canônicos e dimensões obrigatórias
+- Comunicar aos times de Checkout e Notification que o OBC está disponível para consulta
+
+### O que está fora do escopo do time de Payments
+
+- Construção da tela de Split no Checkout
+- Implementação das notificações ao cliente
 
 ---
 
