@@ -1,0 +1,8 @@
+{
+  "iteration-id": "v0.12.0",
+  "status": "completed",
+  "correlation-id": "e50564c1-9b99-4f49-bcce-34d4ef92c242",
+  "completed-at": "2026-08-04T10:15:00Z",
+  "plan-issue": 150,
+  "issues": ["146", "147", "148", "149"]
+}
