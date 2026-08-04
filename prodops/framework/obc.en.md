@@ -122,9 +122,9 @@ An OBC does not belong to a single Product Dimension. It can simultaneously modi
 
 **When refining an OBC, identify which Product Dimensions will be affected.** This informs:
 - Which teams need to be involved (Team)
-- Which flows and rules will change (Flow)
 - Which schemas, events, and contracts will be created or modified (Data)
-- Which services, databases, or infrastructure will be created or modified (Components)
+- Which services, behaviors, and infrastructure will be created or modified (Components)
+- What is the temporal trail of this change through the product — how it traverses the journeys until it becomes permanent (Flow)
 
 This analysis complements the OBC and feeds the Reliability Plan with structural impact context.
 

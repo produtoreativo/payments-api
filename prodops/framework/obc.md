@@ -122,9 +122,9 @@ Um OBC não pertence a uma única Product Dimension. Ele pode modificar simultan
 
 **Ao refinar um OBC, identificar quais Product Dimensions serão afetadas.** Isso informa:
 - Quais times precisam estar envolvidos (Team)
-- Quais fluxos e regras serão alterados (Flow)
 - Quais schemas, eventos e contratos serão criados ou modificados (Data)
-- Quais serviços, bancos de dados ou infraestrutura serão criados ou modificados (Components)
+- Quais serviços, comportamentos e infraestrutura serão criados ou modificados (Components)
+- Qual o rastro temporal desta mudança pelo produto — como ela percorre as jornadas até se tornar permanente (Flow)
 
 Essa análise complementa o OBC e alimenta o Reliability Plan com contexto de impacto estrutural.
 
