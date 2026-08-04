@@ -197,18 +197,45 @@ Fila Downstream — Iteration Plan ativo
       Se `"datadog-sync": "error"` → exibir: `⚠️ Datadog sync falhou — evento registrado na timeline local mas não enviado ao Datadog`.
       Se `"github-sync": "error"` → exibir: `⚠️ GitHub sync falhou — oem-state NÃO foi atualizado no Project`. Neste caso **não avançar** para a próxima fase sem resolver, pois o estado do Project ficará inconsistente.
 
-      **6b-ii — Postar comentário obrigatório na issue:**
-      ```bash
-      gh issue comment <work-item-id> --body "## <Fase> — <YYYY-MM-DD HH:MM UTC>
+      **6b-ii — Registrar trail entry obrigatória na issue (por phase):**
 
-      **Status:** <Concluído | Bloqueado | Falhou>
+      Este passo é composto por duas entradas de trail por phase: uma ao **iniciar** a phase e outra ao **concluir** (ou falhar). Ambas devem ser postadas antes de avançar qualquer estado.
+
+      **Campos obrigatórios em toda entry de trail:** `phase-name`, `work-item-id`, `status`, `timestamp`. A ausência de qualquer campo invalida a entry como evidência auditável.
+
+      **Entry de início de phase** — postar imediatamente antes de invocar o sub-agente da phase:
+      ```bash
+      gh issue comment <work-item-id> --body "## Trail — <Fase> Iniciada — <YYYY-MM-DDTHH:MM:SSZ>
+
+      **phase:** <Fase>
+      **work-item-id:** <work-item-id>
+      **status:** started
+      **timestamp:** <YYYY-MM-DDTHH:MM:SSZ>
+
+      ---
+      *correlation-id: <uuid> · iteration: <iteration-id> · actor: <player>*"
+      ```
+
+      **Entry de conclusão de phase** — postar após receber o resultado do sub-agente e **antes de avançar para a próxima phase**:
+      ```bash
+      gh issue comment <work-item-id> --body "## Trail — <Fase> — <YYYY-MM-DDTHH:MM:SSZ>
+
+      **phase:** <Fase>
+      **work-item-id:** <work-item-id>
+      **status:** <completed | failed | blocked>
+      **timestamp:** <YYYY-MM-DDTHH:MM:SSZ>
 
       <resumo em até 5 linhas: o que foi feito, evidências principais, próximo passo>
 
       ---
       *correlation-id: <uuid> · iteration: <iteration-id> · actor: <player>*"
       ```
-      **Este passo é obrigatório e não pode ser omitido.** Postar mesmo em caso de falha ou bloqueio — o comentário deve descrever o motivo e a ação necessária.
+
+      **Regras de trail:**
+      - A entry de conclusão deve ser postada **antes de avançar à próxima phase ou issue** — nunca após.
+      - Postar mesmo em caso de falha ou bloqueio — o comentário deve descrever o motivo e a ação necessária.
+      - **Falha ao postar trail é não-fatal:** se `gh issue comment` retornar erro, registrar aviso interno (`⚠️ Trail entry falhou — <motivo>`) e continuar a execução normalmente. A incapacidade de registrar trail não deve bloquear nem interromper o loop de execução.
+      - O trail parcial (entries de início sem entries de conclusão) é suficiente para diagnosticar a última phase executada em caso de interrupção mid-flight.
    c. Reportar evidências do item concluído e avançar automaticamente para o próximo.
 
 Parar apenas quando: (1) um readiness falhar, (2) um gate de qualidade não passar, (3) a fila se esgotar.
