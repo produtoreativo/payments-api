@@ -163,3 +163,7 @@ All 5 BDD scenarios satisfied. All 4 OBC acceptance criteria met.
 | emit-event tests | `bash prodops/runtime/tools/emit-event/tests/run-all.sh` | 10/10 PASS |
 
 **Finish.Started:** `Delivery.Finish.Started` emitted — event-id `ed29c6b3-af65-4726-b5f9-091ee776f5ee`, derived-state FINISHING, github-sync success, datadog-sync success.
+
+**PR:** [#153](https://github.com/produtoreativo/payments-api/pull/153) — merged (squash, auto-merge).
+
+**Finish.Completed:** `Delivery.Finish.Completed` emitted — see event below.
