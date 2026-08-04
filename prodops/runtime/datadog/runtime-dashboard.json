@@ -1,0 +1,482 @@
+{
+  "title": "RT ProdOps Runtime Dashboard",
+  "description": "Observability dashboard for ProdOps delivery phases. Uses iteration:<id> tags from DS-57.",
+  "layout_type": "ordered",
+  "reflow_type": "fixed",
+  "tags": [
+    "team:prodops"
+  ],
+  "template_variables": [
+    {
+      "name": "iteration_id",
+      "prefix": "iteration",
+      "available_values": [],
+      "default": "*"
+    },
+    {
+      "name": "service",
+      "prefix": "service",
+      "available_values": [],
+      "default": "*"
+    },
+    {
+      "name": "env",
+      "prefix": "env",
+      "available_values": [],
+      "default": "*"
+    }
+  ],
+  "notify_list": [],
+  "widgets": [
+    {
+      "definition": {
+        "type": "group",
+        "title": "Cycle Time per Delivery Phase",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Bootstrap Cycle Time",
+              "title_size": "16",
+              "title_align": "left",
+              "precision": 1,
+              "autoscale": true,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:bootstrap,service:$service.value,env:$env.value}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 0,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "custom_unit": "h"
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Hack Cycle Time",
+              "title_size": "16",
+              "title_align": "left",
+              "precision": 1,
+              "autoscale": true,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:hack,service:$service.value,env:$env.value}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 0,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "custom_unit": "h"
+            },
+            "layout": {
+              "x": 3,
+              "y": 0,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Sync Cycle Time",
+              "title_size": "16",
+              "title_align": "left",
+              "precision": 1,
+              "autoscale": true,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:sync,service:$service.value,env:$env.value}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 0,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "custom_unit": "h"
+            },
+            "layout": {
+              "x": 6,
+              "y": 0,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Finish Cycle Time",
+              "title_size": "16",
+              "title_align": "left",
+              "precision": 1,
+              "autoscale": true,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:finish,service:$service.value,env:$env.value}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 0,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "custom_unit": "h"
+            },
+            "layout": {
+              "x": 9,
+              "y": 0,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Ship Cycle Time",
+              "title_size": "16",
+              "title_align": "left",
+              "precision": 1,
+              "autoscale": true,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:ship,service:$service.value,env:$env.value}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 0,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "custom_unit": "h"
+            },
+            "layout": {
+              "x": 0,
+              "y": 2,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Validate Cycle Time",
+              "title_size": "16",
+              "title_align": "left",
+              "precision": 1,
+              "autoscale": true,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:validate,service:$service.value,env:$env.value}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 0,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "custom_unit": "h"
+            },
+            "layout": {
+              "x": 3,
+              "y": 2,
+              "width": 3,
+              "height": 2
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Promote Cycle Time",
+              "title_size": "16",
+              "title_align": "left",
+              "precision": 1,
+              "autoscale": true,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:promote,service:$service.value,env:$env.value}",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "comparator": ">=",
+                      "value": 0,
+                      "palette": "white_on_green"
+                    }
+                  ]
+                }
+              ],
+              "custom_unit": "h"
+            },
+            "layout": {
+              "x": 6,
+              "y": 2,
+              "width": 3,
+              "height": 2
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 12,
+        "height": 5
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "title": "Cycle Time Timeseries — All Phases",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Bootstrap — Cycle Time Over Time",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:bootstrap,service:$service.value,env:$env.value}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "hours",
+                "include_zero": true
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 6,
+              "height": 3
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Hack — Cycle Time Over Time",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:hack,service:$service.value,env:$env.value}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "hours",
+                "include_zero": true
+              }
+            },
+            "layout": {
+              "x": 6,
+              "y": 0,
+              "width": 6,
+              "height": 3
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Sync — Cycle Time Over Time",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:sync,service:$service.value,env:$env.value}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "hours",
+                "include_zero": true
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 3,
+              "width": 6,
+              "height": 3
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Finish — Cycle Time Over Time",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:finish,service:$service.value,env:$env.value}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "hours",
+                "include_zero": true
+              }
+            },
+            "layout": {
+              "x": 6,
+              "y": 3,
+              "width": 6,
+              "height": 3
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Ship — Cycle Time Over Time",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:ship,service:$service.value,env:$env.value}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "hours",
+                "include_zero": true
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 6,
+              "width": 6,
+              "height": 3
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Validate — Cycle Time Over Time",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:validate,service:$service.value,env:$env.value}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "hours",
+                "include_zero": true
+              }
+            },
+            "layout": {
+              "x": 6,
+              "y": 6,
+              "width": 6,
+              "height": 3
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Promote — Cycle Time Over Time",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "requests": [
+                {
+                  "q": "avg:prodops.delivery.cycle_time{iteration:$iteration_id.value,phase:promote,service:$service.value,env:$env.value}",
+                  "display_type": "line",
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  }
+                }
+              ],
+              "yaxis": {
+                "label": "hours",
+                "include_zero": true
+              }
+            },
+            "layout": {
+              "x": 0,
+              "y": 9,
+              "width": 6,
+              "height": 3
+            }
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 5,
+        "width": 12,
+        "height": 13
+      }
+    }
+  ]
+}
