@@ -230,6 +230,114 @@ As métricas DORA estendidas complementam o Reliability Plan com uma visão de m
 
 ---
 
+---
+
+# Split Payment — Pix + Boleto (PI-001)
+
+> OBC: `prodops/artifacts/obcs/split-payment-pix-boleto.md` · BDD: `prodops/artifacts/bdd/split-payment-pix-boleto.feature` · Prazo: 15 dias · Lançamento: fornecedor parceiro · Aprovado por: Eugenio (PM) em 2026-08-04
+
+## Executive Summary
+
+Split Payment envolve movimentação financeira com dois meios independentes — Pix e Boleto — que precisam ser reconciliados antes de liberar um pedido. O risco central não é técnico: é de inconsistência financeira. Um pedido pode ser liberado com apenas um meio pago, um cliente pode ser cobrado duplicado por retry, ou um Boleto vencido com Pix pago pode ficar sem resolução indefinidamente.
+
+O prazo de 15 dias pressiona o início imediato da Delivery, mas três condições precisam estar satisfeitas antes do Bootstrap: política de Boleto vencido definida pelo negócio, alinhamento com Checkout e Notification, e levantamento de requisitos técnicos do fornecedor parceiro.
+
+## Funcionalidades consideradas
+
+| Funcionalidade | Decisão | Evidência |
+|---|---|---|
+| Split Payment Pix + Boleto | Entrou | OBC Committed `prodops/artifacts/obcs/split-payment-pix-boleto.md`; BDD `prodops/artifacts/bdd/split-payment-pix-boleto.feature` |
+
+Fora do escopo desta release: Split com Cartão de Crédito (fase posterior).
+
+## Estado atual
+
+| Área | Estado |
+|---|---|
+| OBC | Committed — aprovado por Eugenio (PM) em 2026-08-04 |
+| BDD Feature | Criada — 11 cenários cobrindo happy path, idempotência, boleto vencido, validações e falhas |
+| Implementação | **Não iniciada** — nenhum código de Split Payment existe no repositório |
+| Riscos | 6 riscos mapeados em `prodops/artifacts/risks/risks.md` (RISK-SP-001 a RISK-SP-006) |
+| Premortem | **Não criado** — obrigatório antes do go-live dado o prazo e a natureza financeira |
+
+## Principais riscos
+
+| Risco | Impacto | Probabilidade | Criticidade |
+|---|---|---|---|
+| Política de Boleto vencido indefinida (RISK-SP-001) | Pix pago retido sem resolução; operação sem runbook | Certa | Alta |
+| Cobrança duplicada por falta de idempotência (RISK-SP-002) | Cliente cobrado duas vezes | Média | Alta |
+| Soma dos valores não validada antes do provedor (RISK-SP-003) | Cobrança com valor incorreto no provedor | Baixa | Alta |
+| Prazo sem Reliability Plan e Premortem formais (RISK-SP-004) | Go-live sem observabilidade e runbook | Alta | Alta |
+| Checkout e Notification não alinhados (RISK-SP-005) | Interface de Split ausente ou comunicação ao cliente quebrada | Alta | Média |
+| Requisitos técnicos do fornecedor desconhecidos (RISK-SP-006) | Retrabalho de última hora no contrato de API | Média | Média |
+
+## Análise por funcionalidade
+
+### Split Payment Pix + Boleto
+
+**Riscos de implementação**
+
+- Dois meios de pagamento independentes precisam ser orquestrados com idempotência: falha em um não pode afetar o outro já confirmado
+- `pixAmount + boletoAmount = totalAmount` precisa ser validado antes de qualquer I/O — erro aqui gera cobrança incorreta no provedor sem possibilidade de rollback simples
+- Comportamento quando Boleto vence com Pix pago é indefinido pelo negócio — o sistema precisa de uma regra explícita para não decidir sozinho
+- Status `PENDING_INVESTIGATION` exige runbook operacional — sem ele o time de atendimento não sabe o que fazer
+
+**Dependências críticas**
+
+- **Checkout:** precisa saber como apresentar a divisão de valores ao cliente e consumir o Response Contract
+- **Notification Service:** precisa saber quando e o que comunicar — Split criado, Pix confirmado, Boleto confirmado, pedido liberado, Boleto vencido
+- **Provedor (Asaas):** Pix e Boleto são cobranças independentes — confirmar se o provedor suporta referência cruzada entre elas pelo `orderId`
+- **Fornecedor parceiro:** requisitos técnicos específicos sobre o contrato de Split ainda não levantados
+
+**Pontos de atenção**
+
+- O evento `split_payment.boleto.expired` com `pixStatus: confirmed` é o sinal mais crítico — precisa de alerta imediato para operação
+- A ausência de implementação prévia elimina risco de dívida técnica, mas elimina também qualquer evidência de comportamento real em produção
+- 15 dias inclui Bootstrap, Hack, Sync, Finish, Ship, Validate e Promote — sem margem para surpresas
+
+**Recomendações**
+
+- Definir política de Boleto vencido com Eugenio antes do Bootstrap (P0 — bloqueia go-live)
+- Alinhar Checkout e Notification nesta semana antes de começar a construir
+- Criar runbook mínimo para `PENDING_INVESTIGATION` antes do Ship
+- Criar Premortem antes do go-live
+
+## Reliability Roadmap
+
+| Iniciativa | Objetivo | Prioridade | Risco mitigado | Esforço |
+|---|---|---|---|---|
+| Definir política de Boleto vencido (negócio) | Eliminar decisão implícita do sistema sobre Pix pago retido | P0 — pré-Bootstrap | RISK-SP-001 | Baixo (reunião com PM) |
+| Alinhar Checkout e Notification | Garantir que interface e comunicação ao cliente estejam cobertas | P0 — pré-Bootstrap | RISK-SP-005 | Baixo (reunião entre times) |
+| Levantar requisitos técnicos do fornecedor | Validar Response Contract antes de construir | P0 — pré-Bootstrap | RISK-SP-006 | Baixo (call com fornecedor) |
+| Implementar idempotência por `orderId` + meios | Evitar cobrança duplicada em retry | P0 — Bootstrap | RISK-SP-002 | Médio |
+| Validar soma `pixAmount + boletoAmount = totalAmount` | Rejeitar antes de chamar provedor | P0 — Bootstrap | RISK-SP-003 | Baixo |
+| Alerta para `split_payment.boleto.expired` com `pixStatus: confirmed` | Operação é notificada imediatamente | P0 — Ship | RISK-SP-001 | Baixo |
+| Runbook para `PENDING_INVESTIGATION` | Atendimento tem procedimento claro | P0 — antes do Promote | RISK-SP-001 | Baixo |
+| Dashboard mínimo de Split Payment | Visibilidade de criação, confirmações, vencimentos e erros | P1 — Ship | RISK-SP-004 | Médio |
+| Criar Premortem de Split Payment | Antecipar cenários de falha antes do go-live | P1 — antes do Ship | RISK-SP-004 | Médio |
+| Evento `split_payment.creation_failed` com contexto de validação | Diagnóstico de falhas de criação sem expor dados sensíveis | P1 — Hack | RISK-SP-003 | Baixo |
+
+## Quick Wins
+
+| Melhoria | Benefício | Esforço |
+|---|---|---|
+| Validar soma dos valores como primeiro guard no controller | Rejeita erro financeiro antes de qualquer I/O | Baixo |
+| Log estruturado com `splitPaymentId`, `orderId`, `pixAmount`, `boletoAmount` em toda operação | Diagnóstico imediato em produção | Baixo |
+| Retornar `splitPaymentId` na criação mesmo em erro de idempotência | Checkout consegue rastrear sem criar novo Split | Baixo |
+| Alerta Datadog para status `PENDING_INVESTIGATION` > 30 minutos | Operação detecta Boleto vencido sem monitoramento manual | Baixo |
+
+## Definition of Done operacional para Split Payment
+
+Uma história de Split Payment só está concluída quando, além dos critérios funcionais:
+
+- [ ] Idempotência validada para retry e webhook duplicado
+- [ ] Logs com `splitPaymentId`, `orderId`, `pixInvoiceId`, `boletoInvoiceId` e `correlationId`
+- [ ] Eventos canônicos emitidos exatamente uma vez por transição
+- [ ] `PENDING_INVESTIGATION` gera alerta imediato para operação
+- [ ] Nenhum dado financeiro exposto em resposta de erro pública
+
+---
+
 ## Premissas
 
 - A palavra `Entrou` foi interpretada de forma estrita conforme o prompt. `Entrou como MVP` não foi considerado no escopo deste Reliability Plan.
