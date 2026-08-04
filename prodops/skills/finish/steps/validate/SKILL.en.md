@@ -51,24 +51,53 @@ requires), run eslint without `--fix`, as `pr-gates.yml` does:
 `npx eslint "{src,apps,libs,test}/**/*.ts"` (errors fail; warnings do not — the
 repo carries pre-existing warnings and the gate only requires exit 0).
 
-### 2. Tools not yet present as a script
+### 2. Security — SAST and dependencies
+
+Two complementary security gates, both `blocks: auto_merge_only`: a red result
+disarms auto-merge, but never prevents a manual merge.
+
+**SAST** (`gates.sast` in the manifest — local SonarQube, `api/src` source code):
+
+```bash
+./scripts/check-sast.sh          # starts/reuses the container and analyzes
+./scripts/check-sast.sh --keep   # keeps the container up to inspect the UI
+```
+
+Runs **locally**, via an ephemeral SonarQube container — the same shape as
+LocalStack in the acceptance gate. Requires no secret: the script provisions the
+token on the freshly started server. `SONAR_TOKEN` in the environment (or in
+`api/.env`) takes precedence if present. The first run takes ~1-2 min until the
+server is healthy.
+
+Exit 0 releases; exit 1 **blocks** auto-merge (red quality gate); exit 2 = the
+gate could not run (no Docker, invalid token, server down) — auto-merge stays
+disarmed and the reason is recorded on the PR.
+
+The verdict comes from the SonarQube **API** (`/api/qualitygates/project_status`),
+not from the `sonar-scanner` exit code: the scanner's codes are undocumented by
+SonarSource and do not distinguish "red gate" from "execution error" (an invalid
+token also exits 1). Reading the status from the API is the path SonarSource
+itself recommends.
+
+In CI, remote SAST remains covered by CodeQL (job
+`Analyze (javascript-typescript)`); there is no Sonar job in `pr-gates.yml`, to
+avoid two SAST tools doing the same work.
+
+**Dependencies / SCA** (`gates.dependencies` in the manifest — Snyk):
+
+```bash
+./scripts/check-dependencies.sh
+```
+
+Analyzes third-party libraries, not the source code. Requires `SNYK_TOKEN`.
+
+### 2b. Tools not yet present as a script
 
 To configure before making the gate mandatory (gap of this refinement):
 
 ```bash
 # commit lint — Conventional Commits messages
 npx --no-install commitlint --edit $1
-
-# SAST — SonarQube (local scanner)
-docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
-sonar-scanner \
-  -Dsonar.projectKey=payments \
-  -Dsonar.sources=. \
-  -Dsonar.host.url=http://localhost:9000 \
-  -Dsonar.login=<SONAR_TOKEN>
-
-# dependencies — Snyk
-snyk test --dev
 ```
 
 ### 3. Dynamic exception (acceptance/integration) — and coverage
