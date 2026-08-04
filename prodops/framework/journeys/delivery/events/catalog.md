@@ -23,13 +23,15 @@
 | 7 | Promote.Completed | Phase Lifecycle | true | DONE | System | Active |
 | 8 | Gate.Passed | Gate | false | — | System, Agent | **Deprecated** → Shared.Gate.Passed |
 | 9 | Gate.Failed | Gate | false | — | System, Agent | **Deprecated** → Shared.Gate.Failed |
-| 10 | Promote.Approved | Human Decision | true | PROMOTING | Human | Active |
-| 11 | Promote.Rejected | Human Decision | true | VALIDATING | Human | Active |
-| 12 | Impediment.Declared | Blocking | true | BLOCKED | Human, Agent | **Deprecated** → Shared.Impediment.Declared |
-| 13 | Impediment.Resolved | Blocking | false | — (Lookback) | Human | Active — convergido v2 |
-| 14 | Rework.Declared | Rework | true | HACKING | Human, Agent | Active |
-| 15 | Rework.Completed | Rework | true | SYNCING | Human, Agent | **Deprecated** → Rework.Resolved |
-| 16 | Rework.Resolved | Rework | true | SYNCING | Human, Agent | Active |
+| 10 | Validate.Started | Phase Lifecycle | false | — | System, Agent | Active |
+| 11 | Validate.Completed | Phase Lifecycle | false | — | System, Agent | Active |
+| 12 | Promote.Approved | Human Decision | true | PROMOTING | Human | Active |
+| 13 | Promote.Rejected | Human Decision | true | VALIDATING | Human | Active |
+| 14 | Impediment.Declared | Blocking | true | BLOCKED | Human, Agent | **Deprecated** → Shared.Impediment.Declared |
+| 15 | Impediment.Resolved | Blocking | false | — (Lookback) | Human | Active — convergido v2 |
+| 16 | Rework.Declared | Rework | true | HACKING | Human, Agent | Active |
+| 17 | Rework.Completed | Rework | true | SYNCING | Human, Agent | **Deprecated** → Rework.Resolved |
+| 18 | Rework.Resolved | Rework | true | SYNCING | Human, Agent | Active |
 
 ---
 
@@ -341,9 +343,69 @@ Item está disponível para validação em Staging.
 
 ---
 
-*A Phase Validate é representada neste MVP por eventos Gate.Passed e Gate.Failed (já definidos
-acima) e pela decisão humana de promover ou rejeitar (abaixo). Eventos específicos de
-validação automatizada são candidatos ao catálogo v2.*
+### Validate.Started
+
+| Campo | Valor |
+|---|---|
+| **name** | `Validate.Started` |
+| **category** | Phase Lifecycle |
+| **alters_state** | `false` |
+| **producer_subtypes** | `[System, Agent]` |
+| **lifecycle_status** | Active |
+| **introduced_in** | 2.1.0 |
+
+**description:**
+A Phase de Validate foi iniciada. Os testes automatizados de validação em Staging estão
+em execução. O Derived State permanece VALIDATING — definido pelo Ship.Completed anterior.
+
+**preconditions:**
+- O Work Item está no estado VALIDATING
+- Ship.Completed foi registrado na Timeline
+
+**postconditions:**
+- O início da validação está registrado na Timeline
+- O Derived State permanece VALIDATING
+
+**payload_shape:**
+- `validation_suite` (string, obrigatório): identificador da suite de testes executada (ex.: `e2e`, `smoke`, `contract`)
+- `environment` (string, obrigatório): ambiente em que a validação está sendo executada (ex.: `staging`)
+
+**owner_journey:** Delivery
+
+---
+
+### Validate.Completed
+
+| Campo | Valor |
+|---|---|
+| **name** | `Validate.Completed` |
+| **category** | Phase Lifecycle |
+| **alters_state** | `false` |
+| **producer_subtypes** | `[System, Agent]` |
+| **lifecycle_status** | Active |
+| **introduced_in** | 2.1.0 |
+
+**description:**
+A Phase de Validate foi concluída com sucesso. Todos os gates de validação automatizada
+passaram em Staging. O Work Item está pronto para a decisão humana de promoção
+(Promote.Approved ou Promote.Rejected). O Derived State permanece VALIDATING até que
+a decisão humana seja registrada.
+
+**preconditions:**
+- O Work Item está no estado VALIDATING
+- Validate.Started foi registrado na Timeline
+- Todos os Shared.Gate.Passed necessários foram registrados
+
+**postconditions:**
+- A conclusão da validação está registrada na Timeline
+- O Derived State permanece VALIDATING — aguarda Promote.Approved ou Promote.Rejected
+
+**payload_shape:**
+- `validation_suite` (string, obrigatório): identificador da suite executada
+- `gates_passed` (integer, obrigatório): número de gates que passaram
+- `duration_ms` (integer, obrigatório): duração total da suite de validação
+
+**owner_journey:** Delivery
 
 ---
 
@@ -676,13 +738,15 @@ CI Sync
   9. Finish.Completed     → SHIPPING
 CI Async
  10. Ship.Completed       → VALIDATING
- 11. Gate.Passed          (e2e-tests)
- 12. Promote.Approved     → PROMOTING
- 13. Promote.Completed    → DONE
+ 11. Validate.Started
+ 12. Shared.Gate.Passed   (e2e-tests)
+ 13. Validate.Completed
+ 14. Promote.Approved     → PROMOTING
+ 15. Promote.Completed    → DONE
 ────────────────────────────────────────────────────────────────
 Derived State final: DONE
 Events com alters_state = true: 7
-Events com alters_state = false: 6
+Events com alters_state = false: 8
 ```
 
 ### Fluxo com rework
