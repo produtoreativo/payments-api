@@ -23,14 +23,12 @@
 | 7 | Promote.Completed | Phase Lifecycle | true | DONE | System | Active |
 | 8 | Gate.Passed | Gate | false | — | System, Agent | **Deprecated** → Shared.Gate.Passed |
 | 9 | Gate.Failed | Gate | false | — | System, Agent | **Deprecated** → Shared.Gate.Failed |
-| 10 | Review.Approved | Human Decision | false | — | Human | Active — Phase não definida |
-| 11 | Review.ChangesRequested | Human Decision | false | — | Human | Active — Phase não definida |
-| 12 | Promote.Approved | Human Decision | true | PROMOTING | Human | Active |
-| 13 | Promote.Rejected | Human Decision | true | VALIDATING | Human | Active |
-| 14 | Impediment.Declared | Blocking | true | BLOCKED | Human, Agent | **Deprecated** → Shared.Impediment.Declared |
-| 15 | Impediment.Resolved | Blocking | false | — (Lookback) | Human | Active — convergido v2 |
-| 16 | Rework.Declared | Rework | true | HACKING | Human, Agent | Active |
-| 17 | Rework.Completed | Rework | true | SYNCING | Human, Agent | Active |
+| 10 | Promote.Approved | Human Decision | true | PROMOTING | Human | Active |
+| 11 | Promote.Rejected | Human Decision | true | VALIDATING | Human | Active |
+| 12 | Impediment.Declared | Blocking | true | BLOCKED | Human, Agent | **Deprecated** → Shared.Impediment.Declared |
+| 13 | Impediment.Resolved | Blocking | false | — (Lookback) | Human | Active — convergido v2 |
+| 14 | Rework.Declared | Rework | true | HACKING | Human, Agent | Active |
+| 15 | Rework.Completed | Rework | true | SYNCING | Human, Agent | Active |
 
 ---
 
@@ -243,81 +241,26 @@ v2.0.0 do catálogo. Timelines históricas continuam válidas. Novas emissões d
 | **introduced_in** | 1.0.0 |
 
 **description:**
-A Phase de Sync foi concluída. O rebase da feature branch sobre a base foi executado com
-sucesso e os artefatos ProdOps foram alinhados com a implementação (BDD Features, Event
-Storming, arquitetura, Release Trail). O Work Item está pronto para as checagens finais
-do CI Sync (Finish).
+A Phase de Sync foi concluída. A feature branch incorporou as mudanças mais recentes da
+origin (fetch + rebase) e os artefatos ProdOps foram alinhados com o estado atual da
+implementação (BDD Features, Event Storming, arquitetura, Release Trail). Sync não publica
+nem atualiza a origin — apenas sincroniza o estado local com o que já existe nela.
 
 **preconditions:**
 - O Work Item está no estado SYNCING
-- O rebase da feature branch foi executado sem conflitos não resolvidos
+- O fetch + rebase da feature branch sobre a origin foi executado sem conflitos não resolvidos
 - Os artefatos ProdOps foram verificados e estão alinhados com o estado atual da implementação
 
 **postconditions:**
 - O Work Item transita para o estado FINISHING
-- A feature branch está atualizada em relação ao branch base
+- A feature branch está atualizada com a origin
 - Os artefatos ProdOps refletem o estado atual da implementação
+- Nenhuma alteração foi publicada na origin
 
 **payload_shape:**
 - `rebase_commit` (string, obrigatório): hash do commit de HEAD após o rebase
 - `base_branch` (string, obrigatório): branch base usado no rebase (ex.: `master`)
 - `aligned_artifacts` (array, opcional): lista de artefatos ProdOps verificados (ex.: `["bdd", "event-storming", "release-trail"]`)
-
-**owner_journey:** Delivery
-
----
-
-## Human Decision — Phase não definida
-
-> Estes eventos existem no catálogo mas não estão atribuídos a nenhuma Phase corrente.
-> A Phase de Code Review não está implementada no modelo atual — o CI usa auto-merge.
-> Estes tipos ficam reservados para uso futuro quando uma Phase de Review for definida.
-
----
-
-### Review.Approved
-
-| Campo | Valor |
-|---|---|
-| **name** | `Review.Approved` |
-| **category** | Human Decision |
-| **alters_state** | `false` |
-| **producer_subtypes** | `[Human]` |
-| **lifecycle_status** | Active — Phase não definida |
-| **introduced_in** | 1.0.0 |
-
-**description:**
-Um revisor humano aprovou o Pull Request após análise do código. Reservado para uso quando
-uma Phase de Code Review for definida no CI Sync ou CI Async.
-
-**payload_shape:**
-- `reviewer` (string, obrigatório): identidade do revisor que aprovou
-- `pr_number` (integer, obrigatório): número do Pull Request aprovado
-
-**owner_journey:** Delivery
-
----
-
-### Review.ChangesRequested
-
-| Campo | Valor |
-|---|---|
-| **name** | `Review.ChangesRequested` |
-| **category** | Human Decision |
-| **alters_state** | `false` |
-| **producer_subtypes** | `[Human]` |
-| **lifecycle_status** | Active — Phase não definida |
-| **introduced_in** | 1.0.0 |
-
-**description:**
-Um revisor humano solicitou alterações no Pull Request. Reservado para uso quando uma Phase
-de Code Review for definida. O Producer deve declarar Rework.Declared se as mudanças
-exigirem retorno ao desenvolvimento.
-
-**payload_shape:**
-- `reviewer` (string, obrigatório): identidade do revisor que solicitou mudanças
-- `pr_number` (integer, obrigatório): número do Pull Request
-- `reason` (string, obrigatório): descrição das mudanças solicitadas
 
 **owner_journey:** Delivery
 
