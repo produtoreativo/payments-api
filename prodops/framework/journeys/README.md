@@ -11,7 +11,8 @@ O Framework ProdOps possui cinco jornadas organizadas em dois grupos.
 | Conceito | O que é | Exemplo |
 |---|---|---|
 | **Modo** | Determina o nível de compromisso e os quality gates aplicados | Upstream, Downstream |
-| **Jornada** | Descreve o caminho de trabalho dentro de um modo | Discovery, Delivery, Operation |
+| **Jornada de produto** | Descreve o caminho de trabalho orientado ao produto | Discovery, Delivery, Operation |
+| **Jornada ProdOps** | Acompanha transversalmente as jornadas de produto | Assessment, Diligence |
 | **Backlog** | Organiza o trabalho antes e durante a execução | Product Backlog, Icebox, Iteration Backlog |
 | **Plano** | Registra a execução de uma iteração | Iteration Plan |
 
