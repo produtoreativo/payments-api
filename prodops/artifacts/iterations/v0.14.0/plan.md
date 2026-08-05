@@ -1,6 +1,6 @@
 # Iteration Plan — v0.14.0
 
-> Status: Em preparação — aguardando `/downstream`
+> Status: Entrou — 2026-08-05
 
 ## Objetivo
 
@@ -10,13 +10,13 @@ Revisão formal de entrega de Split Payment Pix + Boleto (PI-001). A iteração 
 
 | DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status | PR |
 |---|---|---|---|---|---|---|---|---|
-| DS-61 | TBD | split-payment-pix-boleto: Split Payment criação, confirmação Pix+Boleto, expiração Boleto, idempotência, eventos observáveis | — | ✓ | ✓ | ✓ | Em preparação | — |
+| DS-61 | #167 | split-payment-pix-boleto: Split Payment criação, confirmação Pix+Boleto, expiração Boleto, idempotência, eventos observáveis | — | ✓ | ✓ | ✓ | Entrou | — |
 
 ## Mapeamento DS-ID → Issue
 
 | DS-ID | Feature slug | Issue v0.14.0 |
 |---|---|---|
-| DS-61 | split-payment-pix-boleto | TBD — criado pelo `/downstream` |
+| DS-61 | split-payment-pix-boleto | #167 |
 
 ## Sequência de entrega
 
