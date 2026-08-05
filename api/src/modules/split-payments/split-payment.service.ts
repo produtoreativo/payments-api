@@ -14,7 +14,7 @@ import {
 } from './split-payment.types';
 import { SplitPaymentRepository } from './split-payment-repository.service';
 
-export interface CreateSplitPaymentDto {
+export class CreateSplitPaymentDto {
   tenantId: string;
   orderId: string;
   totalAmount: number;
