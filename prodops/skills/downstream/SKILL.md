@@ -157,13 +157,14 @@ Fila Downstream — Iteration Plan ativo
 
    O dispatcher reage a cada `Plan.Bootstrap.Issue.Entered` e dispara `Diligence.Capture` automaticamente para esta issue.
 
-   **Etapa 4 — Adicionar issues ao Project:** para cada issue do Iteration Plan (todas as issues com status `Entrou`), adicionar ao GitHub Project:
+   **Etapa 4 — Adicionar issues ao Project:** adicionar ao GitHub Project a tracking issue da iteração **e** todas as feature issues do Iteration Plan com status `Entrou`:
    ```bash
-   for ISSUE_NUMBER in <lista-de-issues>; do
+   # TRACKING_ISSUE foi obtida na Etapa 2 (número da issue de acompanhamento)
+   for ISSUE_NUMBER in "$TRACKING_ISSUE" <lista-de-feature-issues>; do
      gh project item-add "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --url "https://github.com/$PROJECT_OWNER/payments-api/issues/$ISSUE_NUMBER"
    done
    ```
-   Após adicionar todas, emitir `Delivery.Plan.Bootstrap.Issues.Added`.
+   A tracking issue deve ser a **primeira** a ser adicionada. Após adicionar todas, emitir `Delivery.Plan.Bootstrap.Issues.Added`.
 
    **Etapa 5 — Instalar dependências:** instalar dependências com o gerenciador de pacotes declarado. Se falhar: parar toda a fila. Após instalar, emitir `Delivery.Plan.Bootstrap.Dependencies.Installed`.
 
@@ -171,8 +172,7 @@ Fila Downstream — Iteration Plan ativo
 
    **Etapa 7 — Smoke gate:** executar o gate `smoke` definido em `prodops/exec/manifest.yaml`. Se falhar: parar toda a fila. Após passar, emitir `Delivery.Plan.Bootstrap.Smoke.Passed`.
 
-   c. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`. Verificar `"datadog-sync"` e `"github-sync"` na saída — exibir aviso se erro.
-   d. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json`:
+   c. Escrever `ITERATION_DIR/runtime/plan-bootstrap.json` **antes** de emitir `Plan.Bootstrap.Completed` — o dispatcher reage ao evento e `trail.sh` precisa do arquivo para construir o comentário na issue:
    ```json
    {
      "iteration-id": "<iteration-id>",
@@ -183,19 +183,21 @@ Fila Downstream — Iteration Plan ativo
      "issues": ["<issue-1>", "<issue-2>", "..."]
    }
    ```
+   d. Emitir `Delivery.Plan.Bootstrap.Completed` com `subject: <iteration-id>` e `--iteration-id <iteration-id>`. Verificar `"datadog-sync"`, `"github-sync"` e `"dispatch.status"` na saída — exibir aviso se qualquer campo retornar `"error"` ou `"failed"`.
    e. Commitar o arquivo no repositório antes de iniciar o loop.
 
 6. Para cada item na fila, em ordem, sem pedir confirmação entre eles:
    a. Executar `/readiness <capability>` — se falhar: gravar `readiness-gate.json` com `"result": "blocked"` (ver seção **Readiness Cache**) e **parar toda a fila**.
    b. Executar CI Sync: Bootstrap → Hack → Sync → Finish — **em sequência estrita e síncrona**. Cada fase é um sub-agente invocado com `run_in_background: false`. Nunca spawnar uma fase em background. Nunca iniciar a fase seguinte antes de receber o resultado da fase anterior. Após **cada fase concluída**:
 
-      **6b-i — Verificar saída de cada emit-event:** o emit-event retorna JSON com campos `"datadog-sync"` e `"github-sync"`. Após **cada chamada** de emit-event (em qualquer fase), capturar o JSON e verificar:
+      **6b-i — Verificar saída de cada emit-event:** o emit-event retorna JSON com campos `"datadog-sync"`, `"github-sync"` e `"dispatch.status"`. Após **cada chamada** de emit-event (em qualquer fase), capturar o JSON e verificar os três campos:
       ```bash
       RESULT=$(bash prodops/runtime/tools/emit-event/scripts/emit-event --input <event.json>)
-      echo "$RESULT" | jq -r '"datadog-sync: \(."datadog-sync") | github-sync: \(."github-sync")"'
+      echo "$RESULT" | jq -r '"datadog-sync: \(."datadog-sync") | github-sync: \(."github-sync") | dispatch: \(.dispatch.status)"'
       ```
       Se `"datadog-sync": "error"` → exibir: `⚠️ Datadog sync falhou — evento registrado na timeline local mas não enviado ao Datadog`.
       Se `"github-sync": "error"` → exibir: `⚠️ GitHub sync falhou — oem-state NÃO foi atualizado no Project`. Neste caso **não avançar** para a próxima fase sem resolver, pois o estado do Project ficará inconsistente.
+      Se `"dispatch.status": "failed"` → exibir: `⚠️ Dispatch falhou — subscribers não notificados (trail e diligence podem estar incompletos)`. Não-fatal: continuar execução mas registrar no trail da issue.
 
       **6b-ii — Registrar trail entry obrigatória na issue (por phase):**
 
