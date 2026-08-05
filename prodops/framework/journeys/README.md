@@ -76,11 +76,36 @@ flowchart TD
     DEL -->|"eventos disparam\nDiligence Sync"| DIL
     DIL -."Findings alimentam".-> ASS
 
-    style MODES fill:#1a2a3a,stroke:#4a90d9,color:#e8f4fd
-    style PRODUCT fill:#1a3a1a,stroke:#5aad2a,color:#eaf7e4
-    style TRANSVERSAL fill:#2a1a2a,stroke:#9a5ad9,color:#f4e8fd
-    style ASS fill:#3a2a1a,stroke:#d9903a,color:#fdf0e4
-    style DIL fill:#2a1a3a,stroke:#9a5ad9,color:#f4e8fd
+    %% Paleta — subgraphs
+    style MODES      fill:#dbeafe,stroke:#2563eb,color:#1e3a5f
+    style PRODUCT    fill:#dcfce7,stroke:#16a34a,color:#14532d
+    style TRANSVERSAL fill:#f5f3ff,stroke:#7c3aed,color:#4c1d95
+
+    %% Paleta — nós individuais
+    style UP   fill:#bfdbfe,stroke:#1d4ed8,color:#1e3a5f
+    style DOWN fill:#bfdbfe,stroke:#1d4ed8,color:#1e3a5f
+    style DIS  fill:#bbf7d0,stroke:#15803d,color:#14532d
+    style DEL  fill:#bbf7d0,stroke:#15803d,color:#14532d
+    style OP   fill:#bbf7d0,stroke:#15803d,color:#14532d
+    style ASS  fill:#fef3c7,stroke:#d97706,color:#78350f
+    style DIL  fill:#ede9fe,stroke:#7c3aed,color:#3b0764
+
+    %% Setas — modo → discovery (azul, médias)
+    linkStyle 0,1 stroke:#2563eb,stroke-width:2px,stroke-dasharray:6
+
+    %% Setas — fluxo principal produto (verde, grossas)
+    linkStyle 2,3 stroke:#15803d,stroke-width:3px
+
+    %% Seta — ciclo operacional de volta (verde, média tracejada)
+    linkStyle 4 stroke:#15803d,stroke-width:2px,stroke-dasharray:6
+
+    %% Setas — Assessment ↔ jornadas (âmbar)
+    linkStyle 5,6,7,8,9,10 stroke:#d97706,stroke-width:2px,stroke-dasharray:4
+
+    %% Setas — Diligence ↔ jornadas (violeta)
+    linkStyle 11,12,13 stroke:#7c3aed,stroke-width:2px,stroke-dasharray:4
+    linkStyle 14 stroke:#7c3aed,stroke-width:3px
+    linkStyle 15 stroke:#7c3aed,stroke-width:2px,stroke-dasharray:4
 ```
 
 ---
