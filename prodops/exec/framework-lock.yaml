@@ -1,34 +1,29 @@
 schema_version: 1
 
 prodops_framework:
-  version: "1.0.0-empirical"
-  status: self
+  version: "1.0.0"
+  status: consumer
   source_repository: payments-api
-  external_source: null
-  synchronization_mechanism: null
+  external_source: github.com/produtoreativo/prodops-framework
+  synchronization_mechanism: ci-pr-sync
   note: >
-    O repositório canônico prodops-framework ainda não existe.
-    Este repositório (payments-api) é o upstream empírico temporário do
-    ProdOps Framework. O conteúdo do Framework evolui aqui antes de ser
-    extraído para o repositório canônico dedicado.
+    Este repositório é um consumidor do ProdOps Framework canônico.
+    O framework evolui em produtoreativo/prodops-framework.
+    Atualizações chegam via PR gerado por sync-from-framework.sh (manual)
+    ou pelo workflow sync-prodops.yml (CI, acionado por notify-consumers.yml).
 
 distribution:
-  state: empirical
-  lock_mode: self-managed
-  update_procedure: null
+  state: consumer
+  lock_mode: framework-managed
+  update_procedure: >
+    Manual: bash prodops/scripts/sync-from-framework.sh
+    CI: workflow_dispatch via notify-consumers.yml em prodops-framework
 
 drift:
-  status: not_applicable
+  status: ok
+  installed_version: "1.0.0"
+  available_version: "1.0.0"
+  last_checked: "2026-08-05"
   reason: >
-    O drift do Framework não pode ser calculado enquanto este repositório
-    for a fonte canônica temporária. Quando prodops-framework for criado
-    e este repositório se tornar consumidor, a detecção de drift será ativada
-    e este campo passará a declarar a versão instalada versus a versão disponível.
-
-# ── Transição futura ──────────────────────────────────────────────────────────
-# Quando prodops-framework existir:
-#   status: consumer
-#   external_source: github.com/org/prodops-framework
-#   synchronization_mechanism: ci-pr-sync
-#   version: <semver instalado>
-#   drift.status: ok | behind | conflict
+    Versão instalada igual à versão disponível — sem drift.
+    Re-checar após nova release publicada em prodops-framework.
