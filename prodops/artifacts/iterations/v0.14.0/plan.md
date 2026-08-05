@@ -10,7 +10,7 @@ Revisão formal de entrega de Split Payment Pix + Boleto (PI-001). A iteração 
 
 | DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status | PR |
 |---|---|---|---|---|---|---|---|---|
-| DS-61 | #167 | split-payment-pix-boleto: Split Payment criação, confirmação Pix+Boleto, expiração Boleto, idempotência, eventos observáveis | — | ✓ | ✓ | ✓ | Entrou | — |
+| DS-61 | #167 | split-payment-pix-boleto: Split Payment criação, confirmação Pix+Boleto, expiração Boleto, idempotência, eventos observáveis | — | ✓ | ✓ | ✓ | Entrou | #169 |
 
 ## Mapeamento DS-ID → Issue
 

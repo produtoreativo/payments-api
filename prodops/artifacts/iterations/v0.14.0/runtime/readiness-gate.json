@@ -1,0 +1,18 @@
+{
+  "iteration-id": "v0.14.0",
+  "checked-at": "2026-08-05T15:38:51Z",
+  "result": "ready",
+  "capabilities": {
+    "DS-61": {
+      "slug": "split-payment-pix-boleto",
+      "gates": {
+        "obc": true,
+        "bdd": true,
+        "risks": true,
+        "iteration-plan": true,
+        "github-issue": true
+      },
+      "missing-artifacts": []
+    }
+  }
+}
