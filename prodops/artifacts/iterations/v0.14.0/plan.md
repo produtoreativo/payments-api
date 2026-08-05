@@ -1,6 +1,6 @@
 # Iteration Plan — v0.14.0
 
-> Status: Entrou — 2026-08-05
+> Status: ✅ Concluído — 2026-08-05
 
 ## Objetivo
 
@@ -10,7 +10,7 @@ Revisão formal de entrega de Split Payment Pix + Boleto (PI-001). A iteração 
 
 | DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status | PR |
 |---|---|---|---|---|---|---|---|---|
-| DS-61 | #167 | split-payment-pix-boleto: Split Payment criação, confirmação Pix+Boleto, expiração Boleto, idempotência, eventos observáveis | — | ✓ | ✓ | ✓ | Entrou | #169 |
+| DS-61 | #167 | split-payment-pix-boleto: Split Payment criação, confirmação Pix+Boleto, expiração Boleto, idempotência, eventos observáveis | — | ✓ | ✓ | ✓ | Concluído | #169 |
 
 ## Mapeamento DS-ID → Issue
 
@@ -30,10 +30,15 @@ DS-61 — entrega única (capability autossuficiente)
 
 ## Critérios de saída
 
-- [ ] PR merged para DS-61 — Split Payment criado, confirmações Pix+Boleto funcionando, expiração Boleto, idempotência e eventos observáveis implementados
-- [ ] `prodops.delivery.promote.completed` emitido para a issue DS-61 — oem-state: DONE
-- [ ] Issue DS-61 fechada no GitHub
-- [ ] Eventos `split_payment.created`, `split_payment.pix.confirmed`, `split_payment.boleto.confirmed`, `split_payment.completed`, `split_payment.boleto.expired`, `split_payment.creation_failed` presentes nos logs de aceitação
+- [x] PR merged para DS-61 — Split Payment criado, confirmações Pix+Boleto funcionando, expiração Boleto, idempotência e eventos observáveis implementados (PR #169)
+- [x] `prodops.delivery.promote.completed` emitido para a issue DS-61 — oem-state: DONE
+- [x] Issue DS-61 fechada no GitHub (#167 fechada pelo merge do PR #169)
+- [x] Eventos `split_payment.created`, `split_payment.pix.confirmed`, `split_payment.boleto.confirmed`, `split_payment.completed`, `split_payment.boleto.expired`, `split_payment.creation_failed` presentes nos logs de aceitação
+
+## Notas de fechamento
+
+- Follow-up #170 criado para RISK-SP-004 (Reliability Plan a criar antes do go-live)
+- Issues herdadas #163 e #164 permanecem abertas — não foram escopo desta iteração
 
 ## Runtime
 
