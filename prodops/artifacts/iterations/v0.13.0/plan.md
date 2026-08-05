@@ -1,6 +1,6 @@
 # Iteration Plan — v0.13.0
 
-> Status: Ready for Delivery — OBC Committed, BDD Feature criada, Riscos documentados, Owner Approval: Eugenio (PM) — 2026-08-04
+> Status: Concluído — 2026-08-04
 
 ## Objetivo
 
@@ -8,9 +8,9 @@ Entregar Split Payment Pix + Boleto como nova capacidade da payments-api, viabil
 
 ## Escopo
 
-| DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status |
-|---|---|---|---|---|---|---|---|
-| DS-61 | #160 | split-payment-pix-boleto: Split Payment criação, confirmação Pix+Boleto, expiração Boleto, idempotência, eventos observáveis | — | ✓ | ✓ | ✓ | Entrou |
+| DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status | PR |
+|---|---|---|---|---|---|---|---|---|
+| DS-61 | #160 | split-payment-pix-boleto: Split Payment criação, confirmação Pix+Boleto, expiração Boleto, idempotência, eventos observáveis | — | ✓ | ✓ | ✓ | Concluído | #162 |
 
 ## Mapeamento DS-ID → Issue
 
@@ -30,10 +30,10 @@ DS-61 — entrega única (capability autossuficiente)
 
 ## Critérios de saída
 
-- [ ] PR merged para DS-61 — Split Payment criado, confirmações Pix+Boleto funcionando, expiração Boleto, idempotência e eventos observáveis implementados (#160)
-- [ ] `prodops.delivery.promote.completed` emitido para issue #160
-- [ ] Issue #160 fechada no GitHub
-- [ ] Eventos `split_payment.created`, `split_payment.pix.confirmed`, `split_payment.boleto.confirmed`, `split_payment.completed`, `split_payment.boleto.expired`, `split_payment.creation_failed` presentes nos logs de aceitação
+- [x] PR merged para DS-61 — Split Payment criado, confirmações Pix+Boleto funcionando, expiração Boleto, idempotência e eventos observáveis implementados (#160) → PR #162 merged
+- [x] `prodops.delivery.promote.completed` emitido para issue #160 — evento ed86c1f6, oem-state: DONE
+- [x] Issue #160 fechada no GitHub — CLOSED
+- [x] Eventos `split_payment.created`, `split_payment.pix.confirmed`, `split_payment.boleto.confirmed`, `split_payment.completed`, `split_payment.boleto.expired`, `split_payment.creation_failed` presentes nos logs de aceitação — cobertos por 9 cenários de aceitação
 
 ## Runtime
 
@@ -43,3 +43,9 @@ DS-61 — entrega única (capability autossuficiente)
 - Plan Validate: `runtime/plan-validate.json`
 - Context capsules: `cards/<slug>/context.md`
 - Session trails: `trails/`
+
+## Notas de encerramento
+
+- Experiment Sandbox Deploy falhou por secrets ausentes (`EXPERIMENT_ASAAS_TOKEN`, `EXPERIMENT_ASAAS_WEBHOOK_TOKEN`, `EXPERIMENT_ADMIN_SECRET`) — não aplicável a DS delivery; Staging deploy (run #30964992611) confirmado como RC. Follow-up criado.
+- RISK-SP-005 (times adjacentes sem contrato da API) — follow-up criado para garantir acesso ao Response Contract.
+- Build blocker (TS1272 — CreateSplitPaymentDto como interface) detectado pelo finish-agent e corrigido na mesma sessão (commit ca4198f1).

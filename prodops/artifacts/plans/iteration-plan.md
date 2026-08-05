@@ -1,27 +1,12 @@
 # Iteration Plan
 
-> **Iteração ativa: v0.13.0** — Split Payment Pix + Boleto (PI-001)
-> Status: Em abertura — Bootstrap iniciando.
-
-## Iteração ativa
-
-| Versão | Escopo | Status |
-|---|---|---|
-| [v0.13.0](../iterations/v0.13.0/plan.md) | Split Payment — PI-001 | Bootstrap |
+Nenhuma iteração ativa. Próxima iteração a definir.
 
 ## Suspenso
 
 | Versão | Escopo | Status | Motivo |
 |---|---|---|---|
 | [v0.12.0](../iterations/v0.12.0/plan.md) | DS-57 · DS-58 · DS-59 · DS-60 | **Suspenso** em 2026-08-04 | Prioridade cedida a v0.13.0 — prazo de fornecedor parceiro para Split Payment (PI-001). Retoma após conclusão de v0.13.0. |
-
-## Pipeline — Entrou (aguardando iteração)
-
-| Funcionalidade | Intent | OBC | BDD | Reliability Plan | Status |
-|---|---|---|---|---|---|
-| Split Payment — Pix + Boleto | [PI-001](../business-intents/PI-001.md) | ✅ Committed | ✅ Criado | ✅ Criado | **Entrou** — aguarda início de iteração pós v0.12.0 |
-
-> **Entrou** em 2026-08-04. Gates de Downstream Ready cumpridos: OBC Committed, BDD Feature, Riscos documentados, Reliability Plan criado. Prazo alvo: 15 dias a partir de 2026-08-04 (fornecedor parceiro).
 
 ---
 
@@ -39,3 +24,4 @@
 | [v0.9.0](../iterations/v0.9.0/plan.md) | DS-48 · DS-49 · DS-50 | Concluido — PRs #120 #121 #122 #123 |
 | [v0.10.0](../iterations/v0.10.0/plan.md) | DS-51 · DS-52 | ✅ Concluído — PRs #125 #126 |
 | [v0.11.0](../iterations/v0.11.0/plan.md) | DS-53 · DS-54 · DS-55 · DS-56 | ✅ Concluído — PRs #136 #137 #138 #139 |
+| [v0.13.0](../iterations/v0.13.0/plan.md) | DS-61: Split Payment Pix + Boleto (PI-001) | ✅ Concluído — PR #162 |
