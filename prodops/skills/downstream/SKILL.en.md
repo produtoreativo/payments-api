@@ -122,13 +122,20 @@ Downstream Queue — Active Iteration Plan
    ```bash
    gh issue list --search "[Iteration <iteration-id>]" --state all --json number,title | jq '.[0].number // empty'
    ```
-   - If **not found**: create the tracking issue:
+   - If **not found**: create. Before creating, obtain the authenticated user's login:
+     ```bash
+     CE_LOGIN=$(gh api user --jq '.login')
+     ```
+     Create the issue including the assignee (non-fatal — if GitHub rejects `--assignee`, create without it and log a warning in the trail):
      ```bash
      gh issue create \
        --title "[Iteration <iteration-id>]: <scope-summary>" \
        --label "prodops,artifact-type:iteration-plan" \
+       --assignee "$CE_LOGIN" \
        --body "Iteration Plan: prodops/artifacts/iterations/<iteration-id>/plan.md\n\nCapabilities: <DS-IDs>\nIssues: <issue-numbers>"
      ```
+     If the command fails only because of `--assignee`, retry without `--assignee` and log a warning:
+     `⚠️ Assignee could not be added to tracking issue — issue created without assignee`.
    - If already exists: record the number and continue.
    Emit `Delivery.Plan.Bootstrap.Issue.Registered` with the registered number in the payload.
 
@@ -150,13 +157,14 @@ Downstream Queue — Active Iteration Plan
 
    The dispatcher reacts to each `Plan.Bootstrap.Issue.Entered` and automatically triggers `Diligence.Capture` for that issue.
 
-   **Step 4 — Add issues to Project:** for each issue in the Iteration Plan (all issues with status `Entrou`), add to the GitHub Project:
+   **Step 4 — Add issues to Project:** add the iteration tracking issue **and** all feature issues with status `Entrou` to the GitHub Project:
    ```bash
-   for ISSUE_NUMBER in <issue-list>; do
+   # TRACKING_ISSUE was obtained in Step 2 (tracking issue number)
+   for ISSUE_NUMBER in "$TRACKING_ISSUE" <feature-issue-list>; do
      gh project item-add "$PROJECT_NUMBER" --owner "$PROJECT_OWNER" --url "https://github.com/$PROJECT_OWNER/payments-api/issues/$ISSUE_NUMBER"
    done
    ```
-   After adding all, emit `Delivery.Plan.Bootstrap.Issues.Added`.
+   The tracking issue must be added **first**. After adding all, emit `Delivery.Plan.Bootstrap.Issues.Added`.
 
    **Step 5 — Install dependencies:** install dependencies with the declared package manager. If it fails: stop the entire queue. After installing, emit `Delivery.Plan.Bootstrap.Dependencies.Installed`.
 
@@ -164,8 +172,7 @@ Downstream Queue — Active Iteration Plan
 
    **Step 7 — Smoke gate:** run the `smoke` gate defined in `prodops/exec/manifest.yaml`. If it fails: stop the entire queue. After passing, emit `Delivery.Plan.Bootstrap.Smoke.Passed`.
 
-   c. Emit `Delivery.Plan.Bootstrap.Completed` with `subject: <iteration-id>` and `--iteration-id <iteration-id>`. Check `"datadog-sync"` and `"github-sync"` in the output — display a warning if error.
-   d. Write `ITERATION_DIR/runtime/plan-bootstrap.json`:
+   c. Write `ITERATION_DIR/runtime/plan-bootstrap.json` **before** emitting `Plan.Bootstrap.Completed` — the dispatcher reacts to the event and `trail.sh` needs the file to build the issue comment:
    ```json
    {
      "iteration-id": "<iteration-id>",
@@ -176,22 +183,61 @@ Downstream Queue — Active Iteration Plan
      "issues": ["<issue-1>", "<issue-2>", "..."]
    }
    ```
+   d. Emit `Delivery.Plan.Bootstrap.Completed` with `subject: <iteration-id>` and `--iteration-id <iteration-id>`. Check `"datadog-sync"`, `"github-sync"` and `"dispatch.status"` in the output — display a warning if any field returns `"error"` or `"failed"`.
    e. Commit the file to the repository before starting the loop.
 
 6. For each item in the queue, in order, without requesting confirmation between them:
    a. Run `/readiness <capability>` — if it fails: write `readiness-gate.json` with `"result": "blocked"` (see **Readiness Cache** section) and **stop the entire queue**.
-   b. Execute CI Sync: Bootstrap → Hack → Sync → Finish. After **each completed phase**, post a mandatory comment on the item's issue:
-      ```bash
-      gh issue comment <work-item-id> --body "## <Phase> — <YYYY-MM-DD HH:MM UTC>
+   b. Execute CI Sync: Bootstrap → Hack → Sync → Finish — **in strict sequential synchronous order**. Each phase is a sub-agent invoked with `run_in_background: false`. Never spawn a phase in background. Never start the next phase before receiving the result of the previous one. After **each completed phase**:
 
-      **Status:** <Completed | Blocked | Failed>
+      **6b-i — Verify output of each emit-event:** emit-event returns JSON with fields `"datadog-sync"`, `"github-sync"` and `"dispatch.status"`. After **each** emit-event call (in any phase), capture the JSON and verify the three fields:
+      ```bash
+      RESULT=$(bash prodops/runtime/tools/emit-event/scripts/emit-event --input <event.json>)
+      echo "$RESULT" | jq -r '"datadog-sync: \(."datadog-sync") | github-sync: \(."github-sync") | dispatch: \(.dispatch.status)"'
+      ```
+      If `"datadog-sync": "error"` → display: `⚠️ Datadog sync failed — event recorded in local timeline but not sent to Datadog`.
+      If `"github-sync": "error"` → display: `⚠️ GitHub sync failed — oem-state was NOT updated in the Project`. In this case **do not advance** to the next phase without resolving, as the Project state will be inconsistent.
+      If `"dispatch.status": "failed"` → display: `⚠️ Dispatch failed — subscribers not notified (trail and diligence may be incomplete)`. Non-fatal: continue but log in the issue trail.
+
+      **6b-ii — Post mandatory trail entry on issue (per phase):**
+
+      This step consists of two trail entries per phase: one when **starting** the phase and one when **completing** (or failing). Both must be posted before advancing any state.
+
+      **Required fields in every trail entry:** `phase-name`, `work-item-id`, `status`, `timestamp`. The absence of any field invalidates the entry as auditable evidence.
+
+      **Phase start entry** — post immediately before invoking the phase sub-agent:
+      ```bash
+      gh issue comment <work-item-id> --body "## Trail — <Phase> Started — <YYYY-MM-DDTHH:MM:SSZ>
+
+      **phase:** <Phase>
+      **work-item-id:** <work-item-id>
+      **status:** started
+      **timestamp:** <YYYY-MM-DDTHH:MM:SSZ>
+
+      ---
+      *correlation-id: <uuid> · iteration: <iteration-id> · actor: <player>*"
+      ```
+
+      **Phase completion entry** — post after receiving the sub-agent result and **before advancing to the next phase**:
+      ```bash
+      gh issue comment <work-item-id> --body "## Trail — <Phase> — <YYYY-MM-DDTHH:MM:SSZ>
+
+      **phase:** <Phase>
+      **work-item-id:** <work-item-id>
+      **status:** <completed | failed | blocked>
+      **timestamp:** <YYYY-MM-DDTHH:MM:SSZ>
 
       <summary in up to 5 lines: what was done, key evidence, next step>
 
       ---
       *correlation-id: <uuid> · iteration: <iteration-id> · actor: <player>*"
       ```
-      **This step is mandatory and must not be skipped.** Post even on failure or block — the comment must describe the reason and the action required to resolve it.
+
+      **Trail rules:**
+      - The completion entry must be posted **before advancing to the next phase or issue** — never after.
+      - Post even on failure or block — the comment must describe the reason and the action required to resolve it.
+      - **Failure to post trail is non-fatal:** if `gh issue comment` returns an error, log an internal warning (`⚠️ Trail entry failed — <reason>`) and continue execution normally. The inability to record trail must not block or interrupt the execution loop.
+      - A partial trail (start entries without completion entries) is sufficient to diagnose the last executed phase in case of mid-flight interruption.
    c. Report evidence for the completed item and automatically advance to the next.
 
 Stop only when: (1) a readiness check fails, (2) a quality gate does not pass, (3) the queue is exhausted.
@@ -263,12 +309,17 @@ To avoid token consumption on repeated invocations with blocked gates, the gate 
 
 If the item is in the Iteration Plan with status `Entrou` but without a mapped Issue:
 
-1. Create the Issue via `gh issue create`:
+1. Obtain the authenticated user's login (reuse `CE_LOGIN` if already captured in Plan Bootstrap, or capture now):
+   ```bash
+   CE_LOGIN=$(gh api user --jq '.login')
+   ```
+2. Create the Issue via `gh issue create` including the assignee (non-fatal — if GitHub rejects `--assignee`, create without it and log a warning in the trail: `⚠️ Assignee could not be added to issue DS-<n> — issue created without assignee`):
    - **Title:** `[DS-<n>]: <capability-description>`
    - **Body:** include DS-ID, iteration-id, OBC path, BDD path and link to plan.md
    - **Labels:** `journey:delivery`, `artifact-type:local-obc`, `operation:implement`
-2. Update the `Issue` column in `plan.md` with the created number.
-3. Commit `plan.md` before continuing.
+   - **Assignee:** `--assignee "$CE_LOGIN"`
+3. Update the `Issue` column in `plan.md` with the created number.
+4. Commit `plan.md` before continuing.
 
 Do not associate with the Project here — adding all issues to the Project is handled centrally in Step 3 of Plan Bootstrap (`Plan.Bootstrap.Issues.Added`).
 
@@ -352,6 +403,34 @@ All of the following conditions must be true:
 3. All corresponding PRs are `MERGED`.
 
 ### Closure actions (in order)
+
+0. **Close iteration tracking issue (auto-close):**
+   Resolve the tracking issue number from `ITERATION_DIR/runtime/plan-bootstrap.json` (field `plan-issue`).
+   Verify whether the tracking issue is already closed (idempotency):
+   ```bash
+   TRACKING_STATE=$(gh issue view <plan-issue> --json state --jq '.state')
+   ```
+   - If `TRACKING_STATE == "CLOSED"`: no action — do not reopen, do not post a duplicate comment. Log in the trail: `ℹ️ Tracking issue #<plan-issue> was already closed — no action taken.` and continue.
+   - If `TRACKING_STATE == "OPEN"`:
+     a. Post closure comment:
+        ```bash
+        gh issue comment <plan-issue> --body "## Iteration <iteration-id> — Automatic Closure
+
+        **Date:** <YYYY-MM-DD>
+
+        **DS-IDs delivered:** <DS-ID list, e.g.: DS-57, DS-58, DS-59, DS-60>
+
+        **Merged PRs:** <PR list, e.g.: #148, #149, #150, #151>
+
+        All Promotes completed. Iteration closed by downstream-agent.
+
+        ---
+        *iteration: <iteration-id> · actor: <player>*"
+        ```
+     b. Close the tracking issue:
+        ```bash
+        gh issue close <plan-issue>
+        ```
 
 1. **Update `ITERATION_DIR/plan.md`:**
    - Header: `# Iteration Plan — <iteration-id>` (remove `(Active)` suffix)
@@ -479,6 +558,9 @@ This sets `oem-state = PENDING` and allows Bootstrap to start again.
 - In no-argument mode, stop only on readiness failure or gate failure — never wait for confirmation between items.
 - Use the canonical Work Item title pattern: `[Artifact ID]: description`.
 - Never stop silently — every blocker must emit `Delivery.Block.Declared` before reporting to the caller.
+- **Never spawn phase sub-agents (Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote) in background.** All sub-agents must use `run_in_background: false`. The downstream-agent waits for the result before invoking the next phase.
+- **In restart (timeline with pre-existing events), always emit `Delivery.Restart.*` with the previous `correlation-id` before any phase event.** Never omit the Restart protocol — it is the auditable evidence that execution was resumed and the marker that separates executions in the timeline.
+- **Duplicate events in the timeline are expected and correct in restart.** Each execution generates a new `correlation-id`; the Restart events with the previous correlation-id link the histories. Do not attempt to suppress phase events in restart.
 
 ## References
 

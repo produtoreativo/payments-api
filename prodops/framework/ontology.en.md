@@ -109,7 +109,7 @@ flowchart TD
 | Assessment | Assessment Sync | Structured — collect, analyze and synthesize on demand |
 | Assessment | Assessment Async | Continuous — proactive monitoring and alerting |
 
-**Note:** Discovery and Operation have no formal Cycles — they operate as fluid sequences of Phases or activities without explicit grouping.
+**Note:** Discovery and Operation have no formal Cycles — they operate as fluid sequences of Phases or activities without explicit grouping. Workspace Reconciliation is a **Capability** of Diligence — not a Cycle. It is invoked by Bootstrap, Diligence Async, and Diligence Sync as a sub-routine.
 
 **Never represents:** The Journey that contains it, an individual Phase, or a Capability.
 
@@ -181,7 +181,7 @@ flowchart TD
 **Framework Capability groups by area of origin** (not of exclusive ownership):
 
 - *Delivery area:* Commit Workflow, Contract Management, Evidence Management, Observability, Reliability
-- *Diligence area:* Backlog Synchronization, Work Item Management, Divergence Detection, Artifact Evolution, Workspace Reconciliation
+- *Diligence area:* Backlog Synchronization, Work Item Management, Readiness Verification, Divergence Detection, Artifact Evolution, Workspace Reconciliation
 
 These groups are organized by where Capabilities were originally defined, not by a usage restriction. A Delivery Capability can be consumed by another Journey if relevant.
 

@@ -2,6 +2,7 @@
 
 Canonical terms of the ProdOps Framework. One concept = one name. One name = one concept.
 
+For the **canonical hierarchy of structural concepts** (Framework, Execution Model, Journey, Cycle, Phase, Capability, Skill, Step), see [`ontology.en.md`](ontology.en.md).
 For the full Framework flow, see [`flow.md`](flow.en.md).
 For the four Origin Streams, see [`origin-streams.md`](origin-streams.en.md).
 For the backlog hierarchy, see [`backlogs.md`](backlogs.en.md).
@@ -764,6 +765,50 @@ See [`flow.en.md`](flow.en.md), [`journeys/discovery/README.en.md`](journeys/dis
 
 ---
 
+## Journey
+
+**Definition:** A work path with a single responsibility, its own lifecycle, and defined entry and exit criteria. The 5 journeys are: Discovery, Delivery, Operation, Assessment, and Diligence.
+
+**Fundamental rule:** Journeys are not execution modes. Upstream and Downstream are not journeys — they are modes of the Execution Model that apply over journeys.
+
+→ Full definition: [`ontology.en.md — Journey`](ontology.en.md#journey) · [`journeys/README.en.md`](journeys/README.en.md)
+
+---
+
+## Cycle
+
+**Definition:** An ordered grouping of Phases within a Journey, with distinct purpose, trigger, and nature. Delivery has CI Sync and CI Async; Diligence has diligence-sync and diligence-async. Workspace Reconciliation is a **Capability** of Diligence — not a Cycle. Discovery, Operation, and Assessment have no formal Cycles.
+
+→ Full definition: [`ontology.en.md — Cycle`](ontology.en.md#cycle)
+
+---
+
+## Phase
+
+**Definition:** An individual, ordered stage within a Cycle, with entry preconditions, single responsibility, and verifiable exit postconditions. Examples: Bootstrap, Hack, Ship, Capture, Inspect.
+
+**Distinction:** [`phases.en.md`](phases.en.md) describes **Conception** and **Inception** — these are **Lifecycle Stages** (stages of the Business Intent lifecycle before Delivery), conceptually distinct from the Phases in this ontology. When ambiguity exists, use the explicit qualifier: "Lifecycle Stage", "Delivery Phase", or "Diligence Phase".
+
+→ Full definition: [`ontology.en.md — Phase`](ontology.en.md#phase)
+
+---
+
+## Skill
+
+**Definition:** A specification of executable behavior intended for agents. A Skill implements a Journey, Cycle, Phase, or Capability, describing what the agent must do, when to enter, what to read, and what to produce. Skill is NOT a structural concept of the Framework — it is a technology-independent implementation.
+
+→ Full definition: [`ontology.en.md — Skill`](ontology.en.md#skill) · [`skills/README.en.md`](../skills/README.en.md)
+
+---
+
+## Step
+
+**Definition:** An ordered sub-unit within a Skill, with its own input and output. Can be invoked individually. Step is an internal structure of Skill — it has no direct relationship with the structural axis (Journey, Cycle, Phase, Capability).
+
+→ Full definition: [`ontology.en.md — Step`](ontology.en.md#step)
+
+---
+
 ## Bootstrap
 
 **Definition:** The first stage of CI Sync. Installs dependencies, prepares local infrastructure, verifies configuration, and runs the smoke gate. Does not read code, tests, or product artifacts, and does not create a branch — Git flow belongs to Hack Start. See [`journeys/delivery/phases/bootstrap/README.en.md`](journeys/delivery/phases/bootstrap/README.en.md).
@@ -903,6 +948,95 @@ See [`prodops/framework/execution-model/downstream.en.md`](execution-model/downs
 **What it does not do:** Does not implement software. Does not create implementation Pull Requests. Does not modify product code. Does not make product decisions that belong to Assessment.
 
 **Relationship with other concepts:** Cross-cutting journey. Consumes Assessment recommendations and feeds Delivery with organized, traceable work. In turn, it produces execution and synchronization evidence that Assessment consumes to evaluate operational maturity — the relationship is bidirectional. See [`journeys/diligence/README.md`](journeys/diligence/README.en.md) and [`backlogs.md`](backlogs.en.md).
+
+---
+
+## Canonical Operational Representation
+
+**Definition:** The operational materialization of the ProdOps conceptual model.
+
+In the current stage of the Framework, the Canonical Operational Representation is realized through **GitHub Projects** (scoped by Journey or operational domain) and **GitHub Issues** (individual Work Items).
+
+**What it is NOT:** The Canonical Operational Representation is not the conceptual model itself. OBCs, Business Intents, Business Signals, and other artifacts continue to live as Markdown files in `prodops/`. GitHub is the operational expression of that knowledge — not the knowledge itself.
+
+**Maintenance responsibility:** The **Diligence** journey is the guardian of synchronization between the conceptual model (`prodops/`) and the Canonical Operational Representation (GitHub Projects and Issues).
+
+**Relationship with other concepts:** See [GitHub Project](#github-project), [GitHub Issue](#github-issue), [knowledge-vs-execution.en.md](knowledge-vs-execution.en.md).
+
+---
+
+## GitHub Project
+
+**Definition:** The canonical operational representation of a Journey or operational domain of ProdOps. Organizes and projects Work Items (GitHub Issues) of a specific scope (by Journey, Phase, and Operation). Does not represent the Framework as a whole — the Framework can have multiple canonical Projects, each covering the scope of its Journey. Does not replace Knowledge Space artifacts.
+
+**Purpose:** Make visible the work in progress on ProdOps artifacts, grouped and filtered by operational dimensions (Journey, Artifact Type, Operation, Phase).
+
+**What it represents:** A work management domain. Each GitHub Project tracks Work Items of a scope (Portfolio or Product Repository). Does not contain artifacts — contains operations over artifacts.
+
+**What it does NOT represent:** Artifact backlogs. The GitHub Project is not a substitute for OBCs, Business Intents, Business Signals, or any Knowledge Space artifact. Views within a Project are filters over Work Items — never over artifacts.
+
+**Canonical status:** GitHub Projects constitute the Canonical Operational Representation of ProdOps — each Project operationally represents a specific Journey or operational domain. There is no abstraction to other tools (Jira, Azure DevOps, Linear). External tools are optional synchronizations — never equivalents.
+
+→ See [Canonical Operational Representation](#canonical-operational-representation)
+
+**Relationship with other concepts:** Contains Work Items (GitHub Issues). Organized by Views. State represented by Fields. Classified by Labels. See [knowledge-vs-execution.en.md](knowledge-vs-execution.en.md).
+
+---
+
+## View (GitHub Project)
+
+**Definition:** Canonical projection of the state of Work Items (GitHub Issues) within a GitHub Project, filtered and organized by a specific operational dimension — Journey, Phase, Operation, Artifact Type, or a combination of them.
+
+**Purpose:** Make visible the relevant operational slices of work in progress — e.g., "all Work Items of the Delivery journey in Hack phase" or "Work Items blocked by Findings".
+
+**What it represents:** A persistent, named filter over Work Items. The View does not alter Work Item state — it only projects them. Different Views can show the same Work Items from different perspectives.
+
+**What it does NOT represent:** A list of artifacts. "The Icebox View" shows Work Items about artifacts in Refining state — not the artifacts themselves. The absence of an artifact in a View does not mean the artifact is absent from the system.
+
+**Distinction:** View in the sense of this entry is the GitHub Projects interface construct. Do not confuse with conceptual backlog views (Icebox, Iteration Backlog, Release) — those are ProdOps model constructs that can be *implemented* as GitHub Project Views.
+
+**Relationship with other concepts:** Derived from Fields. Part of a GitHub Project. See [knowledge-vs-execution.en.md](knowledge-vs-execution.en.md).
+
+---
+
+## Field (GitHub Project)
+
+**Definition:** Operational state of a Work Item (GitHub Issue) within a GitHub Project. Fields represent the operational state dimensions needed to correctly project each Work Item in Views.
+
+**Canonical required fields:** `Artifact Type`, `Artifact ID`, `Operation`, `Journey`. See full schema at [`execution-mapping/work-item-schema.md`](execution-mapping/work-item-schema.md).
+
+**Two types of fields:**
+- **Fields owned by the Execution Space** (GitHub): `Status`, `Assignee`, `Priority` — can be edited directly in the Project.
+- **Fields owned by the Knowledge Space** (Markdown artifacts): `Artifact ID`, `Artifact Type`, `Finding Severity`, `Waiver Expiration` — must not be edited manually in the Project; manual edits create drift.
+
+**What they are NOT:** Source of truth for artifacts. The canonical state of an artifact lives in its Markdown file. Fields that derive from the Knowledge Space are reflections — not sources of truth.
+
+**Relationship with other concepts:** Filled by the Work Item creator (identity fields) or by GitHub (operational fields). Read by Views. Audited by Diligence (Capability: Workspace Reconciliation). See [execution-mapping/work-item-schema.md](execution-mapping/work-item-schema.md).
+
+---
+
+## Label (GitHub)
+
+**Definition:** Auxiliary classification mechanism for Work Items (GitHub Issues) — **never** a source of truth for the state of any ProdOps artifact or entity.
+
+**Purpose:** Facilitate search, filtering, and operational categorization of Work Items by `operation:<value>` and `artifact-type:<value>`.
+
+**Canonical usage in ProdOps:**
+- `operation:<value>` — operation being executed (e.g.: `operation:refine`, `operation:promote`)
+- `artifact-type:<value>` — type of the affected artifact (e.g.: `artifact-type:local-obc`, `artifact-type:finding`)
+- `journey:<value>` — ProdOps journey (recommended)
+
+**What Labels CANNOT represent:**
+- Canonical ID of any entity (Finding, Remediation, Waiver, OBC, etc.)
+- Canonical status of a Finding or any artifact
+- Finding severity
+- Waiver approval
+- Waiver expiration state
+- Any state that requires persistence and auditability
+
+**Rule:** If the information needs to be permanent, auditable, or authoritative, it belongs in the entity's Markdown file — not in a Label. Labels are ephemeral and mutable; canonical states are not.
+
+**Relationship with other concepts:** Used in GitHub Issues. Naming convention defined in [execution-mapping/work-item-schema.md](execution-mapping/work-item-schema.md). See [knowledge-vs-execution.en.md](knowledge-vs-execution.en.md).
 
 ---
 
