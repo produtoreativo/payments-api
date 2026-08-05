@@ -3,7 +3,7 @@
 > Atualizar sempre que houver mudança estrutural: novo módulo, rota, dependência
 > externa, tabela de banco ou tópico de evento. Ver regra em [`AGENTS.md`](../../../AGENTS.md#arquitetura).
 >
-> Última atualização: 2026-07-17
+> Última atualização: 2026-08-04
 
 ## Fronteira de responsabilidade
 
@@ -159,3 +159,4 @@ de contrato.
 | 2026-07-17 | Retroativo: adicionados `HealthController` (`GET /health`, sem guard), `WebhookWorker` (Lambda SQS trigger separado), `TransactionsTable`, GSI1 (ProviderPaymentIndex) em PaymentsTable. Corrigidos nomes de parâmetros de rota (`:webhookId`, `:providerPaymentId`). Adicionada aresta `WkDelivery → emit payments.observability`. |
 | 2026-07-23 | Diagrama atualizado com dados reais da IaC: Lambda Function URL como ponto de entrada explícito (AuthType: NONE), Datadog Extension Layer (arn:…:Datadog-Extension:97), CloudWatch Log Groups com retenção 30d, parâmetros reais de SQS (VisibilityTimeout 60s, retenção 14d, maxReceiveCount 5), nomes reais de tabelas e GSIs com chaves de partição/range e ProjectionType. Removidos GSI2 (StatusOrderIndex) e ProvidersTable — não provisionados na IaC (`dynamodb.yaml`). |
 | 2026-07-31 | DS-41 (credit-card-authorization-confirmation): adicionada rota `POST /invoices/:invoiceId/refund` no `InvoiceController`; adicionado `hostedPaymentUrl` em `InvoiceResponseDto`; adicionado status `REFUND_REQUESTED` em `InvoiceStatus`; emissão de `payment.card.hosted_invoice.created` e `payment.card.refund.requested`. |
+| 2026-08-04 | DS-61 (split-payment-pix-boleto): adicionados `SplitPaymentController` (`POST /split-payments`, `GET /split-payments/:splitPaymentId`, autenticação via `X-Api-Token`) e `SplitPaymentWebhookController` (`POST /webhooks/split-payment/pix/:splitPaymentId`, `POST /webhooks/split-payment/boleto/:splitPaymentId`, `POST /webhooks/split-payment/boleto/:splitPaymentId/expire`); `SplitPaymentService` usa `PaymentsTable` via `DynamoService`; novos eventos no EventBus: `split_payment.created`, `split_payment.pix.confirmed`, `split_payment.boleto.confirmed`, `split_payment.completed`, `split_payment.boleto.expired`, `split_payment.creation_failed`. |
