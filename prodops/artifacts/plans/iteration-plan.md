@@ -1,6 +1,10 @@
 # Iteration Plan
 
-Nenhuma iteração ativa. Próxima iteração a definir.
+## Ativa
+
+| Versão | Escopo | Status |
+|---|---|---|
+| [v0.14.0](../iterations/v0.14.0/plan.md) | DS-61: Split Payment Pix + Boleto (PI-001) — Revisão | Em preparação |
 
 ## Suspenso
 
