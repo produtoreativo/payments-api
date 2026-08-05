@@ -36,43 +36,49 @@ Upstream e Downstream são modos, não jornadas. A Discovery é a jornada — el
 
 ```mermaid
 flowchart TD
-    subgraph UPSTREAM["Modo Upstream — exploração sem compromisso"]
-        DIS_UP["Discovery\nExplora hipóteses, protótipos,\nexperimentos e spikes"]
+    subgraph MODES["Modos de execução — determinam compromisso e gates"]
+        UP["Upstream\nexploração sem compromisso"]
+        DOWN["Downstream\ncompromisso com entrega"]
     end
 
-    subgraph DOWNSTREAM["Modo Downstream — compromisso com entrega"]
-        DIS_DOWN["Discovery\nPrepara OBC Committed\ndentro do Icebox"]
+    subgraph PRODUCT["Jornadas de produto"]
+        DIS["Discovery\nReduz incertezas e\nprepara o trabalho"]
         DEL["Delivery\nCI Sync → CI Async\nBootstrap → Promote"]
         OP["Operation\nObservabilidade, incidentes,\npostmortems, DORA"]
     end
 
-    ASS["Assessment\nAvalia maturidade, riscos\ne prontidão dos Work Items"]
-    DIL["Diligence\nVerifica consistência,\nrastreabilidade e conformidade"]
+    subgraph TRANSVERSAL["Jornadas transversais"]
+        ASS["Assessment\nAnalisa e informa"]
+        DIL["Diligence\nVerifica e corrige"]
+    end
 
-    %% Fluxo principal
-    DIS_UP -."aprendizados suficientes\npromovem para Downstream".-> DIS_DOWN
-    DIS_DOWN -->|"OBC Committed\n→ Iteration Plan"| DEL
+    %% Modos determinam como Discovery opera — não são jornadas
+    UP -."Discovery opera\nsem compromisso".-> DIS
+    DOWN -."Discovery prepara\nOBC Committed".-> DIS
+
+    %% Fluxo principal das jornadas de produto
+    DIS -->|"OBC Committed\n→ Iteration Plan"| DEL
     DEL -->|"Promote.Completed"| OP
-    OP -."sinais operacionais\nalimentam novos intents".-> DIS_UP
+    OP -."sinais operacionais\nalimentam novos intents".-> DIS
 
     %% Assessment — transversal às 3 jornadas de produto
-    ASS -."análises e recomendações".-> DIS_DOWN
+    ASS -."análises e recomendações".-> DIS
     ASS -."análises e recomendações".-> DEL
     ASS -."análises e recomendações".-> OP
-    DIS_DOWN -."hipóteses e riscos\npré-compromisso".-> ASS
-    DEL -."timelines + métricas\n+ retroativa".-> ASS
-    OP -."postmortems + DORA\n+ sinais operacionais".-> ASS
-    ASS -."recomendações\n→ novos Business Intents".-> DIS_UP
+    DIS -."hipóteses e riscos\npré-compromisso".-> ASS
+    DEL -."timelines + métricas".-> ASS
+    OP -."postmortems + DORA".-> ASS
 
     %% Diligence — transversal às 3 jornadas de produto
-    DIL -."verifica consistência\nem todas as jornadas".-> DIS_DOWN
-    DIL -."verifica consistência\nem todas as jornadas".-> DEL
-    DIL -."verifica consistência\nem todas as jornadas".-> OP
+    DIL -."verifica consistência".-> DIS
+    DIL -."verifica consistência".-> DEL
+    DIL -."verifica consistência".-> OP
     DEL -->|"eventos disparam\nDiligence Sync"| DIL
     DIL -."Findings alimentam".-> ASS
 
-    style UPSTREAM fill:#1a2a3a,stroke:#4a90d9,color:#e8f4fd
-    style DOWNSTREAM fill:#1a3a1a,stroke:#5aad2a,color:#eaf7e4
+    style MODES fill:#1a2a3a,stroke:#4a90d9,color:#e8f4fd
+    style PRODUCT fill:#1a3a1a,stroke:#5aad2a,color:#eaf7e4
+    style TRANSVERSAL fill:#2a1a2a,stroke:#9a5ad9,color:#f4e8fd
     style ASS fill:#3a2a1a,stroke:#d9903a,color:#fdf0e4
     style DIL fill:#2a1a3a,stroke:#9a5ad9,color:#f4e8fd
 ```
