@@ -48,7 +48,7 @@ paths:
     # nova rota, dependência externa, tabela DynamoDB, tópico de evento ou fila SQS.
   experiments: prodops/artifacts/experiments/
   templates: prodops/templates/
-  cards: prodops/artifacts/iterations/<version>/cards/ # gerado pelo readiness do /downstream; escopo por iteração
+  cards: prodops/artifacts/iterations/<version>/cards/ # optional — gerado pelo readiness do /downstream; escopo por iteração (<version> é placeholder)
 
 # Quality gates verificáveis (comando + critério objetivo)
 gates:
