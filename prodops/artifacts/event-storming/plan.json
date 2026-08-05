@@ -1212,6 +1212,178 @@
           "palette": "success"
         }
       ]
+    },
+    {
+      "id": "split_payment_negative_kpis",
+      "title": "Split Payment | Negativos | Contadores",
+      "sectionType": "problems",
+      "widgets": [
+        {
+          "id": "split_payment_negative_kpis_1_flow:split-payment:step:1:event:split_payment.created",
+          "title": "Split Payment Criado - Exceções | Split Payment",
+          "widgetType": "query_value",
+          "query": "tags:(event_key:split_payment.created_exception env:dev)",
+          "stage": "split_payment_criado",
+          "sectionType": "problems",
+          "sourceEventKeys": ["split_payment.created_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:split_payment.created"],
+          "visualRole": "kpi",
+          "palette": "alert"
+        },
+        {
+          "id": "split_payment_negative_kpis_2_flow:split-payment:step:2:event:split_payment.completed",
+          "title": "Split Payment Completado - Exceções | Split Payment",
+          "widgetType": "query_value",
+          "query": "tags:(event_key:split_payment.completed_exception env:dev)",
+          "stage": "split_payment_completed",
+          "sectionType": "problems",
+          "sourceEventKeys": ["split_payment.completed_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:split_payment.completed"],
+          "visualRole": "kpi",
+          "palette": "alert"
+        },
+        {
+          "id": "split_payment_negative_kpis_3_flow:split-payment:step:3:event:split_payment.boleto.expired",
+          "title": "Boleto Expirado - Exceções | Split Payment",
+          "widgetType": "query_value",
+          "query": "tags:(event_key:split_payment.boleto.expired_exception env:dev)",
+          "stage": "split_payment_boleto_expirado",
+          "sectionType": "problems",
+          "sourceEventKeys": ["split_payment.boleto.expired_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:split_payment.boleto.expired"],
+          "visualRole": "kpi",
+          "palette": "alert"
+        }
+      ]
+    },
+    {
+      "id": "split_payment_negative_trends",
+      "title": "Split Payment | Negativos | Tendência",
+      "sectionType": "problems",
+      "widgets": [
+        {
+          "id": "split_payment_negative_trends_1_flow:split-payment:step:1:event:split_payment.created",
+          "title": "Split Payment Criado - Exceções | Split Payment",
+          "widgetType": "timeseries",
+          "query": "tags:(event_key:split_payment.created_exception env:dev)",
+          "stage": "split_payment_criado",
+          "sectionType": "problems",
+          "sourceEventKeys": ["split_payment.created_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:split_payment.created"],
+          "visualRole": "trend",
+          "palette": "alert"
+        },
+        {
+          "id": "split_payment_negative_trends_2_flow:split-payment:step:2:event:split_payment.completed",
+          "title": "Split Payment Completado - Exceções | Split Payment",
+          "widgetType": "timeseries",
+          "query": "tags:(event_key:split_payment.completed_exception env:dev)",
+          "stage": "split_payment_completed",
+          "sectionType": "problems",
+          "sourceEventKeys": ["split_payment.completed_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:split_payment.completed"],
+          "visualRole": "trend",
+          "palette": "alert"
+        },
+        {
+          "id": "split_payment_negative_trends_3_flow:split-payment:step:3:event:split_payment.boleto.expired",
+          "title": "Boleto Expirado - Exceções | Split Payment",
+          "widgetType": "timeseries",
+          "query": "tags:(event_key:split_payment.boleto.expired_exception env:dev)",
+          "stage": "split_payment_boleto_expirado",
+          "sectionType": "problems",
+          "sourceEventKeys": ["split_payment.boleto.expired_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:split_payment.boleto.expired"],
+          "visualRole": "trend",
+          "palette": "alert"
+        }
+      ]
+    },
+    {
+      "id": "split_payment_positive_kpis",
+      "title": "Split Payment | Positivos | Contadores",
+      "sectionType": "normal",
+      "widgets": [
+        {
+          "id": "split_payment_positive_kpis_1_flow:split-payment:step:1:event:split_payment.created",
+          "title": "Split Payment Criado | Split Payment",
+          "widgetType": "query_value",
+          "query": "tags:(event_key:split_payment.created env:dev)",
+          "stage": "split_payment_criado",
+          "sectionType": "normal",
+          "sourceEventKeys": ["split_payment.created"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:split_payment.created"],
+          "visualRole": "kpi",
+          "palette": "success"
+        },
+        {
+          "id": "split_payment_positive_kpis_2_flow:split-payment:step:2:event:split_payment.completed",
+          "title": "Split Payment Completado | Split Payment",
+          "widgetType": "query_value",
+          "query": "tags:(event_key:split_payment.completed env:dev)",
+          "stage": "split_payment_completed",
+          "sectionType": "normal",
+          "sourceEventKeys": ["split_payment.completed"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:split_payment.completed"],
+          "visualRole": "kpi",
+          "palette": "success"
+        },
+        {
+          "id": "split_payment_positive_kpis_3_flow:split-payment:step:3:event:split_payment.boleto.expired",
+          "title": "Boleto Expirado | Split Payment",
+          "widgetType": "query_value",
+          "query": "tags:(event_key:split_payment.boleto.expired env:dev)",
+          "stage": "split_payment_boleto_expirado",
+          "sectionType": "normal",
+          "sourceEventKeys": ["split_payment.boleto.expired"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:split_payment.boleto.expired"],
+          "visualRole": "kpi",
+          "palette": "success"
+        }
+      ]
+    },
+    {
+      "id": "split_payment_positive_trends",
+      "title": "Split Payment | Positivos | Tendência",
+      "sectionType": "normal",
+      "widgets": [
+        {
+          "id": "split_payment_positive_trends_1_flow:split-payment:step:1:event:split_payment.created",
+          "title": "Split Payment Criado | Split Payment",
+          "widgetType": "timeseries",
+          "query": "tags:(event_key:split_payment.created env:dev)",
+          "stage": "split_payment_criado",
+          "sectionType": "normal",
+          "sourceEventKeys": ["split_payment.created"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:split_payment.created"],
+          "visualRole": "trend",
+          "palette": "success"
+        },
+        {
+          "id": "split_payment_positive_trends_2_flow:split-payment:step:2:event:split_payment.completed",
+          "title": "Split Payment Completado | Split Payment",
+          "widgetType": "timeseries",
+          "query": "tags:(event_key:split_payment.completed env:dev)",
+          "stage": "split_payment_completed",
+          "sectionType": "normal",
+          "sourceEventKeys": ["split_payment.completed"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:split_payment.completed"],
+          "visualRole": "trend",
+          "palette": "success"
+        },
+        {
+          "id": "split_payment_positive_trends_3_flow:split-payment:step:3:event:split_payment.boleto.expired",
+          "title": "Boleto Expirado | Split Payment",
+          "widgetType": "timeseries",
+          "query": "tags:(event_key:split_payment.boleto.expired env:dev)",
+          "stage": "split_payment_boleto_expirado",
+          "sectionType": "normal",
+          "sourceEventKeys": ["split_payment.boleto.expired"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:split_payment.boleto.expired"],
+          "visualRole": "trend",
+          "palette": "success"
+        }
+      ]
     }
   ],
   "customEvents": [
@@ -2132,6 +2304,222 @@
       "priority": "normal",
       "source_type_name": "odd-exception",
       "aggregation_key": "pagamento_recebido"
+    },
+    {
+      "title": "split_payment.created",
+      "text": "Split Payment created with Pix and Boleto charges defined",
+      "tags": [
+        "event_key:split_payment.created",
+        "env:dev",
+        "stage:split_payment_criado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "success",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "split_payment_criado"
+    },
+    {
+      "title": "split_payment.created_exception",
+      "text": "Exception occurred during Split Payment creation",
+      "tags": [
+        "event_key:split_payment.created_exception",
+        "env:dev",
+        "stage:split_payment_criado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "split_payment_criado"
+    },
+    {
+      "title": "split_payment.pix.confirmed",
+      "text": "Pix portion of Split Payment confirmed by provider",
+      "tags": [
+        "event_key:split_payment.pix.confirmed",
+        "env:dev",
+        "stage:split_payment_pix_confirmado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "success",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "split_payment_pix_confirmado"
+    },
+    {
+      "title": "split_payment.pix.confirmed_exception",
+      "text": "Exception during Pix confirmation processing",
+      "tags": [
+        "event_key:split_payment.pix.confirmed_exception",
+        "env:dev",
+        "stage:split_payment_pix_confirmado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "split_payment_pix_confirmado"
+    },
+    {
+      "title": "split_payment.boleto.confirmed",
+      "text": "Boleto portion of Split Payment confirmed by provider",
+      "tags": [
+        "event_key:split_payment.boleto.confirmed",
+        "env:dev",
+        "stage:split_payment_boleto_confirmado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "success",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "split_payment_boleto_confirmado"
+    },
+    {
+      "title": "split_payment.boleto.confirmed_exception",
+      "text": "Exception during Boleto confirmation processing",
+      "tags": [
+        "event_key:split_payment.boleto.confirmed_exception",
+        "env:dev",
+        "stage:split_payment_boleto_confirmado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "split_payment_boleto_confirmado"
+    },
+    {
+      "title": "split_payment.completed",
+      "text": "Both Pix and Boleto confirmed — order released",
+      "tags": [
+        "event_key:split_payment.completed",
+        "env:dev",
+        "stage:split_payment_completed",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "success",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "split_payment_completed"
+    },
+    {
+      "title": "split_payment.completed_exception",
+      "text": "Exception during Split Payment completion processing",
+      "tags": [
+        "event_key:split_payment.completed_exception",
+        "env:dev",
+        "stage:split_payment_completed",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "split_payment_completed"
+    },
+    {
+      "title": "split_payment.boleto.expired",
+      "text": "Boleto expired without payment — order moved to PENDING_INVESTIGATION",
+      "tags": [
+        "event_key:split_payment.boleto.expired",
+        "env:dev",
+        "stage:split_payment_boleto_expirado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "split_payment_boleto_expirado"
+    },
+    {
+      "title": "split_payment.boleto.expired_exception",
+      "text": "Exception during Boleto expiration processing",
+      "tags": [
+        "event_key:split_payment.boleto.expired_exception",
+        "env:dev",
+        "stage:split_payment_boleto_expirado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "split_payment_boleto_expirado"
+    },
+    {
+      "title": "split_payment.creation_failed",
+      "text": "Split Payment creation failed due to provider error",
+      "tags": [
+        "event_key:split_payment.creation_failed",
+        "env:dev",
+        "stage:split_payment_criacao_falhou",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "split_payment_criacao_falhou"
+    },
+    {
+      "title": "split_payment.creation_failed_exception",
+      "text": "Exception during Split Payment creation failure handling",
+      "tags": [
+        "event_key:split_payment.creation_failed_exception",
+        "env:dev",
+        "stage:split_payment_criacao_falhou",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:split_payment",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "split_payment_criacao_falhou"
     }
   ],
   "sloSuggestions": [
@@ -2322,6 +2710,36 @@
         "flow:confirmacao:step:2:event:payment.received"
       ],
       "queryHint": "tags:(event_key:payment.received env:dev)"
+    },
+    {
+      "id": "split_payment_completed_availability",
+      "name": "Split Payment Completado em até 5s",
+      "objective": "Garantir que split_payment.completed seja emitido em até 5s após confirmação do segundo meio de pagamento.",
+      "sliType": "latency",
+      "target": "99%",
+      "rationale": "OBC DS-61: ambas as porções confirmadas liberam o pedido. Latência acima de 5s impacta o SLA de liberação do pedido para o cliente.",
+      "sourceEventKeys": [
+        "split_payment.completed"
+      ],
+      "sourceOccurrenceKeys": [
+        "flow:split-payment:step:2:event:split_payment.completed"
+      ],
+      "queryHint": "tags:(event_key:split_payment.completed env:dev)"
+    },
+    {
+      "id": "split_payment_boleto_expired_latency",
+      "name": "Boleto Expirado Detectado em até 60min",
+      "objective": "Garantir que split_payment.boleto.expired seja emitido em até 60min após o vencimento do boleto.",
+      "sliType": "latency",
+      "target": "99%",
+      "rationale": "OBC DS-61: detecção tardia de boleto vencido mantém pedido no estado PENDING_INVESTIGATION além do tempo aceitável para investigação manual.",
+      "sourceEventKeys": [
+        "split_payment.boleto.expired"
+      ],
+      "sourceOccurrenceKeys": [
+        "flow:split-payment:step:3:event:split_payment.boleto.expired"
+      ],
+      "queryHint": "tags:(event_key:split_payment.boleto.expired env:dev)"
     }
   ],
   "assumptions": [
@@ -2335,6 +2753,7 @@
     "2026-07-31: DS-41 credit-card-authorization-confirmation — adicionados eventos: payment.card.hosted_invoice.created, pagamento.cartao.webhook.pagamento.autorizado, pagamento.cartao.webhook.analise_risco.aguardando/aprovada/reprovada, pagamento.cartao.webhook.captura_recusada, payment.card.refund.requested, pagamento.estorno.cobranca.estorno.solicitado (e respectivos _exception). Novos sloSuggestions: cartao_hospedado_criado_availability, cartao_confirmacao_unica_availability.",
     "2026-08-01: DS-39 payment-confirmation — adicionado evento canônico payment.received (e payment.received_exception) emitido via eventEmitter no processamento de PAYMENT_RECEIVED webhook. Novo sloSuggestion: payment_received_reconciliation_availability. Evento garante conciliação financeira sem republicar payment.confirmed.",
     "2026-08-01: work-item-107 api-token-validation — TDD cycle validado. Eventos api.token.validated e api.token.rejected (ODD: pagamento.autenticacao.api.token.validado/rejeitado) já registrados desde 2026-07-03. Implementação completa em AuthModule (ApiTokenGuard, ApiTokenService, TokenRepository, AdminTokenController). Todos os 18 cenários BDD passando.",
-    "2026-08-01: work-item-108 webhook-configuration (v0.6.0) — TDD cycle validado. Implementação pré-existente no master (DS-43). Todos os 15 cenários e2e passando: POST /webhooks (201 + secret), GET /webhooks (sem secret), DELETE /webhooks/:id, HTTPS enforcement, limite 10 webhooks, entrega fire-and-forget com HMAC-SHA256, falha de entrega sem bloquear pagamento, webhook inativo não recebe entrega. Eventos já registrados: pagamento.webhook.configuracao.webhook.registrado, pagamento.webhook.configuracao.webhook.removido, pagamento.webhook.entrega.pagamento.confirmado.entregue, pagamento.webhook.entrega.entrega.falhou. SLOs existentes: webhook_entregue_availability (95%), webhook_entrega_falhou_observability (100%)."
+    "2026-08-01: work-item-108 webhook-configuration (v0.6.0) — TDD cycle validado. Implementação pré-existente no master (DS-43). Todos os 15 cenários e2e passando: POST /webhooks (201 + secret), GET /webhooks (sem secret), DELETE /webhooks/:id, HTTPS enforcement, limite 10 webhooks, entrega fire-and-forget com HMAC-SHA256, falha de entrega sem bloquear pagamento, webhook inativo não recebe entrega. Eventos já registrados: pagamento.webhook.configuracao.webhook.registrado, pagamento.webhook.configuracao.webhook.removido, pagamento.webhook.entrega.pagamento.confirmado.entregue, pagamento.webhook.entrega.entrega.falhou. SLOs existentes: webhook_entregue_availability (95%), webhook_entrega_falhou_observability (100%).",
+    "2026-08-05: DS-61 split-payment-pix-boleto (v0.14.0, work-item 167) — TDD cycle validado. Implementação pré-existente no master (merge de v0.13.0). Todos os 9 cenários BDD passando: criação com PENDING_BOTH, confirmação Pix→COMPLETED, confirmação Boleto→COMPLETED (ordem inversa), idempotência, webhook duplicado, boleto expirado com Pix confirmado, boleto expirado sem pagamento, rejeição de soma incorreta, segurança de resposta de erro. Novos eventos: split_payment.created, split_payment.pix.confirmed, split_payment.boleto.confirmed, split_payment.completed, split_payment.boleto.expired, split_payment.creation_failed (e variantes _exception). Novos SLOs: split_payment_completed_availability (99%, latência 5s), split_payment_boleto_expired_latency (99%, latência 60min). Novo flow band: split_payment."
   ]
 }
