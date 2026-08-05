@@ -139,7 +139,7 @@ A Delivery começa somente quando um item entra no Iteration Plan.
 
 ## Jornadas transversais
 
-Assessment e Diligence não são etapas de um fluxo linear — são jornadas que acompanham as três jornadas de produto simultaneamente. A diferença entre elas não é de posição, mas de **foco**: Assessment analisa e decide; Diligence verifica e corrige.
+Assessment e Diligence não são etapas de um fluxo linear — são jornadas que acompanham as três jornadas de produto simultaneamente. A diferença entre elas não é de posição, mas de **foco**: Assessment analisa e informa; Diligence verifica e corrige.
 
 ```
                DISCOVERY     DELIVERY     OPERATION
