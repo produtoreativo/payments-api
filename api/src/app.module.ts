@@ -7,6 +7,7 @@ import awsConfig from './config/aws.config';
 import { InvoicesModule } from './modules/invoices/invoices.module';
 import { WebhooksModule } from './modules/webhooks/webhooks.module';
 import { ObservabilityModule } from './observability/observability.module';
+import { SplitPaymentsModule } from './modules/split-payments/split-payments.module';
 import { ddTraceMixin } from './observability/datadog.tracer';
 
 // pino-pretty reformats JSON to text, stripping dd.trace_id / dd.span_id.
@@ -76,6 +77,7 @@ const usePinoTransport =
     InvoicesModule,
     WebhooksModule,
     ObservabilityModule,
+    SplitPaymentsModule,
   ],
   controllers: [],
   providers: [Logger],
