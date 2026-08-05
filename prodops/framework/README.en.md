@@ -26,7 +26,8 @@ This directory contains the canonical ProdOps Framework documentation. The conte
 | [backlogs.en.md](backlogs.en.md) | Backlog hierarchy |
 | [phases.en.md](phases.en.md) | Business Intent lifecycle stages: Conception and Inception |
 | [obc.en.md](obc.en.md) | Observable Business Contract — Global OBC, Local OBC, OBC Partitioning |
-| [artifact-governance.en.md](artifact-governance.en.md) | Artifact governance |
+| [artifact-types.en.md](artifact-types.en.md) | Canonical artifact types — what each type is, when it is born, and how it relates to others |
+| [artifact-governance.en.md](artifact-governance.en.md) | Artifact governance — owners, approvals, and lifecycle |
 | [origin-streams.en.md](origin-streams.en.md) | The four Intent origins |
 | [product-topology.en.md](product-topology.en.md) | Product Topology — the four permanent structural dimensions of the product |
 | [product-stages.en.md](product-stages.en.md) | Product stages (PoC→MLP) |

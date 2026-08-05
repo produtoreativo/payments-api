@@ -26,7 +26,8 @@ Este diretório contém a documentação canônica do ProdOps Framework. O conte
 | [backlogs.md](backlogs.md) | Hierarquia de backlogs |
 | [phases.md](phases.md) | Estágios do ciclo de vida da Business Intent: Concepção e Inception |
 | [obc.md](obc.md) | Observable Business Contract — Global OBC, Local OBC, OBC Partitioning |
-| [artifact-governance.md](artifact-governance.md) | Governança de artefatos |
+| [artifact-types.md](artifact-types.md) | Tipos canônicos de artefatos — o que cada tipo é, quando nasce e como se relaciona |
+| [artifact-governance.md](artifact-governance.md) | Governança de artefatos — owners, aprovações e ciclo de vida |
 | [origin-streams.md](origin-streams.md) | As quatro origens de Intents |
 | [product-topology.md](product-topology.md) | Product Topology — as quatro dimensões estruturais permanentes do produto |
 | [product-stages.md](product-stages.md) | Estágios de produto (PoC→MLP) |
