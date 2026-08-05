@@ -1,5 +1,28 @@
 # Operation
 
+```mermaid
+flowchart TD
+    ENTRY(["← Delivery\nPromote.Completed"])
+
+    subgraph OP["Operation — produto em produção"]
+        direction TB
+        OBS["Observabilidade\nmétricas · logs · traces · alertas"]
+        INC["Resposta a Incidentes\ndetecção · contenção · resolução"]
+        PM["Postmortem\ncausa raiz · aprendizado"]
+        DORA["Métricas DORA\nLead Time · MTTR · CFR · Frequency"]
+
+        OBS --> INC --> PM --> DORA
+        DORA -->|"deterioração\ndetectada"| OBS
+    end
+
+    ENTRY --> OBS
+
+    DORA -->|"novo sinal\nno Product Tracking List"| SIGNAL(["→ Discovery\nnovo Business Intent"])
+    PM -->|"risco operacional\n→ Assessment"| ASS(["→ Assessment"])
+
+    style OP fill:#2a1a3a,stroke:#9a5ad9,color:#f4e8fd
+```
+
 ## Responsabilidade
 
 Operar e evoluir o produto em produção.

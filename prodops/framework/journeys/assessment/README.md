@@ -9,6 +9,44 @@
 
 ---
 
+```mermaid
+flowchart TD
+    subgraph INPUTS["Entradas"]
+        direction LR
+        TL["Timelines\n(Delivery + Diligence)"]
+        FIN["Findings\n(Diligence Scan)"]
+        PM["Postmortems\n(Operation)"]
+        OBC["OBCs + Reliability Plans"]
+        EXP["Experimentos\n(Discovery)"]
+    end
+
+    subgraph ASS["Assessment"]
+        direction TB
+        TRIG{"Gatilho"}
+        PROS["Dimensão Prospectiva\nrisco · hipóteses · prontidão\npré-Delivery"]
+        RETRO["Dimensão Retrospectiva\nmaturidade · tendências\npós-ciclo"]
+        REP["Assessment Report\nou Decision Package"]
+        TRIG -->|"Work Item candidato\nà Delivery"| PROS
+        TRIG -->|"cadência · limiar\noperacional · incidente"| RETRO
+        PROS --> REP
+        RETRO --> REP
+    end
+
+    subgraph OUTPUTS["Saídas"]
+        direction LR
+        GATE["Gate de prontidão\n→ Delivery liberada\nou bloqueada"]
+        REC["Recomendações\n→ novos Business Intents"]
+        RISK["Riscos documentados\n→ risks.md"]
+    end
+
+    INPUTS --> ASS
+    REP --> GATE & REC & RISK
+
+    style ASS fill:#3a2a1a,stroke:#d9903a,color:#fdf0e4
+    style INPUTS fill:#1a1a2a,stroke:#5a5a9a,color:#eeeeff
+    style OUTPUTS fill:#1a2a1a,stroke:#5a9a5a,color:#eeffee
+```
+
 ## Questão central
 
 > **"Estamos melhorando continuamente o nosso modelo operacional?"**

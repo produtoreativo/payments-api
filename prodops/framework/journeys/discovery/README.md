@@ -1,5 +1,33 @@
 # Discovery
 
+```mermaid
+flowchart TD
+    subgraph UP["Upstream — sem compromisso de entrega"]
+        direction TB
+        INT["Business Intent\nou hipótese"]
+        EXP["Exploração\nentrevistas · benchmarks · spikes\nEvent Storming · experimentos"]
+        LEARN["Aprendizados\nprotótipos · evidências"]
+        DISC["Decisão"]
+        INT --> EXP --> LEARN --> DISC
+        DISC -->|"incerteza\npersiste"| EXP
+        DISC -->|"descartado"| DISCARD(["❌ Descartado"])
+    end
+
+    subgraph DOWN["Downstream — preparação comprometida"]
+        direction TB
+        ICE["Icebox\n(item aceito no Product Backlog)"]
+        REF["Refinamento\nfuncional · técnico · operacional"]
+        OBC["OBC Committed\n+ BDD Feature\n+ Riscos documentados"]
+        ICE --> REF --> OBC
+    end
+
+    DISC -->|"aprendizados suficientes\npromovem"| DOWN
+    OBC -->|"entra no\nIteration Backlog"| NEXT(["→ Delivery"])
+
+    style UP fill:#1a2a3a,stroke:#4a90d9,color:#e8f4fd
+    style DOWN fill:#1a3a1a,stroke:#5aad2a,color:#eaf7e4
+```
+
 ## Propósito
 
 Discovery é a jornada de exploração e preparação do ProdOps. Ela existe nos modos Upstream e Downstream com responsabilidades diferentes; não é sinônimo de Upstream.

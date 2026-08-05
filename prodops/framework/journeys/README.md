@@ -31,6 +31,50 @@ Upstream e Downstream são modos, não jornadas. A Discovery é a jornada — el
 
 ---
 
+## Relacionamento entre jornadas
+
+```mermaid
+flowchart TD
+    subgraph UPSTREAM["Modo Upstream — exploração sem compromisso"]
+        DIS_UP["Discovery\nExplora hipóteses, protótipos,\nexperimentos e spikes"]
+    end
+
+    subgraph DOWNSTREAM["Modo Downstream — compromisso com entrega"]
+        DIS_DOWN["Discovery\nPrepara OBC Committed\ndentro do Icebox"]
+        DEL["Delivery\nCI Sync → CI Async\nBootstrap → Promote"]
+        OP["Operation\nObservabilidade, incidentes,\npostmortems, DORA"]
+    end
+
+    ASS["Assessment\nAvalia maturidade, riscos\ne prontidão dos Work Items"]
+    DIL["Diligence\nVerifica consistência,\nrastreabilidade e conformidade"]
+
+    %% Fluxo principal
+    DIS_UP -."aprendizados suficientes\npromovem para Downstream".-> DIS_DOWN
+    DIS_DOWN -->|"OBC Committed\n→ Iteration Plan"| DEL
+    DEL -->|"Promote.Completed"| OP
+    OP -."sinais operacionais\nalimentam novos intents".-> DIS_UP
+
+    %% Assessment — gate prospectivo e análise retrospectiva
+    ASS -->|"gate de prontidão\npré-Delivery"| DEL
+    DEL -->|"Timelines + métricas"| ASS
+    OP -->|"postmortems + DORA"| ASS
+    ASS -."recomendações\n→ novos Business Intents".-> DIS_UP
+
+    %% Diligence — transversal
+    DIL -."verifica consistência\nem todas as jornadas".-> DIS_DOWN
+    DIL -."verifica consistência\nem todas as jornadas".-> DEL
+    DIL -."verifica consistência\nem todas as jornadas".-> OP
+    DEL -->|"eventos disparam\nDiligence Sync"| DIL
+    DIL -."Findings alimentam".-> ASS
+
+    style UPSTREAM fill:#1a2a3a,stroke:#4a90d9,color:#e8f4fd
+    style DOWNSTREAM fill:#1a3a1a,stroke:#5aad2a,color:#eaf7e4
+    style ASS fill:#3a2a1a,stroke:#d9903a,color:#fdf0e4
+    style DIL fill:#2a1a3a,stroke:#9a5ad9,color:#f4e8fd
+```
+
+---
+
 ## Fluxo Upstream
 
 ```

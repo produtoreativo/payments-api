@@ -8,6 +8,50 @@
 
 ---
 
+```mermaid
+flowchart TD
+    subgraph SYNC["Diligence Sync — reativo, contextual"]
+        direction TB
+        CAP["Capture\nWork Item identificado"]
+        ATT["Attach\nassociado ao GitHub Project"]
+        PROM["Promote\naprovação no projeto gerenciado"]
+        CLOSE["Close\nciclo encerrado"]
+        CAP --> ATT --> PROM --> CLOSE
+    end
+
+    subgraph ASYNC["Diligence Async — proativo, varredura de drift"]
+        direction TB
+        SCAN["Scan\nvarredura de todos os OBCs e Issues"]
+        FLAG["Flag\nitens com divergência marcados"]
+        REPAIR["Repair\ncorreção da divergência"]
+        WAIVER{"Waiver?"}
+        SCAN --> FLAG --> REPAIR --> WAIVER
+        WAIVER -->|"Waiver.Granted"| CLOSE2(["WAIVED"])
+        WAIVER -->|"Waiver.Rejected"| SCAN
+    end
+
+    subgraph WR["Workspace Reconciliation — sub-rotina"]
+        direction LR
+        INS["Inspect"] --> REC["Reconcile"] --> VER["Verify"]
+    end
+
+    %% Gatilhos
+    EV(["Eventos das jornadas\nBootstrap · Block · Promote"]) -->|"disparam\nautomaticamente"| CAP
+    TIMER(["Cadência periódica\nou drift detectado"]) --> SCAN
+
+    %% Workspace Reconciliation é chamada pelos ciclos
+    SYNC -."invoca WR\ncomo sub-rotina".-> WR
+    ASYNC -."invoca WR\nse drift detectado".-> WR
+
+    %% Saídas
+    CLOSE --> ASS(["→ Assessment\nFindings"])
+    REPAIR --> ASS
+
+    style SYNC fill:#1a3a1e,stroke:#5aad2a,color:#eaf7e4
+    style ASYNC fill:#1a2a3a,stroke:#4a90d9,color:#e8f4fd
+    style WR fill:#2a2a1a,stroke:#d9c03a,color:#fdf8e4
+```
+
 ## Propósito
 
 A Diligence garante que o que foi decidido, produzido e executado em cada jornada permaneça coerente, rastreável e conforme ao longo de todo o ciclo de vida do produto. Ela não avalia, não decide, não implementa — ela verifica, sincroniza, reconcilia e preserva.
