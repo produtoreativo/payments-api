@@ -55,13 +55,16 @@ flowchart TD
     DEL -->|"Promote.Completed"| OP
     OP -."sinais operacionais\nalimentam novos intents".-> DIS_UP
 
-    %% Assessment — gate prospectivo e análise retrospectiva
-    ASS -->|"gate de prontidão\npré-Delivery"| DEL
-    DEL -->|"Timelines + métricas"| ASS
-    OP -->|"postmortems + DORA"| ASS
+    %% Assessment — transversal às 3 jornadas de produto
+    ASS -."análises e recomendações".-> DIS_DOWN
+    ASS -."análises e recomendações".-> DEL
+    ASS -."análises e recomendações".-> OP
+    DIS_DOWN -."hipóteses e riscos\npré-compromisso".-> ASS
+    DEL -."timelines + métricas\n+ retroativa".-> ASS
+    OP -."postmortems + DORA\n+ sinais operacionais".-> ASS
     ASS -."recomendações\n→ novos Business Intents".-> DIS_UP
 
-    %% Diligence — transversal
+    %% Diligence — transversal às 3 jornadas de produto
     DIL -."verifica consistência\nem todas as jornadas".-> DIS_DOWN
     DIL -."verifica consistência\nem todas as jornadas".-> DEL
     DIL -."verifica consistência\nem todas as jornadas".-> OP
@@ -136,40 +139,43 @@ A Delivery começa somente quando um item entra no Iteration Plan.
 
 ## Jornadas transversais
 
-Assessment e Diligence acompanham continuamente as demais jornadas. Não representam apenas documentação — representam comportamento ativo do Framework.
-
-Assessment pode ocorrer tanto no Upstream quanto no Downstream.
-
-### Diligence — natureza transversal
-
-A Diligence não é uma etapa linear ao final do fluxo. É transversal: verifica consistência, rastreabilidade, completude e conformidade em todas as jornadas simultaneamente.
+Assessment e Diligence não são etapas de um fluxo linear — são jornadas que acompanham as três jornadas de produto simultaneamente. A diferença entre elas não é de posição, mas de **foco**: Assessment analisa e decide; Diligence verifica e corrige.
 
 ```
-                    DISCOVERY
-                        │
-                        ▼
-                    ASSESSMENT
-                        │
-                        ▼
-                     DELIVERY
-                        │
-                        ▼
-                    OPERATION
-                        │
-                        └──────────┐
-                                   │
-DILIGENCE ─────────────────────────┤
-                                   │
-verifica consistência,             │
-rastreabilidade, completude        │
-e conformidade em todas            │
-as jornadas                        │
-                                   ▼
-                              novos sinais,
-                              decisões e trabalho
+               DISCOVERY     DELIVERY     OPERATION
+                   │             │             │
+                   │             │             │
+ASSESSMENT ────────┼─────────────┼─────────────┤
+                   │             │             │
+DILIGENCE  ────────┼─────────────┼─────────────┤
+                   │             │             │
+                   ▼             ▼             ▼
 ```
 
-**Questão central da Diligence:** O conhecimento, as decisões, a execução e as evidências continuam coerentes e rastreáveis?
+O peso e o esforço de cada jornada transversal variam conforme a jornada de produto em que operam:
+
+| | Discovery | Delivery | Operation |
+|---|---|---|---|
+| **Assessment** | Médio — avalia hipóteses, riscos e prontidão pré-compromisso | Alto — gate formal de entrada + análise retroativa de timelines | Alto — postmortems, DORA, sinais operacionais alimentam novos intents |
+| **Diligence** | Leve — consistência dos artefatos exploratórios | Alto — sincroniza OBC, eventos, timelines e estado do Project em tempo real | Médio — detecta drift acumulado de artefatos e conformidade operacional |
+
+---
+
+### Assessment
+
+Produz análises e recomendações que apoiam decisões. Não bloqueia o fluxo por si só — gera insumos que outros atores usam para decidir.
+
+**Questão central:** O que sabemos, o que não sabemos e o que devemos decidir antes de avançar?
+
+→ [Assessment — especificação completa](assessment/README.md)
+
+---
+
+### Diligence
+
+Verifica se o sistema de trabalho do ProdOps permanece coerente e rastreável. Opera de forma reativa (síncrona) a eventos de entrega e de forma proativa (assíncrona) para detectar drift acumulado.
+
+**Questão central:** O conhecimento, as decisões, a execução e as evidências continuam coerentes e rastreáveis?
 
 A Diligence opera em exatamente dois ciclos:
 - **diligence-sync** — síncrono, reativo, contextual, ligado a uma operação em andamento
@@ -178,5 +184,8 @@ A Diligence opera em exatamente dois ciclos:
 Capabilities como Workspace Reconciliation são sub-rotinas consumidas pelos ciclos — não são ciclos independentes.
 
 → [Diligence — especificação completa](diligence/README.md)
+
+---
+
 → [Execution Model](../execution-model/README.md)
 → [Hierarquia de backlogs](../backlogs.md)
