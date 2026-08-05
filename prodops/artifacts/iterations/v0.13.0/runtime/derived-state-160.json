@@ -1,0 +1,12 @@
+{
+  "issue": "160",
+  "state": "SYNCING",
+  "last-event-type": "prodops.delivery.sync.started",
+  "runtime-correlation-id": "747016de-2b77-4e5d-8d17-90937f31c929",
+  "restart-count": 0,
+  "previous-correlation-ids": [],
+  "runtime-version": "0.3.0",
+  "framework-version": "1.0.0",
+  "schema-version": "1",
+  "computed-at": "2026-08-05T00:33:52Z"
+}

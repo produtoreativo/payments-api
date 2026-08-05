@@ -145,6 +145,7 @@ case "${FILTER}" in
   token)     SPECS="test/api-token.acceptance.e2e-spec.ts" ;;
   webhook)   SPECS="test/webhook-configuration.e2e-spec.ts" ;;
   cartao)    SPECS="test/cartao-credito-hospedado.e2e-spec.ts" ;;
+  split)     SPECS="test/split-payment.e2e-spec.ts" ;;
   "")
     SPECS="test/criar-invoice.e2e-spec.ts \
            test/criar-invoice-boleto.e2e-spec.ts \
@@ -152,10 +153,11 @@ case "${FILTER}" in
            test/confirmar-pagamento.e2e-spec.ts \
            test/api-token.acceptance.e2e-spec.ts \
            test/webhook-configuration.e2e-spec.ts \
-           test/cartao-credito-hospedado.e2e-spec.ts"
+           test/cartao-credito-hospedado.e2e-spec.ts \
+           test/split-payment.e2e-spec.ts"
     ;;
   *)
-    abort "Filtro inválido: '${FILTER}'. Use: criar | boleto | cancelar | confirmar | token | webhook | cartao"
+    abort "Filtro inválido: '${FILTER}'. Use: criar | boleto | cancelar | confirmar | token | webhook | cartao | split"
     ;;
 esac
 
