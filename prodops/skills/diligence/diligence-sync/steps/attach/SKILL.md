@@ -9,6 +9,46 @@ Execute only the Attach step of the Diligence Sync flow.
 
 **Responsabilidade:** garantir que o trabalho sobre o OBC seja rastreável em backlogs externos. Attach não muda o estado do OBC — apenas cria ou verifica o Work Item que representa o trabalho sendo executado sobre ele.
 
+## Phase: Attach.Started
+
+**Momento:** após verificar o contexto de entrada, antes de qualquer ação de backlog.
+
+Emitir:
+
+```json
+{
+  "event": "Diligence.Attach.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-agent" },
+  "payload": {}
+}
+```
+
+## Phase: Attach.Completed
+
+**Momento:** após todas as post-conditions satisfeitas — antes de reportar sucesso ao caller.
+
+Emitir usando o **mesmo `correlation-id`** do Attach.Started:
+
+```json
+{
+  "event": "Diligence.Attach.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<same-uuid-as-started>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-agent" },
+  "payload": {}
+}
+```
+
+Não emitir `Attach.Completed` se o Work Item não existir ou se o projeto estiver inacessível.
+
+---
+
 ## Ação
 
 ### 1. Verificar se Work Item ativo existe
