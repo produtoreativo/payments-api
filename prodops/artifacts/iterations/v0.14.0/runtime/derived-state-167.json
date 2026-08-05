@@ -1,0 +1,12 @@
+{
+  "issue": "167",
+  "state": "PENDING",
+  "last-event-type": "prodops.delivery.plan.bootstrap.issue.entered",
+  "runtime-correlation-id": "a5cdd485-63e3-4451-b1cf-db40843a1066",
+  "restart-count": 0,
+  "previous-correlation-ids": [],
+  "runtime-version": "0.3.0",
+  "framework-version": "1.0.0",
+  "schema-version": "1",
+  "computed-at": "2026-08-05T15:40:46Z"
+}
