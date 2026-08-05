@@ -415,7 +415,6 @@ if [[ -n "$EVIDENCE_FILE" ]]; then
     --argjson dispatch_subs "$DISPATCH_SUBS" \
     '{
       "_meta": {
-        "experiment": "EXP-015",
         "tool-version": $tool_version,
         "player": $player,
         "agent": $agent,

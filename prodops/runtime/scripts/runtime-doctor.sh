@@ -30,7 +30,7 @@ PYEOF
 echo ""
 echo "┌──────────────────────────────────────┐"
 echo "│   ProdOps Runtime Doctor             │"
-echo "│   EXP-013 — runtime v0.3.0           │"
+echo "│   runtime v0.3.0                     │"
 echo "└──────────────────────────────────────┘"
 echo ""
 
@@ -134,13 +134,7 @@ echo ""
 # ── Datadog ────────────────────────────────────────────────────────────────────
 echo "Datadog:"
 
-ENV_FILE="$PRODOPS_DIR/../api/.env"
-if [[ -z "${DD_API_KEY:-}" && -f "$ENV_FILE" ]]; then
-  DD_API_KEY=$(grep -E "^DD_API_KEY=" "$ENV_FILE" | cut -d= -f2 | tr -d '"' | tr -d "'") || true
-fi
-if [[ -z "${DD_APP_KEY:-}" && -f "$ENV_FILE" ]]; then
-  DD_APP_KEY=$(grep -E "^DD_APP_KEY=" "$ENV_FILE" | cut -d= -f2 | tr -d '"' | tr -d "'") || true
-fi
+# DD_API_KEY and DD_APP_KEY must be set as environment variables before running.
 
 if [[ -n "${DD_API_KEY:-}" ]]; then
   KEY_PREVIEW="${DD_API_KEY:0:8}..."

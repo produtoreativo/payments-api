@@ -46,6 +46,7 @@ WORK_ITEM_ID=""
 REASON=""
 SCOPE="full"
 PLAYER="claude"
+ITERATION_ID=""
 DRY_RUN="false"
 INPUT_FILE=""
 
@@ -55,6 +56,7 @@ while [[ $# -gt 0 ]]; do
     --reason)       REASON="$2"; shift 2 ;;
     --scope)        SCOPE="$2"; shift 2 ;;
     --player)       PLAYER="$2"; shift 2 ;;
+    --iteration-id) ITERATION_ID="$2"; shift 2 ;;
     --dry-run)      DRY_RUN="true"; shift ;;
     --input)        INPUT_FILE="$2"; shift 2 ;;
     --help|-h)
@@ -259,7 +261,7 @@ REQUESTED_INPUT=$(jq -n \
   --arg event            "Delivery.Restart.Requested" \
   --arg work_item_id     "$WORK_ITEM_ID" \
   --arg new_corr         "$NEW_CORRELATION_ID" \
-  --arg iteration_id     "IP-EXP016-F03-RESTART" \
+  --arg iteration_id     "${ITERATION_ID:-}" \
   --arg execution_id     "$RESTART_ID" \
   --arg player           "$PLAYER" \
   --arg prev_corr        "$PREV_CORRELATION_ID" \
@@ -297,7 +299,7 @@ STARTED_INPUT=$(jq -n \
   --arg event            "Delivery.Restart.Started" \
   --arg work_item_id     "$WORK_ITEM_ID" \
   --arg new_corr         "$NEW_CORRELATION_ID" \
-  --arg iteration_id     "IP-EXP016-F03-RESTART" \
+  --arg iteration_id     "${ITERATION_ID:-}" \
   --arg execution_id     "$RESTART_ID" \
   --arg player           "$PLAYER" \
   --arg prev_corr        "$PREV_CORRELATION_ID" \
@@ -333,7 +335,7 @@ COMPLETED_INPUT=$(jq -n \
   --arg event            "Delivery.Restart.Completed" \
   --arg work_item_id     "$WORK_ITEM_ID" \
   --arg new_corr         "$NEW_CORRELATION_ID" \
-  --arg iteration_id     "IP-EXP016-F03-RESTART" \
+  --arg iteration_id     "${ITERATION_ID:-}" \
   --arg execution_id     "$RESTART_ID" \
   --arg player           "$PLAYER" \
   --arg prev_corr        "$PREV_CORRELATION_ID" \

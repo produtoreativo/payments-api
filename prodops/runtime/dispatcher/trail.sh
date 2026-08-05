@@ -60,58 +60,58 @@ ISSUE_LINE=""
 case "$EVENT_TYPE" in
   prodops.delivery.plan.bootstrap.completed)
     ISSUES=$(jq -r '.issues // [] | join(", #")' "$PLAN_BOOTSTRAP")
-    TITLE="🚀 Plan Bootstrap — Concluído"
-    BODY="Ambiente compartilhado pronto para a iteração **${ITERATION_ID}**."$'\n'"**Issues no plano:** #${ISSUES}"
+    TITLE="Plan Bootstrap — Completed"
+    BODY="Shared environment ready for iteration **${ITERATION_ID}**."$'\n'"**Issues in plan:** #${ISSUES}"
     ISSUE_LINE=""
     ;;
   prodops.delivery.plan.bootstrap.issue.entered)
-    TITLE="📋 Issue Entrou no Plano"
-    BODY="Issue registrada no plano da iteração **${ITERATION_ID}** com \`oem-state: PENDING\`. Diligence.Capture acionado."
+    TITLE="Issue Entered Plan"
+    BODY="Issue registered in iteration **${ITERATION_ID}** plan with \`oem-state: PENDING\`. Diligence.Capture triggered."
     ;;
   prodops.delivery.bootstrap.completed)
-    TITLE="⚙️ Bootstrap — Concluído"
-    BODY="Ambiente local validado. \`oem-state: BOOTSTRAPPING\`. Pronto para Hack."
+    TITLE="Bootstrap — Completed"
+    BODY="Local environment validated. \`oem-state: BOOTSTRAPPING\`. Ready for Hack."
     ;;
   prodops.delivery.hack.completed)
-    TITLE="🔨 Hack — Implementação Concluída"
-    BODY="Todos os cenários BDD verdes. Pronto para Sync."
+    TITLE="Hack — Implementation Completed"
+    BODY="All BDD scenarios green. Ready for Sync."
     ;;
   prodops.delivery.sync.completed)
-    TITLE="🔀 Sync — PR Aprovado e Merged"
-    BODY="Branch integrada ao \`master\`. Pronto para Finish."
+    TITLE="Sync — PR Merged"
+    BODY="Branch integrated. Ready for Finish."
     ;;
   prodops.delivery.finish.completed)
-    TITLE="✅ Finish — Quality Gates Passaram"
-    BODY="Testes, lint e build limpos. PR pronto para Ship."
+    TITLE="Finish — Quality Gates Passed"
+    BODY="Tests, lint, and build clean. PR ready for Ship."
     ;;
   prodops.delivery.ship.completed)
-    TITLE="🚢 Ship — Deploy Staging Concluído"
-    BODY="\`infra-scope\` confirmado. Pronto para Validate."
+    TITLE="Ship — Staging Deploy Completed"
+    BODY="\`infra-scope\` confirmed. Ready for Validate."
     ;;
   prodops.delivery.validate.completed)
-    TITLE="🔍 Validate — Critérios Confirmados"
-    BODY="Critérios OBC verificados no ambiente de staging."
+    TITLE="Validate — Criteria Confirmed"
+    BODY="OBC criteria verified in staging environment."
     ;;
   prodops.delivery.plan.validated)
-    TITLE="🎯 Plan Validated — Gate de Promote Aberto"
-    BODY="Todas as issues da iteração **${ITERATION_ID}** validadas. Promote liberado para todas."
+    TITLE="Plan Validated — Promote Gate Open"
+    BODY="All issues in iteration **${ITERATION_ID}** validated. Promote unlocked for all."
     ISSUE_LINE=""
     ;;
   prodops.delivery.promote.completed)
-    TITLE="🏁 Promote — DONE"
-    BODY="\`oem-state: DONE\`. Issue fechada no GitHub."
+    TITLE="Promote — DONE"
+    BODY="\`oem-state: DONE\`. Issue closed on GitHub."
     ;;
   prodops.delivery.block.declared)
-    TITLE="🚨 BLOQUEIO DECLARADO"
-    BODY="Issue bloqueada. Verificar \`Block.Declared\` na timeline para detalhes e ação corretiva."
+    TITLE="BLOCK DECLARED"
+    BODY="Issue blocked. Check \`Block.Declared\` in the timeline for details and corrective action."
     ;;
   prodops.delivery.block.resolved)
-    TITLE="✅ Bloqueio Resolvido"
-    BODY="Issue desbloqueada. Flow retomado a partir do Bootstrap."
+    TITLE="Block Resolved"
+    BODY="Issue unblocked. Flow resumed from Bootstrap."
     ;;
   prodops.delivery.restart.completed)
-    TITLE="🔄 Restart Concluído"
-    BODY="Novo \`correlation-id\` gerado. Timeline preservada. Fluxo reiniciado."
+    TITLE="Restart Completed"
+    BODY="New \`correlation-id\` generated. Timeline preserved. Flow restarted."
     ;;
   *)
     log "No trail template for event '$EVENT_TYPE' — skipping"

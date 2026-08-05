@@ -35,6 +35,25 @@ export:
     - scripts/README.en.md
     - LICENSE
     - CHANGELOG.md
+    # Runtime — Reference Implementation core
+    - runtime/catalog/**
+    - runtime/consumer/**
+    - runtime/dispatcher/**
+    - runtime/docs/**
+    - runtime/github/**
+    - runtime/producer/**
+    - runtime/subscriptions/**
+    - runtime/timeline/**
+    - runtime/tools/**
+    - runtime/datadog/send.sh
+    - runtime/datadog/README.md
+    - runtime/datadog/runtime-dashboard.json
+    - runtime/datadog/dashboards/v3.4.0.json
+    - runtime/scripts/validate-event.sh
+    - runtime/scripts/runtime-doctor.sh
+    - runtime/scripts/project-cleanup.sh
+    - runtime/scripts/create-github-views.sh
+    - runtime/runtime.yaml.example
   exclude:
     - skills/local/**
     - skills/references/local/**
@@ -42,6 +61,18 @@ export:
     - scripts/local/**
     - artifacts/**
     - exec/**
+    # Runtime — product-specific scripts excluded from RI
+    - runtime/scripts/bootstrap-*.sh
+    - runtime/scripts/demo-*.sh
+    - runtime/scripts/prepare-demo.sh
+    - runtime/scripts/validate-demo.sh
+    - runtime/scripts/create-events-dashboard.sh
+    - runtime/datadog/create-*.sh
+    - runtime/datadog/send-test-events.sh
+    - runtime/datadog/dashboards/CHANGELOG.md
+    - runtime/tools/emit-event/emit-event.sh
+    - runtime/tools/emit-event/tests/conformance/results/**
+    - runtime/runtime.yaml
 
 conventions:
   consumer_owned_paths:

@@ -25,14 +25,9 @@ PYEOF
 DD_SERVICE=$(yaml_get "datadog.service")
 DD_ENV_VALUE=$(yaml_get "datadog.environment")
 
-# Credentials: prefer environment variables, fall back to api/.env
-ENV_FILE="$PRODOPS_DIR/../api/.env"
-if [[ -z "${DD_API_KEY:-}" && -f "$ENV_FILE" ]]; then
-  DD_API_KEY=$(grep -E "^DD_API_KEY=" "$ENV_FILE" | cut -d= -f2 | tr -d '"' | tr -d "'") || true
-fi
-if [[ -z "${DD_SITE:-}" && -f "$ENV_FILE" ]]; then
-  DD_SITE=$(grep -E "^DD_SITE=" "$ENV_FILE" | cut -d= -f2 | tr -d '"' | tr -d "'") || true
-fi
+# Credentials must be provided via environment variables.
+# Set DD_API_KEY and optionally DD_SITE before calling this script.
+# Example: export DD_API_KEY=$(grep DD_API_KEY .env | cut -d= -f2)
 DD_SITE="${DD_SITE:-datadoghq.com}"
 
 ISSUE=""
