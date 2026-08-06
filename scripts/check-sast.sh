@@ -205,6 +205,82 @@ else
   ok "SONAR_TOKEN fornecido pelo ambiente"
 fi
 
+# ── 5b. Quality gate próprio (sem cobertura) ──────────────────────────────────
+# O quality gate default do container ("Sonar way") inclui `new_coverage >= 80`.
+# Essa condição é redundante e nociva aqui: quem mede cobertura é `gates.coverage`
+# (branches, limiar 100%, código inteiro) — estritamente mais rigoroso que o
+# new_coverage do Sonar (linhas, 80%, só código novo). Pior, o scanner não recebe
+# relatório de cobertura neste fluxo, então o Sonar leria 0.0% e reprovaria um
+# código que está limpo, mascarando o veredito de segurança.
+#
+# Cada gate tem uma responsabilidade única (ver prodops/exec/manifest.yaml):
+# cobertura é de `gates.coverage`; SAST é vulnerabilidade, code smell e duplicação.
+#
+# O servidor é efêmero, então isto é provisionado a cada execução — não dá para
+# configurar pela UI e esperar que persista.
+step "Provisionando quality gate sem condição de cobertura..."
+
+QG_NAME="prodops-sast"
+
+# create é idempotente na prática: se já existe (container reusado com --keep),
+# a API responde erro e seguimos para ajustar o gate existente.
+curl -sf -u "${SONAR_TOKEN}:" -X POST \
+  "${SONAR_HOST}/api/qualitygates/create?name=${QG_NAME}" >/dev/null 2>&1 || true
+
+# ATENÇÃO: um gate recém-criado NÃO nasce vazio — o SonarQube o pré-popula com as
+# condições CAYC ("Clean as You Code"), entre elas new_coverage >= 80. Portanto
+# não basta acrescentar condições: é preciso REMOVER as de cobertura, senão o
+# gate próprio reprova exatamente como o default.
+QG_JSON=$(curl -sf -u "${SONAR_TOKEN}:" \
+  "${SONAR_HOST}/api/qualitygates/show?name=${QG_NAME}" 2>/dev/null || true)
+
+# Extrai o id das condições de cobertura (new_coverage e coverage) para deletar.
+COVERAGE_COND_IDS=$(echo "${QG_JSON}" | python3 -c '
+import sys, json
+try:
+    data = json.load(sys.stdin)
+except Exception:
+    sys.exit(0)
+for c in data.get("conditions", []):
+    if c.get("metric") in ("new_coverage", "coverage"):
+        print(c.get("id", ""))
+' 2>/dev/null || true)
+
+for CID in ${COVERAGE_COND_IDS}; do
+  [[ -z "${CID}" ]] && continue
+  curl -sf -u "${SONAR_TOKEN}:" -X POST \
+    "${SONAR_HOST}/api/qualitygates/delete_condition" \
+    -d "id=${CID}" >/dev/null 2>&1 || true
+done
+
+# Garante as condições que o SAST de fato responde (idempotente: se já vieram do
+# CAYC, a API rejeita a duplicata e seguimos).
+#   new_violations > 0               → qualquer problema novo reprova
+#   new_duplicated_lines_density > 3 → duplicação em código novo
+for COND in "new_violations|GT|0" "new_duplicated_lines_density|GT|3"; do
+  IFS='|' read -r METRIC OP VAL <<< "${COND}"
+  curl -sf -u "${SONAR_TOKEN}:" -X POST \
+    "${SONAR_HOST}/api/qualitygates/create_condition" \
+    -d "gateName=${QG_NAME}&metric=${METRIC}&op=${OP}&error=${VAL}" >/dev/null 2>&1 || true
+done
+
+# O projeto precisa existir antes de receber o gate. Se ainda não foi analisado,
+# a associação falha aqui e o scan usaria o gate default — por isso criamos o
+# projeto explicitamente (idempotente).
+curl -sf -u "${SONAR_TOKEN}:" -X POST \
+  "${SONAR_HOST}/api/projects/create?project=${PROJECT_KEY}&name=${PROJECT_KEY}" >/dev/null 2>&1 || true
+
+if curl -sf -u "${SONAR_TOKEN}:" -X POST \
+  "${SONAR_HOST}/api/qualitygates/select" \
+  -d "gateName=${QG_NAME}&projectKey=${PROJECT_KEY}" >/dev/null 2>&1; then
+  ok "Quality gate '${QG_NAME}' associado (violations + duplicação; cobertura fica com gates.coverage)"
+else
+  warn "Não foi possível associar o quality gate '${QG_NAME}' — o scan usará o gate default do servidor.
+  Isso reintroduz new_coverage >= 80, que reprova por falta de relatório de cobertura.
+  O veredito abaixo pode ser um falso negativo; confira as condições em
+  ${SONAR_HOST}/dashboard?id=${PROJECT_KEY}"
+fi
+
 # ── 6. Scan ────────────────────────────────────────────────────────────────────
 # O scanner roda em container (não exige sonar-scanner instalado na máquina) e
 # fala com o servidor pela rede do host. Analisa api/src — o código de produto;
