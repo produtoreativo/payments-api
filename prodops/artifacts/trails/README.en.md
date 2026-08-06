@@ -10,6 +10,7 @@ Each agent session produces its own trail file under `sessions/`.
 
 | File | Session | Opened | Status |
 |---|---|---|---|
+| [2026-08-05-4a9e4c58.en.md](sessions/2026-08-05-4a9e4c58.en.md) | `4a9e4c58` | 2026-08-05 | open |
 | [2026-07-13-08117eda.en.md](sessions/2026-07-13-08117eda.en.md) | `08117eda` | 2026-07-13 | open |
 
 ---
