@@ -100,15 +100,42 @@ materialize_skill() {
     local target="$target_dir/SKILL.md"
 
     local generated_content
-    generated_content="$(provenance_header "$skill" "$player")
+    # Tools like Codex CLI require YAML frontmatter on the very first line.
+    # If the source starts with ---, inject the provenance comment after the
+    # closing --- so the frontmatter block remains at line 1.
+    if [[ "$src_content" == ---* ]]; then
+      local fm_end_line
+      fm_end_line=$(printf '%s\n' "$src_content" | awk 'NR==1{next} /^---/{print NR; exit}')
+      if [[ -n "$fm_end_line" ]]; then
+        local frontmatter body
+        frontmatter=$(printf '%s\n' "$src_content" | head -n "$fm_end_line")
+        body=$(printf '%s\n' "$src_content" | tail -n +"$((fm_end_line + 1))")
+        generated_content="${frontmatter}
+$(provenance_header "$skill" "$player")
+${body}"
+      else
+        generated_content="$(provenance_header "$skill" "$player")
 ${src_content}"
+      fi
+    else
+      generated_content="$(provenance_header "$skill" "$player")
+${src_content}"
+    fi
 
     if [[ -f "$target" ]]; then
-      local target_body
+      local target_body target_first_line
       target_body=$(strip_header < "$target")
+      target_first_line=$(head -1 "$target")
 
-      # Check drift: compare canonical body with target body
-      if [[ "$target_body" == "$src_content" ]]; then
+      # Check drift: compare canonical body AND verify structural correctness.
+      # If the source has frontmatter, the target must also start with ---
+      # (not with a provenance comment) — otherwise tools like Codex CLI fail.
+      local structure_ok=true
+      if [[ "$src_content" == ---* && "$target_first_line" != "---" ]]; then
+        structure_ok=false
+      fi
+
+      if [[ "$target_body" == "$src_content" && "$structure_ok" == "true" ]]; then
         log "✓ up-to-date  [$player] $skill"
         ((UP_TO_DATE_COUNT++))
         continue

@@ -5,9 +5,9 @@ argument-hint: "[--demo] [--with-diligence] [--demo-run-id <id>] [--fast]"
 ---
 <!-- MATERIALIZED FILE — DO NOT EDIT MANUALLY
      Source:    prodops/skills/delivery/SKILL.md
-     Player:    claude
+     Player:    copilot
      Generator: prodops/scripts/agents/materialize-skills.sh
-     Generated: 2026-08-06T13:38:34Z
+     Generated: 2026-08-06T13:38:35Z
      To update: bash prodops/scripts/agents/materialize-skills.sh --skill delivery
 -->
 

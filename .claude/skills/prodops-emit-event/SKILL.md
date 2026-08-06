@@ -1,16 +1,16 @@
-<!-- MATERIALIZED FILE — DO NOT EDIT MANUALLY
-     Source:    prodops/skills/prodops-emit-event/SKILL.md
-     Player:    claude
-     Generator: prodops/scripts/agents/materialize-skills.sh
-     Generated: 2026-07-28T17:50:58Z
-     To update: bash prodops/scripts/agents/materialize-skills.sh --skill prodops-emit-event
--->
 ---
 name: prodops-emit-event
 description: Emit a ProdOps Delivery lifecycle event via the player-neutral prodops_emit_event tool. Use this capability whenever a Delivery Skill requires recording a Started or Completed lifecycle moment.
 tool: prodops/runtime/tools/emit-event/scripts/emit-event
 schema-version: "1"
 ---
+<!-- MATERIALIZED FILE — DO NOT EDIT MANUALLY
+     Source:    prodops/skills/prodops-emit-event/SKILL.md
+     Player:    claude
+     Generator: prodops/scripts/agents/materialize-skills.sh
+     Generated: 2026-08-06T13:39:36Z
+     To update: bash prodops/scripts/agents/materialize-skills.sh --skill prodops-emit-event
+-->
 
 # PRODOPS EMIT EVENT
 

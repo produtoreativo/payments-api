@@ -4,9 +4,9 @@ description: Synchronize OBC state across backlogs and tools. Runs event-driven 
 ---
 <!-- MATERIALIZED FILE — DO NOT EDIT MANUALLY
      Source:    prodops/skills/diligence/SKILL.md
-     Player:    claude
+     Player:    copilot
      Generator: prodops/scripts/agents/materialize-skills.sh
-     Generated: 2026-08-06T13:38:32Z
+     Generated: 2026-08-06T13:38:33Z
      To update: bash prodops/scripts/agents/materialize-skills.sh --skill diligence
 -->
 

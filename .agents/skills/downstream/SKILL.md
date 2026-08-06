@@ -4,9 +4,9 @@ description: Orquestra a execução do fluxo de entrega governado do ProdOps. Se
 ---
 <!-- MATERIALIZED FILE — DO NOT EDIT MANUALLY
      Source:    prodops/skills/downstream/SKILL.md
-     Player:    claude
+     Player:    codex
      Generator: prodops/scripts/agents/materialize-skills.sh
-     Generated: 2026-08-06T13:38:28Z
+     Generated: 2026-08-06T13:38:30Z
      To update: bash prodops/scripts/agents/materialize-skills.sh --skill downstream
 -->
 
