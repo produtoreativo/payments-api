@@ -20,7 +20,6 @@ name: Deploy to Production
 #     PRODUCTION_ASAAS_TOKEN
 #     PRODUCTION_ASAAS_WEBHOOK_TOKEN
 #     PRODUCTION_ADMIN_SECRET
-#     PRODUCTION_DATADOG_API_KEY
 # ─────────────────────────────────────────────────────────────────────────────
 
 on:
@@ -87,13 +86,11 @@ jobs:
           ASAAS_TOKEN: ${{ secrets.PRODUCTION_ASAAS_TOKEN }}
           ASAAS_WEBHOOK_TOKEN: ${{ secrets.PRODUCTION_ASAAS_WEBHOOK_TOKEN }}
           ADMIN_SECRET: ${{ secrets.PRODUCTION_ADMIN_SECRET }}
-          DATADOG_API_KEY: ${{ secrets.PRODUCTION_DATADOG_API_KEY }}
         run: |
           MISSING=()
           [[ -z "$ASAAS_TOKEN" ]]        && MISSING+=("PRODUCTION_ASAAS_TOKEN")
           [[ -z "$ASAAS_WEBHOOK_TOKEN" ]] && MISSING+=("PRODUCTION_ASAAS_WEBHOOK_TOKEN")
           [[ -z "$ADMIN_SECRET" ]]        && MISSING+=("PRODUCTION_ADMIN_SECRET")
-          [[ -z "$DATADOG_API_KEY" ]]     && MISSING+=("PRODUCTION_DATADOG_API_KEY")
           if [[ ${#MISSING[@]} -gt 0 ]]; then
             echo "ERROR: The following required secrets are not set in the 'production' environment:"
             printf '  - %s\n' "${MISSING[@]}"
@@ -147,7 +144,6 @@ jobs:
           PRODUCTION_ASAAS_TOKEN: ${{ secrets.PRODUCTION_ASAAS_TOKEN }}
           PRODUCTION_ASAAS_WEBHOOK_TOKEN: ${{ secrets.PRODUCTION_ASAAS_WEBHOOK_TOKEN }}
           PRODUCTION_ADMIN_SECRET: ${{ secrets.PRODUCTION_ADMIN_SECRET }}
-          PRODUCTION_DATADOG_API_KEY: ${{ secrets.PRODUCTION_DATADOG_API_KEY }}
         run: |
           sam deploy \
             --template-file .aws-sam/build/template.yaml \
@@ -172,14 +168,9 @@ jobs:
               EnabledPaymentProviders=ASAAS \
               DefaultPaymentProvider=ASAAS \
               WebhookProcessingMode=async \
-              DatadogEnabled=true \
-              DatadogSite=datadoghq.com \
-              DatadogExtensionLayerArn=arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:97 \
-              DatadogVersion=5.111.0 \
               AsaasToken="$PRODUCTION_ASAAS_TOKEN" \
               AsaasWebhookToken="$PRODUCTION_ASAAS_WEBHOOK_TOKEN" \
-              AdminSecret="$PRODUCTION_ADMIN_SECRET" \
-              DatadogApiKey="$PRODUCTION_DATADOG_API_KEY"
+              AdminSecret="$PRODUCTION_ADMIN_SECRET"
 
       # ── Retrieve deployed API URL ────────────────────────────────────────────
       - name: Get API URL
@@ -214,7 +205,6 @@ jobs:
             echo "AsaasUrl          = https://api.asaas.com  (LIVE API)"
             echo "AsaasMock         = false"
             echo "WebhookProcessing = async"
-            echo "DatadogEnabled    = true"
             echo "\`\`\`"
           } >> "$GITHUB_STEP_SUMMARY"
 

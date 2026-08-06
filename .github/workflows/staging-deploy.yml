@@ -259,7 +259,6 @@ jobs:
           STAGING_ASAAS_TOKEN: ${{ secrets.STAGING_ASAAS_TOKEN }}
           STAGING_ASAAS_WEBHOOK_TOKEN: ${{ secrets.STAGING_ASAAS_WEBHOOK_TOKEN }}
           STAGING_ADMIN_SECRET: ${{ secrets.STAGING_ADMIN_SECRET }}
-          STAGING_DATADOG_API_KEY: ${{ secrets.STAGING_DATADOG_API_KEY }}
         run: |
           sam deploy \
             --template-file .aws-sam/build/template.yaml \
@@ -284,14 +283,9 @@ jobs:
               EnabledPaymentProviders=ASAAS \
               DefaultPaymentProvider=ASAAS \
               WebhookProcessingMode=async \
-              DatadogEnabled=true \
-              DatadogSite=datadoghq.com \
-              DatadogExtensionLayerArn=arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:97 \
-              DatadogVersion=5.111.0 \
               AsaasToken="$STAGING_ASAAS_TOKEN" \
               AsaasWebhookToken="$STAGING_ASAAS_WEBHOOK_TOKEN" \
-              AdminSecret="$STAGING_ADMIN_SECRET" \
-              DatadogApiKey="$STAGING_DATADOG_API_KEY"
+              AdminSecret="$STAGING_ADMIN_SECRET"
 
       # ── Retrieve deployed API URL ────────────────────────────────────────────
       - name: Get API URL
