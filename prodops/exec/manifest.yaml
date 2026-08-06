@@ -110,7 +110,7 @@ gates:
     tool: sonarqube
     project_key: payments-api
     blocks: auto_merge_only
-    note: "servidor SonarQube efêmero em container; o script provisiona o token sozinho — não requer secret. Veredito lido da API (/api/qualitygates/project_status), não do exit code do scanner, que não é documentado. Sem Docker o gate não roda (exit 2) e o auto-merge fica desarmado; o merge manual segue livre."
+    note: "servidor SonarQube efêmero em container; o script provisiona o token sozinho — não requer secret. Veredito lido da API (/api/qualitygates/project_status), não do exit code do scanner, que não é documentado. O script provisiona o quality gate 'prodops-sast' (violations + duplicação + security hotspots) e remove a condição de cobertura que o SonarQube injeta via CAYC: cobertura é responsabilidade de gates.coverage, que é mais rigoroso (branches, 100%, código inteiro) que o new_coverage do Sonar (linhas, 80%, só código novo). Sem Docker o gate não roda (exit 2) e o auto-merge fica desarmado; o merge manual segue livre."
   no_mocks:
     # fonte: prodops/skills/hack/references/workflow.md (No Mocks Rule)
     # Aplica-se apenas a api/test/ (testes de aceitação devem usar implementações reais).
