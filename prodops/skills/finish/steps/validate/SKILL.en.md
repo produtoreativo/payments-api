@@ -17,7 +17,11 @@ writing to artifacts; pushing. It is an **inspection** step, not a mutation one.
 ## Inputs
 
 - `prodops/exec/manifest.yaml` — canonical gate commands and criteria
-  (`gates.lint`, `gates.acceptance`, `gates.build`, `gates.no_mocks`)
+  (`gates.lint`, `gates.acceptance`, `gates.build`, `gates.no_mocks`,
+  `gates.coverage`, `gates.dependencies`, `gates.sast`). The last three are
+  `blocks: auto_merge_only` — they disarm auto-merge, not manual merge — but
+  they **run in this step like every other gate**: they are static quality
+  analysis.
 - `prodops/framework/journeys/delivery/phases/finish/quality-gates.md` — what blocks merge
 - Current diff — to decide whether the dynamic exception (acceptance) applies
 
@@ -68,6 +72,15 @@ LocalStack in the acceptance gate. Requires no secret: the script provisions the
 token on the freshly started server. `SONAR_TOKEN` in the environment (or in
 `api/.env`) takes precedence if present. The first run takes ~1-2 min until the
 server is healthy.
+
+**SAST does not measure coverage.** The script provisions its own quality gate
+(`prodops-sast`) with violations, duplication, and security hotspots, and
+**removes** the `new_coverage` condition SonarQube automatically injects into
+every new gate (via CAYC — "Clean as You Code"). Coverage is the exclusive
+responsibility of `gates.coverage`, which is strictly stricter: branches at 100%
+over the whole codebase, versus lines at 80% over new code only. Without that
+removal SAST would fail on 0.0% coverage — the scanner receives no report in
+this flow — masking the security verdict it exists to deliver.
 
 Exit 0 releases; exit 1 **blocks** auto-merge (red quality gate); exit 2 = the
 gate could not run (no Docker, invalid token, server down) — auto-merge stays
