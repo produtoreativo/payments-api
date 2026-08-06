@@ -1,7 +1,20 @@
 # Payments API — Guia do Agente
 
-Este arquivo é um roteador mínimo. O contexto de execução vive nos skills, no
-manifest e nos artefatos do card — **não pré-leia a documentação do framework**.
+## Contexto obrigatório — leia antes de qualquer ação
+
+Este repositório opera sob o **ProdOps Framework**. Qualquer agente, independentemente
+da ferramenta ou modelo, deve estabelecer esse contexto antes de classificar ou executar
+qualquer pedido:
+
+1. **`prodops/exec/manifest.yaml`** — fonte única de paths canônicos, vocabulário,
+   tipos de artefato e quality gates. Leia uma única vez por sessão.
+2. **`prodops/framework/principles.md`** — os 11 princípios que governam todas as
+   decisões. Sem esse contexto, o agente não consegue classificar corretamente o trabalho.
+3. **`prodops/README.md`** — mapa de navegação do framework e resumo das jornadas.
+
+Após estabelecer esse contexto, use o protocolo abaixo para classificar e rotear.
+O contexto de execução de cada tarefa vive nos skills e nos artefatos do card —
+não releia o framework a cada passo, apenas na abertura da sessão.
 
 ## Permissões pré-autorizadas para subagentes
 
