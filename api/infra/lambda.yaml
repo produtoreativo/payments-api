@@ -9,32 +9,6 @@ Parameters:
     AllowedPattern: '^[a-zA-Z0-9-]+$'
     Description: Environment name used as prefix for all resource names.
 
-  # ── Observability ──────────────────────────────────────────────────────────
-  DatadogEnabled:
-    Type: String
-    Default: 'true'
-    AllowedValues: ['true', 'false']
-  DatadogSite:
-    Type: String
-    Default: datadoghq.com
-  DatadogExtensionLayerArn:
-    Type: String
-    # Default ARN for us-east-1 — override with the ARN for your target region.
-    # Format: arn:aws:lambda:<REGION>:464622532012:layer:Datadog-Extension:97
-    Default: 'arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:97'
-    Description: >
-      Datadog Extension Layer ARN. Must be overridden for each target AWS region.
-      Use a pinned version (e.g. :97) — never use latest to avoid uncontrolled updates.
-  DatadogApiKey:
-    Type: String
-    Default: ''
-    NoEcho: true
-    Description: >
-      Datadog API key. Injected via GitHub Environment secret at deploy time — never stored in code or samconfig.toml.
-  DatadogVersion:
-    Type: String
-    Default: 0.0.1
-
   # ── Storage ────────────────────────────────────────────────────────────────
   AwsDynamoDbEndpoint:
     Type: String
@@ -87,15 +61,11 @@ Parameters:
       Leave empty in staging and production.
 
 Conditions:
-  IsDatadogEnabled:         !Equals [!Ref DatadogEnabled, 'true']
-  HasDatadogExtensionLayer: !Not [!Equals [!Ref DatadogExtensionLayerArn, '']]
   HasAwsDynamoDbEndpoint:   !Not [!Equals [!Ref AwsDynamoDbEndpoint, '']]
   HasAsaasToken:            !Not [!Equals [!Ref AsaasToken, '']]
   HasAsaasWebhookToken:     !Not [!Equals [!Ref AsaasWebhookToken, '']]
   HasAdminSecret:           !Not [!Equals [!Ref AdminSecret, '']]
   HasApiTokenLocal:         !Not [!Equals [!Ref ApiTokenLocal, '']]
-  UseDatadogExtension:
-    !And [!Condition IsDatadogEnabled, !Condition HasDatadogExtensionLayer]
 
 Globals:
   Function:
@@ -110,20 +80,6 @@ Globals:
       Variables:
         NODE_ENV: !Ref EnvironmentName
         OBSERVABILITY_ENV: !Ref EnvironmentName
-
-        # Observability
-        DD_SERVICE: payments-api
-        DD_ENV: !Ref EnvironmentName
-        DD_VERSION: !Ref DatadogVersion
-        DD_SITE: !Ref DatadogSite
-        DD_TRACE_ENABLED: !Ref DatadogEnabled
-        DD_LOGS_INJECTION: !Ref DatadogEnabled
-        DD_RUNTIME_METRICS_ENABLED: !Ref DatadogEnabled
-        # DatadogApiKey injected via GitHub Environment secret at deploy time — never stored in plain text.
-        DD_API_KEY: !If
-          - IsDatadogEnabled
-          - !Ref DatadogApiKey
-          - !Ref AWS::NoValue
 
         # Storage
         AWS_DYNAMODB_ENDPOINT: !If
@@ -334,10 +290,6 @@ Resources:
       CodeUri: ../dist/
       Handler: lambda.handler
       Role: !GetAtt ApiFunctionRole.Arn
-      Layers: !If
-        - UseDatadogExtension
-        - - !Ref DatadogExtensionLayerArn
-        - !Ref AWS::NoValue
       FunctionUrlConfig:
         AuthType: NONE
         Cors:
@@ -366,10 +318,6 @@ Resources:
       Handler: webhook-worker.handler
       Role: !GetAtt WebhookWorkerRole.Arn
       Timeout: 30
-      Layers: !If
-        - UseDatadogExtension
-        - - !Ref DatadogExtensionLayerArn
-        - !Ref AWS::NoValue
       Events:
         WebhookQueueEvent:
           Type: SQS

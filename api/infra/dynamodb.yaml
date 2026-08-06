@@ -16,7 +16,7 @@ Resources:
       TableName: !Sub "${EnvironmentName}-TransactionsTable"
       BillingMode: PAY_PER_REQUEST
       PointInTimeRecoverySpecification:
-        PointInTimeRecoveryEnabled: true
+        PointInTimeRecoveryEnabled: false
       AttributeDefinitions:
         - AttributeName: PK
           AttributeType: S
@@ -41,7 +41,7 @@ Resources:
       TableName: !Sub "${EnvironmentName}-TenantsTable"
       BillingMode: PAY_PER_REQUEST
       PointInTimeRecoverySpecification:
-        PointInTimeRecoveryEnabled: true
+        PointInTimeRecoveryEnabled: false
       AttributeDefinitions:
         - AttributeName: PK
           AttributeType: S
@@ -66,7 +66,7 @@ Resources:
       TableName: !Sub "${EnvironmentName}-CustomersTable"
       BillingMode: PAY_PER_REQUEST
       PointInTimeRecoverySpecification:
-        PointInTimeRecoveryEnabled: true
+        PointInTimeRecoveryEnabled: false
       AttributeDefinitions:
         - AttributeName: PK
           AttributeType: S
@@ -91,7 +91,7 @@ Resources:
       TableName: !Sub "${EnvironmentName}-PaymentsTable"
       BillingMode: PAY_PER_REQUEST
       PointInTimeRecoverySpecification:
-        PointInTimeRecoveryEnabled: true
+        PointInTimeRecoveryEnabled: false
       AttributeDefinitions:
         - AttributeName: PK
           AttributeType: S
@@ -129,7 +129,7 @@ Resources:
       TableName: !Sub "${EnvironmentName}-WebhooksTable"
       BillingMode: PAY_PER_REQUEST
       PointInTimeRecoverySpecification:
-        PointInTimeRecoveryEnabled: true
+        PointInTimeRecoveryEnabled: false
       AttributeDefinitions:
         - AttributeName: PK
           AttributeType: S

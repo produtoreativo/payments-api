@@ -36,13 +36,6 @@ parameter_overrides = [
   # Webhooks — real SQS async processing
   "WebhookProcessingMode=async",
 
-  # Observability — Datadog enabled (EXP-010)
-  # DatadogApiKey must be injected at deploy time via --parameter-overrides
-  "DatadogEnabled=true",
-  "DatadogSite=datadoghq.com",
-  "DatadogExtensionLayerArn=arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:97",
-  "DatadogVersion=5.111.0",
-
   # ApiTokenLocal intentionally NOT set.
   # The local dev token must NOT be accepted in staging — if it were set here,
   # the insecure local token would grant access to the real staging database.
@@ -83,8 +76,6 @@ parameter_overrides = [
   # Webhooks — real SQS async processing
   "WebhookProcessingMode=async",
 
-  # Observability — Datadog desabilitado em experimentos
-  "DatadogEnabled=false",
 ]
 
 # ── Production ───────────────────────────────────────────────────────────────
@@ -122,13 +113,6 @@ parameter_overrides = [
 
   # Webhooks — real SQS async processing
   "WebhookProcessingMode=async",
-
-  # Observability — Datadog enabled (EXP-010 / EXP-012)
-  # DatadogApiKey must be injected at deploy time via --parameter-overrides
-  "DatadogEnabled=true",
-  "DatadogSite=datadoghq.com",
-  "DatadogExtensionLayerArn=arn:aws:lambda:us-east-1:464622532012:layer:Datadog-Extension:97",
-  "DatadogVersion=5.111.0",
 
   # ApiTokenLocal intentionally NOT set — insecure local token must never be
   # accepted in production.
