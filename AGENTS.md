@@ -1,20 +1,23 @@
 # Payments API — Guia do Agente
 
-## Contexto obrigatório — leia antes de qualquer ação
+## AÇÃO OBRIGATÓRIA — execute antes de responder qualquer mensagem
 
-Este repositório opera sob o **ProdOps Framework**. Qualquer agente, independentemente
-da ferramenta ou modelo, deve estabelecer esse contexto antes de classificar ou executar
-qualquer pedido:
+Este repositório usa o **ProdOps Framework**. Você **não tem contexto suficiente**
+para classificar ou executar nenhum pedido sem ler os arquivos abaixo.
 
-1. **`prodops/exec/manifest.yaml`** — fonte única de paths canônicos, vocabulário,
-   tipos de artefato e quality gates. Leia uma única vez por sessão.
-2. **`prodops/framework/principles.md`** — os 11 princípios que governam todas as
-   decisões. Sem esse contexto, o agente não consegue classificar corretamente o trabalho.
-3. **`prodops/README.md`** — mapa de navegação do framework e resumo das jornadas.
+**Leia agora, nesta ordem, antes de responder:**
 
-Após estabelecer esse contexto, use o protocolo abaixo para classificar e rotear.
-O contexto de execução de cada tarefa vive nos skills e nos artefatos do card —
-não releia o framework a cada passo, apenas na abertura da sessão.
+```
+1. prodops/exec/manifest.yaml
+2. prodops/framework/principles.md
+3. prodops/README.md
+```
+
+Não pule essa etapa. Não responda ao usuário antes de completar essas leituras.
+Se qualquer um dos arquivos não existir, informe e aguarde instrução.
+
+Após as leituras, use o protocolo de recebimento de trabalho abaixo.
+Nas etapas seguintes da mesma sessão, não releia — o contexto já está estabelecido.
 
 ## Permissões pré-autorizadas para subagentes
 
