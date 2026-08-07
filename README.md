@@ -1,10 +1,15 @@
 [English](README.en.md)
 
-# Payments API — ProdOps University Reference Project
+# Payments API — Implementação de Referência do ProdOps Framework
 
-Payments API é um projeto de referência da [ProdOps University](https://prodops.university/) que demonstra como código, contratos, especificações, observabilidade, confiabilidade, operação e artefatos de produto se conectam na evolução de um produto digital.
+> **Este repositório é uma RI (Referência de Implementação) do [ProdOps Framework](prodops/framework/README.md).**
+> O produto (Payments API) é o veículo — o objetivo é demonstrar o Framework em operação real.
+> Se você quer entender o produto, comece por `api/`. Se quer entender o Framework, comece por `prodops/`.
 
-→ **Documentação do Framework ProdOps:** [prodops/README.md](prodops/README.md)
+Payments API é um projeto de referência da [ProdOps University](https://prodops.university/) que demonstra como código, contratos, especificações, observabilidade, confiabilidade, operação e artefatos de produto se conectam na evolução de um produto digital — seguindo o ProdOps Framework do início ao fim.
+
+→ **Framework ProdOps:** [prodops/README.md](prodops/README.md)
+→ **Filosofia de contribuição:** [prodops/framework/contributor-philosophy.md](prodops/framework/contributor-philosophy.md)
 
 ---
 
