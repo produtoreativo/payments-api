@@ -128,6 +128,28 @@ When you find a conflict between two definitions:
 
 ---
 
+## Community standards before custom patterns
+
+Before inventing a format, schema, protocol, or convention for the Runtime, choose an
+existing community standard — even one with low adoption.
+
+**Why?** Community standards have already solved the edge cases you have not encountered yet.
+They come with documentation, tooling, examples, and contributors who will keep evolving
+the standard independently of this project.
+
+Canonical references for the ProdOps Runtime:
+
+| Domain | Adopted standard |
+|---|---|
+| HTTP API contracts | [OpenAPI](https://spec.openapis.org/oas/latest.html) |
+| Async event contracts | [AsyncAPI](https://www.asyncapi.com/docs/reference/specification/latest) |
+| Event envelope | [CloudEvents](https://cloudevents.io/) |
+| Service level objectives | [OpenSLO](https://openslo.com/) |
+
+When no community standard exists for the problem: document the gap in `framework-gaps.md`,
+describe the minimal pattern adopted, and mark it as provisional.
+Never promote a provisional pattern to canonical without an explicit review.
+
 ## File conventions
 
 Every framework document must have a language pair:

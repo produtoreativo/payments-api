@@ -129,6 +129,28 @@ Quando encontrar conflito entre duas definições:
 
 ---
 
+## Padrões da comunidade antes de padrões próprios
+
+Antes de inventar um formato, schema, protocolo ou convenção para o Runtime, escolha um
+padrão existente na comunidade — mesmo que tenha baixa adoção.
+
+**Por quê?** Padrões da comunidade já resolveram os casos extremos que você ainda não
+encontrou. Eles têm documentação, tooling, exemplos e contribuidores que continuarão
+evoluindo o padrão independentemente deste projeto.
+
+Referências canônicas do Runtime ProdOps:
+
+| Domínio | Padrão adotado |
+|---|---|
+| Contratos de API HTTP | [OpenAPI](https://spec.openapis.org/oas/latest.html) |
+| Contratos de eventos assíncronos | [AsyncAPI](https://www.asyncapi.com/docs/reference/specification/latest) |
+| Envelope de eventos | [CloudEvents](https://cloudevents.io/) |
+| Objetivos de nível de serviço | [OpenSLO](https://openslo.com/) |
+
+Quando não existir um padrão da comunidade para o problema: documente o gap em
+`framework-gaps.md`, descreva o padrão mínimo adotado e sinalize que é provisório.
+Nunca eleve um padrão provisório a canônico sem revisão explícita.
+
 ## Convenções de arquivo
 
 Todo documento do framework deve ter par de idioma:
