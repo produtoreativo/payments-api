@@ -33,6 +33,7 @@ Este diretório contém a documentação canônica do ProdOps Framework. O conte
 | [product-stages.md](product-stages.md) | Estágios de produto (PoC→MLP) |
 | [dora-metrics.md](dora-metrics.md) | Métricas DORA estendidas |
 | [positioning.md](positioning.md) | **Como explicar ProdOps** — guia de comunicação canônico para agentes e humanos; inclui o diferencial Upstream/Downstream como modos, frases aprovadas e erros comuns |
+| [contributor-philosophy.md](contributor-philosophy.md) | **Filosofia do contribuidor** — onde cada mudança pertence (Framework vs Runtime vs Agents), os quatro qualificadores de design e como evoluir sem acumular inconsistência |
 
 ## Templates de OBC
 
