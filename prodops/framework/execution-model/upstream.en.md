@@ -90,8 +90,8 @@ Objective: validate behavior against a real provider (e.g.: Asaas sandbox) when 
 - **Required:** stack destroyed at the end of the experiment via `action=teardown`
 
 → [Step: deploy-to-sandbox](../../skills/upstream/steps/deploy-to-sandbox/SKILL.md)
-→ [Workflow: experiment-deploy.yml](../../../.github/workflows/experiment-deploy.yml)
-→ [IAM Role: iam-experiment-role.yaml](../../../api/infra/iam-experiment-role.yaml)
+→ Deploy workflow: `.github/workflows/experiment-deploy.yml` (implemented by the product)
+→ IAM Role: `api/infra/iam-experiment-role.yaml` (implemented by the product)
 
 ## Promotion to Downstream
 

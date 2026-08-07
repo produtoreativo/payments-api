@@ -90,8 +90,8 @@ Objetivo: validar comportamento contra um provedor real (ex: Asaas sandbox) quan
 - **Obrigatório:** stack destruída ao final do experimento via `action=teardown`
 
 → [Step: deploy-to-sandbox](../../skills/upstream/steps/deploy-to-sandbox/SKILL.md)
-→ [Workflow: experiment-deploy.yml](../../../.github/workflows/experiment-deploy.yml)
-→ [Role IAM: iam-experiment-role.yaml](../../../api/infra/iam-experiment-role.yaml)
+→ Workflow de deploy: `.github/workflows/experiment-deploy.yml` (implementado pelo produto)
+→ Role IAM: `api/infra/iam-experiment-role.yaml` (implementado pelo produto)
 
 ## Promoção para Downstream
 

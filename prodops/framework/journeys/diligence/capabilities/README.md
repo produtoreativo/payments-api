@@ -274,7 +274,7 @@ Esta Capability é invocada como sub-rotina. Não possui acionamento próprio. R
 
 **Fontes de verdade:**
 - Canonical Specification: `prodops/framework/github-workspace.md`
-- Sync manifest: `prodops/artifacts/trails/github-sync-manifest.md`
+- Sync manifest: `prodops/artifacts/trails/github-sync-manifest.md` (criado pelo produto)
 
 **Limites:**
 - Não opera em projetos manuais (fora do escopo `ProdOps — `)

@@ -44,7 +44,7 @@ O ProdOps adota um modelo DORA estendido de **7 métricas** que expande as 4 mé
 **Padrão de eventos de OBC que alimentam esta métrica:**
 Eventos com sufixo `*_failed`, `*_rejected`, `*_refused`, `*_error` correlacionados com deploys recentes. Exemplo de produto (payments-api): `invoice.creation_failed`, `webhook.delivery.failed`.
 
-→ Ver mapeamento de produto em [`../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md`](../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ Crie seu mapeamento OBC → DORA em `prodops/artifacts/experiments/<slug>/evidence/obc-dora-mapping.md`
 
 ---
 
@@ -181,6 +181,6 @@ Usadas em perfis específicos (especialmente `quality` e `ai_readiness`):
 
 → [Estágios de Produto](product-stages.md)
 → [Glossário](glossary.md)
-→ [Mapeamento OBC → DORA](../artifacts/experiments/008-dora-extended-documentation/evidence/obc-dora-mapping.md)
+→ Mapeamento OBC → DORA: `prodops/artifacts/experiments/<slug>/evidence/obc-dora-mapping.md` (criado pelo produto)
 → [Jornada Operation](journeys/operation/README.md)
 → [Reliability Plans](../artifacts/plans/reliability/README.md)

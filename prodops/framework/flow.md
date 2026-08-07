@@ -228,7 +228,7 @@ Esta etapa pertence somente ao **Fluxo Global**. No **Fluxo Local**, o Business 
 
 **Quando avançar:** Todos os gates de readiness Downstream estão satisfeitos.
 
-→ [Iteration Plan](../artifacts/plans/iteration-plan.md)
+→ Iteration Plan: `prodops/artifacts/plans/iteration-plan.md`
 
 ---
 

@@ -80,10 +80,8 @@ else
   pass "prodops/execution-model/ correctly moved to framework"
 fi
 
-# Verify key committed OBC artifacts exist for items with Entrou status
-for obc in api-token-validation create-invoice-boleto webhook-configuration credit-card-authorization-confirmation; do
-  check_path "prodops/artifacts/obcs/${obc}.md"
-done
+# OBC artifacts are product-specific — no generic name checks here.
+# Products define their own OBCs under prodops/artifacts/obcs/.
 
 while IFS= read -r experiment_dir; do
   [[ -z "${experiment_dir}" ]] && continue
@@ -269,30 +267,15 @@ fi
 check_path ".prodopsignore"
 check_path "prodops/exec/framework-lock.yaml"
 
+# Read framework status for conditional checks below
+FRAMEWORK_STATUS=""
 if [[ -f "prodops/exec/framework-lock.yaml" ]]; then
-  if grep -q "status: self" prodops/exec/framework-lock.yaml; then
-    pass "framework-lock.yaml: status is self (empirical phase)"
-  else
-    fail "framework-lock.yaml: expected 'status: self' for empirical phase"
-  fi
-fi
-
-if grep -q "payments-api-local-testing" prodops/framework/canonical-paths.md 2>/dev/null; then
-  fail "canonical-paths.md references product-local skill (payments-api-local-testing) — remove it"
-else
-  pass "canonical-paths.md: no product-local skill references"
+  FRAMEWORK_STATUS=$(grep -E '^\s+status:' prodops/exec/framework-lock.yaml | head -1 | awk '{print $2}' | tr -d '"')
 fi
 
 # ── Product-local skills space ─────────────────────────────────────────────
 check_path "prodops/skills/local"
 check_path "prodops/skills/local/README.md"
-check_path "prodops/skills/local/payments-api-local-testing/SKILL.md"
-
-if [[ -e "prodops/skills/payments-api-local-testing" ]]; then
-  fail "prodops/skills/payments-api-local-testing still exists — should be at prodops/skills/local/payments-api-local-testing"
-else
-  pass "prodops/skills/payments-api-local-testing correctly moved to local/"
-fi
 
 if grep -q "prodops/skills/local/" .prodopsignore 2>/dev/null; then
   pass ".prodopsignore protects prodops/skills/local/"
@@ -374,82 +357,88 @@ check_path "prodops/templates/obcs/obc.md"
 check_path "prodops/templates/operation/runbook.md"
 check_path "prodops/templates/operation/postmortem.md"
 
-# ── Export boundary integrity ──────────────────────────────────────────────────
+# ── Empirical-upstream-only checks ────────────────────────────────────────────
+# These run only when this repo is the framework source (status: self).
+# Consumer repos (status: consumer) skip this section entirely.
 
-check_path "prodops/exec/export-manifest.yaml"
-check_path "prodops/exec/export-boundary.md"
-check_path "prodops/exec/export-boundary.en.md"
+if [[ "${FRAMEWORK_STATUS}" == "self" ]]; then
 
-# YAML validity check for export-manifest
-if command -v python3 >/dev/null 2>&1; then
-  if python3 -c "import yaml" 2>/dev/null; then
-    if python3 -c "import yaml; yaml.safe_load(open('prodops/exec/export-manifest.yaml'))" 2>/dev/null; then
-      pass "export-manifest.yaml: YAML valid"
+  # Export boundary integrity
+  check_path "prodops/exec/export-manifest.yaml"
+  check_path "prodops/exec/export-boundary.md"
+  check_path "prodops/exec/export-boundary.en.md"
+
+  # YAML validity check for export-manifest
+  if command -v python3 >/dev/null 2>&1; then
+    if python3 -c "import yaml" 2>/dev/null; then
+      if python3 -c "import yaml; yaml.safe_load(open('prodops/exec/export-manifest.yaml'))" 2>/dev/null; then
+        pass "export-manifest.yaml: YAML valid"
+      else
+        fail "export-manifest.yaml: YAML invalid"
+      fi
     else
-      fail "export-manifest.yaml: YAML invalid"
+      skip "PyYAML not installed — YAML validation of export-manifest skipped"
     fi
   else
-    skip "PyYAML not installed — YAML validation of export-manifest skipped"
+    skip "python3 not found — YAML validation of export-manifest skipped"
   fi
-else
-  skip "python3 not found — YAML validation of export-manifest skipped"
-fi
 
-# Confirm local areas are excluded
-if grep -qF "skills/local/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
-  pass "export-manifest.yaml: skills/local/** excluded"
-else
-  fail "export-manifest.yaml: skills/local/** not excluded"
-fi
-
-if grep -qF "artifacts/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
-  pass "export-manifest.yaml: artifacts/** excluded"
-else
-  fail "export-manifest.yaml: artifacts/** not excluded"
-fi
-
-if grep -qF "exec/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
-  pass "export-manifest.yaml: exec/** excluded from direct export"
-else
-  fail "export-manifest.yaml: exec/** not excluded from direct export"
-fi
-
-# Confirm canonical roots are included
-if grep -qF "framework/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
-  pass "export-manifest.yaml: framework/** included"
-else
-  fail "export-manifest.yaml: framework/** not included in export"
-fi
-
-if grep -qF "skills/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
-  pass "export-manifest.yaml: skills/** included"
-else
-  fail "export-manifest.yaml: skills/** not included in export"
-fi
-
-# ── Canonicalization integrity ──────────────────────────────────────────────
-
-# Runbook must not contain product-specific terms
-for product_term in "Asaas" "DynamoDB" "/webhook/payments" "ASAAS_WEBHOOK_TOKEN"; do
-  if grep -q "${product_term}" prodops/framework/journeys/operation/runbooks.md 2>/dev/null; then
-    fail "runbooks.md contains product-specific term: ${product_term}"
+  # Confirm local areas are excluded
+  if grep -qF "skills/local/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
+    pass "export-manifest.yaml: skills/local/** excluded"
   else
-    pass "runbooks.md: no reference to '${product_term}'"
+    fail "export-manifest.yaml: skills/local/** not excluded"
   fi
-done
 
-# sync-framework-docs.sh must be disabled
-if [[ -f "scripts/sync-framework-docs.sh" ]]; then
-  if head -30 scripts/sync-framework-docs.sh | grep -q "DISABLED"; then
-    pass "scripts/sync-framework-docs.sh is disabled"
+  if grep -qF "artifacts/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
+    pass "export-manifest.yaml: artifacts/** excluded"
   else
-    fail "scripts/sync-framework-docs.sh is not disabled — risk of destructive execution"
+    fail "export-manifest.yaml: artifacts/** not excluded"
   fi
-fi
 
-# empirical-upstream.md exists
-check_path "prodops/exec/empirical-upstream.md"
-check_path "prodops/exec/empirical-upstream.en.md"
+  if grep -qF "exec/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
+    pass "export-manifest.yaml: exec/** excluded from direct export"
+  else
+    fail "export-manifest.yaml: exec/** not excluded from direct export"
+  fi
+
+  # Confirm canonical roots are included
+  if grep -qF "framework/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
+    pass "export-manifest.yaml: framework/** included"
+  else
+    fail "export-manifest.yaml: framework/** not included in export"
+  fi
+
+  if grep -qF "skills/**" prodops/exec/export-manifest.yaml 2>/dev/null; then
+    pass "export-manifest.yaml: skills/** included"
+  else
+    fail "export-manifest.yaml: skills/** not included in export"
+  fi
+
+  # Canonicalization integrity — runbook must not contain product-specific terms
+  for product_term in "Asaas" "DynamoDB" "/webhook/payments" "ASAAS_WEBHOOK_TOKEN"; do
+    if grep -q "${product_term}" prodops/framework/journeys/operation/runbooks.md 2>/dev/null; then
+      fail "runbooks.md contains product-specific term: ${product_term}"
+    else
+      pass "runbooks.md: no reference to '${product_term}'"
+    fi
+  done
+
+  # sync-framework-docs.sh must be disabled
+  if [[ -f "scripts/sync-framework-docs.sh" ]]; then
+    if head -30 scripts/sync-framework-docs.sh | grep -q "DISABLED"; then
+      pass "scripts/sync-framework-docs.sh is disabled"
+    else
+      fail "scripts/sync-framework-docs.sh is not disabled — risk of destructive execution"
+    fi
+  fi
+
+  check_path "prodops/exec/empirical-upstream.md"
+  check_path "prodops/exec/empirical-upstream.en.md"
+
+else
+  skip "empirical-upstream checks skipped (status: ${FRAMEWORK_STATUS:-unknown})"
+fi
 
 if [[ "${failures}" -gt 0 ]]; then
   printf '\nProdOps doctor found %s issue(s).\n' "${failures}" >&2

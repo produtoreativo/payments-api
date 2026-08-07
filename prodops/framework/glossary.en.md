@@ -917,7 +917,7 @@ See [`prodops/framework/execution-model/downstream.en.md`](execution-model/downs
 
 ## Release Trail
 
-**Definition:** The append-only log of Downstream evidence. Each agent session produces its own file at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`. See model at [`artifacts/trails/release-trail.en.md`](../artifacts/trails/release-trail.en.md).
+**Definition:** The append-only log of Downstream evidence. Each agent session produces its own file at `prodops/artifacts/trails/sessions/YYYY-MM-DD-<session-id>.md`. See model at `prodops/artifacts/trails/release-trail.md`.
 
 ---
 

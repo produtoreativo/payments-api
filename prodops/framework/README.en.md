@@ -50,4 +50,4 @@ This directory contains the canonical ProdOps Framework documentation. The conte
 
 For work context, see the [assessment](journeys/assessment/README.en.md), [product](../artifacts/product/), and [downstream](execution-model/downstream.en.md) directories.
 
-For agent execution, see [AGENTS.md](../../AGENTS.md) and [skills/](../skills/).
+For agent execution, see `AGENTS.md` in your repository and [skills/](../skills/).

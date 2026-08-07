@@ -13,7 +13,7 @@ Observabilidade, estratégia de deploy e testes são definidos **antes** de escr
 Nenhuma mudança de código começa sem contexto compatível com o modo de execução. Upstream é permissivo, experimental e sem compromisso de entrega. Downstream é completo: antes de executar Delivery, exige todos os artefatos e gates de readiness definidos pelo Framework. Agentes não devem inventar contexto de negócio ausente.
 
 ## 5. Upstream before commitment
-Upstream não é uma jornada: é o modo sem compromisso de entrega, no qual qualquer jornada pode operar com rigor experimental e maturidade variável. Código é descartável até ser promovido para Downstream. Downstream também pode executar qualquer jornada, mas aplica todos os quality gates vigentes. Ver [AGENTS.md Upstream Path](../../AGENTS.md).
+Upstream não é uma jornada: é o modo sem compromisso de entrega, no qual qualquer jornada pode operar com rigor experimental e maturidade variável. Código é descartável até ser promovido para Downstream. Downstream também pode executar qualquer jornada, mas aplica todos os quality gates vigentes. Ver `AGENTS.md` do repositório (Upstream Path).
 
 ## 6. Contracts before implementation
 Identificar ou criar um contrato verificável (OpenAPI, AsyncAPI, BDD Feature, schema) antes de escrever código de produção. O contrato é a linguagem compartilhada entre teste e implementação.
