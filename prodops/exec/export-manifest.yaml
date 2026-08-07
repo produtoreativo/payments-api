@@ -37,6 +37,8 @@ export:
     - scripts/README.en.md
     - LICENSE
     - CHANGELOG.md
+    - CONTRIBUTING.md
+    - CONTRIBUTING.en.md
     # Runtime — Reference Implementation core
     - runtime/catalog/**
     - runtime/consumer/**
