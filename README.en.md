@@ -4,6 +4,13 @@
 > The product (Payments API) is the vehicle — the goal is to demonstrate the Framework running on real infrastructure.
 > If you want to understand the product, start with `api/`. If you want to understand the Framework, start with `prodops/`.
 
+> **Framework status:** The Framework already has its canonical repository at [produtoreativo/prodops-framework](https://github.com/produtoreativo/prodops-framework) with an installer for any repo. For now, Framework and Runtime are being developed here in the RI and in the canonical repo in parallel — synchronized at every change — while the content matures toward Release Candidate. Once RC is declared, this RI becomes a pure consumer.
+>
+> → Canonical repo: [produtoreativo/prodops-framework](https://github.com/produtoreativo/prodops-framework)
+> → Latest release: [v1.3.0](https://github.com/produtoreativo/prodops-framework/releases/tag/v1.3.0)
+> → Install in a new repo: `bash <(curl -fsSL https://raw.githubusercontent.com/produtoreativo/prodops-framework/master/prodops/scripts/install-prodops.sh) --version v1.3.0`
+> → This RI: [produtoreativo/payments-api](https://github.com/produtoreativo/payments-api)
+
 Payments API is a reference project from [ProdOps University](https://prodops.university/) that demonstrates how code, contracts, specifications, observability, reliability, operation, and product artifacts connect in the evolution of a digital product — following the ProdOps Framework end to end.
 
 → **ProdOps Framework:** [prodops/README.en.md](prodops/README.en.md)
