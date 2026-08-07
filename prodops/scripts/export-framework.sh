@@ -23,6 +23,7 @@ DOCTOR_SCRIPT="prodops/scripts/doctor.sh"
 MANIFEST="${EXPORT_MANIFEST_OVERRIDE:-prodops/exec/export-manifest.yaml}"
 FRAMEWORK_REPO="${PRODOPS_FRAMEWORK_REPO:-produtoreativo/prodops-framework}"
 DRY_RUN="${EXPORT_DRY_RUN:-0}"
+DIRECT_PUSH="${EXPORT_DIRECT_PUSH:-0}"  # 1 = push directly to default branch, skip PR
 
 EXCLUDED_PREFIXES=(
   "prodops/artifacts/"
@@ -224,7 +225,11 @@ else
   DEFAULT_BRANCH=$(git -C "${DEST_DIR}" remote show origin | awk '/HEAD branch/{print $NF}')
 fi
 
-git -C "${DEST_DIR}" checkout -b "${BRANCH}"
+if [[ "${DIRECT_PUSH}" == "1" ]]; then
+  log "Direct-push mode — working on ${DEFAULT_BRANCH} directly."
+else
+  git -C "${DEST_DIR}" checkout -b "${BRANCH}"
+fi
 
 # ── Step 6: Copy files to destination ────────────────────────────────────────
 
@@ -254,23 +259,34 @@ if [[ "${DEST_FILE_COUNT}" -lt 50 ]]; then
 fi
 log "Destination content validation passed (${DEST_FILE_COUNT} files)."
 
-# ── Step 8: Commit and open PR ───────────────────────────────────────────────
+# ── Step 8: Commit and push (PR or direct) ───────────────────────────────────
 
 git -C "${DEST_DIR}" add -A
+
+# Check if there are actual changes to commit
+if git -C "${DEST_DIR}" diff --cached --quiet; then
+  log "No changes detected — destination is already up to date."
+  exit 0
+fi
+
 git -C "${DEST_DIR}" commit -m "feat(export): sync framework content from payments-api
 
 Exported via prodops/scripts/export-framework.sh
 Source: prodops/exec/export-manifest.yaml
 Date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-git -C "${DEST_DIR}" push origin "${BRANCH}"
+if [[ "${DIRECT_PUSH}" == "1" ]]; then
+  git -C "${DEST_DIR}" push origin "${DEFAULT_BRANCH}"
+  log "Pushed directly to ${DEFAULT_BRANCH}."
+else
+  git -C "${DEST_DIR}" push origin "${BRANCH}"
 
-pr_url=$(gh pr create \
-  --repo "${FRAMEWORK_REPO}" \
-  --head "${BRANCH}" \
-  --base "${DEFAULT_BRANCH}" \
-  --title "feat(export): sync ProdOps Framework from payments-api empirical upstream" \
-  --body "$(cat <<EOF
+  pr_url=$(gh pr create \
+    --repo "${FRAMEWORK_REPO}" \
+    --head "${BRANCH}" \
+    --base "${DEFAULT_BRANCH}" \
+    --title "feat(export): sync ProdOps Framework from payments-api empirical upstream" \
+    --body "$(cat <<EOF
 ## Summary
 
 This PR was generated automatically by \`prodops/scripts/export-framework.sh\`.
@@ -291,4 +307,5 @@ Product-specific paths (\`artifacts/\`, \`exec/\`, \`skills/local/\`, \`scripts/
 EOF
 )")
 
-log "Pull request opened: ${pr_url}"
+  log "Pull request opened: ${pr_url}"
+fi
