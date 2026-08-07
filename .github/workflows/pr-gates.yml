@@ -215,8 +215,9 @@ jobs:
         run: npm run build
 
   # ── Gate: dependencies (SCA / Snyk) ─────────────────────────────────────────
-  # Manifest: gates.dependencies. SCA over api/ third-party deps — NOT SAST
-  # (source-code SAST is covered by GitHub Code Quality/CodeQL). This mirrors
+  # Manifest: gates.dependencies. SCA over api/ third-party deps — it does not
+  # look at source code. Source code is covered by gates.code-analysis
+  # (local SonarQube) and, in CI, by CodeQL (remote SAST). This mirrors
   # gates.coverage: it is an AUTO-MERGE gate, not a required status check, so it
   # does not block manual merge. continue-on-error keeps a red scan from failing
   # the workflow — the enforcement point is `finish request`, which does not arm

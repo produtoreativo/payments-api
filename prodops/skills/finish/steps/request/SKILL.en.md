@@ -72,10 +72,11 @@ gate **could not run** (no `SNYK_TOKEN`) — treat it as not-released: keep
 auto-merge disarmed and record the reason. Creating the secret is an admin
 action, like `allow_auto_merge`.
 
-**SAST** (`gates.sast` in the manifest — local SonarQube over `api/src`):
+**Code analysis** (`gates.code-analysis` in the manifest — local SonarQube over
+`api/src`; maintainability, reliability and security, not security alone):
 
 ```bash
-./scripts/check-sast.sh
+./scripts/check-code-analysis.sh
 ```
 
 Exit 0 releases; exit 1 **blocks** (red quality gate). Exit 2 means the gate
@@ -108,7 +109,7 @@ only for **automating** the merge.
 
 ```bash
 # only when check-coverage-threshold.sh, check-dependencies.sh AND
-# check-sast.sh exited 0
+# check-code-analysis.sh exited 0
 gh pr merge --auto --squash
 ```
 
@@ -117,8 +118,8 @@ gh pr merge --auto --squash
 repository's flow.
 
 **If any step-2 gate did not release** (coverage below threshold, a
-vulnerability >= high, a red SAST quality gate, or a gate that could not run for
-lack of `SNYK_TOKEN`/Docker), do not run `gh pr merge --auto`. Record on the PR
+vulnerability >= high, a red SonarQube quality gate, or a gate that could not run
+for lack of `SNYK_TOKEN`/Docker), do not run `gh pr merge --auto`. Record on the PR
 the reason — specific to the gate that blocked:
 
 ```bash
@@ -128,13 +129,13 @@ available after review."
 #   branch coverage below the 100% threshold (gates.coverage)
 #   vulnerabilities of severity >= high in dependencies (gates.dependencies)
 #   SNYK_TOKEN missing — dependency gate could not run (gates.dependencies)
-#   red SonarQube quality gate on api/src (gates.sast)
-#   Docker unavailable — SAST gate could not run (gates.sast)
+#   red SonarQube quality gate on api/src (gates.code-analysis)
+#   Docker unavailable — code analysis gate could not run (gates.code-analysis)
 ```
 
 The PR stays open, green and **manually mergeable** by a human. The gates govern
 automation only — never the ability to merge. That is why `gates.coverage`,
-`gates.dependencies` and `gates.sast` are **not** required status checks: as
+`gates.dependencies` and `gates.code-analysis` are **not** required status checks: as
 required checks they would also block the manual merge, which is precisely what
 must be preserved.
 
@@ -158,9 +159,9 @@ link. Exactly **one** PR for the branch: before creating, `gh pr list --head
 - Do not open a PR with auto-merge when branch protection is not configured
   (`review` would have flagged it — respect the blocker).
 - Do not arm auto-merge when a step-2 gate did not release (low coverage, a
-  vulnerability >= high, a red SAST quality gate, or a gate unable to run) — and
-  do not withhold the PR because of it: that disarms the automation, not the PR.
-- Do not turn `gates.coverage`, `gates.dependencies` or `gates.sast` into
+  vulnerability >= high, a red SonarQube quality gate, or a gate unable to run) —
+  and do not withhold the PR because of it: that disarms the automation, not the PR.
+- Do not turn `gates.coverage`, `gates.dependencies` or `gates.code-analysis` into
   required status checks: that would block the manual merge, defeating the
   gates' purpose.
 - Do not push, do not commit, do not validate here — only open the PR.
