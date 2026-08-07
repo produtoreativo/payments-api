@@ -127,6 +127,19 @@ Quando encontrar conflito entre duas definições:
 
 ---
 
+---
+
+## Convenções de arquivo
+
+Todo documento do framework deve ter par de idioma:
+
+- `nome.md` — versão em português
+- `nome.en.md` — versão em inglês
+
+Ambos criados no mesmo commit. Não existe "criar depois" — um documento sem par está incompleto.
+O par `.en.md` é o que permite que o Runtime seja consumido por qualquer equipe e que os agentes
+internacionais (Codex, Copilot, GPT) leiam o mesmo contrato sem dependência de tradução futura.
+
 → [principles.md](principles.md) — os 8 princípios fundacionais
 → [canonical-paths.md](canonical-paths.md) — onde cada artefato vive
 → [framework-gaps.md](framework-gaps.md) — lacunas conhecidas e decisões pendentes

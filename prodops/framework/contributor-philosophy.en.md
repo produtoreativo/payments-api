@@ -126,6 +126,19 @@ When you find a conflict between two definitions:
 
 ---
 
+---
+
+## File conventions
+
+Every framework document must have a language pair:
+
+- `name.md` — Portuguese version
+- `name.en.md` — English version
+
+Both created in the same commit. There is no "create later" — a document without its pair is incomplete.
+The `.en.md` pair is what allows the Runtime to be consumed by any team and lets international agents
+(Codex, Copilot, GPT) read the same contract without depending on a future translation.
+
 → [principles.en.md](principles.en.md) — the 8 foundational principles
 → [canonical-paths.en.md](canonical-paths.en.md) — where each artifact lives
 → [framework-gaps.md](framework-gaps.md) — known gaps and pending decisions
