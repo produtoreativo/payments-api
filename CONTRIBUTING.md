@@ -1,5 +1,7 @@
 # Contribuindo
 
+→ [English version](CONTRIBUTING.en.md)
+
 Este repositório pratica dogfooding: contribuições ao framework seguem o
 próprio framework ProdOps. Antes de contribuir, leia `AGENTS.md`,
 `prodops/README.md` e a filosofia do contribuidor:
