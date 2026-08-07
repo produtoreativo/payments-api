@@ -1,8 +1,21 @@
 # Contribuindo
 
 Este repositório pratica dogfooding: contribuições ao framework seguem o
-próprio framework ProdOps. Antes de contribuir, leia `AGENTS.md` e
-`prodops/README.md`.
+próprio framework ProdOps. Antes de contribuir, leia `AGENTS.md`,
+`prodops/README.md` e a filosofia do contribuidor:
+[`prodops/framework/contributor-philosophy.md`](prodops/framework/contributor-philosophy.md).
+
+---
+
+## Onde cada mudança pertence
+
+Antes de qualquer contribuição, responda: isso é uma lei do domínio (→ Framework),
+uma escolha de implementação de referência (→ Runtime), ou uma otimização por serviço
+de IA (→ Agents/Skills)?
+
+A filosofia completa — incluindo os quatro qualificadores de design, a regra de padrões
+da comunidade e a convenção de par de idioma — está em
+[`prodops/framework/contributor-philosophy.md`](prodops/framework/contributor-philosophy.md).
 
 ---
 
