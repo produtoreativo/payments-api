@@ -31,6 +31,8 @@ export:
     - scripts/doctor.sh
     - scripts/validate-manifest.sh
     - scripts/validate-export-manifest.sh
+    - scripts/install-prodops.sh
+    - scripts/sync-from-framework.sh
     - scripts/README.md
     - scripts/README.en.md
     - LICENSE
