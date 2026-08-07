@@ -18,7 +18,7 @@ writing to artifacts; pushing. It is an **inspection** step, not a mutation one.
 
 - `prodops/exec/manifest.yaml` — canonical gate commands and criteria
   (`gates.lint`, `gates.acceptance`, `gates.build`, `gates.no_mocks`,
-  `gates.coverage`, `gates.dependencies`, `gates.sast`). The last three are
+  `gates.coverage`, `gates.dependencies`, `gates.code-analysis`). The last three are
   `blocks: auto_merge_only` — they disarm auto-merge, not manual merge — but
   they **run in this step like every other gate**: they are static quality
   analysis.
@@ -55,17 +55,23 @@ requires), run eslint without `--fix`, as `pr-gates.yml` does:
 `npx eslint "{src,apps,libs,test}/**/*.ts"` (errors fail; warnings do not — the
 repo carries pre-existing warnings and the gate only requires exit 0).
 
-### 2. Security — SAST and dependencies
+### 2. Source code and dependencies
 
-Two complementary security gates, both `blocks: auto_merge_only`: a red result
-disarms auto-merge, but never prevents a manual merge.
+Two complementary gates, both `blocks: auto_merge_only`: a red result disarms
+auto-merge, but never prevents a manual merge. They look at different targets —
+one the code we write, the other the libraries we import.
 
-**SAST** (`gates.sast` in the manifest — local SonarQube, `api/src` source code):
+**Code analysis** (`gates.code-analysis` in the manifest — local SonarQube,
+`api/src` source code):
 
 ```bash
-./scripts/check-sast.sh          # starts/reuses the container and analyzes
-./scripts/check-sast.sh --keep   # keeps the container up to inspect the UI
+./scripts/check-code-analysis.sh          # starts/reuses the container, analyzes
+./scripts/check-code-analysis.sh --keep   # keeps the container up for the UI
 ```
+
+Evaluates maintainability, reliability **and** security. It is not a
+security-only gate: SAST is a subset of what SonarQube does, and treating the
+two as equivalent understates what a red result is saying.
 
 Runs **locally**, via an ephemeral SonarQube container — the same shape as
 LocalStack in the acceptance gate. Requires no secret: the script provisions the
@@ -73,14 +79,14 @@ token on the freshly started server. `SONAR_TOKEN` in the environment (or in
 `api/.env`) takes precedence if present. The first run takes ~1-2 min until the
 server is healthy.
 
-**SAST does not measure coverage.** The script provisions its own quality gate
-(`prodops-sast`) with violations, duplication, and security hotspots, and
-**removes** the `new_coverage` condition SonarQube automatically injects into
-every new gate (via CAYC — "Clean as You Code"). Coverage is the exclusive
-responsibility of `gates.coverage`, which is strictly stricter: branches at 100%
-over the whole codebase, versus lines at 80% over new code only. Without that
-removal SAST would fail on 0.0% coverage — the scanner receives no report in
-this flow — masking the security verdict it exists to deliver.
+**This gate does not measure coverage.** The script provisions its own quality
+gate (`prodops-code-analysis`) with violations, duplication, and security
+hotspots, and **removes** the `new_coverage` condition SonarQube automatically
+injects into every new gate (via CAYC — "Clean as You Code"). Coverage is the
+exclusive responsibility of `gates.coverage`, which is strictly stricter:
+branches at 100% over the whole codebase, versus lines at 80% over new code only.
+Without that removal the gate would fail on 0.0% coverage — the scanner receives
+no report in this flow — masking the verdict it exists to deliver.
 
 Exit 0 releases; exit 1 **blocks** auto-merge (red quality gate); exit 2 = the
 gate could not run (no Docker, invalid token, server down) — auto-merge stays
@@ -94,7 +100,7 @@ itself recommends.
 
 In CI, remote SAST remains covered by CodeQL (job
 `Analyze (javascript-typescript)`); there is no Sonar job in `pr-gates.yml`, to
-avoid two SAST tools doing the same work.
+avoid two tools analyzing the same source code.
 
 **Dependencies / SCA** (`gates.dependencies` in the manifest — Snyk):
 
@@ -102,7 +108,14 @@ avoid two SAST tools doing the same work.
 ./scripts/check-dependencies.sh
 ```
 
-Analyzes third-party libraries, not the source code. Requires `SNYK_TOKEN`.
+SCA (Software Composition Analysis): resolves the dependency tree from
+`api/package.json` — direct and transitive — against the Snyk Intel DB. It does
+not look at a single line of `api/src`. Requires `SNYK_TOKEN`.
+
+> Three tools, three targets, so the acronyms do not blur:
+> `code-analysis` (Sonar, local) analyzes the source code; `dependencies`
+> (Snyk, SCA) analyzes third-party libraries; CodeQL (SAST, remote in CI)
+> analyzes the source code for vulnerabilities.
 
 ### 2b. Tools not yet present as a script
 

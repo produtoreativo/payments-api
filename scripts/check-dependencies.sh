@@ -7,9 +7,10 @@
 # por um humano. Não é um required status check — ver
 # prodops/framework/journeys/delivery/phases/finish/quality-gates.md.
 #
-# NÃO é SAST: a análise estática do código-fonte é coberta pelo GitHub Code
-# Quality/CodeQL. Este gate é SCA — analisa as dependências de terceiros
-# (api/package.json) contra o Snyk Intel DB.
+# Este gate é SCA (Software Composition Analysis): analisa as dependências de
+# terceiros (api/package.json) contra o Snyk Intel DB. NÃO olha o código-fonte —
+# isso é do gate `code-analysis` (SonarQube local, ./scripts/check-code-analysis.sh)
+# e, no CI, do CodeQL (SAST remoto).
 #
 # Uso:
 #   ./scripts/check-dependencies.sh              # usa o limiar do manifest

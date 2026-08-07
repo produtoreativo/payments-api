@@ -42,7 +42,7 @@ terraform.tfvars
 terraform.tfstate.backup
 terraform.tfstate
 
-# SonarQube — diretório de trabalho do sonar-scanner (gate gates.sast).
-# scripts/check-sast.sh roda o scanner em container, que não suja a tree; este
-# ignore cobre quem rodar o sonar-scanner nativo na máquina.
+# SonarQube — diretório de trabalho do sonar-scanner (gate gates.code-analysis).
+# scripts/check-code-analysis.sh roda o scanner em container, que não suja a
+# tree; este ignore cobre quem rodar o sonar-scanner nativo na máquina.
 .scannerwork/

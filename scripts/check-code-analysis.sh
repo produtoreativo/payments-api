@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
-# check-sast.sh — Análise estática de segurança do código-fonte (SAST via
-#                 SonarQube local) contra o quality gate do servidor
+# check-code-analysis.sh — Análise estática do código-fonte (SonarQube local)
+#                          contra o quality gate do servidor
 #
 # Gate de AUTO-MERGE, não de merge. Um resultado vermelho aqui impede que o
 # `finish request` arme o auto-merge; o PR continua aberto e mergeável à mão
 # por um humano. Não é um required status check — ver
 # prodops/framework/journeys/delivery/phases/finish/quality-gates.md.
 #
-# É SAST (código-fonte em api/src), complementar ao gate `dependencies`, que é
-# SCA (bibliotecas de terceiros via Snyk). No CI o SAST remoto segue coberto
-# pelo CodeQL — este gate é a contraparte local, para falhar antes do push.
+# Analisa o código-fonte em api/src: manutenibilidade, confiabilidade e
+# segurança. Não é um gate só de segurança — SAST é um subconjunto do que o
+# Sonar faz. Complementar ao gate `dependencies`, que é SCA (bibliotecas de
+# terceiros via Snyk). No CI o SAST remoto segue coberto pelo CodeQL — este gate
+# é a contraparte local sobre o mesmo código, para falhar antes do push.
 #
 # Uso:
-#   ./scripts/check-sast.sh          # sobe/reusa o container e analisa
-#   ./scripts/check-sast.sh --keep   # não para o container ao final (iteração)
+#   ./scripts/check-code-analysis.sh          # sobe/reusa o container e analisa
+#   ./scripts/check-code-analysis.sh --keep   # não para o container ao final
 #
 # Requer Docker. Diferente do Snyk, não requer secret: o servidor SonarQube é
 # efêmero e local, e o script provisiona o token nele automaticamente. Se
@@ -57,8 +59,8 @@ KEEP_CONTAINER=0
 
 PROJECT_KEY=$(python3 - "${MANIFEST}" <<'PY' || true
 import sys
-in_gates = in_sast = False
-sast_indent = None
+in_gates = in_ca = False
+ca_indent = None
 for raw in open(sys.argv[1]):
     line = raw.rstrip("\n")
     if not line.strip() or line.lstrip().startswith("#"):
@@ -67,16 +69,16 @@ for raw in open(sys.argv[1]):
     stripped = line.strip()
     if indent == 0:
         in_gates = stripped.startswith("gates:")
-        in_sast = False
+        in_ca = False
         continue
     if not in_gates:
         continue
-    if stripped.startswith("sast:"):
-        in_sast, sast_indent = True, indent
+    if stripped.startswith("code-analysis:"):
+        in_ca, ca_indent = True, indent
         continue
-    if in_sast:
-        if indent <= sast_indent:      # saiu do bloco sast
-            in_sast = False
+    if in_ca:
+        if indent <= ca_indent:        # saiu do bloco code-analysis
+            in_ca = False
             continue
         if stripped.startswith("project_key:"):
             print(stripped.split(":", 1)[1].strip().strip('"').strip("'"))
@@ -86,14 +88,14 @@ PY
 )
 
 if [[ -z "${PROJECT_KEY}" ]]; then
-  abort "gates.sast.project_key não encontrado em ${MANIFEST}."
+  abort "gates.code-analysis.project_key não encontrado em ${MANIFEST}."
 fi
 
 # ── 2. Pré-condições de ambiente ───────────────────────────────────────────────
-step "Verificando SAST (SonarQube local) — projeto: ${PROJECT_KEY}..."
+step "Analisando código-fonte (SonarQube local) — projeto: ${PROJECT_KEY}..."
 
 if ! command -v docker &>/dev/null; then
-  abort "Docker não encontrado — o gate SAST não pode rodar.
+  abort "Docker não encontrado — o gate de análise de código não pode rodar.
 
 O SonarQube roda como container local (mesmo molde do LocalStack no gate de
 aceitação). Instale em https://docs.docker.com/get-docker/
@@ -103,7 +105,7 @@ auto-merge e registra o motivo no PR."
 fi
 
 if ! docker info &>/dev/null; then
-  abort "Docker daemon não está rodando — o gate SAST não pode rodar.
+  abort "Docker daemon não está rodando — o gate de análise de código não pode rodar.
 
 Inicie o Docker Desktop e tente novamente. Isto NÃO bloqueia o merge manual:
 o \`finish request\` apenas não arma o auto-merge e registra o motivo no PR."
@@ -214,13 +216,14 @@ fi
 # código que está limpo, mascarando o veredito de segurança.
 #
 # Cada gate tem uma responsabilidade única (ver prodops/exec/manifest.yaml):
-# cobertura é de `gates.coverage`; SAST é vulnerabilidade, code smell e duplicação.
+# cobertura é de `gates.coverage`; este gate é vulnerabilidade, code smell e
+# duplicação.
 #
 # O servidor é efêmero, então isto é provisionado a cada execução — não dá para
 # configurar pela UI e esperar que persista.
 step "Provisionando quality gate sem condição de cobertura..."
 
-QG_NAME="prodops-sast"
+QG_NAME="prodops-code-analysis"
 
 # create é idempotente na prática: se já existe (container reusado com --keep),
 # a API responde erro e seguimos para ajustar o gate existente.
@@ -253,8 +256,8 @@ for CID in ${COVERAGE_COND_IDS}; do
     -d "id=${CID}" >/dev/null 2>&1 || true
 done
 
-# Garante as condições que o SAST de fato responde (idempotente: se já vieram do
-# CAYC, a API rejeita a duplicata e seguimos).
+# Garante as condições que este gate de fato responde (idempotente: se já vieram
+# do CAYC, a API rejeita a duplicata e seguimos).
 #   new_violations > 0               → qualquer problema novo reprova
 #   new_duplicated_lines_density > 3 → duplicação em código novo
 for COND in "new_violations|GT|0" "new_duplicated_lines_density|GT|3"; do
@@ -335,7 +338,7 @@ fi
 # inválido): rc != 0 e != 3. Aí a API não é fonte confiável sobre ESTE scan.
 if [[ ${SCANNER_RC} -ne 0 && ${SCANNER_RC} -ne 3 ]]; then
   abort "sonar-scanner falhou na execução (código ${SCANNER_RC}) — não é um veredito
-de segurança. Verifique a rede, o token e a saída acima."
+do quality gate. Verifique a rede, o token e a saída acima."
 fi
 
 if [[ -z "${GATE_STATUS}" ]]; then
@@ -348,7 +351,7 @@ fi
 
 case "${GATE_STATUS}" in
   OK)
-    ok "Quality gate do SonarQube passou — nenhum problema de segurança bloqueante."
+    ok "Quality gate do SonarQube passou — nenhum problema bloqueante em api/src."
     ok "Auto-merge liberado."
     exit 0
     ;;
@@ -366,7 +369,7 @@ case "${GATE_STATUS}" in
     echo ""
     echo "  A correção pertence ao ciclo TDD do Hack: retorne ao \`/hack tdd\`,"
     echo "  feche em verde e rode novamente:"
-    echo "    ./scripts/check-sast.sh"
+    echo "    ./scripts/check-code-analysis.sh"
     echo ""
     exit 1
     ;;
