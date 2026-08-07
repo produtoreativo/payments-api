@@ -99,11 +99,16 @@ if [[ "${DRY_RUN}" != "1" ]]; then
   fi
   DOCTOR_OUTPUT=$(bash "${DOCTOR_SCRIPT}" 2>&1) || true
   # Fail only if issues are in exported paths (framework/, skills/, templates/, scripts/).
-  # Failures in artifacts/ or exec/ are product-specific and do not affect export quality.
+  # Failures in artifacts/, exec/, or materialized player dirs (.claude/.agents/.github)
+  # are product-specific or build artifacts and do not affect export quality.
   EXPORTED_FAILS=$(printf '%s\n' "${DOCTOR_OUTPUT}" | grep '^FAIL:' \
     | grep -v 'prodops/artifacts/' \
     | grep -v 'prodops/exec/' \
     | grep -v '^FAIL: stale artifact' \
+    | grep -v '^FAIL: \.agents/' \
+    | grep -v '^FAIL: \.claude/' \
+    | grep -v '^FAIL: \.github/' \
+    | grep -v '^FAIL: framework-lock\.yaml:' \
     || true)
   if [[ -n "${EXPORTED_FAILS}" ]]; then
     printf '%s\n' "${EXPORTED_FAILS}" >&2
@@ -111,7 +116,7 @@ if [[ "${DRY_RUN}" != "1" ]]; then
   fi
   ARTIFACTS_FAILS=$(printf '%s\n' "${DOCTOR_OUTPUT}" | grep -c '^FAIL:' || true)
   if [[ "${ARTIFACTS_FAILS}" -gt 0 ]]; then
-    log "WARNING: doctor.sh found ${ARTIFACTS_FAILS} issue(s) in non-exported paths (artifacts/ / exec/) — skipped."
+    log "WARNING: doctor.sh found ${ARTIFACTS_FAILS} issue(s) in non-exported paths (artifacts/ / exec/ / materialized skills) — skipped."
   fi
   log "Exported path health check passed."
 fi

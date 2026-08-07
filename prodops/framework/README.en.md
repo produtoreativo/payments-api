@@ -32,7 +32,7 @@ This directory contains the canonical ProdOps Framework documentation. The conte
 | [product-topology.en.md](product-topology.en.md) | Product Topology — the four permanent structural dimensions of the product |
 | [product-stages.en.md](product-stages.en.md) | Product stages (PoC→MLP) |
 | [dora-metrics.en.md](dora-metrics.en.md) | Extended DORA metrics |
-| [positioning.en.md](positioning.en.md) | **How to explain ProdOps** — canonical communication guide for agents and humans; includes the Upstream/Downstream-as-modes differentiator, approved phrases, and common mistakes |
+| [positioning.md](positioning.md) | **How to explain ProdOps** — canonical communication guide for agents and humans; includes the Upstream/Downstream-as-modes differentiator, approved phrases, and common mistakes |
 
 ## OBC Templates
 
