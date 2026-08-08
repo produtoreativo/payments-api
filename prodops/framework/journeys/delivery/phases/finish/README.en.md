@@ -6,18 +6,34 @@
 
 ## Overview
 
-**What it's for:** It is the exit gate of CI Sync. It delivers a fully autonomous Pull Request — a PR that traverses the entire CI Async (Ship → Validate → Promote) without human intervention.
+**What it's for:** It is the exit gate of CI Sync. It validates quality locally
+with the same rigor as the pipeline, confirms the automatic-PR rules are valid,
+publishes the commits, and opens a fully autonomous Pull Request — a PR that
+traverses the entire CI Async (Ship → Validate → Promote) without human
+intervention.
 
 **What Finish is NOT:** Finish does NOT deliver software. Finish delivers the PR.
 
-**How it works:**
+**How it works — four sub-steps, each with a single responsibility and an
+explicit boundary of what it does *not* do** (so each step is auditable in
+isolation, with no cross-cutting side effects):
 
 ```
-Review diff scope → Run lint + build + tests + contracts
-→ Confirm ProdOps artifacts updated → Evidence in Release Trail
-→ Publish PR → Auto-approval → Auto-merge → Verify workflows
-→ Confirm repository readiness for automated execution
+validate → review → push origin → request
+(static     (pipeline   (git,        (opens PR with
+ analysis)   inspection) no force)    auto-approval)
 ```
+
+1. **`validate`** — static quality analysis (runs all static-analysis steps;
+   acceptance/integration is the only dynamic exception). If something fails, the
+   fix belongs to Hack's TDD cycle — return to `hack tdd`, do not fix it here.
+2. **`review`** — inspects the pipeline and ensures the rules for an automatic PR
+   are valid, **without running the pipeline**. A missing branch-protection
+   condition is a **blocker**.
+3. **push origin** — publishes the commits to the origin branch (git, no force push).
+4. **`request`** — opens the PR in auto-approval mode (auto-merge if CI passes),
+   executes auto-approval, verifies existing workflows, and confirms repository
+   readiness for automated execution.
 
 **If any requirement cannot be satisfied: Finish does NOT complete. Stop and investigate.**
 
@@ -27,6 +43,8 @@ Review diff scope → Run lint + build + tests + contracts
 - Do not hide skipped tests — record the reason
 - Do not expand scope during Finish
 - If auto-approval or auto-merge fails: blocker — investigate before proceeding
+- Do not force push
+- Do not enable auto-approval without branch protection configured
 
 **Position in the flow:**
 
@@ -57,21 +75,25 @@ An implementation does not leave Finish until all items are checked.
 
 ---
 
-## Commit Workflow in Finish
+## Sub-steps and responsibilities
 
-Finish is responsible for:
+Each sub-step has a single responsibility and a boundary of what it is **not**
+responsible for. The execution mechanics of each live in the skill.
 
-1. Validating commit history (all follow Conventional Commits).
-2. Running formatter + lint (no errors).
-3. Running build (no TypeScript errors).
-4. Running unit and acceptance tests.
-5. Validating contracts (BDD Features, OpenAPI, AsyncAPI).
-6. Filling the PR template with evidence.
-7. Publishing the Pull Request.
-8. Executing auto-approval on the PR (when the repository supports it).
-9. Enabling auto-merge on the PR (when the repository supports it).
-10. Verifying existing workflows and repository readiness for automated execution.
-11. Marking the Task as complete with the template [task-closing.md](../../capabilities/commit-workflow/templates/task-closing.md).
+| Sub-step | Responsibility | **Not** its responsibility | Skill |
+|---|---|---|---|
+| `validate` | Static analysis (format, lint, build) + acceptance/coverage as the dynamic exception | Committing, writing/reading code, writing to artifacts, pushing | [steps/validate](../../../../../skills/finish/steps/validate/SKILL.md) |
+| `review` | Confirm required checks, branch protection, and absence of a blocking reviewer allow safe auto-approval | Running the pipeline, committing, writing/reading code, pushing, opening a PR | [steps/review](../../../../../skills/finish/steps/review/SKILL.md) |
+| push origin | Publish the commits to the origin branch, no force push | Validating, inspecting the pipeline, opening a PR | — (plain git, see skill router) |
+| `request` | Open **one** PR with the template filled, auto-merge armed (`--auto --squash`), and auto-approval executed | Validating, pushing, committing, writing/reading code | [steps/request](../../../../../skills/finish/steps/request/SKILL.md) |
+
+Mandatory order: green `validate` → blocker-free `review` → push → `request`. If
+`validate` fails, the fix goes back to
+[`hack tdd`](../../../../../skills/hack/steps/tdd/SKILL.md) — Finish does not write
+product code.
+
+At the end, mark the Task as complete with the template
+[task-closing.md](../../capabilities/commit-workflow/templates/task-closing.md).
 
 Complete checklist: [capabilities/commit-workflow/README.md — Finish Checklist](../../capabilities/commit-workflow/README.md#checklist-do-finish)
 

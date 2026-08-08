@@ -134,7 +134,7 @@ Formato:
 ```
 
 - **type** — obrigatório, define a natureza da mudança.
-- **scope** — opcional, delimita o módulo ou domínio afetado.
+- **scope** — opcional, minúsculas, delimita o módulo ou domínio afetado.
 - **summary** — obrigatório, imperativo, minúsculas, sem ponto final, máximo 72 caracteres.
 - **body** — opcional, explica o "porquê", não o "o quê".
 - **footer** — opcional, referências a issues, breaking changes (`BREAKING CHANGE:`).

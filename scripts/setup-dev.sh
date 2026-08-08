@@ -92,9 +92,9 @@ fi
 # ── 3. Git hooks ──────────────────────────────────────────────────────────────
 step "Configurando Git hooks (Commit Workflow)..."
 
-HOOKS_DIR="$REPO_ROOT/prodops/journeys/delivery/capabilities/commit-workflow/hooks"
-SCRIPTS_DIR="$REPO_ROOT/prodops/journeys/delivery/capabilities/commit-workflow/scripts"
-HOOKS_PATH="prodops/journeys/delivery/capabilities/commit-workflow/hooks"
+HOOKS_DIR="$REPO_ROOT/prodops/framework/journeys/delivery/capabilities/commit-workflow/hooks"
+SCRIPTS_DIR="$REPO_ROOT/prodops/framework/journeys/delivery/capabilities/commit-workflow/scripts"
+HOOKS_PATH="prodops/framework/journeys/delivery/capabilities/commit-workflow/hooks"
 
 if [[ ! -d "$HOOKS_DIR" ]]; then
   fail "commit-workflow/hooks não encontrado em $HOOKS_PATH"

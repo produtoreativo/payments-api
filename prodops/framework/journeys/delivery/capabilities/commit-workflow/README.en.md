@@ -134,7 +134,7 @@ Format:
 ```
 
 - **type** — required, defines the nature of the change.
-- **scope** — optional, delimits the affected module or domain.
+- **scope** — optional, lowercase, delimits the affected module or domain.
 - **summary** — required, imperative mood, lowercase, no trailing period, maximum 72 characters.
 - **body** — optional, explains the "why", not the "what".
 - **footer** — optional, references to issues, breaking changes (`BREAKING CHANGE:`).

@@ -15,17 +15,64 @@ if echo "$MSG" | grep -qE '^(Merge |Revert |fixup! |squash! )'; then
   exit 0
 fi
 
-PATTERN='^(feat|fix|docs|test|refactor|perf|build|ci|style|chore|revert)(\([a-zA-Z0-9/_-]+\))?!?: .{1,72}$'
+# Conventional Commits shape. The trailing `.+` only asserts a non-empty
+# summary — the length limit is enforced separately below over the WHOLE
+# subject line, because `.{1,72}` here would measure only the text after
+# `type(scope): `, letting the prefix push the real subject past 72 chars.
+PATTERN='^(feat|fix|docs|test|refactor|perf|build|ci|style|chore|revert)(\([a-zA-Z0-9/_-]+\))?!?: .+$'
 
 if ! echo "$MSG" | grep -qE "$PATTERN"; then
   echo ""
   echo "  ✗ Commit message does not follow Conventional Commits format."
   echo ""
-  echo "  Expected:  <type>(<scope>): <summary>  (summary max 72 chars)"
+  echo "  Expected:  <type>(<scope>): <summary>  (subject max 72 chars)"
   echo "  Received:  $MSG"
   echo ""
   echo "  Valid types: feat fix docs test refactor perf build ci style chore revert"
   echo "  Example:   feat(invoices): add credit card hosted flow"
+  echo ""
+  echo "  See: prodops/framework/journeys/delivery/capabilities/commit-workflow/README.md#conventional-commits"
+  echo ""
+  exit 1
+fi
+
+# Enforce the summary limit over the entire subject line, prefix included
+# (Conventional Commits convention; mirrors commit_summary_max in the manifest).
+MAX_SUMMARY=72
+if [ "${#MSG}" -gt "$MAX_SUMMARY" ]; then
+  echo ""
+  echo "  ✗ Commit subject too long: ${#MSG} chars (max ${MAX_SUMMARY})."
+  echo ""
+  echo "  The limit covers the whole subject line, including the"
+  echo "  \"<type>(<scope>): \" prefix — not just the text after it."
+  echo "  Received:  $MSG"
+  echo ""
+  echo "  See: prodops/framework/journeys/delivery/capabilities/commit-workflow/README.md#conventional-commits"
+  echo ""
+  exit 1
+fi
+
+# Scope must be lowercase (subject-case) — the shape regex accepts A-Z inside
+# the scope for readability; enforce lowercase here.
+SCOPE=$(echo "$MSG" | sed -nE 's/^[a-z]+\(([^)]+)\)!?:.*/\1/p')
+if [ -n "$SCOPE" ] && echo "$SCOPE" | grep -q '[A-Z]'; then
+  echo ""
+  echo "  ✗ Commit scope must be lowercase: ($SCOPE)"
+  echo ""
+  echo "  Use lowercase for the scope, e.g. feat(invoices): ..."
+  echo "  Received:  $MSG"
+  echo ""
+  echo "  See: prodops/framework/journeys/delivery/capabilities/commit-workflow/README.md#conventional-commits"
+  echo ""
+  exit 1
+fi
+
+# Subject must not end with a period (subject-full-stop).
+if echo "$MSG" | grep -q '\.$'; then
+  echo ""
+  echo "  ✗ Commit subject must not end with a period."
+  echo ""
+  echo "  Received:  $MSG"
   echo ""
   echo "  See: prodops/framework/journeys/delivery/capabilities/commit-workflow/README.md#conventional-commits"
   echo ""
