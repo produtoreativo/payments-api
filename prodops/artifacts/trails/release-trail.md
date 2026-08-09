@@ -55,10 +55,35 @@ O campo `Status` muda para `closed` quando a sessão encerra.
 ## Regras
 
 1. **Uma sessão = um arquivo.** Não misturar entregas de sessões diferentes.
+   O arquivo vive **sempre** em `prodops/artifacts/trails/sessions/`, nunca dentro
+   da pasta de uma iteração. Uma sessão é endereçada pelo seu ID, não pela versão:
+   ela pode cruzar iterações, e sua localização não deve depender de estado mutável
+   da entrega. Trail dentro de `iterations/<version>/` é desvio — mover para
+   `sessions/` e registrar no índice.
 2. **Append-only.** Nunca editar entradas já registradas; registrar correções como nova entrada.
 3. **Bilíngue.** Sempre criar `.md` (pt-BR) e `.en.md` (English) em paralelo.
 4. **Onde escrever.** O agente identifica o arquivo da sessão ativa pelo seu próprio session ID. Se o arquivo ainda não existir na sessão, criá-lo antes da primeira entrada.
 5. **Legado.** Entradas anteriores a 2026-07-14 estão em [`sessions/legacy.md`](sessions/legacy.md).
+
+---
+
+## Release Trail ≠ TDD Evidence
+
+Dois artefatos distintos já foram confundidos por compartilharem o nome
+`release-trail.md`. Eles pertencem a camadas diferentes:
+
+| | Release Trail (sessão) | TDD Evidence (iteração/card) |
+|---|---|---|
+| **Escopo** | uma sessão de agente | uma entrega dentro de uma iteração |
+| **Identidade** | session ID (UUID) | versão da iteração ou slug do card |
+| **Onde vive** | `trails/sessions/` | `iterations/<version>/` |
+| **Nome** | `YYYY-MM-DD-<session-id>.md` | `tdd-evidence*.md` |
+| **Camada** | Framework define; Runtime executa | texto de trail do produto |
+
+O Release Trail é ontologia do Framework — o log append-only de sessões.
+A TDD Evidence é artefato de produto: consolida evidência de teste de uma
+entrega específica e não tem identidade de sessão. **Não usar o nome
+`release-trail.md` para evidência escopada por iteração ou card.**
 
 ---
 

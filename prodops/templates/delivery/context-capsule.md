@@ -40,7 +40,7 @@ base-branch:          master
 timeline-path:        prodops/artifacts/iterations/<version>/runtime/timelines/<work-item-id>.json
 plan-bootstrap-path:  prodops/artifacts/iterations/<version>/runtime/plan-bootstrap.json
 plan-validate-path:   prodops/artifacts/iterations/<version>/runtime/plan-validate.json
-session-trail-dir:    prodops/artifacts/iterations/<version>/trails/
+session-trail-dir:    prodops/artifacts/trails/sessions/   ← fixo; nunca escopado por iteração
 obc-path:             prodops/artifacts/obcs/<capability>.md
 bdd-path:             prodops/artifacts/bdd/<capability>.feature
 reliability-path:     prodops/artifacts/plans/reliability/<capability>.md   ← ou "none" se não existir (opcional)
