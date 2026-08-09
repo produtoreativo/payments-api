@@ -108,8 +108,14 @@ materialize_skill() {
       fm_end_line=$(printf '%s\n' "$src_content" | awk 'NR==1{next} /^---/{print NR; exit}')
       if [[ -n "$fm_end_line" ]]; then
         local frontmatter body
-        frontmatter=$(printf '%s\n' "$src_content" | head -n "$fm_end_line")
-        body=$(printf '%s\n' "$src_content" | tail -n +"$((fm_end_line + 1))")
+        # Split without pipes: `head` closes the pipe before `printf` finishes
+        # writing a large skill, and under `set -o pipefail` that SIGPIPE (141)
+        # aborts the whole run. mapfile keeps the split in-process and preserves
+        # blank lines and glob characters verbatim.
+        local -a src_lines
+        mapfile -t src_lines <<< "$src_content"
+        frontmatter=$(printf '%s\n' "${src_lines[@]:0:fm_end_line}")
+        body=$(printf '%s\n' "${src_lines[@]:fm_end_line}")
         generated_content="${frontmatter}
 $(provenance_header "$skill" "$player")
 ${body}"
@@ -137,7 +143,7 @@ ${src_content}"
 
       if [[ "$target_body" == "$src_content" && "$structure_ok" == "true" ]]; then
         log "✓ up-to-date  [$player] $skill"
-        ((UP_TO_DATE_COUNT++))
+        UP_TO_DATE_COUNT=$((UP_TO_DATE_COUNT + 1))
         continue
       fi
 
@@ -148,24 +154,24 @@ ${src_content}"
       if [[ "$target_no_header" == "$src_content" ]]; then
         # Only header differs (e.g. timestamp) — safe to update
         log "↻ refresh     [$player] $skill (header only)"
-        ((DRIFT_COUNT++))
+        DRIFT_COUNT=$((DRIFT_COUNT + 1))
       else
         # Body differs from canonical — potential manual edit
         if [[ "$FORCE" == "false" ]]; then
           warn "Manual divergence in [$player] $skill — use --force to overwrite"
           warn "  Target: $target"
-          ((DIVERGENCE_COUNT++))
+          DIVERGENCE_COUNT=$((DIVERGENCE_COUNT + 1))
           if [[ "$CHECK_ONLY" == "false" ]]; then
             continue
           fi
         else
           warn "Overwriting manual divergence in [$player] $skill (--force)"
-          ((DRIFT_COUNT++))
+          DRIFT_COUNT=$((DRIFT_COUNT + 1))
         fi
       fi
     else
       log "✚ new         [$player] $skill"
-      ((DRIFT_COUNT++))
+      DRIFT_COUNT=$((DRIFT_COUNT + 1))
     fi
 
     if [[ "$CHECK_ONLY" == "true" ]]; then
@@ -175,7 +181,7 @@ ${src_content}"
     mkdir -p "$target_dir"
     printf '%s\n' "$generated_content" > "$target"
     log "  → written: $target"
-    ((WRITTEN_COUNT++))
+    WRITTEN_COUNT=$((WRITTEN_COUNT + 1))
   done
 }
 
