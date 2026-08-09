@@ -197,3 +197,31 @@
 **Impacto se omitido:** Ambiguidade entre o catálogo de eventos e o modelo operacional. Agentes que leem o catálogo podem inferir que Promote leva para Production, contradizendo o modelo operacional consolidado que coloca Production fora da Delivery Journey.
 
 **Status:** Lacuna aberta. Não alterar o catálogo de eventos neste ciclo — documentar apenas. Candidato a próxima versão do catálogo.
+
+---
+
+## GAP-019 — O nome `release-trail.md` designa dois artefatos de camadas diferentes
+
+**Contexto:** Durante a refatoração do Finish (branch `refine/11-finish-v2`), foram encontrados 7 arquivos de trail fora de `prodops/artifacts/trails/sessions/`. Ao inspecioná-los, eram dois artefatos distintos com o mesmo nome: 3 eram session trails de verdade (UUID de sessão, convenção `YYYY-MM-DD-<session-id>.md`) que haviam sido escritos dentro de `iterations/<version>/trails/`; os outros 4 eram evidência de TDD escopada por iteração ou card (`# Release Trail — v0.9.0`), sem qualquer identidade de sessão.
+
+**O que o Framework não diz:** Que "Release Trail" designa exclusivamente o log append-only de sessões. Não existe nome canônico para o artefato que consolida evidência de teste de uma entrega dentro de uma iteração, então ele herdou o nome do conceito do Framework.
+
+**O que deveria dizer:** Release Trail é ontologia do Framework — endereçado por session ID, vive em `trails/sessions/`. A evidência de TDD por iteração/card é artefato de produto — endereçada por versão ou slug, vive em `iterations/<version>/`. São camadas diferentes na tabela de `contributor-philosophy.md` ("trail templates → Runtime" vs "textos de trail do produto → Produto") e não devem compartilhar nome.
+
+**Impacto se omitido:** Um agente que lê `iterations/v0.9.0/release-trail.md` pode inferir que trails são escopados por iteração e passar a escrever session trails lá — foi exatamente o que aconteceu com os 3 arquivos encontrados. A colisão de nome propaga o erro de localização.
+
+**Status:** Mitigado em `refine/11-finish-v2`. Os 4 agregados foram renomeados para `tdd-evidence*.md` e `release-trail.md` ganhou a seção "Release Trail ≠ TDD Evidence". Falta o Framework nomear formalmente o artefato de evidência por iteração — hoje o nome `tdd-evidence` é convenção do produto, não definição do Framework.
+
+---
+
+## GAP-020 — Gates de qualidade acoplam ferramenta, credencial e endpoint ao produto
+
+**Contexto:** Os gates `scripts/check-code-analysis.sh` e `scripts/check-dependencies.sh` implementam análise estática e verificação de dependências, mas hardcodam a escolha de ferramenta e a topologia local: container `sonarqube`, `localhost:9000`, imagem do scanner, e leitura de `SNYK_TOKEN` a partir de `api/.env`.
+
+**O que o Framework não diz:** Onde termina a definição do gate (o que precisa ser verificado antes de um PR mergear) e onde começa a escolha de implementação (com qual ferramenta, em qual endpoint, com qual credencial). A tabela de `contributor-philosophy.md` cobre "credenciais e endpoints → Produto", mas não diz qual camada define o gate em si.
+
+**O que deveria dizer:** O Framework define quais classes de gate existem (análise estática, dependências, cobertura, aceitação) e o contrato de exit code. O Runtime oferece uma implementação de referência opinativa. O produto fornece credenciais, endpoints e limiares.
+
+**Impacto se omitido:** Cada produto reimplementa os mesmos gates do zero, e a RI não consegue exportar verificação de qualidade sem arrastar junto a escolha de ferramenta.
+
+**Status:** Lacuna aberta. **Não promover para o Runtime neste ciclo** — os gates têm um único consumidor real, e `contributor-philosophy.md` (pergunta 2) exige dois casos reais antes de generalizar. Documentar apenas; reavaliar quando um segundo consumidor existir.
