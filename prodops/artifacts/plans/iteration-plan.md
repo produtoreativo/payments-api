@@ -4,7 +4,7 @@
 
 | Versão | Escopo | Status |
 |---|---|---|
-| [v0.15.0](../iterations/v0.15.0/plan.md) | DS-62 · DS-63 · DS-64 — Refino da fase Finish (issue #11) | Em execução desde 2026-08-07 |
+| [v0.15.0](../iterations/v0.15.0/plan.md) | DS-62 · DS-63 · DS-64 · DS-65 · DS-66 — Refino da fase Finish (issue #11) | Em execução desde 2026-08-07 |
 
 ## Suspenso
 

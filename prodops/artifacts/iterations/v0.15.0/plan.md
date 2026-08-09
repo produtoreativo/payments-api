@@ -13,6 +13,8 @@ Refinar a fase Finish do Delivery Journey: decompor o passo monolítico em sub-s
 | DS-62 | #11 | finish-substeps: decompor Finish em `validate`, `review`, `request` com fronteira explícita por step | — | n/a | n/a | n/a | Em execução | — |
 | DS-63 | #11 | finish-quality-gates: gates `coverage`, `dependencies` e `code-analysis` como `blocks: auto_merge_only` | DS-62 | n/a | n/a | n/a | Em execução | — |
 | DS-64 | #11 | commit-workflow-rules: subject completo em 72 caracteres, scope-case e ponto final | — | n/a | n/a | n/a | Em execução | — |
+| DS-65 | #11 | trail-layout-consistency: consolidar session trails em `trails/sessions/`, separar trail por iteração e corrigir a causa raiz no template de capsule | — | n/a | n/a | n/a | Em execução | — |
+| DS-66 | #11 | skill-materialization-fix: materializar a árvore completa do skill e reparar os defeitos que impediam a regeneração | — | n/a | n/a | n/a | Em execução | — |
 
 > **OBC/BDD/Risco marcados `n/a`.** Trabalho de infraestrutura ProdOps não tem
 > OBC de produto nem cenário BDD executável. Mesma lacuna que suspendeu a
@@ -26,6 +28,8 @@ Refinar a fase Finish do Delivery Journey: decompor o passo monolítico em sub-s
 | DS-62 | finish-substeps | #11 |
 | DS-63 | finish-quality-gates | #11 |
 | DS-64 | commit-workflow-rules | #11 |
+| DS-65 | trail-layout-consistency | #11 |
+| DS-66 | skill-materialization-fix | #11 |
 
 > Os três DS compartilham a issue #11: o refino foi especificado como uma única
 > issue guarda-chuva antes de existir a decomposição em DS. Diferente de
@@ -34,6 +38,12 @@ Refinar a fase Finish do Delivery Journey: decompor o passo monolítico em sub-s
 ## Sequência de entrega
 
 DS-62 → DS-63 (os gates dependem da fronteira dos steps) · DS-64 independente.
+
+DS-65 e DS-66 entraram durante a execução, a partir do review da PR: o pedido de
+consolidar os trails órfãos expôs a causa raiz no template de capsule (DS-65), e
+a decomposição do Finish em multi-arquivo expôs que a materialização só copiava
+o `SKILL.md` de topo (DS-66). Ambos são consequência do escopo original, não
+trabalho novo.
 
 ## Critérios de saída
 
@@ -44,6 +54,10 @@ DS-62 → DS-63 (os gates dependem da fronteira dos steps) · DS-64 independente
 - [x] Gate `code-analysis` — `scripts/check-code-analysis.sh`, SonarQube local
 - [x] `commit-msg.sh` medindo o subject inteiro, com scope-case e ponto final
 - [x] Os três gates executados de ponta a ponta ao menos uma vez
+- [x] Session trails consolidados em `trails/sessions/` e índice reconstruído
+- [x] Trail por iteração separado do Release Trail (`iteration-trail*.md`)
+- [x] `session-trail-dir` corrigido no template de capsule (causa raiz)
+- [x] `materialize-skills.sh` materializando a árvore completa do skill
 - [ ] PR aberto para a issue #11
 - [ ] Issue #11 fechada no GitHub
 - [ ] `prodops.delivery.promote.completed` emitido para a issue #11
@@ -57,6 +71,20 @@ Ambos exigem `admin` no repositório — herdados do trail `4a9e4c58`:
 2. **`SNYK_TOKEN` não cadastrado.** O gate `dependencies` sai com exit 2 em
    qualquer ambiente enquanto o secret não existir.
 
+### Dívida registrada, não resolvida aqui
+
+Descoberta durante DS-65 e DS-66; documentada em
+`prodops/framework/framework-gaps.md`:
+
+- **20 capsules em 8 iterações** ainda declaram o `session-trail-dir` antigo
+  (GAP-019). Capsule é artefato gerado — a correção é regenerar via
+  `/downstream`, não editar à mão.
+- **153 links apontando para fora do diretório do skill** seguem quebrados no
+  destino materializado (GAP-022). Anterior a esta branch; depende de definir a
+  fronteira do skill materializado.
+- **Gates acoplam ferramenta, credencial e endpoint ao produto** (GAP-020).
+  Mantido no produto: um consumidor real só.
+
 ## Runtime
 
 - Iteration dir: `prodops/artifacts/iterations/v0.15.0/`
@@ -64,5 +92,6 @@ Ambos exigem `admin` no repositório — herdados do trail `4a9e4c58`:
 - Plan Bootstrap: `runtime/plan-bootstrap.json`
 - Plan Validate: `runtime/plan-validate.json`
 - Context capsules: `cards/<slug>/context.md`
-- Session trails: `prodops/artifacts/trails/sessions/` — trail `4a9e4c58`
+- Session trails: `prodops/artifacts/trails/sessions/` — trails `4a9e4c58` e
+  `c29a5b1a` (sessão ativa)
   (modelo vigente é por sessão, não por iteração; ver `trails/release-trail.md`)

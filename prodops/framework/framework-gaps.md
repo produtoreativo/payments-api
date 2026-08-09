@@ -241,3 +241,17 @@
 **Impacto se omitido:** Codex e Copilot leem um `SKILL.md` que manda abrir `steps/validate/SKILL.md` e não encontram o arquivo. O agente executa a fase sem a definição do sub-passo, ou inventa o comportamento. Silencioso porque o gate de drift não olhava a subárvore.
 
 **Status:** Corrigido em `refine/11-finish-v2`. `materialize-skills.sh` ganhou `materialize_steps()`, chamada inclusive quando o `SKILL.md` de topo está up-to-date (o pai estar em dia não diz nada sobre os filhos). Corrige `finish` (multi-arquivo introduzido nesta branch) e também `hack`, que tinha o mesmo defeito latente desde antes.
+
+---
+
+## GAP-022 — Skills materializados linkam para fora do próprio diretório
+
+**Contexto:** Os `SKILL.md` de `finish`, `hack`, `sync`, `upstream` e `ship` referenciam arquivos fora do diretório do skill — `../references/engineering/tdd-prodops/`, `../../framework/journeys/delivery/phases/`. Na origem (`prodops/skills/`) esses paths resolvem. No destino materializado (`.claude/`, `.agents/`, `.github/`) não existe irmão `framework/` nem `references/` compartilhado, então 153 links ficam pendurados. O defeito é anterior a `refine/11-finish-v2` — já estava em `master`.
+
+**O que o Framework não diz:** Qual é a fronteira de um skill materializado. Se o `SKILL.md` é um contrato autocontido que o player lê isoladamente, ele não pode depender de arquivos fora da sua própria árvore; se pode, a materialização precisa levar as dependências junto.
+
+**O que deveria dizer:** Uma das duas — ou o skill é autocontido e toda referência externa vira conteúdo inline / link absoluto para o repositório, ou a unidade de materialização passa a incluir as dependências referenciadas. A escolha muda o que `materialize-skills.sh` faz e o que o `--check` valida.
+
+**Impacto se omitido:** Codex e Copilot leem um contrato que manda consultar `../references/engineering/tdd-prodops/red-green-refactor.md` e não encontram nada. O agente executa a fase sem a referência ou infere o comportamento. Silencioso: nenhum gate detecta.
+
+**Status:** Lacuna aberta. Não corrigido em `refine/11-finish-v2` — a correção depende de decidir a fronteira do skill materializado, que é definição de Framework, não ajuste de script. GAP-021 resolveu o caso interno (subárvore do próprio skill); este é o caso externo.
