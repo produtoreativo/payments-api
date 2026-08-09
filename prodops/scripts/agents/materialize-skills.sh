@@ -82,31 +82,34 @@ strip_header() {
 }
 
 materialize_steps() {
-  # A skill may be multi-file (e.g. finish/steps/<step>/SKILL.md). The parent
-  # SKILL.md links to those with source-relative paths, so the sub-tree must be
-  # materialized alongside it or every link dangles for the player. Copied
-  # verbatim — only the parent SKILL.md carries the provenance header.
+  # A skill may be multi-file: finish/steps/<step>/SKILL.md, but also
+  # diligence/diligence-sync/... or ship/references/workflow.md. The parent
+  # SKILL.md links to those with source-relative paths, so the whole sub-tree
+  # must be materialized alongside it or the links dangle for the player.
+  # Everything under the skill dir except the top-level SKILL.md is copied
+  # verbatim — only the parent carries the provenance header.
   local skill="$1" target_dir="$2"
-  local steps_src="$SKILLS_SRC/$skill/steps"
-  [[ -d "$steps_src" ]] || return 0
+  local skill_src="$SKILLS_SRC/$skill"
+  [[ -d "$skill_src" ]] || return 0
 
-  local step_src step_rel step_target
-  while IFS= read -r step_src; do
-    step_rel="${step_src#"$SKILLS_SRC/$skill/"}"
-    step_target="$target_dir/$step_rel"
-    if [[ -f "$step_target" ]] && cmp -s "$step_src" "$step_target"; then
+  local sub_src sub_rel sub_target
+  while IFS= read -r sub_src; do
+    sub_rel="${sub_src#"$skill_src/"}"
+    [[ "$sub_rel" == "SKILL.md" ]] && continue
+    sub_target="$target_dir/$sub_rel"
+    if [[ -f "$sub_target" ]] && cmp -s "$sub_src" "$sub_target"; then
       continue
     fi
     if [[ "$CHECK_ONLY" == "true" ]]; then
-      log "↻ step drift  [$skill] $step_rel"
+      log "↻ sub drift   [$skill] $sub_rel"
       DRIFT_COUNT=$((DRIFT_COUNT + 1))
       continue
     fi
-    mkdir -p "$(dirname "$step_target")"
-    cp "$step_src" "$step_target"
-    log "  → written: $step_target"
+    mkdir -p "$(dirname "$sub_target")"
+    cp "$sub_src" "$sub_target"
+    log "  → written: $sub_target"
     WRITTEN_COUNT=$((WRITTEN_COUNT + 1))
-  done < <(find "$steps_src" -type f -name '*.md' | sort)
+  done < <(find "$skill_src" -type f -name '*.md' | sort)
 }
 
 materialize_skill() {

@@ -1,0 +1,166 @@
+---
+name: diligence/repair
+description: Execute corrections identified by Flag — update OBCs, create missing Work Items, close orphaned ones. Never touches product code or creates implementation PRs.
+---
+
+# DILIGENCE ASYNC → REPAIR
+
+Execute only the Repair step of the Diligence Async flow.
+
+**Responsabilidade:** executar as correções identificadas pelo Flag, restaurando a consistência entre artefatos canônicos e ferramentas externas. Repair nunca modifica código de produto e nunca cria Pull Requests de implementação.
+
+## Ação
+
+### 1. Ler a lista de itens pendentes do Flag
+
+Obter os itens classificados como reparáveis pela Diligence. Ignorar itens com status `BLOQUEADO` — esses pertencem a outras jornadas.
+
+### 2. Executar reparos em ordem de severidade
+
+Para cada item, aplicar a ação corretora correspondente:
+
+**Work Item ausente:** executar step Attach para o OBC afetado.
+
+```
+→ prodops/skills/diligence/diligence-sync/steps/attach/SKILL.md
+```
+
+**Issue com labels canônicas fora do projeto gerenciado:**
+
+```bash
+gh project item-add <project-number> \
+  --owner <owner> \
+  --url https://github.com/<owner>/<repo>/issues/<issue-number>
+```
+
+Verificar membership após adição:
+
+```bash
+gh project item-list <project-number> --owner <owner> --format json \
+  | jq '.items[] | select(.content.number == <issue-number>) | .id'
+```
+
+Se o projeto gerenciado não existir: registrar bloqueio — escalar para Workspace
+Reconciliation antes de continuar.
+
+**Work Item aberto com OBC Operational:** executar step Close para o OBC afetado.
+
+```
+→ prodops/skills/diligence/diligence-sync/steps/close/SKILL.md
+```
+
+**OBC absent do Iteration Plan com pré-requisitos satisfeitos:** executar step Promote para o OBC afetado.
+
+```
+→ prodops/skills/diligence/diligence-sync/steps/promote/SKILL.md
+```
+
+**Artefato de gestão desatualizado (Iteration Plan, Roadmap, Product Backlog):** atualizar o artefato diretamente, registrando a data e a decisão que originou a mudança.
+
+**OBC sem estado canônico correto:** executar step Capture para o OBC afetado.
+
+```
+→ prodops/skills/diligence/diligence-sync/steps/capture/SKILL.md
+```
+
+### 3. Parar em itens que exigem decisão de produto
+
+Quando um reparo não pode ser executado sem uma decisão de produto:
+- Registrar o bloqueio com o OBC afetado, o gap e a jornada responsável
+- Não inventar a decisão
+- Escalar para Assessment ou Discovery conforme o tipo de gap
+
+### 4. Commit por grupo de reparos
+
+```bash
+git add prodops/artifacts/obcs/
+git add prodops/artifacts/plans/
+git commit -m "docs(diligence): repair divergences from async scan"
+```
+
+### 5. Registrar resultado
+
+Para cada item reparado: OBC afetado, ação executada, data.
+Para cada item não reparado: motivo e jornada responsável.
+
+## Eventos — emissão obrigatória
+
+Antes de executar qualquer correção, emitir:
+
+```json
+{
+  "event": "Diligence.Repair.Started",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-repair-agent" },
+  "payload": {}
+}
+```
+
+Quando um reparo individual fica bloqueado e não pode avançar sem decisão de produto, emitir:
+
+```json
+{
+  "event": "Diligence.Block.Declared",
+  "work-item-id": "<obc-work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-repair-agent" },
+  "payload": { "obc-id": "<obc-id>", "reason": "<motivo do bloqueio>" }
+}
+```
+
+Quando um bloqueio de Diligence é resolvido e o reparo pode continuar, emitir:
+
+```json
+{
+  "event": "Diligence.Block.Resolved",
+  "work-item-id": "<obc-work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-repair-agent" },
+  "payload": { "obc-id": "<obc-id>" }
+}
+```
+
+Após todos os reparos concluídos (ou explicitamente bloqueados), emitir:
+
+```json
+{
+  "event": "Diligence.Repair.Completed",
+  "work-item-id": "<work-item-id>",
+  "iteration-id": "<iteration-id>",
+  "correlation-id": "<correlation-id>",
+  "execution-id": "<new-uuid>",
+  "actor": { "player": "<player>", "agent": "diligence-repair-agent" },
+  "payload": {
+    "items-repaired": <número>,
+    "items-blocked": <número>
+  }
+}
+```
+
+## Post-conditions
+
+Concluído quando:
+
+- Todos os itens reparáveis foram corrigidos ou tiveram o bloqueio explicitamente registrado
+- Nenhum código de produto foi modificado
+- Nenhum Pull Request de implementação foi criado
+
+## Guardrails
+
+- Nunca modificar código de produto — escopo é exclusivamente artefatos ProdOps e backlogs.
+- Nunca criar Pull Requests de implementação.
+- Parar e escalar itens que exigem decisão de produto antes de reparar.
+- Não silenciar falhas de reparo — registrar explicitamente o que não pôde ser corrigido e por quê.
+
+## Out of scope
+
+- `repair` **não** implementa funcionalidades — nunca.
+- `repair` **não** resolve divergências que exigem decisão de Assessment ou Discovery.
+- `repair` **não** substitui a execução de Downstream readiness para itens bloqueados por artefatos ausentes de Delivery.
