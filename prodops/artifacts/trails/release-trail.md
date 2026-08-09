@@ -67,23 +67,23 @@ O campo `Status` muda para `closed` quando a sessão encerra.
 
 ---
 
-## Release Trail ≠ TDD Evidence
+## Release Trail ≠ Iteration Trail
 
 Dois artefatos distintos já foram confundidos por compartilharem o nome
 `release-trail.md`. Eles pertencem a camadas diferentes:
 
-| | Release Trail (sessão) | TDD Evidence (iteração/card) |
+| | Release Trail (sessão) | Iteration Trail (iteração/card) |
 |---|---|---|
 | **Escopo** | uma sessão de agente | uma entrega dentro de uma iteração |
 | **Identidade** | session ID (UUID) | versão da iteração ou slug do card |
 | **Onde vive** | `trails/sessions/` | `iterations/<version>/` |
-| **Nome** | `YYYY-MM-DD-<session-id>.md` | `tdd-evidence*.md` |
+| **Nome** | `YYYY-MM-DD-<session-id>.md` | `iteration-trail*.md` |
 | **Camada** | Framework define; Runtime executa | texto de trail do produto |
 
 O Release Trail é ontologia do Framework — o log append-only de sessões.
-A TDD Evidence é artefato de produto: consolida evidência de teste de uma
-entrega específica e não tem identidade de sessão. **Não usar o nome
-`release-trail.md` para evidência escopada por iteração ou card.**
+O Iteration Trail é artefato de produto: consolida a evidência de uma entrega
+específica (TDD, decisões, artefatos tocados) e não tem identidade de sessão.
+**Não usar o nome `release-trail.md` para trail escopado por iteração ou card.**
 
 ---
 
