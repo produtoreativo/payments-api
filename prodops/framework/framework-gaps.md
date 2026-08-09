@@ -212,6 +212,8 @@
 
 **Status:** Mitigado em `refine/11-finish-v2`. Os 4 agregados foram renomeados para `iteration-trail*.md` e `release-trail.md` ganhou a seção "Release Trail ≠ Iteration Trail". Falta o Framework nomear formalmente esse artefato — hoje `iteration-trail` é convenção do produto, não definição do Framework. O nome descreve o escopo (uma entrega dentro de uma iteração) em vez do conteúdo, porque os 4 arquivos não são homogêneos: dois são evidência de TDD, um é registro de entrega (`DS-58 — RT Iteration Lifecycle Automation`) e um é trail de card.
 
+**Dívida residual:** 20 capsules já geradas, em 8 iterações (v0.6.0, v0.7.0, v0.9.0 a v0.14.0), ainda declaram `session-trail-dir: prodops/artifacts/iterations/<version>/trails/`. O template foi corrigido, mas capsules são artefato gerado e não devem ser editadas à mão — a correção correta é regenerar via `/downstream`, não um sed em massa. Até lá, um agente que ler uma capsule antiga recebe o path errado. Os diretórios `trails/` correspondentes foram removidos: mantê-los vazios preservaria exatamente o layout que a Regra 1 declara desvio.
+
 ---
 
 ## GAP-020 — Gates de qualidade acoplam ferramenta, credencial e endpoint ao produto
@@ -225,3 +227,17 @@
 **Impacto se omitido:** Cada produto reimplementa os mesmos gates do zero, e a RI não consegue exportar verificação de qualidade sem arrastar junto a escolha de ferramenta.
 
 **Status:** Lacuna aberta. **Não promover para o Runtime neste ciclo** — os gates têm um único consumidor real, e `contributor-philosophy.md` (pergunta 2) exige dois casos reais antes de generalizar. Documentar apenas; reavaliar quando um segundo consumidor existir.
+
+---
+
+## GAP-021 — `materialize-skills.sh` assumia um skill = um arquivo
+
+**Contexto:** O script materializava apenas `prodops/skills/<skill>/SKILL.md` para os três players. Quando `finish` e `hack` passaram a ser multi-arquivo (`steps/<step>/SKILL.md`), os sub-steps nunca chegavam a `.claude/`, `.agents/` e `.github/` — mas o `SKILL.md` materializado continuava linkando para eles com paths relativos à origem. O resultado eram links pendurados em todos os players, sem nenhum sinal de erro: o `--check` só compara o `SKILL.md` de topo e reportava "up-to-date".
+
+**O que o Framework não diz:** Que um skill pode ser multi-arquivo, e que a materialização é responsável pela subárvore inteira — não só pelo arquivo de entrada.
+
+**O que deveria dizer:** A unidade de materialização é o diretório do skill, não o `SKILL.md`. Qualquer arquivo referenciado por path relativo a partir do skill precisa existir no destino, senão o contrato lido pelo player está incompleto.
+
+**Impacto se omitido:** Codex e Copilot leem um `SKILL.md` que manda abrir `steps/validate/SKILL.md` e não encontram o arquivo. O agente executa a fase sem a definição do sub-passo, ou inventa o comportamento. Silencioso porque o gate de drift não olhava a subárvore.
+
+**Status:** Corrigido em `refine/11-finish-v2`. `materialize-skills.sh` ganhou `materialize_steps()`, chamada inclusive quando o `SKILL.md` de topo está up-to-date (o pai estar em dia não diz nada sobre os filhos). Corrige `finish` (multi-arquivo introduzido nesta branch) e também `hack`, que tinha o mesmo defeito latente desde antes.

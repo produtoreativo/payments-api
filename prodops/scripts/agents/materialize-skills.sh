@@ -81,6 +81,34 @@ strip_header() {
   sed '/^<!-- MATERIALIZED FILE/,/^-->/d'
 }
 
+materialize_steps() {
+  # A skill may be multi-file (e.g. finish/steps/<step>/SKILL.md). The parent
+  # SKILL.md links to those with source-relative paths, so the sub-tree must be
+  # materialized alongside it or every link dangles for the player. Copied
+  # verbatim — only the parent SKILL.md carries the provenance header.
+  local skill="$1" target_dir="$2"
+  local steps_src="$SKILLS_SRC/$skill/steps"
+  [[ -d "$steps_src" ]] || return 0
+
+  local step_src step_rel step_target
+  while IFS= read -r step_src; do
+    step_rel="${step_src#"$SKILLS_SRC/$skill/"}"
+    step_target="$target_dir/$step_rel"
+    if [[ -f "$step_target" ]] && cmp -s "$step_src" "$step_target"; then
+      continue
+    fi
+    if [[ "$CHECK_ONLY" == "true" ]]; then
+      log "↻ step drift  [$skill] $step_rel"
+      DRIFT_COUNT=$((DRIFT_COUNT + 1))
+      continue
+    fi
+    mkdir -p "$(dirname "$step_target")"
+    cp "$step_src" "$step_target"
+    log "  → written: $step_target"
+    WRITTEN_COUNT=$((WRITTEN_COUNT + 1))
+  done < <(find "$steps_src" -type f -name '*.md' | sort)
+}
+
 materialize_skill() {
   local skill="$1"
   local src="$SKILLS_SRC/$skill/SKILL.md"
@@ -144,6 +172,9 @@ ${src_content}"
       if [[ "$target_body" == "$src_content" && "$structure_ok" == "true" ]]; then
         log "✓ up-to-date  [$player] $skill"
         UP_TO_DATE_COUNT=$((UP_TO_DATE_COUNT + 1))
+        # The parent being current says nothing about the sub-steps — check them
+        # before skipping, or a multi-file skill never gets its sub-tree.
+        materialize_steps "$skill" "$target_dir"
         continue
       fi
 
@@ -182,6 +213,8 @@ ${src_content}"
     printf '%s\n' "$generated_content" > "$target"
     log "  → written: $target"
     WRITTEN_COUNT=$((WRITTEN_COUNT + 1))
+
+    materialize_steps "$skill" "$target_dir"
   done
 }
 
