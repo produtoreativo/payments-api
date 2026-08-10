@@ -177,6 +177,38 @@ Execution artifacts (`Iteration Plan`, `Context Capsule`, `Release Trail`) are p
 
 ## Knowledge artifacts
 
+### `product-deck`
+
+**What it is:** a single-page canvas that aggregates the essential information about a product — vision, services with SLOs, team, execution architecture, reliability matrix, analytics, and stakeholders. Inspired by Toyota's A3 Report.
+
+**Born when:** the product exists as a recognized entity and the team needs a consolidated operational reference artifact — typically after the first service enters Operational.
+
+**Journey:** cross-cutting — consumed by Assessment (premortems, maturity evaluation), Discovery (scope alignment), Delivery (Bootstrap context), and Operation (continuous metrics update).
+
+**Canonical path:** `prodops/artifacts/product/product-deck.md` (one per product)
+
+**Relations:** consumes `local-obc` (service SLOs), `reliability-plan` (Reliability Matrix), and `release-trail` (Product Analytics); consumed as input by premortems and Assessment.
+
+→ Full definition: [`product-deck.en.md`](product-deck.en.md)
+
+---
+
+### `service-deck`
+
+**What it is:** a single-page canvas that represents a service as a product — same sections as the Product Deck, but scoped to the service. A Product Service can be a `Service` (single deployable unit) or a `Value Stream` (logical grouping of multiple services). The Service Deck is the artifact that details each Product Services entry.
+
+**Born when:** a service is listed in the Product Deck with a committed Local OBC — the Service Deck materializes that OBC's contracts as the operational view of the service.
+
+**Journey:** cross-cutting — created when the OBC reaches Committed; updated in Operation (metrics, SLOs) and Assessment (risk and contract review).
+
+**Canonical path:** `prodops/artifacts/services/<service-slug>/service-deck.md`
+
+**Relations:** referenced by `product-deck` (Product Services); consumes `local-obc` (Service Endpoints: APIs, events, schemas, SLIs) and `reliability-plan`; feeds the Product Deck's Reliability Matrix.
+
+→ Full definition: [`service-deck.en.md`](service-deck.en.md)
+
+---
+
 ### `architecture`
 
 **What it is:** an architectural decision or documentation — ADRs, component diagrams, technical decisions with context and consequences.

@@ -33,6 +33,8 @@ Este diretório contém a documentação canônica do ProdOps Framework. O conte
 | [phases.md](phases.md) | Estágios do ciclo de vida da Business Intent: Concepção e Inception |
 | [obc.md](obc.md) | Observable Business Contract — Global OBC, Local OBC, OBC Partitioning |
 | [artifact-types.md](artifact-types.md) | Tipos canônicos de artefatos — o que cada tipo é, quando nasce e como se relaciona |
+| [product-deck.md](product-deck.md) | Product Deck — canvas de página única com visão, serviços, arquitetura e métricas do produto |
+| [service-deck.md](service-deck.md) | Service Deck — canvas de página única que representa um serviço (ou Value Stream) como um produto |
 | [artifact-governance.md](artifact-governance.md) | Governança de artefatos — owners, aprovações e ciclo de vida |
 | [origin-streams.md](origin-streams.md) | As quatro origens de Intents |
 | [product-topology.md](product-topology.md) | Product Topology — as quatro dimensões estruturais permanentes do produto |
