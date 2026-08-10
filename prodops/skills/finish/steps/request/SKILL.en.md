@@ -22,7 +22,8 @@ Do not open the PR before:
 
 - `validate` is clean (lint + build + acceptance when applicable).
 - `review` has no blockers (branch protection and required checks present).
-- The commits are already published on the origin branch (the `push origin` step).
+- The commits are already published on the working branch (the `push origin`
+  step) — on the current branch, never on the PR's target branch.
 
 If any is unmet, stop and surface it — opening the PR with auto-merge without
 these prerequisites can merge ungated code.
@@ -51,38 +52,33 @@ Before arming auto-merge, run the auto-merge gates. All must release for
 auto-merge to be armed — if **any** does not, auto-merge stays disarmed (the PR
 opens anyway; see step 4).
 
-**Coverage** (`gates.coverage` in the manifest — currently **100% of branches**):
+The three auto-merge gates — `gates.coverage`, `gates.dependencies` and
+`gates.code-analysis` — **run in `validate`**, the static-analysis step. Here the
+verdict `validate` produced in this session is only **read**. All must have
+released for auto-merge to be armed; if **any** did not, auto-merge stays
+disarmed (the PR still opens; see step 4).
 
-```bash
-./scripts/check-coverage-threshold.sh
-```
+**Do not run the gate scripts here.** This step's responsibility is opening the
+PR — running `check-coverage-threshold.sh`, `check-dependencies.sh` or
+`check-code-analysis.sh` would be executing quality analysis, which belongs to
+`validate`. Running acceptance to regenerate the coverage XML would be worse
+still: dynamic analysis inside the PR-opening step.
 
-Consumes the XML produced by the `acceptance` gate, so run it after `validate`.
-Exit 0 releases; exit 1 **blocks** auto-merge.
+| Gate | Verdict expected from `validate` |
+|---|---|
+| `gates.coverage` | branch coverage >= threshold (currently 100%) |
+| `gates.dependencies` | no vulnerabilities >= high |
+| `gates.code-analysis` | SonarQube quality gate green |
 
-**Dependencies / SCA** (`gates.dependencies` in the manifest — Snyk, severity
-threshold **high**):
+For each one, `validate` reports released, blocked, or **could not run** (no
+`SNYK_TOKEN`, no Docker, missing XML). The last two count the same here: **not
+released** — keep auto-merge disarmed and record the reason.
 
-```bash
-./scripts/check-dependencies.sh
-```
-
-Exit 0 releases; exit 1 **blocks** (vulnerabilities >= high). Exit 2 means the
-gate **could not run** (no `SNYK_TOKEN`) — treat it as not-released: keep
-auto-merge disarmed and record the reason. Creating the secret is an admin
-action, like `allow_auto_merge`.
-
-**Code analysis** (`gates.code-analysis` in the manifest — local SonarQube over
-`api/src`; maintainability, reliability and security, not security alone):
-
-```bash
-./scripts/check-code-analysis.sh
-```
-
-Exit 0 releases; exit 1 **blocks** (red quality gate). Exit 2 means the gate
-**could not run** (no Docker, invalid token, server down) — treat it as
-not-released, same as the dependency gate. Already run in `validate`; here the
-verdict is only confirmed.
+**If there is no verdict from `validate` in this session** — because `request`
+was invoked on its own, or `validate` ran on a different HEAD — treat all three
+gates as **not released**. Do not try to recover them: open the PR without arming
+auto-merge and record that the gates were not verified in this flow. Re-running
+`validate` is the path to arming it.
 
 ### 3. Open the PR
 
@@ -108,8 +104,8 @@ only for **automating** the merge.
 ### 4. Arm auto-merge — only if every step-2 gate released
 
 ```bash
-# only when check-coverage-threshold.sh, check-dependencies.sh AND
-# check-code-analysis.sh exited 0
+# only when `validate` reported all three gates released
+# (gates.coverage, gates.dependencies AND gates.code-analysis)
 gh pr merge --auto --squash
 ```
 

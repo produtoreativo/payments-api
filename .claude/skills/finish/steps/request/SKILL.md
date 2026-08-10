@@ -21,7 +21,8 @@ Não abra o PR antes de:
 
 - `validate` limpo (lint + build + aceitação quando aplicável).
 - `review` sem bloqueadores (branch protection e checks obrigatórios presentes).
-- Commits já publicados na branch de origem (o passo `push origin`).
+- Commits já publicados na branch de trabalho (o passo `push origin`) — na
+  branch atual, nunca na branch de destino do PR.
 
 Se algum não foi cumprido, pare e sinalize — abrir o PR com auto-merge sem esses
 pré-requisitos pode mergear código sem gate.
@@ -44,44 +45,35 @@ com evidências reais — objetivo, resumo, contratos alterados, testes executad
 (com o output de `validate`), artefatos ProdOps atualizados e pendências. Não é
 um log de commits; é o que a mudança entrega e como foi verificada.
 
-### 2. Verificar os gates de auto-merge
+### 2. Ler os vereditos dos gates de auto-merge
 
-Antes de armar o auto-merge, rode os gates de auto-merge. Todos precisam liberar
-para o auto-merge ser armado — se **qualquer um** não liberar, o auto-merge fica
-desarmado (o PR abre mesmo assim; ver passo 4).
+Os três gates de auto-merge — `gates.coverage`, `gates.dependencies` e
+`gates.code-analysis` — **rodam no `validate`**, que é o step de análise
+estática. Aqui apenas se **lê o veredito** que o `validate` produziu nesta
+sessão. Todos precisam ter liberado para o auto-merge ser armado; se **qualquer
+um** não liberou, o auto-merge fica desarmado (o PR abre mesmo assim; ver passo 4).
 
-**Cobertura** (`gates.coverage` no manifest — hoje **100% de branches**):
+**Não execute os scripts de gate aqui.** A responsabilidade deste step é abrir o
+PR — rodar `check-coverage-threshold.sh`, `check-dependencies.sh` ou
+`check-code-analysis.sh` seria executar análise de qualidade, que pertence ao
+`validate`. Rodar a aceitação para regerar o XML de cobertura seria pior ainda:
+análise dinâmica dentro do step de abertura de PR.
 
-```bash
-./scripts/check-coverage-threshold.sh
-```
+| Gate | Veredito esperado do `validate` |
+|---|---|
+| `gates.coverage` | cobertura de branches >= limiar (hoje 100%) |
+| `gates.dependencies` | sem vulnerabilidades >= high |
+| `gates.code-analysis` | quality gate do SonarQube verde |
 
-Consome o XML gerado pelo gate `acceptance`, então rode-o depois de `validate`.
-Exit 0 libera; exit 1 **bloqueia** o auto-merge.
+Para cada um, o `validate` reporta liberado, bloqueado, ou **não pôde rodar**
+(sem `SNYK_TOKEN`, sem Docker, XML ausente). Os dois últimos contam igual aqui:
+**não liberado** — mantenha o auto-merge desarmado e registre o motivo.
 
-**Dependências / SCA** (`gates.dependencies` no manifest — Snyk, limiar de
-severidade **high**):
-
-```bash
-./scripts/check-dependencies.sh
-```
-
-Exit 0 libera; exit 1 **bloqueia** (vulnerabilidades >= high). Exit 2 significa
-que o gate **não pôde rodar** (sem `SNYK_TOKEN`) — trate como não-liberado:
-mantenha o auto-merge desarmado e registre o motivo. Cadastrar o secret é ação
-de admin, como `allow_auto_merge`.
-
-**Análise de código** (`gates.code-analysis` no manifest — SonarQube local sobre
-`api/src`; manutenibilidade, confiabilidade e segurança, não só segurança):
-
-```bash
-./scripts/check-code-analysis.sh
-```
-
-Exit 0 libera; exit 1 **bloqueia** (quality gate vermelho). Exit 2 significa que
-o gate **não pôde rodar** (sem Docker, token inválido, servidor fora do ar) —
-trate como não-liberado, igual ao gate de dependências. Já rodado no `validate`;
-aqui apenas se confirma o veredito.
+**Se não houver veredito do `validate` nesta sessão** — porque o `request` foi
+invocado isoladamente, ou o `validate` rodou em outro HEAD — trate os três gates
+como **não liberados**. Não tente recuperá-los: abra o PR sem armar o auto-merge
+e registre que os gates não foram verificados neste fluxo. Reexecutar o
+`validate` é o caminho para armá-lo.
 
 ### 3. Abrir o PR
 
@@ -107,8 +99,8 @@ apenas para **automatizar** o merge.
 ### 4. Armar o auto-merge — somente se todos os gates do passo 2 liberaram
 
 ```bash
-# apenas quando check-coverage-threshold.sh, check-dependencies.sh E
-# check-code-analysis.sh saíram 0
+# apenas quando o `validate` reportou os três gates liberados
+# (gates.coverage, gates.dependencies E gates.code-analysis)
 gh pr merge --auto --squash
 ```
 

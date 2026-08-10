@@ -43,7 +43,8 @@ executa pipeline, etc.):
   análise estática; a exceção dinâmica única é a aceitação/integração).
 - **`review` — inspeção da pipeline** (garante que as regras para um PR
   automático estão válidas, sem executar a pipeline).
-- **push origin** — publica os commits na branch de origem (git, sem force push).
+- **push origin** — publica os commits da branch de trabalho no seu rastreador
+  remoto (git, sem force push).
 - **`request` — abre o PR em modo auto aprovação** (auto-merge se o CI aprovar).
 
 | Step | Arquivo | Quando usar |
@@ -144,17 +145,24 @@ Quando invocado sem argumento de step, execute em ordem:
    não há reviewer obrigatório bloqueando o auto-merge. Condição ausente é um
    **bloqueador** a registrar antes de ativar auto aprovação.
 7. **push origin** — após `validate` limpo e `review` sem bloqueadores, publicar
-   os commits na **branch de origem** (a branch da qual a atual foi derivada),
-   sem force push:
+   os commits da **branch atual** no seu rastreador remoto, sem force push:
 
    ```bash
-   git push origin HEAD:<branch-de-origem>
+   git push origin HEAD
    ```
+
+   Publique **a branch de trabalho**, nunca a branch de destino do PR. Um
+   refspec com destino (`HEAD:<branch-de-destino>`) escreveria direto na branch
+   alvo sem nenhum check de CI rodar — e o `request` abriria em seguida um PR já
+   mergeado, vazio ou conflitante. O único caminho de merge autorizado a partir
+   do Finish é o auto-merge do passo 8.
 8. **[request](steps/request/SKILL.md)** — abrir o PR com o template preenchido
    com evidências, executar auto-approval e ativar auto-merge imediatamente após
-   a criação (`gh pr merge <number> --auto --squash`), e atualizar o Release
-   Trail com o link do PR e o status do auto-merge. O auto-merge enfileira o
-   squash para executar assim que os checks obrigatórios passarem. O agente
+   a criação (`gh pr merge <number> --auto --squash`) — **desde que o `validate`
+   tenha reportado os três gates de auto-merge liberados**; se algum não liberou,
+   o PR abre mesmo assim, sem auto-merge, com o motivo registrado. Atualizar o
+   Release Trail com o link do PR e o status do auto-merge. O auto-merge enfileira
+   o squash para executar assim que os checks obrigatórios passarem. O agente
    **não** espera ocioso.
 9. Verificar que workflows existentes estão válidos e que o repositório está apto para execução automática.
 10. Registrar explicitamente qualquer item incompleto — Finish NÃO conclui com itens abertos.

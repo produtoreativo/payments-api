@@ -18,7 +18,9 @@ commit-workflow/
 │   ├── pre-commit.sh
 │   ├── prepare-commit-msg.sh
 │   ├── commit-msg.sh
-│   └── pre-push.sh
+│   ├── pre-push.sh
+│   ├── test-commit-msg.sh  suíte de regressão do commit-msg (via `git commit` real)
+│   └── check-commit-msg-suite.sh  roda a suíte só quando os scripts mudaram
 └── templates/         ← templates reutilizáveis para PR, task-closing e mensagem de commit
     ├── commit-template.txt
     ├── pull_request.md
@@ -26,6 +28,23 @@ commit-workflow/
 ```
 
 Os **hooks** contêm apenas uma linha de delegação — toda a lógica reside nos **scripts**. Isso permite testar scripts independentemente e reutilizá-los na CI sem depender dos hooks.
+
+### Testando o `commit-msg`
+
+```bash
+./prodops/framework/journeys/delivery/capabilities/commit-workflow/scripts/test-commit-msg.sh
+```
+
+Roda o validador através de um `git commit` **real**, num repositório descartável
+com o mesmo `core.hooksPath` deste repo — o caminho de integração, não só o
+script isolado. Exit 0 = todos os casos passaram.
+
+A propriedade que a suíte protege: **as regras do Conventional Commits valem para
+o subject, não para a mensagem inteira**. Ler a mensagem toda (`cat "$1"`) em vez
+do subject (`head -1 "$1"`) faz o hook rejeitar qualquer commit com body ou
+trailer — e todo commit do fluxo ProdOps carrega um `Co-Authored-By:`. A suíte
+foi verificada por mutação: injetando esse `cat`, os quatro casos de escopo de
+subject falham e a suíte sai 1.
 
 ---
 

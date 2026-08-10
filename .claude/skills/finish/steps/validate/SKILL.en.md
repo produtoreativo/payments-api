@@ -36,15 +36,28 @@ without adjustment (see notes):
 ```bash
 cd api
 
-# format — Prettier (clean gate)
-npm run format     # prettier --write "src/**/*.ts" "test/**/*.ts"
+# format — Prettier in check mode (do NOT use `npm run format`: it is
+# `--write` and rewrites files)
+npx prettier --check "src/**/*.ts" "test/**/*.ts"
 
-# lint — ESLint (see note: --fix)
-npm run lint       # eslint "{src,apps,libs,test}/**/*.ts" --fix
+# lint — ESLint without --fix (do NOT use `npm run lint`: it is `--fix`)
+npx eslint "{src,apps,libs,test}/**/*.ts"
 
 # build — compilation check (clean gate)
 npm run build      # nest build
 ```
+
+> **Why not the `package.json` scripts here.** `npm run format` is
+> `prettier --write` and `npm run lint` is `eslint --fix`: both **rewrite**
+> files. Running them in this step would violate its own Guardrail ("do not
+> write code") and would dirty the tree that the guard below requires clean.
+> Fixing what they report is Hack-cycle work.
+>
+> The `npx eslint` above is **exactly** the command in `pr-gates.yml`'s `lint`
+> job. `prettier --check`, by contrast, has no corresponding CI job: it is a
+> local check, to catch formatting drift before the push. The manifest records
+> `gates.lint` as `cd api && npm run lint` — the form without `--fix` is the
+> correct reading of that gate as inspection, and is what CI runs.
 
 > **Coverage** does not belong here: in this repo it is a byproduct of the
 > acceptance suite, which is dynamic. See section 3.
@@ -54,6 +67,20 @@ failing — useless as a CI gate. To inspect without mutating (what `validate`
 requires), run eslint without `--fix`, as `pr-gates.yml` does:
 `npx eslint "{src,apps,libs,test}/**/*.ts"` (errors fail; warnings do not — the
 repo carries pre-existing warnings and the gate only requires exit 0).
+
+> **Clean-tree guard.** The Hack cycle runs `npm run lint` **with** `--fix`: it
+> corrects in place and declares green. If those corrections were never
+> committed, CI — which runs without `--fix`, over what is committed — fails on
+> exactly the points Hack considered resolved. The divergence is silent: green
+> locally, red remotely. Before running lint, confirm the tree is clean:
+>
+> ```bash
+> git status --porcelain   # empty = what you inspect is what CI will see
+> ```
+>
+> A dirty tree is a **blocker**: the pending corrections belong to a commit in
+> the Hack cycle, not to this step (`validate` does not commit — see Guardrails).
+> Return to [`hack commit`](../../../hack/steps/commit/SKILL.md) before moving on.
 
 ### 2. Source code and dependencies
 
@@ -117,14 +144,42 @@ not look at a single line of `api/src`. Requires `SNYK_TOKEN`.
 > (Snyk, SCA) analyzes third-party libraries; CodeQL (SAST, remote in CI)
 > analyzes the source code for vulnerabilities.
 
-### 2b. Tools not yet present as a script
+### 2b. Commit validator — conditional
 
-To configure before making the gate mandatory (gap of this refinement):
+Commit messages have **already been validated**: the `commit-msg` hook runs on
+every `git commit`, so every commit reaching this point has passed through it.
+There is nothing left to re-validate about the messages in this step.
+
+What may have changed is the **validator itself**. When the diff touches the
+commit-workflow scripts, run the regression suite — it exercises the validator
+through a real `git commit`, in a throwaway repository:
 
 ```bash
-# commit lint — Conventional Commits messages
-npx --no-install commitlint --edit $1
+./prodops/framework/journeys/delivery/capabilities/commit-workflow/scripts/check-commit-msg-suite.sh
 ```
+
+The script decides for itself whether it needs to run: it compares the current
+branch against its base and, if the commit-workflow scripts are not in the diff,
+exits 0 without doing anything.
+
+If the diff does **not** touch those scripts, it skips — the validator cannot
+have broken. Exit 0 releases; exit 1 means a validator rule regressed, and the
+fix belongs to the Hack cycle like any other failure in this step. Exit 2 means
+the check **could not decide** (undeterminable base) — in that case the script
+runs the suite anyway instead of skipping.
+
+> Why a script and not an inline `git diff | grep`: the inline form fails
+> **open**. If the base ref does not exist locally (stale fetch, a placeholder
+> pasted literally), `git diff` aborts, `grep` does not match, and the command
+> skips the suite silently — exactly when it should have run. The script treats
+> an undeterminable base as "run it anyway".
+
+> Why it does not run every time, and why it does not run in CI: a validator
+> broken in the restrictive direction (reading the whole message instead of the
+> subject) blocks `git commit` itself — the failure shows up immediately,
+> locally. And in CI every commit has by definition already passed the hook, so
+> there it would be too late to be useful. The suite serves whoever **edits**
+> the validator, not every delivery.
 
 ### 3. Dynamic exception (acceptance/integration) — and coverage
 
@@ -132,11 +187,25 @@ When behavior or contracts changed (`gates.acceptance.when:
 behavior_or_contract_changed`):
 
 ```bash
-./scripts/test-acceptance.sh   # also emits api/coverage/cobertura-coverage.xml
+./scripts/test-acceptance.sh          # ~25s; emits api/coverage/cobertura-coverage.xml
+./scripts/check-coverage-threshold.sh # gates.coverage: evaluates the fresh XML
 ```
 
 Requires LocalStack (the app fixture provisions DynamoDB tables even with the
 in-memory repository).
+
+**Coverage is evaluated here**, immediately after acceptance: acceptance is what
+generates the XML, so this is the only point in the flow where the report is
+fresh by construction. `request` does not re-evaluate — it reads the verdict
+produced here.
+
+Exit 0 releases; exit 1 **disarms auto-merge**; exit 2 = the gate could not run
+(XML missing or invalid).
+
+`blocks: auto_merge_only` describes what the gate blocks **at merge time** — it
+disarms auto-merge, it does not prevent a manual merge. It is not permission for
+the agent to move on: like every gate in this step, a non-green result **stops
+`validate`** (see "Criterion"). The fix goes back to the Hack cycle.
 
 **Coverage origin.** There are no unit suites over `api/src`
 (`jest --coverage` via `test:cov` uses `rootDir: src` + `testRegex: .*\.spec\.ts$`
@@ -169,6 +238,13 @@ build, or red acceptance) is a product change and belongs to Hack's TDD cycle.
 Route the failure to [`hack tdd`](../../../hack/steps/tdd/SKILL.md)
 (Red → Green → Refactor) and only re-run `validate` after Hack closes green. A
 green `validate` is a precondition for `review` and the push.
+
+**Report the verdict of the three auto-merge gates** — `gates.coverage`,
+`gates.dependencies` and `gates.code-analysis` — in this step's summary:
+released, blocked, or could not run (and why). `request` reads that report to
+decide whether to arm auto-merge, and has no other source: it does not re-run the
+gates. Without the report, `request` treats all three as not released and opens
+the PR without auto-merge.
 
 ## Guardrails
 

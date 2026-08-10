@@ -291,7 +291,8 @@ jobs:
 
   # ── Gate: prodops_consistency ───────────────────────────────────────────────
   # Validates the repo against prodops/exec/manifest.yaml (prose docs must
-  # reference manifest values, not rewrite them) and runs the repo doctor.
+  # reference manifest values, not rewrite them), confirms the materialized
+  # per-player skills match their source, and runs the repo doctor.
   prodops_consistency:
     name: prodops_consistency
     runs-on: ubuntu-latest
@@ -302,6 +303,16 @@ jobs:
 
       - name: Validate exec manifest
         run: ./prodops/scripts/validate-manifest.sh
+
+      # prodops/skills/ is the source; .claude/, .agents/ and .github/ are
+      # generated copies that the agents actually read. An edit to the source
+      # that is never materialized is INERT — the agents keep reading the stale
+      # copy, so a fixed skill still behaves as if unfixed. That failure is
+      # invisible locally (the source looks right) and only shows up when
+      # another player runs the skill, which is why it belongs in CI.
+      # --check writes nothing and exits 1 on any drift or divergence.
+      - name: Skills materialized from source
+        run: ./prodops/scripts/agents/materialize-skills.sh --check
 
       # Advisory for now: doctor gets stricter on a sibling branch and the
       # fixes it flags land in separate branches. Flip to blocking once the

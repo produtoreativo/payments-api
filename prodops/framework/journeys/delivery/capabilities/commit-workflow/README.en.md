@@ -18,7 +18,9 @@ commit-workflow/
 │   ├── pre-commit.sh
 │   ├── prepare-commit-msg.sh
 │   ├── commit-msg.sh
-│   └── pre-push.sh
+│   ├── pre-push.sh
+│   ├── test-commit-msg.sh  commit-msg regression suite (via real `git commit`)
+│   └── check-commit-msg-suite.sh  runs the suite only when the scripts changed
 └── templates/         ← reusable templates for PR, task-closing and commit message
     ├── commit-template.txt
     ├── pull_request.md
@@ -26,6 +28,23 @@ commit-workflow/
 ```
 
 **Hooks** contain only one delegation line — all logic resides in **scripts**. This allows testing scripts independently and reusing them in CI without depending on hooks.
+
+### Testing `commit-msg`
+
+```bash
+./prodops/framework/journeys/delivery/capabilities/commit-workflow/scripts/test-commit-msg.sh
+```
+
+Runs the validator through a **real** `git commit`, in a throwaway repository
+with the same `core.hooksPath` as this repo — the integration path, not just the
+script in isolation. Exit 0 = every case passed.
+
+The property the suite protects: **Conventional Commits rules apply to the
+subject, not to the whole message**. Reading the entire message (`cat "$1"`)
+instead of the subject (`head -1 "$1"`) makes the hook reject any commit with a
+body or trailer — and every ProdOps-flow commit carries a `Co-Authored-By:`. The
+suite was mutation-verified: injecting that `cat` makes the four subject-scope
+cases fail and the suite exit 1.
 
 ---
 

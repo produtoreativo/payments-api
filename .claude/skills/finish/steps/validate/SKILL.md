@@ -35,15 +35,28 @@ sem ajuste (ver notas):
 ```bash
 cd api
 
-# format — Prettier (gate limpo)
-npm run format     # prettier --write "src/**/*.ts" "test/**/*.ts"
+# format — Prettier em modo verificação (NÃO use `npm run format`: ele é
+# `--write` e reescreve arquivos)
+npx prettier --check "src/**/*.ts" "test/**/*.ts"
 
-# lint — ESLint (ver nota: --fix)
-npm run lint       # eslint "{src,apps,libs,test}/**/*.ts" --fix
+# lint — ESLint sem --fix (NÃO use `npm run lint`: ele é `--fix`)
+npx eslint "{src,apps,libs,test}/**/*.ts"
 
 # build — verificação de compilação (gate limpo)
 npm run build      # nest build
 ```
+
+> **Por que não os scripts do `package.json` aqui.** `npm run format` é
+> `prettier --write` e `npm run lint` é `eslint --fix`: os dois **reescrevem**
+> arquivos. Rodá-los neste step violaria o próprio Guardrail ("não escrever
+> código") e sujaria a árvore que a guarda abaixo exige limpa. Corrigir o que
+> elas apontam é trabalho do ciclo Hack.
+>
+> O `npx eslint` acima é **exatamente** o comando do job `lint` do
+> `pr-gates.yml`. Já o `prettier --check` não tem job correspondente no CI: é
+> verificação local, para pegar desvio de formatação antes do push. O manifest
+> registra `gates.lint` como `cd api && npm run lint` — a forma sem `--fix` é a
+> leitura correta desse gate como inspeção, e é o que o CI executa.
 
 > A **cobertura** não entra aqui: no repo ela é subproduto da suíte de
 > aceitação, que é dinâmica. Ver a seção 3.
@@ -53,6 +66,20 @@ falhar — inútil como gate de CI. Para inspecionar sem mutar (o que `validate`
 exige), rode o eslint sem `--fix`, como o `pr-gates.yml` faz:
 `npx eslint "{src,apps,libs,test}/**/*.ts"` (erros falham; warnings não — o repo
 carrega warnings pré-existentes e o gate exige apenas exit 0).
+
+> **Guarda de árvore limpa.** O ciclo Hack roda `npm run lint` **com** `--fix`:
+> ele corrige in-place e declara verde. Se essas correções não foram commitadas,
+> o CI — que roda sem `--fix`, sobre o que está commitado — falha exatamente nos
+> pontos que o Hack deu por resolvidos. A divergência é silenciosa: local verde,
+> remoto vermelho. Antes de rodar o lint, confirme que a árvore está limpa:
+>
+> ```bash
+> git status --porcelain   # vazio = o que você inspeciona é o que o CI verá
+> ```
+>
+> Árvore suja é um **bloqueador**: as correções pendentes pertencem a um commit
+> do ciclo Hack, não a este step (`validate` não commita — ver Guardrails).
+> Retorne ao [`hack commit`](../../../hack/steps/commit/SKILL.md) antes de seguir.
 
 ### 2. Código-fonte e dependências
 
@@ -116,14 +143,40 @@ uma linha de `api/src`. Requer `SNYK_TOKEN`.
 > (Snyk, SCA) analisa as bibliotecas de terceiros; CodeQL (SAST, remoto no CI)
 > analisa o código-fonte em busca de vulnerabilidades.
 
-### 2b. Ferramentas ainda não presentes como script
+### 2b. Validador de commit — condicional
 
-A configurar antes de tornar o gate obrigatório (gap deste refinamento):
+As mensagens de commit **já foram validadas**: o hook `commit-msg` roda a cada
+`git commit`, então todo commit que chega aqui passou por ele. Não há o que
+revalidar sobre as mensagens neste step.
+
+O que pode ter mudado é o **próprio validador**. Quando o diff toca os scripts do
+commit-workflow, rode a suíte de regressão — ela exercita o validador através de
+um `git commit` real, num repositório descartável:
 
 ```bash
-# commit lint — mensagens em Conventional Commits
-npx --no-install commitlint --edit $1
+./prodops/framework/journeys/delivery/capabilities/commit-workflow/scripts/check-commit-msg-suite.sh
 ```
+
+O script decide sozinho se precisa rodar: compara a branch atual contra sua base
+e, se os scripts do commit-workflow não estiverem no diff, sai 0 sem fazer nada.
+
+Se o diff **não** toca esses scripts, ele pula — não há como o validador ter
+quebrado. Exit 0 libera; exit 1 significa que uma regra do validador regrediu, e
+a correção pertence ao ciclo Hack como qualquer outra falha deste step. Exit 2
+significa que a checagem **não pôde decidir** (base indeterminada) — nesse caso o
+script roda a suíte mesmo assim, em vez de pular.
+
+> Por que um script e não um `git diff | grep` inline: a forma inline falha
+> **aberta**. Se a ref base não existir localmente (fetch velho, placeholder
+> colado literalmente), o `git diff` aborta, o `grep` não casa e o comando pula
+> a suíte silenciosamente — exatamente quando ela deveria rodar. O script trata
+> base indeterminada como "rode assim mesmo".
+
+> Por que não roda sempre, e por que não roda no CI: um validador quebrado no
+> sentido restritivo (ler a mensagem inteira em vez do subject) impede o próprio
+> `git commit` — a falha aparece na hora, localmente. E no CI todo commit já
+> passou pelo hook por definição, então lá seria tarde demais para ser útil.
+> A suíte serve a quem **edita** o validador, não a cada entrega.
 
 ### 3. Exceção dinâmica (aceitação/integração) — e cobertura
 
@@ -131,11 +184,24 @@ Quando comportamento ou contratos mudaram (`gates.acceptance.when:
 behavior_or_contract_changed`):
 
 ```bash
-./scripts/test-acceptance.sh   # também emite api/coverage/cobertura-coverage.xml
+./scripts/test-acceptance.sh          # ~25s; emite api/coverage/cobertura-coverage.xml
+./scripts/check-coverage-threshold.sh # gates.coverage: avalia o XML recém-gerado
 ```
 
 Requer LocalStack (a app fixture provisiona tabelas DynamoDB mesmo com o
 repositório em memória).
+
+**A cobertura é avaliada aqui**, imediatamente após a aceitação: é a aceitação
+que gera o XML, então este é o único ponto do fluxo onde o relatório é fresco por
+construção. O `request` não reavalia — ele lê o veredito produzido aqui.
+
+Exit 0 libera; exit 1 **desarma o auto-merge**; exit 2 = o gate não pôde rodar
+(XML ausente ou inválido).
+
+`blocks: auto_merge_only` descreve o que o gate bloqueia **no merge** — desarma o
+auto-merge, não impede o merge manual. Não é permissão para o agente seguir em
+frente: como todo gate deste step, um resultado não-verde **interrompe o
+`validate`** (ver "Critério"). A correção volta ao ciclo Hack.
 
 **Origem da cobertura.** Não há suítes unitárias sobre `api/src`
 (`jest --coverage` via `test:cov` usa `rootDir: src` + `testRegex: .*\.spec\.ts$`
@@ -167,6 +233,12 @@ falha (lint, build ou aceitação vermelha) é mudança de produto e pertence ao
 ciclo TDD do Hack. Encaminhe a falha ao [`hack tdd`](../../../hack/steps/tdd/SKILL.md)
 (Red → Green → Refactor) e só reexecute `validate` depois que o Hack fechar em
 verde. Um `validate` verde é pré-condição para `review` e o push.
+
+**Reporte o veredito dos três gates de auto-merge** — `gates.coverage`,
+`gates.dependencies` e `gates.code-analysis` — no resumo deste step: liberado,
+bloqueado, ou não pôde rodar (e por quê). O `request` lê esse relato para decidir
+se arma o auto-merge, e não tem outra fonte: ele não reexecuta os gates. Sem esse
+relato, o `request` trata os três como não liberados e abre o PR sem auto-merge.
 
 ## Guardrails
 

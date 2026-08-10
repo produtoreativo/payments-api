@@ -41,7 +41,8 @@ validation step does not commit, a review step does not run the pipeline, etc.):
   single dynamic exception is acceptance/integration).
 - **`review` — pipeline inspection** (ensures the rules for an automatic PR are
   valid, without running the pipeline).
-- **push origin** — publishes the commits to the origin branch (git, no force push).
+- **push origin** — publishes the commits of the working branch to its remote
+  tracker (git, no force push).
 - **`request` — opens the PR in auto-approval mode** (auto-merge if CI passes).
 
 | Step | File | When to use |
@@ -142,15 +143,23 @@ When invoked without a step argument, run in order:
    no required reviewer blocks auto-merge. A missing condition is a **blocker**
    to record before enabling auto-approval.
 7. **push origin** — after a clean `validate` and a `review` with no blockers,
-   publish the commits to the **origin branch** (the branch the current one was
-   derived from), with no force push:
+   publish the commits of the **current branch** to its remote tracker, with no
+   force push:
 
    ```bash
-   git push origin HEAD:<origin-branch>
+   git push origin HEAD
    ```
+
+   Publish **the working branch**, never the PR's target branch. A refspec with
+   a destination (`HEAD:<target-branch>`) would write straight into the target
+   branch without a single CI check running — and `request` would then open a PR
+   that is already merged, empty, or conflicting. The only merge path authorized
+   from Finish is the auto-merge in step 8.
 8. **[request](steps/request/SKILL.md)** — open the PR with the template filled
    with evidence, execute auto-approval and enable auto-merge immediately after
-   creation (`gh pr merge <number> --auto --squash`), then update the Release
+   creation (`gh pr merge <number> --auto --squash`) — **provided `validate`
+   reported all three auto-merge gates released**; if any did not, the PR still
+   opens, without auto-merge, with the reason recorded. Then update the Release
    Trail with the PR link and auto-merge status. Auto-merge queues the squash to
    execute once all required CI checks pass. The agent does **not** wait idle.
 9. Verify that existing workflows are valid and the repository is ready for automated execution.
