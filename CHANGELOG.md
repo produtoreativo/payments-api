@@ -7,6 +7,21 @@ export from `payments-api` (empirical upstream) when applicable.
 
 ---
 
+## [1.6.2] — 2026-08-11
+
+### Fixed
+
+- `prodops/scripts/install-prodops.sh` — consumer root files are now explicitly
+  protected from being overwritten by the framework file-copy step:
+  - `is_protected()` returns unconditionally for `README.md`, `README.en.md`,
+    `.gitignore`, `.gitattributes`, `LICENSE`, and `CHANGELOG.md` — these paths
+    are always skipped, regardless of whether they exist in the target repo
+  - Step 4 adds a paranoia guard that rejects any path not starting with
+    `prodops/`, making the architectural boundary auditable even if the `find`
+    scope changes in the future
+
+---
+
 ## [1.6.1] — 2026-08-11
 
 ### Fixed

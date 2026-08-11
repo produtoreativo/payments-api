@@ -1,8 +1,8 @@
 schema_version: 1
 
 prodops_framework:
-  version: "v1.6.1"
-  status: contributor
+  version: "v1.6.2"
+  status: ok
   source_repository: payments-api
   external_source: github.com/produtoreativo/prodops-framework
   synchronization_mechanism: ci-pr-sync
@@ -21,8 +21,8 @@ distribution:
 
 drift:
   status: ok
-  installed_version: "v1.6.1"
-  available_version: "v1.6.1"
+  installed_version: "v1.6.2"
+  available_version: "v1.6.2"
   last_checked: "2026-08-11"
   reason: >
     Versão instalada igual à versão disponível — sem drift.
