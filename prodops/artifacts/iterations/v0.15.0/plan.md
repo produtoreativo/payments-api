@@ -10,11 +10,11 @@ Refinar a fase Finish do Delivery Journey: decompor o passo monolítico em sub-s
 
 | DS | Issue | Feature | Dependência | OBC | BDD | Risco | Status | PR |
 |---|---|---|---|---|---|---|---|---|
-| DS-62 | #11 | finish-substeps: decompor Finish em `validate`, `review`, `request` com fronteira explícita por step | — | n/a | n/a | n/a | Em execução | — |
-| DS-63 | #11 | finish-quality-gates: gates `coverage`, `dependencies` e `code-analysis` como `blocks: auto_merge_only` | DS-62 | n/a | n/a | n/a | Em execução | — |
-| DS-64 | #11 | commit-workflow-rules: subject completo em 72 caracteres, scope-case e ponto final | — | n/a | n/a | n/a | Em execução | — |
-| DS-65 | #11 | trail-layout-consistency: consolidar session trails em `trails/sessions/`, separar trail por iteração e corrigir a causa raiz no template de capsule | — | n/a | n/a | n/a | Em execução | — |
-| DS-66 | #11 | skill-materialization-fix: materializar a árvore completa do skill e reparar os defeitos que impediam a regeneração | — | n/a | n/a | n/a | Em execução | — |
+| DS-62 | #11 | finish-substeps: decompor Finish em `validate`, `review`, `request` com fronteira explícita por step | — | n/a | n/a | n/a | Em execução | #171 |
+| DS-63 | #11 | finish-quality-gates: gates `coverage`, `dependencies` e `code-analysis` como `blocks: auto_merge_only` | DS-62 | n/a | n/a | n/a | Em execução | #171 |
+| DS-64 | #11 | commit-workflow-rules: subject completo em 72 caracteres, scope-case e ponto final | — | n/a | n/a | n/a | Em execução | #171 |
+| DS-65 | #11 | trail-layout-consistency: consolidar session trails em `trails/sessions/`, separar trail por iteração e corrigir a causa raiz no template de capsule | — | n/a | n/a | n/a | Em execução | #171 |
+| DS-66 | #11 | skill-materialization-fix: materializar a árvore completa do skill e reparar os defeitos que impediam a regeneração | — | n/a | n/a | n/a | Em execução | #171 |
 
 > **OBC/BDD/Risco marcados `n/a`.** Trabalho de infraestrutura ProdOps não tem
 > OBC de produto nem cenário BDD executável. Mesma lacuna que suspendeu a
@@ -58,7 +58,12 @@ trabalho novo.
 - [x] Trail por iteração separado do Release Trail (`iteration-trail*.md`)
 - [x] `session-trail-dir` corrigido no template de capsule (causa raiz)
 - [x] `materialize-skills.sh` materializando a árvore completa do skill
-- [ ] PR aberto para a issue #11
+- [x] Push publica a branch de trabalho, nunca a branch de destino do PR
+- [x] Gates de auto-merge rodam no `validate`; `request` apenas lê os vereditos
+- [x] `validate` inspeciona sem mutar (`prettier --check`, `eslint` sem `--fix`)
+- [x] Suíte de regressão do `commit-msg` verificada por mutação
+- [x] CI barra skill materializado divergente da fonte
+- [x] PR aberto para a issue #11 — #171 (`refine/11-finish-v2` → `master`)
 - [ ] Issue #11 fechada no GitHub
 - [ ] `prodops.delivery.promote.completed` emitido para a issue #11
 
@@ -66,10 +71,15 @@ trabalho novo.
 
 Ambos exigem `admin` no repositório — herdados do trail `4a9e4c58`:
 
-1. **Sem `required_status_checks` na `master`.** O step `review` trata branch
-   protection ausente como bloqueador, o que impede `request` de abrir o PR.
+1. **Sem `required_status_checks` na `master`** (confirmado 404 em 2026-08-10).
+   O step `review` trata branch protection ausente como bloqueador, o que impede
+   **armar o auto-merge** — não impede abrir o PR (#171 está aberto) nem o merge
+   manual por um humano.
 2. **`SNYK_TOKEN` não cadastrado.** O gate `dependencies` sai com exit 2 em
    qualquer ambiente enquanto o secret não existir.
+3. **Cobertura em 62,78% contra limiar de 100%** — `gates.coverage` sai 1 em todo
+   `validate`. Dívida pré-existente do repositório, não regressão desta iteração.
+   Enquanto existir, o auto-merge não arma: o caminho é merge manual.
 
 ### Dívida registrada, não resolvida aqui
 
