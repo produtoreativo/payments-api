@@ -16,5 +16,5 @@
 
 ## Runtime
 
-- Session trail: [2026-07-30-5a19bf95.md](trails/2026-07-30-5a19bf95.md)
+- Session trail: [2026-07-30-5a19bf95.md](../../trails/sessions/2026-07-30-5a19bf95.md)
 - Timeline: [timelines/38.json](runtime/timelines/38.json)

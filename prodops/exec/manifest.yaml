@@ -48,7 +48,7 @@ paths:
     # nova rota, dependência externa, tabela DynamoDB, tópico de evento ou fila SQS.
   experiments: prodops/artifacts/experiments/
   templates: prodops/templates/
-  cards: prodops/artifacts/iterations/<version>/cards/ # gerado pelo readiness do /downstream; escopo por iteração
+  cards: prodops/artifacts/iterations/<version>/cards/ # optional — gerado pelo readiness do /downstream; escopo por iteração (<version> é placeholder)
 
 # Quality gates verificáveis (comando + critério objetivo)
 gates:
@@ -62,9 +62,59 @@ gates:
     expect: exit0
     when: behavior_or_contract_changed
     note: "executa as 4 suítes de aceitação; requer LocalStack (CI: service container)"
+  # gate de AUTO-MERGE, não de merge: um resultado vermelho impede que
+  # `finish request` arme o `gh pr merge --auto`, mas o PR continua aberto e
+  # mergeável à mão por um humano. Não é required status check — por isso não
+  # aparece como job bloqueante em pr-gates.yml.
+  coverage:
+    cmd: "./scripts/check-coverage-threshold.sh"
+    expect: exit0
+    when: behavior_or_contract_changed
+    metric: branches
+    threshold_pct: 100
+    blocks: auto_merge_only
+    note: "consome o XML gerado pelo gate acceptance; cobertura atual 56.81% de branches — o auto-merge fica desarmado até atingir o limiar"
+
   build:
     cmd: "cd api && npm run build"
     expect: exit0
+  # SCA (Software Composition Analysis) — vulnerabilidades conhecidas nas
+  # dependências de terceiros. Não analisa o código-fonte: quem faz isso é
+  # `code-analysis` (SonarQube local) e, no CI, o CodeQL (SAST remoto).
+  # Gate de AUTO-MERGE, não de merge — mesmo desenho
+  # do gate coverage: um resultado vermelho impede que `finish request` arme o
+  # `gh pr merge --auto`, mas o PR continua aberto e mergeável à mão por um
+  # humano. Não é required status check — por isso não aparece como job
+  # bloqueante em pr-gates.yml.
+  dependencies:
+    cmd: "./scripts/check-dependencies.sh"
+    expect: exit0
+    tool: snyk
+    severity_threshold: high
+    requires_secret: SNYK_TOKEN
+    blocks: auto_merge_only
+    note: "sem SNYK_TOKEN o gate não roda e o auto-merge fica desarmado (motivo registrado no PR); o merge manual segue livre. Criar o secret é ação de admin — como allow_auto_merge."
+  # Análise estática do código-fonte em api/src (SonarQube). Avalia
+  # manutenibilidade, confiabilidade E segurança — não é um gate só de segurança,
+  # por isso não se chama `sast`: SAST é um subconjunto do que o Sonar faz.
+  # Complementa o gate `dependencies`, que é SCA (bibliotecas de terceiros).
+  #
+  # Roda LOCALMENTE via container SonarQube efêmero, no molde do LocalStack em
+  # `acceptance`: falhar aqui custa menos que falhar na pipeline remota depois do
+  # push. No CI o SAST remoto segue coberto pelo CodeQL (job
+  # `Analyze (javascript-typescript)`) — não há job Sonar em pr-gates.yml, para
+  # não ter duas ferramentas analisando o mesmo código-fonte.
+  #
+  # Gate de AUTO-MERGE, não de merge — mesmo desenho de coverage/dependencies:
+  # um resultado vermelho impede que `finish request` arme o `gh pr merge --auto`,
+  # mas o PR continua aberto e mergeável à mão por um humano.
+  code-analysis:
+    cmd: "./scripts/check-code-analysis.sh"
+    expect: exit0
+    tool: sonarqube
+    project_key: payments-api
+    blocks: auto_merge_only
+    note: "servidor SonarQube efêmero em container; o script provisiona o token sozinho — não requer secret. Veredito lido da API (/api/qualitygates/project_status), não do exit code do scanner, que não é documentado. O script provisiona o quality gate 'prodops-code-analysis' (violations + duplicação + security hotspots) e remove a condição de cobertura que o SonarQube injeta via CAYC: cobertura é responsabilidade de gates.coverage, que é mais rigoroso (branches, 100%, código inteiro) que o new_coverage do Sonar (linhas, 80%, só código novo). Sem Docker o gate não roda (exit 2) e o auto-merge fica desarmado; o merge manual segue livre."
   no_mocks:
     # fonte: prodops/skills/hack/references/workflow.md (No Mocks Rule)
     # Aplica-se apenas a api/test/ (testes de aceitação devem usar implementações reais).

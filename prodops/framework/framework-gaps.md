@@ -197,3 +197,61 @@
 **Impacto se omitido:** Ambiguidade entre o catálogo de eventos e o modelo operacional. Agentes que leem o catálogo podem inferir que Promote leva para Production, contradizendo o modelo operacional consolidado que coloca Production fora da Delivery Journey.
 
 **Status:** Lacuna aberta. Não alterar o catálogo de eventos neste ciclo — documentar apenas. Candidato a próxima versão do catálogo.
+
+---
+
+## GAP-019 — O nome `release-trail.md` designa dois artefatos de camadas diferentes
+
+**Contexto:** Durante a refatoração do Finish (branch `refine/11-finish-v2`), foram encontrados 7 arquivos de trail fora de `prodops/artifacts/trails/sessions/`. Ao inspecioná-los, eram dois artefatos distintos com o mesmo nome: 3 eram session trails de verdade (UUID de sessão, convenção `YYYY-MM-DD-<session-id>.md`) que haviam sido escritos dentro de `iterations/<version>/trails/`; os outros 4 eram evidência de TDD escopada por iteração ou card (`# Release Trail — v0.9.0`), sem qualquer identidade de sessão.
+
+**O que o Framework não diz:** Que "Release Trail" designa exclusivamente o log append-only de sessões. Não existe nome canônico para o artefato que consolida evidência de teste de uma entrega dentro de uma iteração, então ele herdou o nome do conceito do Framework.
+
+**O que deveria dizer:** Release Trail é ontologia do Framework — endereçado por session ID, vive em `trails/sessions/`. O trail por iteração/card é artefato de produto — endereçado por versão ou slug, vive em `iterations/<version>/`. São camadas diferentes na tabela de `contributor-philosophy.md` ("trail templates → Runtime" vs "textos de trail do produto → Produto") e não devem compartilhar nome.
+
+**Impacto se omitido:** Um agente que lê `iterations/v0.9.0/release-trail.md` pode inferir que trails são escopados por iteração e passar a escrever session trails lá — foi exatamente o que aconteceu com os 3 arquivos encontrados. A colisão de nome propaga o erro de localização.
+
+**Status:** Mitigado em `refine/11-finish-v2`. Os 4 agregados foram renomeados para `iteration-trail*.md` e `release-trail.md` ganhou a seção "Release Trail ≠ Iteration Trail". Falta o Framework nomear formalmente esse artefato — hoje `iteration-trail` é convenção do produto, não definição do Framework. O nome descreve o escopo (uma entrega dentro de uma iteração) em vez do conteúdo, porque os 4 arquivos não são homogêneos: dois são evidência de TDD, um é registro de entrega (`DS-58 — RT Iteration Lifecycle Automation`) e um é trail de card.
+
+**Dívida residual:** 20 capsules já geradas, em 8 iterações (v0.6.0, v0.7.0, v0.9.0 a v0.14.0), ainda declaram `session-trail-dir: prodops/artifacts/iterations/<version>/trails/`. O template foi corrigido, mas capsules são artefato gerado e não devem ser editadas à mão — a correção correta é regenerar via `/downstream`, não um sed em massa. Até lá, um agente que ler uma capsule antiga recebe o path errado. Os diretórios `trails/` correspondentes foram removidos: mantê-los vazios preservaria exatamente o layout que a Regra 1 declara desvio.
+
+---
+
+## GAP-020 — Gates de qualidade acoplam ferramenta, credencial e endpoint ao produto
+
+**Contexto:** Os gates `scripts/check-code-analysis.sh` e `scripts/check-dependencies.sh` implementam análise estática e verificação de dependências, mas hardcodam a escolha de ferramenta e a topologia local: container `sonarqube`, `localhost:9000`, imagem do scanner, e leitura de `SNYK_TOKEN` a partir de `api/.env`.
+
+**O que o Framework não diz:** Onde termina a definição do gate (o que precisa ser verificado antes de um PR mergear) e onde começa a escolha de implementação (com qual ferramenta, em qual endpoint, com qual credencial). A tabela de `contributor-philosophy.md` cobre "credenciais e endpoints → Produto", mas não diz qual camada define o gate em si.
+
+**O que deveria dizer:** O Framework define quais classes de gate existem (análise estática, dependências, cobertura, aceitação) e o contrato de exit code. O Runtime oferece uma implementação de referência opinativa. O produto fornece credenciais, endpoints e limiares.
+
+**Impacto se omitido:** Cada produto reimplementa os mesmos gates do zero, e a RI não consegue exportar verificação de qualidade sem arrastar junto a escolha de ferramenta.
+
+**Status:** Lacuna aberta. **Não promover para o Runtime neste ciclo** — os gates têm um único consumidor real, e `contributor-philosophy.md` (pergunta 2) exige dois casos reais antes de generalizar. Documentar apenas; reavaliar quando um segundo consumidor existir.
+
+---
+
+## GAP-021 — `materialize-skills.sh` assumia um skill = um arquivo
+
+**Contexto:** O script materializava apenas `prodops/skills/<skill>/SKILL.md` para os três players. Quando `finish` e `hack` passaram a ser multi-arquivo (`steps/<step>/SKILL.md`), os sub-steps nunca chegavam a `.claude/`, `.agents/` e `.github/` — mas o `SKILL.md` materializado continuava linkando para eles com paths relativos à origem. O resultado eram links pendurados em todos os players, sem nenhum sinal de erro: o `--check` só compara o `SKILL.md` de topo e reportava "up-to-date".
+
+**O que o Framework não diz:** Que um skill pode ser multi-arquivo, e que a materialização é responsável pela subárvore inteira — não só pelo arquivo de entrada.
+
+**O que deveria dizer:** A unidade de materialização é o diretório do skill, não o `SKILL.md`. Qualquer arquivo referenciado por path relativo a partir do skill precisa existir no destino, senão o contrato lido pelo player está incompleto.
+
+**Impacto se omitido:** Codex e Copilot leem um `SKILL.md` que manda abrir `steps/validate/SKILL.md` e não encontram o arquivo. O agente executa a fase sem a definição do sub-passo, ou inventa o comportamento. Silencioso porque o gate de drift não olhava a subárvore.
+
+**Status:** Corrigido em `refine/11-finish-v2`. `materialize-skills.sh` ganhou `materialize_steps()`, chamada inclusive quando o `SKILL.md` de topo está up-to-date (o pai estar em dia não diz nada sobre os filhos). Corrige `finish` (multi-arquivo introduzido nesta branch) e também `hack`, que tinha o mesmo defeito latente desde antes.
+
+---
+
+## GAP-022 — Skills materializados linkam para fora do próprio diretório
+
+**Contexto:** Os `SKILL.md` de `finish`, `hack`, `sync`, `upstream` e `ship` referenciam arquivos fora do diretório do skill — `../references/engineering/tdd-prodops/`, `../../framework/journeys/delivery/phases/`. Na origem (`prodops/skills/`) esses paths resolvem. No destino materializado (`.claude/`, `.agents/`, `.github/`) não existe irmão `framework/` nem `references/` compartilhado, então 153 links ficam pendurados. O defeito é anterior a `refine/11-finish-v2` — já estava em `master`.
+
+**O que o Framework não diz:** Qual é a fronteira de um skill materializado. Se o `SKILL.md` é um contrato autocontido que o player lê isoladamente, ele não pode depender de arquivos fora da sua própria árvore; se pode, a materialização precisa levar as dependências junto.
+
+**O que deveria dizer:** Uma das duas — ou o skill é autocontido e toda referência externa vira conteúdo inline / link absoluto para o repositório, ou a unidade de materialização passa a incluir as dependências referenciadas. A escolha muda o que `materialize-skills.sh` faz e o que o `--check` valida.
+
+**Impacto se omitido:** Codex e Copilot leem um contrato que manda consultar `../references/engineering/tdd-prodops/red-green-refactor.md` e não encontram nada. O agente executa a fase sem a referência ou infere o comportamento. Silencioso: nenhum gate detecta.
+
+**Status:** Lacuna aberta. Não corrigido em `refine/11-finish-v2` — a correção depende de decidir a fronteira do skill materializado, que é definição de Framework, não ajuste de script. GAP-021 resolveu o caso interno (subárvore do próprio skill); este é o caso externo.

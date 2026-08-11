@@ -21,7 +21,7 @@
 
 ## Runtime
 
-- Session trail: [2026-07-31-021f1344.md](trails/2026-07-31-021f1344.md)
+- Session trail: [2026-07-31-021f1344.md](../../trails/sessions/2026-07-31-021f1344.md)
 - Timelines: [timelines/](runtime/timelines/) — issues #39, #41, #42, #43
 - Correlation IDs:
   - DS-39 (#39): `021f1344-130b-451a-bc39-086a374f74fc`

@@ -6,13 +6,14 @@ description: Close technical work by delivering a fully autonomous Pull Request.
      Source:    prodops/skills/finish/SKILL.md
      Player:    copilot
      Generator: prodops/scripts/agents/materialize-skills.sh
-     Generated: 2026-08-06T13:38:20Z
+     Generated: 2026-08-10T23:49:33Z
      To update: bash prodops/scripts/agents/materialize-skills.sh --skill finish
 -->
 
 # FINISH
 
-Use this skill to close a task by delivering a fully autonomous Pull Request with explicit quality evidence.
+Use este skill para fechar uma tarefa entregando um Pull Request completamente
+autônomo, com evidência de qualidade explícita.
 
 ## O que Finish é e NÃO é
 
@@ -33,26 +34,57 @@ Para isso, Finish garante:
 
 **Se qualquer requisito não puder ser satisfeito: Finish NÃO conclui. Interrompe para investigação.**
 
-## Required input context
+O Finish **não** implementa nem lê código de produto (isso é Hack), **não**
+executa a pipeline remota (isso é o CI), e **não** reescreve decisões de produto
+(isso é upstream).
 
-Before starting, the agent must have:
+## Steps
 
-- `work-item-id` — the GitHub issue number of the Feature
-- `iteration-id` — the Iteration Plan identifier
-- `actor.player` — the current player (`claude`, `codex`, or `copilot`)
-- `correlation-id` — the Delivery-flow UUID provided by the chain runner. If
-  invoked standalone, generate a new UUID.
+O Finish tem **três steps invocáveis** mais um passo de publicação, cada um com
+responsabilidade única e uma fronteira explícita do que **não** é sua
+responsabilidade — para que cada passo seja auditável isoladamente, sem efeitos
+colaterais cruzados (um passo de validação não commita, um passo de review não
+executa pipeline, etc.):
 
-## Preconditions
+- **`validate` — análise estática de qualidade** (roda todos os passos de
+  análise estática; a exceção dinâmica única é a aceitação/integração).
+- **`review` — inspeção da pipeline** (garante que as regras para um PR
+  automático estão válidas, sem executar a pipeline).
+- **push origin** — publica os commits da branch de trabalho no seu rastreador
+  remoto (git, sem force push).
+- **`request` — abre o PR em modo auto aprovação** (auto-merge se o CI aprovar).
 
-1. `prodops/skills/prodops-emit-event/SKILL.md` has been read.
-2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
+| Step | Arquivo | Quando usar |
+|---|---|---|
+| `validate` | [steps/validate/SKILL.md](steps/validate/SKILL.md) | Antes do push — replicar localmente o que a pipeline remota vai executar |
+| `review` | [steps/review/SKILL.md](steps/review/SKILL.md) | Confirmar que as condições para auto aprovação segura estão presentes no repositório |
+| `request` | [steps/request/SKILL.md](steps/request/SKILL.md) | Abrir o PR com título e body segundo o template, com auto-merge configurado |
 
-## Phase: Finish.Started
+Quando invocado com um argumento de step (`/finish <step>`), execute apenas
+aquele step. Caso contrário, execute o fluxo completo em ordem. Se o step pedido
+não estiver listado, execute o fluxo completo.
 
-**Moment**: after input context is verified, before any quality gate work begins.
+## Contexto de entrada obrigatório
 
-Emit:
+Antes de começar, o agente precisa ter:
+
+- `work-item-id` — o número da issue no GitHub da Feature
+- `iteration-id` — o identificador do Iteration Plan
+- `actor.player` — o player atual (`claude`, `codex` ou `copilot`)
+- `correlation-id` — o UUID do fluxo de Delivery fornecido pelo runner da
+  cadeia. Se invocado isoladamente, gerar um novo UUID.
+
+## Pré-condições
+
+1. `prodops/skills/prodops-emit-event/SKILL.md` foi lido.
+2. A ferramenta está disponível em `prodops/runtime/tools/emit-event/scripts/emit-event`.
+
+## Fase: Finish.Started
+
+**Momento**: após o contexto de entrada ser verificado, antes de qualquer
+trabalho de gate de qualidade começar.
+
+Emitir:
 
 ```json
 {
@@ -66,13 +98,15 @@ Emit:
 }
 ```
 
-If the tool returns `status: error`: report the error, fix the input, do not proceed.
+Se a ferramenta retornar `status: error`: reportar o erro, corrigir a entrada,
+não prosseguir.
 
-## Phase: Finish.Completed
+## Fase: Finish.Completed
 
-**Moment**: after all quality gates pass and Release Trail evidence is appended — before reporting success.
+**Momento**: após todos os gates de qualidade passarem e a evidência ser
+registrada no Release Trail — antes de reportar sucesso.
 
-Emit using the **same `correlation-id`** as Finish.Started:
+Emitir usando o **mesmo `correlation-id`** do Finish.Started:
 
 ```json
 {
@@ -86,39 +120,75 @@ Emit using the **same `correlation-id`** as Finish.Started:
 }
 ```
 
-Do not emit `Finish.Completed` if any quality gate fails or evidence is incomplete.
+Não emitir `Finish.Completed` se qualquer gate de qualidade falhar ou se a
+evidência estiver incompleta.
 
-## Inputs
+## Entradas
 
 - `AGENTS.md`
 - `prodops/framework/journeys/delivery/phases/finish/quality-gates.md`
 - `prodops/framework/journeys/delivery/phases/finish/done-criteria.md`
-- Current diff and test output
+- `prodops/exec/manifest.yaml` — comandos e critérios canônicos dos gates
+- Diff atual e saída dos testes
 
-## Flow
+## Fluxo
+
+Quando invocado sem argumento de step, execute em ordem:
 
 1. Verificar contexto de entrada (work-item-id, iteration-id, actor, correlation-id).
 2. Emitir Finish.Started.
-3. Revisar arquivos alterados e confirmar escopo.
-4. Verificar gates de qualidade relevantes à tarefa (lint, build, testes, contratos).
-5. Executar validação focada e, quando o risco justificar, validação mais ampla.
-6. Confirmar que artefatos ProdOps foram atualizados apenas onde impactados.
-7. Confirmar que evidência existe no Release Trail.
-8. Criar o Pull Request preenchendo o template com evidências.
-9. Executar auto-approval no PR (quando o repositório suportar; registrar resultado).
-10. Habilitar auto-merge no PR (quando o repositório suportar; registrar resultado).
-11. Verificar que workflows existentes estão válidos e que o repositório está apto para execução automática.
-12. Registrar explicitamente qualquer item incompleto — Finish NÃO conclui com itens abertos.
-13. Emitir Finish.Completed após todos os requisitos satisfeitos.
+3. **[validate](steps/validate/SKILL.md)** — rodar a suíte de análise estática
+   (format, lint, cobertura, build) mais a aceitação quando comportamento ou
+   contratos mudaram. Se algum falha localmente, o passo falha e **não se
+   avança**: a correção pertence ao ciclo TDD do Hack, então retorne ao
+   [`hack tdd`](../hack/steps/tdd/SKILL.md) e só reexecute `validate` depois de
+   fechar em verde — `validate` não escreve código. Falhar na pipeline remota
+   depois de um push custa mais (retrabalho, notificações, PR vermelho) do que
+   falhar localmente antes.
+4. Confirmar que artefatos ProdOps foram atualizados apenas onde impactados.
+5. Confirmar que evidência existe no Release Trail.
+6. **[review](steps/review/SKILL.md)** — confirmar que a pipeline tem os checks
+   obrigatórios, que a branch protection na branch de destino os exige, e que
+   não há reviewer obrigatório bloqueando o auto-merge. Condição ausente é um
+   **bloqueador** a registrar antes de ativar auto aprovação.
+7. **push origin** — após `validate` limpo e `review` sem bloqueadores, publicar
+   os commits da **branch atual** no seu rastreador remoto, sem force push:
+
+   ```bash
+   git push origin HEAD
+   ```
+
+   Publique **a branch de trabalho**, nunca a branch de destino do PR. Um
+   refspec com destino (`HEAD:<branch-de-destino>`) escreveria direto na branch
+   alvo sem nenhum check de CI rodar — e o `request` abriria em seguida um PR já
+   mergeado, vazio ou conflitante. O único caminho de merge autorizado a partir
+   do Finish é o auto-merge do passo 8.
+8. **[request](steps/request/SKILL.md)** — abrir o PR com o template preenchido
+   com evidências, executar auto-approval e ativar auto-merge imediatamente após
+   a criação (`gh pr merge <number> --auto --squash`) — **desde que o `validate`
+   tenha reportado os três gates de auto-merge liberados**; se algum não liberou,
+   o PR abre mesmo assim, sem auto-merge, com o motivo registrado. Atualizar o
+   Release Trail com o link do PR e o status do auto-merge. O auto-merge enfileira
+   o squash para executar assim que os checks obrigatórios passarem. O agente
+   **não** espera ocioso.
+9. Verificar que workflows existentes estão válidos e que o repositório está apto para execução automática.
+10. Registrar explicitamente qualquer item incompleto — Finish NÃO conclui com itens abertos.
+11. Emitir Finish.Completed assim que o auto-merge estiver ativo, o PR confirmado
+    aberto e todos os requisitos satisfeitos.
 
 ## Guardrails
 
-- Do not mark work complete without evidence.
-- Do not hide skipped tests; record why they were skipped.
-- Do not expand scope during finish work.
-- If any requirement cannot be satisfied, Finish does NOT complete. Stop and investigate.
-- Do not emit Finish.Completed before the PR is created and all quality gates pass.
-- Auto-approval and auto-merge failures are blockers — investigate before proceeding.
+- Não marcar trabalho como completo sem evidência.
+- Não esconder testes pulados; registrar o motivo.
+- Não expandir escopo durante o Finish.
+- Se qualquer requisito não puder ser satisfeito, o Finish NÃO conclui. Parar e investigar.
+- Não emitir `Finish.Completed` antes do PR estar criado e de todos os gates de qualidade passarem.
+- Falhas de auto-approval e auto-merge são bloqueadores — investigar antes de prosseguir.
+- Não fazer force push.
+- Não fazer merge manual. Auto-merge é o único caminho de merge autorizado a
+  partir do Finish.
+- Não ativar auto aprovação enquanto a branch protection não estiver configurada.
+- Não emitir `Finish.Completed` antes do auto-merge estar ativo no PR.
 
 ## Engineering References
 
