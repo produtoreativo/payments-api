@@ -2,7 +2,9 @@
 
 ## Ativa
 
-Nenhuma iteração ativa. Próxima iteração a definir.
+| Versão | Escopo | Status | Início |
+|---|---|---|---|
+| [v0.15.0](../iterations/v0.15.0/plan.md) | DS-62 · DS-63 · DS-64 (Discovery) | **Em execução** | 2026-08-11 |
 
 ## Suspenso
 
