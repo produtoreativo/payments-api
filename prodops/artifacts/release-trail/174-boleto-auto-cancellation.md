@@ -80,7 +80,13 @@ Exit code: 0
 | Event | Execution-ID | Status |
 |---|---|---|
 | Delivery.Finish.Started | 812df01a-7b2d-4d73-886a-dd38f24bd3e2 | accepted (derived-state: FINISHING) |
-| Delivery.Finish.Completed | (pending PR creation) | — |
+| Delivery.Finish.Completed | dc1bd758-ed35-4e2e-b8a4-ba4cac9b7e1d | accepted |
+
+---
+
+## PR
+
+https://github.com/produtoreativo/payments-api/pull/177
 
 ---
 
