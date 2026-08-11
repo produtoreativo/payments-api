@@ -6,8 +6,8 @@ Este diretório contém a documentação canônica do ProdOps Framework. O conte
 
 > **Onde vive o Framework:** O repositório canônico é [produtoreativo/prodops-framework](https://github.com/produtoreativo/prodops-framework). Por enquanto, Framework e Runtime também são desenvolvidos na RI [produtoreativo/payments-api](https://github.com/produtoreativo/payments-api) — sincronizados a cada alteração enquanto amadurecem para Release Candidate. Quando o RC for declarado, a RI passa a ser consumidora pura e este repo se torna a única fonte de autoridade.
 >
-> → Última release: [v1.3.0](https://github.com/produtoreativo/prodops-framework/releases/tag/v1.3.0)
-> → Instalar: `bash <(curl -fsSL https://raw.githubusercontent.com/produtoreativo/prodops-framework/master/prodops/scripts/install-prodops.sh) --version v1.3.0`
+> → Última release: [v1.5.0](https://github.com/produtoreativo/prodops-framework/releases/tag/v1.5.0)
+> → Instalar: `bash <(curl -fsSL https://raw.githubusercontent.com/produtoreativo/prodops-framework/master/prodops/scripts/install-prodops.sh) --version v1.5.0`
 > → RI (payments-api): [produtoreativo/payments-api](https://github.com/produtoreativo/payments-api)
 
 ## Estrutura
