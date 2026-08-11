@@ -48,6 +48,27 @@ STEP=0
 WARNINGS=()
 MANUAL_STEPS=()
 
+# Resolved early so mode detection and is_protected() can use it before Step 5
+LOCK_FILE="${TARGET_DIR}/prodops/exec/framework-lock.yaml"
+IS_UPDATE="false"
+PREVIOUS_VERSION=""
+
+if [[ -f "${LOCK_FILE}" ]]; then
+  IS_UPDATE="true"
+  PREVIOUS_VERSION=$(python3 -c "
+import sys
+try:
+  content = open('${LOCK_FILE}').read()
+  for line in content.splitlines():
+    line = line.strip()
+    if line.startswith('version:'):
+      print(line.split('version:',1)[1].strip().strip('\"'))
+      break
+except Exception:
+  pass
+" 2>/dev/null || grep -m1 'version:' "${LOCK_FILE}" | sed "s/.*version: *['\"]\\?\\([^'\" ]*\\).*/\\1/" 2>/dev/null || echo "unknown")
+fi
+
 step() {
   STEP=$((STEP + 1))
   printf '\n%s── Step %d: %s%s\n' "${BOLD}${CYAN}" "${STEP}" "$1" "${RESET}"
@@ -64,7 +85,7 @@ manual() { MANUAL_STEPS+=("$1"); }
 
 usage() {
   printf 'Usage: %s --version <tag> [--target <dir>] [--skip-hooks] [--skip-claude]\n' "$0" >&2
-  printf 'Example: %s --version v1.5.0\n' "$0" >&2
+  printf 'Example: %s --version v1.6.0\n' "$0" >&2
   exit 1
 }
 
@@ -95,6 +116,11 @@ fi
 printf '\n%sProdOps Framework Installer%s\n' "${BOLD}" "${RESET}"
 printf 'Version : %s\n' "${VERSION}"
 printf 'Target  : %s\n' "${TARGET_DIR}"
+if [[ "${IS_UPDATE}" == "true" ]]; then
+  printf 'Mode    : %supdate%s (%s → %s)\n' "${CYAN}" "${RESET}" "${PREVIOUS_VERSION}" "${VERSION}"
+else
+  printf 'Mode    : %sfresh install%s\n' "${CYAN}" "${RESET}"
+fi
 
 # ── Step 1: Verify version ────────────────────────────────────────────────────
 
@@ -141,7 +167,10 @@ is_protected() {
   local rel="$1"
   local target_file="${TARGET_DIR}/${rel}"
   case "${rel}" in
-    prodops/artifacts/*|prodops/skills/local/*|prodops/exec/manifest.yaml)
+    prodops/artifacts/*|\
+    prodops/skills/local/*|\
+    prodops/exec/manifest.yaml|\
+    prodops/runtime/runtime.yaml)
       [[ -e "${target_file}" ]] && return 0 ;;
   esac
   return 1
@@ -171,11 +200,9 @@ fi
 
 ok "${COPIED} files copied, ${SKIPPED} protected files skipped"
 
-# ── Step 5: Generate framework-lock.yaml ─────────────────────────────────────
+# ── Step 5: Generate / update framework-lock.yaml ────────────────────────────
 
-step "Generate prodops/exec/framework-lock.yaml"
-
-LOCK_FILE="${TARGET_DIR}/prodops/exec/framework-lock.yaml"
+step "Generate/update prodops/exec/framework-lock.yaml"
 
 if [[ ! -f "${LOCK_FILE}" ]]; then
   mkdir -p "$(dirname "${LOCK_FILE}")"
@@ -202,7 +229,63 @@ drift:
 EOF
   ok "Created prodops/exec/framework-lock.yaml (version: ${VERSION})"
 else
-  skip "prodops/exec/framework-lock.yaml already exists (protected)"
+  # Update: rewrite version fields in place, preserve all other consumer content.
+  TODAY="$(date +%Y-%m-%d)"
+  if python3 - "${LOCK_FILE}" "${VERSION}" "${TODAY}" <<'PYEOF' 2>/dev/null; then
+import sys, re
+
+path, version, today = sys.argv[1], sys.argv[2], sys.argv[3]
+content = open(path).read()
+
+def replace_quoted(key, val, text):
+    return re.sub(
+        r'(?m)^(\s*' + re.escape(key) + r':\s*)["\']?[^"\'\n]*["\']?',
+        r'\g<1>"' + val + '"',
+        text,
+    )
+
+content = replace_quoted('version',           version, content)
+content = replace_quoted('installed_version', version, content)
+content = replace_quoted('available_version', version, content)
+content = replace_quoted('last_checked',      today,   content)
+content = re.sub(r'(?m)^(\s*status:\s*).*', r'\g<1>ok', content)
+
+open(path, 'w').write(content)
+PYEOF
+    ok "Updated framework-lock.yaml: ${PREVIOUS_VERSION} → ${VERSION}"
+  else
+    warn "Could not update framework-lock.yaml automatically — update version fields manually"
+    manual "Set version fields to ${VERSION} in prodops/exec/framework-lock.yaml"
+  fi
+fi
+
+# ── Step 5b: Update runtime.yaml framework-version ───────────────────────────
+
+step "Update runtime.yaml framework-version"
+
+RUNTIME_YAML="${TARGET_DIR}/prodops/runtime/runtime.yaml"
+
+if [[ ! -f "${RUNTIME_YAML}" ]]; then
+  skip "prodops/runtime/runtime.yaml not found — create from runtime.yaml.example"
+  manual "Copy prodops/runtime/runtime.yaml.example → prodops/runtime/runtime.yaml and fill in product-specific values"
+else
+  if python3 - "${RUNTIME_YAML}" "${VERSION}" <<'PYEOF' 2>/dev/null; then
+import sys, re
+
+path, version = sys.argv[1], sys.argv[2]
+content = open(path).read()
+content = re.sub(
+    r'(?m)^(framework-version:\s*)["\']?[^"\'\n]*["\']?',
+    r'\g<1>"' + version + '"',
+    content,
+)
+open(path, 'w').write(content)
+PYEOF
+    ok "Updated runtime.yaml framework-version → ${VERSION}"
+  else
+    warn "Could not update framework-version in runtime.yaml automatically"
+    manual "Set framework-version to \"${VERSION}\" in prodops/runtime/runtime.yaml"
+  fi
 fi
 
 # ── Step 6: Create .prodopsignore ─────────────────────────────────────────────
@@ -231,6 +314,11 @@ prodops/artifacts/
 prodops/exec/manifest.yaml
 prodops/exec/framework-lock.yaml
 prodops/exec/cards/
+
+# ── Runtime configuration ─────────────────────────────────────────────────────
+# runtime.yaml contains product-specific values (GitHub org, project number,
+# Datadog service, CloudEvents source). It must not be overwritten by sync.
+prodops/runtime/runtime.yaml
 
 # ── Product-local skills ──────────────────────────────────────────────────────
 prodops/skills/local/
@@ -599,7 +687,11 @@ fi
 # ── Summary ───────────────────────────────────────────────────────────────────
 
 printf '\n%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' "${BOLD}" "${RESET}"
-printf '%sProdOps Framework %s installed at %s%s\n' "${BOLD}${GREEN}" "${VERSION}" "${TARGET_DIR}" "${RESET}"
+if [[ "${IS_UPDATE}" == "true" ]]; then
+  printf '%sProdOps Framework updated: %s → %s%s\n' "${BOLD}${GREEN}" "${PREVIOUS_VERSION}" "${VERSION}" "${RESET}"
+else
+  printf '%sProdOps Framework %s installed at %s%s\n' "${BOLD}${GREEN}" "${VERSION}" "${TARGET_DIR}" "${RESET}"
+fi
 printf '%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' "${BOLD}" "${RESET}"
 
 if [[ ${#WARNINGS[@]} -gt 0 ]]; then
@@ -620,5 +712,9 @@ fi
 
 printf '\n%sCommit when ready:%s\n' "${BOLD}" "${RESET}"
 printf '  git add prodops/ .claude/ .prodopsignore CLAUDE.md AGENTS.md\n'
-printf '  git commit -m "chore(prodops): install ProdOps Framework %s"\n' "${VERSION}"
+if [[ "${IS_UPDATE}" == "true" ]]; then
+  printf '  git commit -m "chore(prodops): update ProdOps Framework %s → %s"\n' "${PREVIOUS_VERSION}" "${VERSION}"
+else
+  printf '  git commit -m "chore(prodops): install ProdOps Framework %s"\n' "${VERSION}"
+fi
 printf '\n'

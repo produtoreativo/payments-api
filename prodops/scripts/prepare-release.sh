@@ -124,10 +124,15 @@ fi
 step "Detect current installed version"
 
 CURRENT_VERSION=$(detect_current_version)
+# Normalize: strip 'v' prefix for use as a sed pattern.
+# bump_version replaces X.Y.Z occurrences in files; the 'v' prefix is preserved
+# in-place (e.g. "v1.5.0" → "v1.6.0") because we match only the numeric part.
+CURRENT_VERSION_BARE="${CURRENT_VERSION#v}"
+VERSION_BARE="${VERSION#v}"
 
 if [[ -z "${CURRENT_VERSION}" ]]; then
   warn "Could not detect current version from framework-lock.yaml — will scan for any vX.Y.Z"
-  CURRENT_VERSION="UNKNOWN"
+  CURRENT_VERSION_BARE="UNKNOWN"
   ok "Will replace all vX.Y.Z patterns referencing an older version"
 else
   ok "Current version: ${CURRENT_VERSION} → target: ${VERSION}"
@@ -146,13 +151,13 @@ do
     continue
   fi
 
-  if [[ "${CURRENT_VERSION}" != "UNKNOWN" ]]; then
-    bump_version "${readme}" "${CURRENT_VERSION}" "${VERSION}"
+  if [[ "${CURRENT_VERSION_BARE}" != "UNKNOWN" ]]; then
+    bump_version "${readme}" "${CURRENT_VERSION_BARE}" "${VERSION_BARE}"
   else
     # Replace any vX.Y.Z that isn't already the target version
     while IFS= read -r old_ver; do
-      [[ "${old_ver}" == "${VERSION}" ]] && continue
-      bump_version "${readme}" "${old_ver}" "${VERSION}"
+      [[ "${old_ver#v}" == "${VERSION_BARE}" ]] && continue
+      bump_version "${readme}" "${old_ver#v}" "${VERSION_BARE}"
     done < <(grep -o 'v[0-9]\+\.[0-9]\+\.[0-9]\+' "${readme}" | sort -u || true)
   fi
 done
@@ -166,12 +171,12 @@ INSTALL_SCRIPT="${ROOT_DIR}/prodops/scripts/install-prodops.sh"
 if [[ ! -f "${INSTALL_SCRIPT}" ]]; then
   warn "install-prodops.sh not found — skipping"
 else
-  if [[ "${CURRENT_VERSION}" != "UNKNOWN" ]]; then
-    bump_version "${INSTALL_SCRIPT}" "${CURRENT_VERSION}" "${VERSION}"
+  if [[ "${CURRENT_VERSION_BARE}" != "UNKNOWN" ]]; then
+    bump_version "${INSTALL_SCRIPT}" "${CURRENT_VERSION_BARE}" "${VERSION_BARE}"
   else
     while IFS= read -r old_ver; do
-      [[ "${old_ver}" == "${VERSION}" ]] && continue
-      bump_version "${INSTALL_SCRIPT}" "${old_ver}" "${VERSION}"
+      [[ "${old_ver#v}" == "${VERSION_BARE}" ]] && continue
+      bump_version "${INSTALL_SCRIPT}" "${old_ver#v}" "${VERSION_BARE}"
     done < <(grep -o 'v[0-9]\+\.[0-9]\+\.[0-9]\+' "${INSTALL_SCRIPT}" | sort -u || true)
   fi
 fi
@@ -189,12 +194,12 @@ do
     continue
   fi
 
-  if [[ "${CURRENT_VERSION}" != "UNKNOWN" ]]; then
-    bump_version "${root_readme}" "${CURRENT_VERSION}" "${VERSION}"
+  if [[ "${CURRENT_VERSION_BARE}" != "UNKNOWN" ]]; then
+    bump_version "${root_readme}" "${CURRENT_VERSION_BARE}" "${VERSION_BARE}"
   else
     while IFS= read -r old_ver; do
-      [[ "${old_ver}" == "${VERSION}" ]] && continue
-      bump_version "${root_readme}" "${old_ver}" "${VERSION}"
+      [[ "${old_ver#v}" == "${VERSION_BARE}" ]] && continue
+      bump_version "${root_readme}" "${old_ver#v}" "${VERSION_BARE}"
     done < <(grep -o 'v[0-9]\+\.[0-9]\+\.[0-9]\+' "${root_readme}" | sort -u || true)
   fi
 done
@@ -218,6 +223,34 @@ else
     -e "s/last_checked: \"[^\"]*\"/last_checked: \"${TODAY}\"/" \
     "${LOCK_FILE}"
   ok "Updated framework-lock.yaml → version: ${VERSION}, last_checked: ${TODAY}"
+fi
+
+# ── Step 6b: Bump framework-version in runtime.yaml ─────────────────────────
+
+step "Update prodops/runtime/runtime.yaml framework-version to ${VERSION}"
+
+RUNTIME_YAML="${ROOT_DIR}/prodops/runtime/runtime.yaml"
+
+if [[ ! -f "${RUNTIME_YAML}" ]]; then
+  warn "runtime.yaml not found — skipping"
+elif [[ "${DRY_RUN}" == "true" ]]; then
+  dry "Would update framework-version in prodops/runtime/runtime.yaml → ${VERSION}"
+else
+  if python3 - "${RUNTIME_YAML}" "${VERSION}" <<'PYEOF' 2>/dev/null; then
+import sys, re
+path, version = sys.argv[1], sys.argv[2]
+content = open(path).read()
+content = re.sub(
+    r'(?m)^(framework-version:\s*)["\']?[^"\'\n]*["\']?',
+    r'\g<1>"' + version + '"',
+    content,
+)
+open(path, 'w').write(content)
+PYEOF
+    ok "Updated runtime.yaml framework-version → ${VERSION}"
+  else
+    warn "Could not update runtime.yaml automatically — update framework-version manually"
+  fi
 fi
 
 # ── Step 7: Print checklist for framework repo root READMEs ──────────────────

@@ -3,8 +3,8 @@ set -Eeuo pipefail
 
 # ensure-views.sh
 #
-# Idempotently creates the 4 canonical Delivery views for a GitHub Projects v2 project.
-# Source of truth: runtime/workspace/workspace.yaml > views.
+# Idempotently creates the single canonical Delivery board view for a GitHub Projects v2 project.
+# Matches project 25 structure: one board view "01 — Delivery Timeline".
 #
 # REST API capabilities (verified empirically, 2026-07-26):
 #   ✅ name        — settable on creation
@@ -14,11 +14,6 @@ set -Eeuo pipefail
 #   ❌ group_by    — 422 "not a permitted key" — configure manually in GitHub UI
 #   ❌ sort_by     — 422 "not a permitted key" — configure manually in GitHub UI
 #   ❌ delete      — no REST endpoint; no GraphQL mutation — remove via GitHub UI only
-#
-# Filter syntax:
-#   label:name              → native GitHub label filter (unambiguous)
-#   "oem state":DONE        → ProdOps custom field filter (field name quoted due to space)
-#   state:open / state:closed → native GitHub issue state — does NOT refer to "oem state"
 #
 # Requirements:
 #   - gh authenticated with Projects (write) permission
@@ -32,8 +27,6 @@ set -Eeuo pipefail
 GITHUB_ORG="${GITHUB_ORG:-produtoreativo}"
 PROJECT_NUMBER="${PROJECT_NUMBER:-24}"
 API_VERSION="${API_VERSION:-2026-03-10}"
-ITERATION_ID="${ITERATION_ID:-IP-RUNTIME-001}"
-JOURNEY_VALUE="${JOURNEY_VALUE:-Delivery}"
 
 REST_BASE="/orgs/${GITHUB_ORG}/projectsV2/${PROJECT_NUMBER}"
 
@@ -207,99 +200,40 @@ create_view() {
   refresh_views_cache
 }
 
-# ── Canonical Delivery views ──────────────────────────────────────────────────
-# Source of truth: runtime/workspace/workspace.yaml > views
-#
-# Filter syntax (field names with space must be quoted):
-#   "witem iteration":IP-RUNTIME-001  → ProdOps custom field
-#   "oem journey":Delivery            → ProdOps custom field
-#   "oem state":BLOCKED               → ProdOps custom field
-#   state:open / state:closed         → native GitHub issue state (NOT our oem state)
-#
-# groupBy is NOT settable via API — configure manually in GitHub UI after creation:
-#   Iteration Backlog → groupBy: oem state
-#   Delivery Board    → groupBy: oem state
-#   Delivery Blocked  → groupBy: witem feature
-#   Delivery Done     → groupBy: oem state
+# ── Canonical Delivery view ───────────────────────────────────────────────────
+# Single board view matching project 25 canonical structure.
+# Column-by (oem-state) must be configured manually in GitHub UI after creation —
+# not settable via REST API.
 
-ITERATION_FILTER="\"witem iteration\":${ITERATION_ID}"
-DELIVERY_FILTER="\"oem journey\":${JOURNEY_VALUE} \"witem iteration\":${ITERATION_ID}"
-BLOCKED_FILTER="${DELIVERY_FILTER} \"oem state\":BLOCKED"
-DONE_FILTER="${DELIVERY_FILTER} \"oem state\":DONE"
-
-COMMON_FIELDS='[
+BOARD_FIELDS='[
   "Title",
   "Assignees",
-  "witem feature",
-  "witem release",
-  "witem iteration",
-  "oem state",
-  "oem cycle",
-  "oem phase",
-  "oem last-event",
-  "runtime last-sync"
-]'
-
-BLOCKED_FIELDS='[
-  "Title",
-  "Assignees",
-  "witem feature",
-  "oem state",
-  "oem cycle",
-  "oem phase",
-  "oem blocked-since",
-  "oem last-event",
-  "oem rework-count"
-]'
-
-DONE_FIELDS='[
-  "Title",
-  "Assignees",
-  "witem feature",
-  "witem release",
-  "witem iteration",
-  "oem state",
-  "oem cycle",
-  "oem phase",
-  "oem last-event",
-  "runtime last-sync",
-  "oem rework-count"
+  "witem-feature",
+  "witem-release",
+  "witem-iteration",
+  "oem-state",
+  "Cycle",
+  "oem-last-event",
+  "diligence-status",
+  "runtime-sync"
 ]'
 
 log
-log "Ensuring canonical ProdOps views..."
+log "Ensuring canonical ProdOps view..."
 log
 
 create_view \
-  "Iteration Backlog" \
-  "table" \
-  "${ITERATION_FILTER}" \
-  "${COMMON_FIELDS}"
-
-create_view \
-  "Delivery Board" \
+  "01 — Delivery Timeline" \
   "board" \
-  "${DELIVERY_FILTER}" \
-  "${COMMON_FIELDS}"
-
-create_view \
-  "Delivery Blocked" \
-  "table" \
-  "${BLOCKED_FILTER}" \
-  "${BLOCKED_FIELDS}"
-
-create_view \
-  "Delivery Done" \
-  "table" \
-  "${DONE_FILTER}" \
-  "${DONE_FIELDS}"
+  "" \
+  "${BOARD_FIELDS}"
 
 log
 log "Final views:"
 jq -r '.[] | "  ✓ \(.name) — view #\(.number) (\(.layout))"' <<<"${VIEWS_JSON}"
 
 log
-log "NOTE: groupBy must be configured manually in GitHub UI — not settable via REST API."
+log "NOTE: 'Column by' (oem-state) must be configured manually in GitHub UI — not settable via REST API."
 log "  Project URL: https://github.com/orgs/${GITHUB_ORG}/projects/${PROJECT_NUMBER}"
 log
 log "Done."

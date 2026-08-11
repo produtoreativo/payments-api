@@ -7,6 +7,46 @@ export from `payments-api` (empirical upstream) when applicable.
 
 ---
 
+## [1.6.0] — 2026-08-11
+
+### Changed
+
+- `prodops/scripts/install-prodops.sh` — now works as both **install** and **update**:
+  - Detects mode automatically: reads `framework-lock.yaml` to determine if it is a
+    fresh install or a version update; prints `Mode: fresh install` or
+    `Mode: update (vX → vY)` in the header
+  - **Step 5** — on update, rewrites version fields in the existing `framework-lock.yaml`
+    in place (preserves consumer content); on fresh install, creates the file as before
+  - **Step 5b** (new) — updates `framework-version` in `prodops/runtime/runtime.yaml`
+    after every install or update, eliminating silent version drift between the lock file
+    and the runtime config
+  - `is_protected()` now guards `prodops/runtime/runtime.yaml` against being overwritten
+    by the framework file-copy step
+  - `.prodopsignore` template now includes `prodops/runtime/runtime.yaml` with an
+    explanatory comment, so `sync-from-framework.sh` also skips it
+  - Commit message suggestion switches to
+    `chore(prodops): update ProdOps Framework vX → vY` on update mode
+
+- `prodops/scripts/sync-from-framework.sh` — after updating `framework-lock.yaml`,
+  now also updates `framework-version` in `prodops/runtime/runtime.yaml` if present;
+  PR body lists `prodops/runtime/runtime.yaml` as a protected path
+
+### Fixed
+
+- `prodops/scripts/diligence/ensure-fields.sh` — all custom field names changed from
+  space separator to hyphen separator to match `sync.sh` expectations and the project 25
+  canonical structure (e.g. `oem state` → `oem-state`, `diligence status` →
+  `diligence-status`, `runtime sync` → `runtime-sync`); `oem cycle` renamed to `Cycle`
+  to align with `sync.sh` and project 25
+- `prodops/scripts/diligence/ensure-views.sh` — replaced 4 views (Iteration Backlog,
+  Delivery Board, Delivery Blocked, Delivery Done) with the single board view
+  `"01 — Delivery Timeline"` that matches project 25; removed `ITERATION_ID` /
+  `JOURNEY_VALUE` env vars that are no longer needed
+- `prodops/scripts/diligence/ensure-issues.sh` — field name references updated from
+  space to hyphen convention, consistent with `ensure-fields.sh`
+
+---
+
 ## [1.5.0] — 2026-08-11
 
 ### Added
