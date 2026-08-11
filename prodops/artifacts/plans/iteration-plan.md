@@ -2,9 +2,8 @@
 
 ## Ativa
 
-| Versão | Escopo | Status | Início |
-|---|---|---|---|
-| [v0.15.0](../iterations/v0.15.0/plan.md) | DS-62 · DS-63 · DS-64 (Discovery) | **Em execução** | 2026-08-11 |
+Nenhuma iteração ativa. Próxima iteração a definir.
+
 
 ## Suspenso
 
@@ -29,4 +28,5 @@
 | [v0.10.0](../iterations/v0.10.0/plan.md) | DS-51 · DS-52 | ✅ Concluído — PRs #125 #126 |
 | [v0.11.0](../iterations/v0.11.0/plan.md) | DS-53 · DS-54 · DS-55 · DS-56 | ✅ Concluído — PRs #136 #137 #138 #139 |
 | [v0.13.0](../iterations/v0.13.0/plan.md) | DS-61: Split Payment Pix + Boleto (PI-001) | ✅ Concluído — PR #162 |
+| [v0.15.0](../iterations/v0.15.0/plan.md) | DS-62 · DS-63 | ✅ Concluído — PRs #176 #177 |
 | [v0.14.0](../iterations/v0.14.0/plan.md) | DS-61: Split Payment Pix + Boleto (PI-001) — Revisão | ✅ Concluído — PR #169 |
