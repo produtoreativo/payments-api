@@ -69,11 +69,12 @@ fi
 
 if [[ -f "${MATERIALIZE_SKILLS}" ]]; then
   log "Materializing skills → .claude/skills/..."
-  # materialize-skills.sh uses REPO_ROOT relative to its own location; run from target
+  # Run from TARGET_DIR so materialize-skills.sh resolves REPO_ROOT to the consumer repo.
   (cd "${TARGET_DIR}" && bash "${MATERIALIZE_SKILLS}")
 else
-  warn "materialize-skills.sh not found — skipping skill materialization"
-  warn "Expected at: prodops/scripts/agents/materialize-skills.sh"
+  warn "materialize-skills.sh not found — skills will NOT be in .claude/skills/"
+  warn "Re-install with a framework version >= v1.6.0 to include the script, or run manually:"
+  warn "  bash prodops/scripts/agents/materialize-skills.sh"
 fi
 
 # ── 3. Install agent definitions → .claude/agents/ ───────────────────────────
