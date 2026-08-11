@@ -143,6 +143,9 @@ export class InvoiceService {
         dueDate: pendingInvoice.dueDate,
         description: pendingInvoice.description ?? pendingInvoice.orderId,
         externalReference: pendingInvoice.externalReference,
+        ...(pendingInvoice.billingType === 'BOLETO' && {
+          daysAfterDueDateToRegistrationCancellation: 1,
+        }),
       });
 
       this.assertProviderChargeContract(pendingInvoice, charge);
@@ -658,7 +661,7 @@ export class InvoiceService {
           'payment.chargeback_reversal_pending',
         );
       case 'PAYMENT_OVERDUE':
-        return this.recordIgnoredProviderEvent(payload, 'PAYMENT_OVERDUE');
+        return this.expireBoletoInvoice(payload);
       default:
         return this.recordIgnoredProviderEvent(payload, payload.event);
     }
@@ -796,6 +799,32 @@ export class InvoiceService {
     });
 
     return this.toResponse(updatedInvoice);
+  }
+
+  private async expireBoletoInvoice(
+    payload: AsaasWebhookDto,
+  ): Promise<InvoiceResponseDto | undefined> {
+    const invoice = await this.findWebhookInvoice(payload);
+
+    if (!invoice) {
+      this.emitUncorrelatedWebhook(payload, 'PAYMENT_OVERDUE');
+      return undefined;
+    }
+
+    if (invoice.billingType !== 'BOLETO') {
+      return this.recordIgnoredProviderEvent(payload, 'PAYMENT_OVERDUE');
+    }
+
+    if (invoice.status === 'CONFIRMED' || invoice.status === 'EXPIRED') {
+      return this.toResponse(invoice);
+    }
+
+    const expiredInvoice = await this.repository.updateInvoice(
+      invoice,
+      'EXPIRED',
+    );
+
+    return this.toResponse(expiredInvoice);
   }
 
   private async recordIgnoredProviderEvent(

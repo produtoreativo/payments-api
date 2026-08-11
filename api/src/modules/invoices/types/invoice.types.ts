@@ -15,7 +15,8 @@ export type InvoiceStatus =
   | 'FAILED'
   | 'CHARGEBACK_REQUESTED'
   | 'CHARGEBACK_DISPUTE'
-  | 'CHARGEBACK_REVERSAL_PENDING';
+  | 'CHARGEBACK_REVERSAL_PENDING'
+  | 'EXPIRED';
 
 export interface InvoiceCustomer {
   id: string;
@@ -65,6 +66,7 @@ export interface ProviderChargeRequest {
   dueDate: string;
   description: string;
   externalReference: string;
+  daysAfterDueDateToRegistrationCancellation?: number;
 }
 
 export interface ProviderChargeResponse {
