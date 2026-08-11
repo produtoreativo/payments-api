@@ -12,7 +12,10 @@ export type InvoiceStatus =
   | 'CANCEL_REQUESTED'
   | 'CANCELLED'
   | 'CANCEL_RECONCILIATION_REQUIRED'
-  | 'FAILED';
+  | 'FAILED'
+  | 'CHARGEBACK_REQUESTED'
+  | 'CHARGEBACK_DISPUTE'
+  | 'CHARGEBACK_REVERSAL_PENDING';
 
 export interface InvoiceCustomer {
   id: string;
