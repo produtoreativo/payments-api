@@ -7,6 +7,22 @@ export from `payments-api` (empirical upstream) when applicable.
 
 ---
 
+## [1.6.1] — 2026-08-11
+
+### Fixed
+
+- `prodops/scripts/install-prodops.sh` — Steps 11 and 12 now detect changes and
+  update on re-runs instead of skipping silently:
+  - **CLAUDE.md** (Step 11): compares existing file with the canonical framework
+    template; if different, backs up as `CLAUDE.md.bak.YYYYMMDD-HHMMSS` and
+    writes the updated template. Reports `up to date` when content matches.
+  - **AGENTS.md** (Step 12): same backup-and-overwrite logic; the update path
+    regenerates the template (substituting `PRODUCT_NAME`) into a temp file, diffs
+    against the installed copy, and only overwrites when content diverges. Backup
+    path is added to manual steps so operators can re-apply their customizations.
+
+---
+
 ## [1.6.0] — 2026-08-11
 
 ### Changed

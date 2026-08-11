@@ -85,7 +85,7 @@ manual() { MANUAL_STEPS+=("$1"); }
 
 usage() {
   printf 'Usage: %s --version <tag> [--target <dir>] [--skip-hooks] [--skip-claude]\n' "$0" >&2
-  printf 'Example: %s --version v1.6.0\n' "$0" >&2
+  printf 'Example: %s --version v1.6.1\n' "$0" >&2
   exit 1
 }
 
@@ -500,15 +500,15 @@ else
   fi
 fi
 
-# ── Step 11: Generate CLAUDE.md ───────────────────────────────────────────────
+# ── Step 11: Generate / update CLAUDE.md ─────────────────────────────────────
 
-step "Generate CLAUDE.md"
+step "Generate/update CLAUDE.md"
 
 CLAUDE_MD="${TARGET_DIR}/CLAUDE.md"
 
-if [[ ! -f "${CLAUDE_MD}" ]]; then
-  cat >"${CLAUDE_MD}" <<'EOF'
-# Claude Code Instructions
+# CLAUDE.md is fully framework-owned — short pointer, no product-specific content.
+# On update: compare with the canonical template; backup and overwrite if different.
+CLAUDE_MD_CONTENT='# Claude Code Instructions
 
 Leia `AGENTS.md` — é o guia operacional do repositório e a fonte de autoridade
 para todos os agentes. As regras de jornada, skills, autorização e protocolo de
@@ -521,23 +521,30 @@ recebimento de trabalho estão lá.
 - Não armazenar contexto de negócio em arquivos exclusivos do Claude.
   Adicionar ou atualizar o arquivo apropriado sob `prodops/`.
 - Memória: apenas convenções estáveis do repositório — decisões de release
-  pertencem a `prodops/`.
-EOF
+  pertencem a `prodops/`.'
+
+if [[ ! -f "${CLAUDE_MD}" ]]; then
+  printf '%s\n' "${CLAUDE_MD_CONTENT}" >"${CLAUDE_MD}"
   ok "Created CLAUDE.md"
+elif [[ "$(cat "${CLAUDE_MD}")" == "${CLAUDE_MD_CONTENT}" ]]; then
+  skip "CLAUDE.md is up to date"
 else
-  skip "CLAUDE.md already exists"
+  CLAUDE_BAK="${CLAUDE_MD}.bak.$(date +%Y%m%d-%H%M%S)"
+  cp "${CLAUDE_MD}" "${CLAUDE_BAK}"
+  printf '%s\n' "${CLAUDE_MD_CONTENT}" >"${CLAUDE_MD}"
+  ok "Updated CLAUDE.md (backup: $(basename "${CLAUDE_BAK}"))"
 fi
 
-# ── Step 12: Generate AGENTS.md ───────────────────────────────────────────────
+# ── Step 12: Generate / update AGENTS.md ─────────────────────────────────────
 
-step "Generate AGENTS.md"
+step "Generate/update AGENTS.md"
 
 AGENTS_MD="${TARGET_DIR}/AGENTS.md"
 
-if [[ ! -f "${AGENTS_MD}" ]]; then
-  # Derive a product name from the target directory basename
-  PRODUCT_NAME="$(basename "${TARGET_DIR}")"
+# Derive a product name from the target directory basename (used in both create and update).
+PRODUCT_NAME="$(basename "${TARGET_DIR}")"
 
+if [[ ! -f "${AGENTS_MD}" ]]; then
   cat >"${AGENTS_MD}" <<EOF
 # ${PRODUCT_NAME} — Guia do Agente
 
@@ -636,7 +643,116 @@ EOF
   ok "Created AGENTS.md (product name: ${PRODUCT_NAME})"
   manual "Review AGENTS.md and adjust product-specific sections (name, permissions, gates)"
 else
-  skip "AGENTS.md already exists"
+  # On update: regenerate into a temp file and compare with the existing AGENTS.md.
+  # The template uses PRODUCT_NAME which may differ from the installed version.
+  AGENTS_TMP=$(mktemp)
+  trap 'rm -f "${AGENTS_TMP}"' RETURN 2>/dev/null || true
+  cat >"${AGENTS_TMP}" <<EOF
+# ${PRODUCT_NAME} — Guia do Agente
+
+## AÇÃO OBRIGATÓRIA — execute antes de responder qualquer mensagem
+
+Este repositório usa o **ProdOps Framework**. Você **não tem contexto suficiente**
+para classificar ou executar nenhum pedido sem ler os arquivos abaixo.
+
+**Leia agora, nesta ordem, antes de responder:**
+
+\`\`\`
+1. prodops/exec/manifest.yaml
+2. prodops/framework/principles.md
+3. prodops/README.md
+\`\`\`
+
+Não pule essa etapa. Não responda ao usuário antes de completar essas leituras.
+Se qualquer um dos arquivos não existir, informe e aguarde instrução.
+
+Após as leituras, use o protocolo de recebimento de trabalho abaixo.
+Nas etapas seguintes da mesma sessão, não releia — o contexto já está estabelecido.
+
+## Permissões pré-autorizadas para subagentes
+
+Todas as operações abaixo estão pré-autorizadas pelo operador para esta sessão.
+Subagentes **não devem pausar para solicitar confirmação** dessas operações:
+
+- **Read** — qualquer arquivo do repositório, incluindo:
+  - \`prodops/artifacts/bdd/*.feature\`
+  - \`prodops/artifacts/obcs/*.md\`
+  - \`prodops/runtime/**\`
+  - \`prodops/skills/**\`
+  - \`prodops/framework/**\`
+- **Bash** — comandos de leitura, git local, gh CLI e scripts do runtime, conforme
+  prescrito pelas Skills.
+
+---
+
+## Protocolo de recebimento de trabalho
+
+**Antes de qualquer ação**, classificar o pedido e propor a jornada adequada.
+Nunca iniciar implementação, refatoração, correção ou criação de artefatos sem
+passar por este protocolo — independentemente de quem solicita ou como.
+
+### Passo 0 — Classificar o trabalho
+
+| Tipo de pedido | Jornada | Skill de entrada |
+|---|---|---|
+| Nova feature, endpoint, comportamento de negócio | **Delivery** | \`/downstream\` |
+| Correção de bug com impacto em contrato ou comportamento | **Delivery** | \`/downstream\` |
+| Atualização de dependência com impacto em runtime | **Delivery** | \`/downstream\` |
+| Correção de vulnerabilidade de segurança | **Delivery** | \`/downstream\` |
+| Investigação, descoberta, análise técnica | **Upstream** | \`/upstream\` |
+| Auditoria, risco, conformidade, sinal de negócio | **Diligence** | \`/diligence\` |
+| Pergunta, explicação, leitura de código | nenhuma jornada | responder diretamente |
+
+### Passo 1 — Verificar artefatos de produto
+
+Para pedidos do tipo **Delivery**, antes de propor execução, verificar:
+
+1. Existe OBC em \`prodops/artifacts/obcs/<capability>.md\`?
+2. Existe BDD Feature em \`prodops/artifacts/bdd/<capability>.feature\`?
+3. Risco documentado em \`prodops/artifacts/risks/risks.md\`?
+4. Item no Iteration Plan com status \`Entrou\`?
+
+### Passo 2 — Propor, não executar
+
+Apresentar ao operador:
+
+\`\`\`
+Jornada identificada: <Delivery | Upstream | Diligence>
+Skill de entrada: <skill>
+Artefatos presentes: <lista>
+Artefatos ausentes: <lista — bloqueia readiness>
+Próxima ação proposta: <descrição>
+\`\`\`
+
+Aguardar confirmação **exceto** quando o pedido já invocou explicitamente um
+skill (\`/downstream\`, \`/upstream\`, \`/hack\`, etc.) — nesse caso executar
+diretamente sem parar para propor.
+
+### Passo 3 — Executar via skill
+
+Após confirmação, executar exclusivamente via skill correspondente.
+Nunca implementar código de produção fora do ciclo Bootstrap → Hack → Sync → Finish.
+
+---
+
+## Como trabalhar
+
+1. **Trabalho de Delivery:** invoque o skill da fase — \`/bootstrap\`, \`/hack\`,
+   \`/sync\`, \`/finish\`, \`/ship\`, \`/validate\`, \`/promote\`.
+2. **Exploração:** \`/upstream\`. **Implementação governada:** \`/downstream\`.
+3. **Paths canônicos, quality gates e vocabulário:** \`prodops/exec/manifest.yaml\`
+EOF
+
+  if diff -q "${AGENTS_TMP}" "${AGENTS_MD}" >/dev/null 2>&1; then
+    skip "AGENTS.md is up to date"
+    rm -f "${AGENTS_TMP}"
+  else
+    AGENTS_BAK="${AGENTS_MD}.bak.$(date +%Y%m%d-%H%M%S)"
+    cp "${AGENTS_MD}" "${AGENTS_BAK}"
+    mv "${AGENTS_TMP}" "${AGENTS_MD}"
+    ok "Updated AGENTS.md (backup: $(basename "${AGENTS_BAK}"))"
+    manual "Review AGENTS.md — your customizations are in $(basename "${AGENTS_BAK}")"
+  fi
 fi
 
 # ── Step 13: Run doctor.sh ────────────────────────────────────────────────────
