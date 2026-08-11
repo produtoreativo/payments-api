@@ -639,6 +639,24 @@ export class InvoiceService {
         return this.confirmProviderPayment(payload);
       case 'PAYMENT_RECEIVED':
         return this.receiveProviderPayment(payload);
+      case 'PAYMENT_CHARGEBACK_REQUESTED':
+        return this.handleChargebackEvent(
+          payload,
+          'CHARGEBACK_REQUESTED',
+          'payment.chargeback_requested',
+        );
+      case 'PAYMENT_CHARGEBACK_DISPUTE':
+        return this.handleChargebackEvent(
+          payload,
+          'CHARGEBACK_DISPUTE',
+          'payment.chargeback_dispute',
+        );
+      case 'PAYMENT_AWAITING_CHARGEBACK_REVERSAL':
+        return this.handleChargebackEvent(
+          payload,
+          'CHARGEBACK_REVERSAL_PENDING',
+          'payment.chargeback_reversal_pending',
+        );
       case 'PAYMENT_OVERDUE':
         return this.recordIgnoredProviderEvent(payload, 'PAYMENT_OVERDUE');
       default:
@@ -735,6 +753,49 @@ export class InvoiceService {
     });
 
     return this.toResponse(receivedInvoice);
+  }
+
+  private async handleChargebackEvent(
+    payload: AsaasWebhookDto,
+    targetStatus:
+      | 'CHARGEBACK_REQUESTED'
+      | 'CHARGEBACK_DISPUTE'
+      | 'CHARGEBACK_REVERSAL_PENDING',
+    eventName: string,
+  ): Promise<InvoiceResponseDto | undefined> {
+    const invoice = await this.findWebhookInvoice(payload);
+
+    if (!invoice) {
+      this.emitUncorrelatedWebhook(payload, targetStatus);
+      return undefined;
+    }
+
+    if (invoice.billingType !== 'CREDIT_CARD') {
+      this.logger.warn(
+        `Chargeback webhook ignored: invoice ${invoice.invoiceId} has billingType ${invoice.billingType}, expected CREDIT_CARD`,
+      );
+      return this.toResponse(invoice);
+    }
+
+    if (invoice.status === targetStatus) {
+      return this.toResponse(invoice);
+    }
+
+    const updatedInvoice = await this.repository.updateInvoice(
+      invoice,
+      targetStatus,
+      this.webhookProviderAttrs(invoice, payload),
+    );
+
+    this.eventEmitter.emit(eventName, {
+      invoiceId: updatedInvoice.invoiceId,
+      orderId: updatedInvoice.orderId,
+      tenantId: updatedInvoice.tenantId,
+      amount: updatedInvoice.amount,
+      occurredAt: updatedInvoice.updatedAt,
+    });
+
+    return this.toResponse(updatedInvoice);
   }
 
   private async recordIgnoredProviderEvent(
