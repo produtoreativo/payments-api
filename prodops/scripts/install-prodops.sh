@@ -167,6 +167,12 @@ is_protected() {
   local rel="$1"
   local target_file="${TARGET_DIR}/${rel}"
   case "${rel}" in
+    # Consumer root files — never touched, regardless of framework content
+    README.md|README.en.md|\
+    .gitignore|.gitattributes|\
+    LICENSE|CHANGELOG.md)
+      return 0 ;;
+    # Consumer-owned paths inside prodops/ — skip only when they already exist
     prodops/artifacts/*|\
     prodops/skills/local/*|\
     prodops/exec/manifest.yaml|\
@@ -177,6 +183,9 @@ is_protected() {
 }
 
 # ── Step 4: Copy framework content ───────────────────────────────────────────
+# Only files inside prodops/ are copied. Consumer root files (README.md,
+# .gitignore, LICENSE, etc.) are never reached by this loop, and is_protected()
+# also guards them explicitly as a belt-and-suspenders measure.
 
 step "Copy framework files"
 
@@ -187,6 +196,12 @@ SKIPPED=0
 if [[ -d "${FRAMEWORK_SRC}/prodops" ]]; then
   while IFS= read -r src_file; do
     rel="${src_file#"${FRAMEWORK_SRC}/"}"
+    # Paranoia guard: reject any path that does not start with prodops/
+    if [[ "${rel}" != prodops/* ]]; then
+      warn "Unexpected path outside prodops/ — skipped: ${rel}"
+      SKIPPED=$((SKIPPED + 1))
+      continue
+    fi
     if is_protected "${rel}"; then
       SKIPPED=$((SKIPPED + 1))
       continue
