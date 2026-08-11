@@ -6,8 +6,8 @@ Este diretório contém a documentação canônica do ProdOps Framework. O conte
 
 > **Onde vive o Framework:** O repositório canônico é [produtoreativo/prodops-framework](https://github.com/produtoreativo/prodops-framework). Por enquanto, Framework e Runtime também são desenvolvidos na RI [produtoreativo/payments-api](https://github.com/produtoreativo/payments-api) — sincronizados a cada alteração enquanto amadurecem para Release Candidate. Quando o RC for declarado, a RI passa a ser consumidora pura e este repo se torna a única fonte de autoridade.
 >
-> → Última release: [v1.3.0](https://github.com/produtoreativo/prodops-framework/releases/tag/v1.3.0)
-> → Instalar: `bash <(curl -fsSL https://raw.githubusercontent.com/produtoreativo/prodops-framework/master/prodops/scripts/install-prodops.sh) --version v1.3.0`
+> → Última release: [vv1.6.1](https://github.com/produtoreativo/prodops-framework/releases/tag/vv1.6.1)
+> → Instalar: `bash <(curl -fsSL https://raw.githubusercontent.com/produtoreativo/prodops-framework/master/prodops/scripts/install-prodops.sh) --version vv1.6.1`
 > → RI (payments-api): [produtoreativo/payments-api](https://github.com/produtoreativo/payments-api)
 
 ## Estrutura
@@ -33,6 +33,8 @@ Este diretório contém a documentação canônica do ProdOps Framework. O conte
 | [phases.md](phases.md) | Estágios do ciclo de vida da Business Intent: Concepção e Inception |
 | [obc.md](obc.md) | Observable Business Contract — Global OBC, Local OBC, OBC Partitioning |
 | [artifact-types.md](artifact-types.md) | Tipos canônicos de artefatos — o que cada tipo é, quando nasce e como se relaciona |
+| [product-deck.md](product-deck.md) | Product Deck — canvas de página única com visão, serviços, arquitetura e métricas do produto |
+| [service-deck.md](service-deck.md) | Service Deck — canvas de página única que representa um serviço (ou Value Stream) como um produto |
 | [artifact-governance.md](artifact-governance.md) | Governança de artefatos — owners, aprovações e ciclo de vida |
 | [origin-streams.md](origin-streams.md) | As quatro origens de Intents |
 | [product-topology.md](product-topology.md) | Product Topology — as quatro dimensões estruturais permanentes do produto |

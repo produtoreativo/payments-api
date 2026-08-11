@@ -5,19 +5,18 @@ set -Eeuo pipefail
 #
 # Idempotently creates all canonical custom fields for the ProdOps project.
 #
-# Field name convention: workspace.yaml uses ':' as namespace separator (e.g. oem:state).
-# GitHub Projects v2 does not allow ':' in field names — they are converted to space.
-# Result: 'oem:state' becomes 'oem state' in GitHub.
+# Field name convention: hyphen-separated (e.g. oem-state, diligence-status).
+# Matches sync.sh field name expectations and project 25 canonical structure.
 #
 # Native field conflict policy:
 #   GitHub Projects v2 native fields: Title, Assignees, Status, Labels,
 #   Linked pull requests, Milestone, Repository, Reviewers.
-#   ProdOps fields use namespaced names ('oem ', 'witem ', 'diligence ', 'runtime ')
+#   ProdOps fields use namespaced names ('oem-', 'witem-', 'diligence-', 'runtime-')
 #   that do NOT shadow these native fields.
 #
 #   Filter distinction:
 #     state:open / state:closed  → native GitHub issue state (open/closed)
-#     "oem state":DONE           → ProdOps custom field (SINGLE_SELECT)
+#     "oem-state":DONE           → ProdOps custom field (SINGLE_SELECT)
 #   These two qualifiers are unambiguous and do not conflict.
 #
 # Requirements:
@@ -144,80 +143,55 @@ log
 
 log "── Identity ─────────────────────────────────────────────────────────────"
 
-# witem:type → witem type
-create_single_select_field "witem type" \
+create_single_select_field "witem-type" \
   "Feature,Runtime Task,Finding"
 
-# witem:repository → witem repository
-create_text_field "witem repository"
-
-# witem:feature → witem feature
-create_text_field "witem feature"
-
-# witem:obc → witem obc
-create_text_field "witem obc"
-
-# witem:release → witem release
-create_text_field "witem release"
-
-# witem:iteration → witem iteration
-create_text_field "witem iteration"
+create_text_field "witem-repository"
+create_text_field "witem-feature"
+create_text_field "witem-obc"
+create_text_field "witem-release"
+create_text_field "witem-iteration"
 
 log
 log "── Delivery ─────────────────────────────────────────────────────────────"
 
-# oem:journey → oem journey
-create_single_select_field "oem journey" \
+create_single_select_field "oem-journey" \
   "Delivery,Diligence,Assessment"
 
-# oem:cycle → oem cycle
-create_single_select_field "oem cycle" \
-  "Bootstrap,Hack,Sync,Finish,Ship,Validate,Promote,Rework"
+# "Cycle" matches sync.sh field name and project 25 canonical structure
+create_single_select_field "Cycle" \
+  "CI Sync,CI Async"
 
-# oem:phase → oem phase
-create_single_select_field "oem phase" \
+create_single_select_field "oem-phase" \
   "Started,Completed"
 
-# oem:state → oem state
-# NOTE: this field is 'oem state', NOT 'state'.
-# Native GitHub filter 'state:closed' targets the issue open/closed state.
-# To filter this field in a view, use: "oem state":DONE
-create_single_select_field "oem state" \
+# NOTE: 'oem-state' not 'state' — 'state:open' targets native GitHub issue state
+create_single_select_field "oem-state" \
   "BOOTSTRAPPING,HACKING,SYNCING,FINISHING,SHIPPING,VALIDATING,PROMOTING,DONE,BLOCKED,REWORKING"
 
-# oem:rework-count → oem rework-count
-create_number_field "oem rework-count"
-
-# oem:blocked-since → oem blocked-since
-create_date_field "oem blocked-since"
-
-# oem:last-event → oem last-event
-create_text_field "oem last-event"
+create_number_field "oem-rework-count"
+create_date_field "oem-blocked-since"
+create_text_field "oem-last-event"
 
 log
 log "── Diligence ────────────────────────────────────────────────────────────"
 
-# diligence:status → diligence status
-create_single_select_field "diligence status" \
+create_single_select_field "diligence-status" \
   "Pending,Sync In Progress,Async In Progress,Compliant,Non-Compliant"
 
-# diligence:evidence → diligence evidence
-create_single_select_field "diligence evidence" \
+create_single_select_field "diligence-evidence" \
   "Missing,Partial,Complete"
 
 log
 log "── Runtime ──────────────────────────────────────────────────────────────"
 
-# runtime:sync → runtime sync
-create_single_select_field "runtime sync" \
+create_single_select_field "runtime-sync" \
   "Pending,In Sync,Drift Detected,Repair In Progress,Reconciled"
 
-# runtime:timeline-state → runtime timeline-state
-create_single_select_field "runtime timeline-state" \
+create_single_select_field "runtime-timeline-state" \
   "Empty,In Progress,Complete,Replay Verified"
 
-# runtime:last-sync → runtime last-sync
-create_date_field "runtime last-sync"
+create_date_field "runtime-last-sync"
 
 log
 log "Final field list:"

@@ -6,8 +6,8 @@ This directory contains the canonical ProdOps Framework documentation. The conte
 
 > **Where the Framework lives:** The canonical repository is [produtoreativo/prodops-framework](https://github.com/produtoreativo/prodops-framework). For now, Framework and Runtime are also being developed in the RI [produtoreativo/payments-api](https://github.com/produtoreativo/payments-api) — synchronized at every change while maturing toward Release Candidate. Once RC is declared, the RI becomes a pure consumer and this repo becomes the sole source of authority.
 >
-> → Latest release: [v1.3.0](https://github.com/produtoreativo/prodops-framework/releases/tag/v1.3.0)
-> → Install: `bash <(curl -fsSL https://raw.githubusercontent.com/produtoreativo/prodops-framework/master/prodops/scripts/install-prodops.sh) --version v1.3.0`
+> → Latest release: [vv1.6.1](https://github.com/produtoreativo/prodops-framework/releases/tag/vv1.6.1)
+> → Install: `bash <(curl -fsSL https://raw.githubusercontent.com/produtoreativo/prodops-framework/master/prodops/scripts/install-prodops.sh) --version vv1.6.1`
 > → RI (payments-api): [produtoreativo/payments-api](https://github.com/produtoreativo/payments-api)
 
 ## Structure
@@ -33,6 +33,8 @@ This directory contains the canonical ProdOps Framework documentation. The conte
 | [phases.en.md](phases.en.md) | Business Intent lifecycle stages: Conception and Inception |
 | [obc.en.md](obc.en.md) | Observable Business Contract — Global OBC, Local OBC, OBC Partitioning |
 | [artifact-types.en.md](artifact-types.en.md) | Canonical artifact types — what each type is, when it is born, and how it relates to others |
+| [product-deck.en.md](product-deck.en.md) | Product Deck — single-page canvas with product vision, services, architecture, and metrics |
+| [service-deck.en.md](service-deck.en.md) | Service Deck — single-page canvas that represents a service (or Value Stream) as a product |
 | [artifact-governance.en.md](artifact-governance.en.md) | Artifact governance — owners, approvals, and lifecycle |
 | [origin-streams.en.md](origin-streams.en.md) | The four Intent origins |
 | [product-topology.en.md](product-topology.en.md) | Product Topology — the four permanent structural dimensions of the product |

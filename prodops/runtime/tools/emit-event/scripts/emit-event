@@ -297,6 +297,20 @@ fi
 # ── Step 4b: Datadog (non-fatal) ──────────────────────────────────────────────
 # Single send.sh call — lead-time-days included when pre-calculated above.
 # This ensures only one runtime.event.received metric is emitted per event.
+
+# Load DD_API_KEY from api/.env if not already in the environment.
+# Allows zero-config local execution without requiring the caller to export secrets.
+if [[ -z "${DD_API_KEY:-}" ]]; then
+  ENV_FILE="$(cd "$PRODOPS_DIR/.." && pwd)/api/.env"
+  if [[ -f "$ENV_FILE" ]]; then
+    _dd_key=$(grep '^DD_API_KEY=' "$ENV_FILE" | head -1 | cut -d= -f2-)
+    if [[ -n "$_dd_key" ]]; then
+      export DD_API_KEY="$_dd_key"
+      log "DD_API_KEY loaded from api/.env"
+    fi
+  fi
+fi
+
 DD_STATUS="success"
 log "Sending Datadog metric..."
 DD_ERR=$(mktemp)

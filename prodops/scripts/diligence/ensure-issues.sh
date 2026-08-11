@@ -303,19 +303,19 @@ ensure_issue() {
   fi
 
   log "  Setting TEXT fields..."
-  set_text_field "${item_id}" "witem repository" "${GITHUB_REPO}"
-  set_text_field "${item_id}" "witem feature"    "${feature}"
-  set_text_field "${item_id}" "witem obc"        "${OBC_ID}"
-  set_text_field "${item_id}" "witem release"    "${RELEASE_ID}"
-  set_text_field "${item_id}" "witem iteration"  "${ITERATION_ID}"
+  set_text_field "${item_id}" "witem-repository" "${GITHUB_REPO}"
+  set_text_field "${item_id}" "witem-feature"    "${feature}"
+  set_text_field "${item_id}" "witem-obc"        "${OBC_ID}"
+  set_text_field "${item_id}" "witem-release"    "${RELEASE_ID}"
+  set_text_field "${item_id}" "witem-iteration"  "${ITERATION_ID}"
 
   log "  Setting SINGLE_SELECT fields..."
-  set_single_select_field "${item_id}" "witem type"          "Feature"
-  set_single_select_field "${item_id}" "oem journey"        "${journey}"
-  set_single_select_field "${item_id}" "oem state"          "BOOTSTRAPPING"
-  set_single_select_field "${item_id}" "diligence evidence" "Missing"
-  set_single_select_field "${item_id}" "runtime sync"       "Pending"
-  set_single_select_field "${item_id}" "runtime timeline-state" "Empty"
+  set_single_select_field "${item_id}" "witem-type"          "Feature"
+  set_single_select_field "${item_id}" "oem-journey"         "${journey}"
+  set_single_select_field "${item_id}" "oem-state"           "BOOTSTRAPPING"
+  set_single_select_field "${item_id}" "diligence-evidence"  "Missing"
+  set_single_select_field "${item_id}" "runtime-sync"        "Pending"
+  set_single_select_field "${item_id}" "runtime-timeline-state" "Empty"
 }
 
 ensure_runtime_task() {
@@ -365,14 +365,14 @@ ensure_runtime_task() {
     log "  added: item ${item_id}"
   fi
 
-  set_text_field "${item_id}" "witem repository" "${GITHUB_REPO}"
-  set_text_field "${item_id}" "witem feature"    "${feature}"
-  set_text_field "${item_id}" "witem obc"        "${OBC_ID}"
-  set_text_field "${item_id}" "witem release"    "${RELEASE_ID}"
-  set_text_field "${item_id}" "witem iteration"  "${ITERATION_ID}"
-  set_single_select_field "${item_id}" "witem type"   "Runtime Task"
-  set_single_select_field "${item_id}" "oem journey"  "${journey}"
-  set_single_select_field "${item_id}" "runtime sync" "Pending"
+  set_text_field "${item_id}" "witem-repository" "${GITHUB_REPO}"
+  set_text_field "${item_id}" "witem-feature"    "${feature}"
+  set_text_field "${item_id}" "witem-obc"        "${OBC_ID}"
+  set_text_field "${item_id}" "witem-release"    "${RELEASE_ID}"
+  set_text_field "${item_id}" "witem-iteration"  "${ITERATION_ID}"
+  set_single_select_field "${item_id}" "witem-type"    "Runtime Task"
+  set_single_select_field "${item_id}" "oem-journey"   "${journey}"
+  set_single_select_field "${item_id}" "runtime-sync"  "Pending"
 }
 
 # ── Canonical issues ──────────────────────────────────────────────────────────

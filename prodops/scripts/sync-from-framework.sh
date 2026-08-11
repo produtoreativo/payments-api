@@ -309,6 +309,26 @@ done < <(find "${FRAMEWORK_SOURCE}" -type f -not -path "${FRAMEWORK_SOURCE}/.git
 # Update framework-lock.yaml with new version and drift.status=ok
 update_lock_file "${LOCK_FILE}" "${VERSION}"
 
+# Update framework-version in runtime.yaml if it exists (protected file — only version field changes)
+RUNTIME_YAML="${ROOT_DIR}/prodops/runtime/runtime.yaml"
+if [[ -f "${RUNTIME_YAML}" ]]; then
+  if python3 - "${RUNTIME_YAML}" "${VERSION}" <<'PYEOF' 2>/dev/null; then
+import sys, re
+path, version = sys.argv[1], sys.argv[2]
+content = open(path).read()
+content = re.sub(
+    r'(?m)^(framework-version:\s*)["\']?[^"\'\n]*["\']?',
+    r'\g<1>"' + version + '"',
+    content,
+)
+open(path, 'w').write(content)
+PYEOF
+    info "Updated runtime.yaml framework-version → ${VERSION}"
+  else
+    info "WARNING: could not update framework-version in runtime.yaml — update manually"
+  fi
+fi
+
 # Commit on the sync branch
 git add -A
 git commit -m "chore(framework): sync prodops-framework to ${VERSION}
@@ -345,6 +365,7 @@ See commit diff for the full list of updated files.
 - \`prodops/artifacts/\`
 - \`prodops/exec/manifest.yaml\`
 - \`prodops/exec/framework-lock.yaml\`
+- \`prodops/runtime/runtime.yaml\` (framework-version field updated automatically)
 - \`prodops/skills/local/\`
 - \`prodops/skills/references/local/\`
 - \`prodops/scripts/local/\`

@@ -143,6 +143,9 @@ export class InvoiceService {
         dueDate: pendingInvoice.dueDate,
         description: pendingInvoice.description ?? pendingInvoice.orderId,
         externalReference: pendingInvoice.externalReference,
+        ...(pendingInvoice.billingType === 'BOLETO' && {
+          daysAfterDueDateToRegistrationCancellation: 1,
+        }),
       });
 
       this.assertProviderChargeContract(pendingInvoice, charge);
@@ -639,8 +642,26 @@ export class InvoiceService {
         return this.confirmProviderPayment(payload);
       case 'PAYMENT_RECEIVED':
         return this.receiveProviderPayment(payload);
+      case 'PAYMENT_CHARGEBACK_REQUESTED':
+        return this.handleChargebackEvent(
+          payload,
+          'CHARGEBACK_REQUESTED',
+          'payment.chargeback_requested',
+        );
+      case 'PAYMENT_CHARGEBACK_DISPUTE':
+        return this.handleChargebackEvent(
+          payload,
+          'CHARGEBACK_DISPUTE',
+          'payment.chargeback_dispute',
+        );
+      case 'PAYMENT_AWAITING_CHARGEBACK_REVERSAL':
+        return this.handleChargebackEvent(
+          payload,
+          'CHARGEBACK_REVERSAL_PENDING',
+          'payment.chargeback_reversal_pending',
+        );
       case 'PAYMENT_OVERDUE':
-        return this.recordIgnoredProviderEvent(payload, 'PAYMENT_OVERDUE');
+        return this.expireBoletoInvoice(payload);
       default:
         return this.recordIgnoredProviderEvent(payload, payload.event);
     }
@@ -735,6 +756,75 @@ export class InvoiceService {
     });
 
     return this.toResponse(receivedInvoice);
+  }
+
+  private async handleChargebackEvent(
+    payload: AsaasWebhookDto,
+    targetStatus:
+      | 'CHARGEBACK_REQUESTED'
+      | 'CHARGEBACK_DISPUTE'
+      | 'CHARGEBACK_REVERSAL_PENDING',
+    eventName: string,
+  ): Promise<InvoiceResponseDto | undefined> {
+    const invoice = await this.findWebhookInvoice(payload);
+
+    if (!invoice) {
+      this.emitUncorrelatedWebhook(payload, targetStatus);
+      return undefined;
+    }
+
+    if (invoice.billingType !== 'CREDIT_CARD') {
+      this.logger.warn(
+        `Chargeback webhook ignored: invoice ${invoice.invoiceId} has billingType ${invoice.billingType}, expected CREDIT_CARD`,
+      );
+      return this.toResponse(invoice);
+    }
+
+    if (invoice.status === targetStatus) {
+      return this.toResponse(invoice);
+    }
+
+    const updatedInvoice = await this.repository.updateInvoice(
+      invoice,
+      targetStatus,
+      this.webhookProviderAttrs(invoice, payload),
+    );
+
+    this.eventEmitter.emit(eventName, {
+      invoiceId: updatedInvoice.invoiceId,
+      orderId: updatedInvoice.orderId,
+      tenantId: updatedInvoice.tenantId,
+      amount: updatedInvoice.amount,
+      occurredAt: updatedInvoice.updatedAt,
+    });
+
+    return this.toResponse(updatedInvoice);
+  }
+
+  private async expireBoletoInvoice(
+    payload: AsaasWebhookDto,
+  ): Promise<InvoiceResponseDto | undefined> {
+    const invoice = await this.findWebhookInvoice(payload);
+
+    if (!invoice) {
+      this.emitUncorrelatedWebhook(payload, 'PAYMENT_OVERDUE');
+      return undefined;
+    }
+
+    if (invoice.billingType !== 'BOLETO') {
+      return this.recordIgnoredProviderEvent(payload, 'PAYMENT_OVERDUE');
+    }
+
+    if (invoice.status === 'CONFIRMED' || invoice.status === 'EXPIRED') {
+      return this.toResponse(invoice);
+    }
+
+    const expiredInvoice = await this.repository.updateInvoice(
+      invoice,
+      'EXPIRED',
+    );
+
+    return this.toResponse(expiredInvoice);
   }
 
   private async recordIgnoredProviderEvent(

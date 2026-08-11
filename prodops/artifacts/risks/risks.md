@@ -777,3 +777,63 @@ O upgrade para multer >=2.2.0 foi aplicado via `npm audit fix` sem alteração e
 
 - OBC: `prodops/artifacts/obcs/observability-datadog.md`
 - Issue: [#44](https://github.com/produtoreativo/payments-api/issues/44)
+
+---
+
+# DS-62 — Chargeback Handling (chargeback-handling)
+
+**Capability:** chargeback-handling
+**Severidade:** Média
+**Status:** Aceito
+
+## Riscos identificados
+
+### RISK-CB-001 — Eventos de chargeback fora de ordem do PSP
+- **Risco:** O PSP Asaas pode enviar `PAYMENT_CHARGEBACK_DISPUTE` sem `PAYMENT_CHARGEBACK_REQUESTED` anterior, causando transição de status inconsistente com o fluxo esperado.
+- **Probabilidade:** Baixa
+- **Impacto:** Médio — estado da invoice pode não refletir a sequência real do chargeback.
+- **Mitigação:** OBC define explicitamente que out-of-order é aceito; implementação não valida sequência de estados.
+- **Aceite:** Explícito — padrão de mercado, sem ação financeira envolvida.
+
+### RISK-CB-002 — Ação manual de operação em chargebacks
+- **Risco:** O sistema apenas rastreia chargebacks sem acionar ação financeira automática; a operação precisa agir manualmente para estornos ou contestações.
+- **Probabilidade:** Alta (todo chargeback exige ação manual)
+- **Impacto:** Baixo para o sistema — o risco é operacional, não técnico.
+- **Mitigação:** Evento `payment.chargeback_requested` sinaliza imediatamente a operação via webhook delivery.
+- **Aceite:** Explícito — design intencional (sem freeze automático).
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/chargeback-handling.md`
+- BDD: `prodops/artifacts/bdd/chargeback-handling.feature`
+- Issue: [#173](https://github.com/produtoreativo/payments-api/issues/173)
+
+---
+
+# DS-63 — Boleto Auto-Cancellation (boleto-auto-cancellation)
+
+**Capability:** boleto-auto-cancellation
+**Severidade:** Baixa
+**Status:** Aceito
+
+## Riscos identificados
+
+### RISK-BC-001 — Boleto pago após vencimento sem webhook de confirmação
+- **Risco:** O portador paga o boleto após o vencimento mas antes do cancelamento automático, e o PSP não envia `PAYMENT_CONFIRMED` antes de `PAYMENT_OVERDUE`, resultando em invoice `EXPIRED` com pagamento realizado.
+- **Probabilidade:** Baixa
+- **Impacto:** Alto — pedido não liberado; reconciliação manual necessária.
+- **Mitigação:** `daysAfterDueDateToRegistrationCancellation=1` reduz a janela; regra CONFIRMED imune garante que boleto confirmado não é expirado.
+- **Aceite:** Explícito — risco inerente ao produto boleto bancário; processo de reconciliação documentado em runbook.
+
+### RISK-BC-002 — Webhook PAYMENT_OVERDUE para invoice já CONFIRMED
+- **Risco:** Race condition entre `PAYMENT_CONFIRMED` e `PAYMENT_OVERDUE`: PSP envia os dois events; o OVERDUE chega por último e tenta expirar uma invoice já confirmada.
+- **Probabilidade:** Baixa
+- **Impacto:** Alto se não protegido — pedido confirmado seria revertido.
+- **Mitigação:** OBC define explicitamente que CONFIRMED é imune a OVERDUE; implementação verifica status antes de transitar.
+- **Aceite:** Explícito — cobertura por BDD scenario "Boleto confirmado não é expirado".
+
+## Referências
+
+- OBC: `prodops/artifacts/obcs/boleto-auto-cancellation.md`
+- BDD: `prodops/artifacts/bdd/boleto-auto-cancellation.feature`
+- Issue: [#174](https://github.com/produtoreativo/payments-api/issues/174)

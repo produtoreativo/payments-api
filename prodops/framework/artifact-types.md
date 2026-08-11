@@ -177,6 +177,38 @@ Artefatos de execução (`Iteration Plan`, `Context Capsule`, `Release Trail`) s
 
 ## Artefatos de conhecimento
 
+### `product-deck`
+
+**O que é:** canvas de página única que agrega as informações essenciais de um produto — visão, serviços com SLOs, time, arquitetura de execução, matriz de confiabilidade, analytics e stakeholders. Inspirado no Report A3 da Toyota.
+
+**Nasce quando:** o produto existe como entidade reconhecida e o time precisa de um artefato de referência operacional consolidado — geralmente após o primeiro serviço entrar em Operational.
+
+**Jornada:** transversal — consumido por Assessment (premortems, avaliação de maturidade), Discovery (alinhamento de escopo), Delivery (contexto de Bootstrap) e Operation (atualização contínua de métricas).
+
+**Caminho canônico:** `prodops/artifacts/product/product-deck.md` (um por produto)
+
+**Relações:** consome `local-obc` (SLOs dos serviços), `reliability-plan` (Reliability Matrix) e `release-trail` (Product Analytics); é consumido como insumo de premortems e Assessment.
+
+→ Definição completa: [`product-deck.md`](product-deck.md)
+
+---
+
+### `service-deck`
+
+**O que é:** canvas de página única que representa um serviço como um produto — mesmas seções do Product Deck, mas scoped ao serviço. Um Product Service pode ser um `Service` (unidade deployável única) ou um `Value Stream` (agrupamento lógico de múltiplos services). O Service Deck é o artefato que detalha cada entrada do Product Services.
+
+**Nasce quando:** um serviço é listado no Product Deck com um Local OBC committed — o Service Deck materializa os contratos desse OBC como visão operacional do serviço.
+
+**Jornada:** transversal — criado quando o OBC atinge Committed; atualizado em Operation (métricas, SLOs) e Assessment (revisão de risco e contratos).
+
+**Caminho canônico:** `prodops/artifacts/services/<service-slug>/service-deck.md`
+
+**Relações:** é referenciado pelo `product-deck` (Product Services); consome `local-obc` (Service Endpoints: APIs, eventos, schemas, SLIs) e `reliability-plan`; alimenta a Reliability Matrix do Product Deck.
+
+→ Definição completa: [`service-deck.md`](service-deck.md)
+
+---
+
 ### `architecture`
 
 **O que é:** decisão ou documentação de arquitetura — ADRs, diagramas de componentes, decisões técnicas com contexto e consequências.

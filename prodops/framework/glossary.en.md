@@ -909,6 +909,42 @@ See [`prodops/framework/execution-model/downstream.en.md`](execution-model/downs
 
 ---
 
+## Product Deck
+
+**Definition:** A single-page canvas that aggregates the essential information about a digital product — Product Vision, Product Services (with SLOs and lead-time), Product Team, Execution Architecture, Reliability Matrix, Product Analytics, and Stakeholders. A living artifact, continuously updated across the Operation, Delivery, and Assessment journeys.
+
+**Purpose:** Allow any team member, stakeholder, or external collaborator to understand the product — its value, operational state, and risks — without consulting additional documentation. Inspired by Toyota's A3 Report and Shopify's Resilience Matrix.
+
+**When to use:** Premortems, maturity Assessments, onboarding of new members, roadmap reviews, incidents that require architecture and dependency context.
+
+**When not to use:** The Product Deck does not replace the Local OBC (which defines the observable contract for each capability), the Reliability Plan (which details risk analysis), or the Release Trail (which records delivery evidence). Each of these artifacts is a source of input for the Product Deck — not the other way around.
+
+**Location:** `prodops/artifacts/product/product-deck.md` (one per product).
+
+**Relationship with other concepts:** Consumes `local-obc` (SLOs), `reliability-plan` (Reliability Matrix), `release-trail` (Product Analytics). Consumed by premortems (Execution Architecture), Assessment, and Bootstrap.
+
+→ **Full definition with canonical sections and lifecycle:** [`product-deck.en.md`](product-deck.en.md)
+
+---
+
+## Service Deck
+
+**Definition:** A single-page canvas that represents a service as a product — the same seven sections as the Product Deck, but with the service as the central unit of analysis. Each entry in a Product Deck's Product Services section references exactly one Service Deck.
+
+**Two types of Product Service:** `Service` (single deployable unit with its own responsibility and SLO) or `Value Stream` (logical grouping of one or more Services that together deliver a specific business outcome).
+
+**Link to Data:** the Service Deck corresponds to exactly one Local OBC. The Service Endpoints section of the Service Deck surfaces the OBC's contracts — APIs, events, schemas, SLIs — making the **Data dimension** visible at the service's operational level. The OBC is the source of truth; the Service Deck is the consolidated reading point.
+
+**When to use:** when a service is listed in the Product Deck with a committed Local OBC. A service without a committed OBC must not have a Service Deck — it must be flagged as pending an observable contract.
+
+**Location:** `prodops/artifacts/services/<service-slug>/service-deck.md`.
+
+**Relationship with other concepts:** referenced by the Product Deck (Product Services); consumes `local-obc` (Service Endpoints), `reliability-plan` (Service Reliability), and `release-trail` (Service Analytics); feeds the Product Deck's Reliability Matrix.
+
+→ **Full definition with canonical sections and lifecycle:** [`service-deck.en.md`](service-deck.en.md)
+
+---
+
 ## Decision Trail
 
 **Definition:** Record of a decision made under uncertainty, including context, alternatives, and impact. Template: [`prodops/templates/assessment/decision-trail.md`](../templates/assessment/decision-trail.en.md).

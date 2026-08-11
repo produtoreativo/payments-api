@@ -1,19 +1,19 @@
 schema_version: 1
 
 prodops_framework:
-  version: "1.1.0"
-  status: consumer
+  version: "v1.6.1"
+  status: contributor
   source_repository: payments-api
   external_source: github.com/produtoreativo/prodops-framework
   synchronization_mechanism: ci-pr-sync
   note: >
-    Este repositório é um consumidor do ProdOps Framework canônico.
-    O framework evolui em produtoreativo/prodops-framework.
+    Este repositório compartilha ownership sobre a evolução do ProdOps Framework.
+    Inovações nascem aqui e são promovidas upstream para produtoreativo/prodops-framework.
     Atualizações chegam via PR gerado por sync-from-framework.sh (manual)
     ou pelo workflow sync-prodops.yml (CI, acionado por notify-consumers.yml).
 
 distribution:
-  state: consumer
+  state: contributor
   lock_mode: framework-managed
   update_procedure: >
     Manual: bash prodops/scripts/sync-from-framework.sh
@@ -21,9 +21,9 @@ distribution:
 
 drift:
   status: ok
-  installed_version: "1.1.0"
-  available_version: "1.1.0"
-  last_checked: "2026-08-05"
+  installed_version: "v1.6.1"
+  available_version: "v1.6.1"
+  last_checked: "2026-08-11"
   reason: >
     Versão instalada igual à versão disponível — sem drift.
     Re-checar após nova release publicada em prodops-framework.

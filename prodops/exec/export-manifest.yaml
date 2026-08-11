@@ -32,6 +32,10 @@ export:
     - scripts/validate-manifest.sh
     - scripts/validate-export-manifest.sh
     - scripts/install-prodops.sh
+    - scripts/install-claude.sh
+    - scripts/agents/materialize-agents.sh
+    - scripts/agents/materialize-skills.sh
+    - agents/**
     - scripts/sync-from-framework.sh
     - scripts/README.md
     - scripts/README.en.md

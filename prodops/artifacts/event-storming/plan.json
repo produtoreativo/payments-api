@@ -2520,6 +2520,114 @@
       "priority": "normal",
       "source_type_name": "odd-exception",
       "aggregation_key": "split_payment_criacao_falhou"
+    },
+    {
+      "title": "payment.chargeback_requested",
+      "text": "Chargeback requested by cardholder — invoice moved to CHARGEBACK_REQUESTED",
+      "tags": [
+        "event_key:payment.chargeback_requested",
+        "env:dev",
+        "stage:chargeback_solicitado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_chargeback",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "warning",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "chargeback_solicitado"
+    },
+    {
+      "title": "payment.chargeback_requested_exception",
+      "text": "Exception while processing chargeback_requested webhook",
+      "tags": [
+        "event_key:payment.chargeback_requested_exception",
+        "env:dev",
+        "stage:chargeback_solicitado",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_chargeback",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "chargeback_solicitado"
+    },
+    {
+      "title": "payment.chargeback_dispute",
+      "text": "Chargeback entered dispute phase — invoice moved to CHARGEBACK_DISPUTE",
+      "tags": [
+        "event_key:payment.chargeback_dispute",
+        "env:dev",
+        "stage:chargeback_disputa",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_chargeback",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "warning",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "chargeback_disputa"
+    },
+    {
+      "title": "payment.chargeback_dispute_exception",
+      "text": "Exception while processing chargeback_dispute webhook",
+      "tags": [
+        "event_key:payment.chargeback_dispute_exception",
+        "env:dev",
+        "stage:chargeback_disputa",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_chargeback",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "chargeback_disputa"
+    },
+    {
+      "title": "payment.chargeback_reversal_pending",
+      "text": "Chargeback reversal pending — invoice moved to CHARGEBACK_REVERSAL_PENDING",
+      "tags": [
+        "event_key:payment.chargeback_reversal_pending",
+        "env:dev",
+        "stage:chargeback_reversao_pendente",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_chargeback",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "warning",
+      "priority": "normal",
+      "source_type_name": "odd-business-event",
+      "aggregation_key": "chargeback_reversao_pendente"
+    },
+    {
+      "title": "payment.chargeback_reversal_pending_exception",
+      "text": "Exception while processing awaiting_chargeback_reversal webhook",
+      "tags": [
+        "event_key:payment.chargeback_reversal_pending_exception",
+        "env:dev",
+        "stage:chargeback_reversao_pendente",
+        "actor:system",
+        "service:pagamento",
+        "touch_point:webhook_chargeback",
+        "business_domain:pagamento",
+        "source:odd"
+      ],
+      "alert_type": "error",
+      "priority": "normal",
+      "source_type_name": "odd-exception",
+      "aggregation_key": "chargeback_reversao_pendente"
     }
   ],
   "sloSuggestions": [
@@ -2754,6 +2862,7 @@
     "2026-08-01: DS-39 payment-confirmation — adicionado evento canônico payment.received (e payment.received_exception) emitido via eventEmitter no processamento de PAYMENT_RECEIVED webhook. Novo sloSuggestion: payment_received_reconciliation_availability. Evento garante conciliação financeira sem republicar payment.confirmed.",
     "2026-08-01: work-item-107 api-token-validation — TDD cycle validado. Eventos api.token.validated e api.token.rejected (ODD: pagamento.autenticacao.api.token.validado/rejeitado) já registrados desde 2026-07-03. Implementação completa em AuthModule (ApiTokenGuard, ApiTokenService, TokenRepository, AdminTokenController). Todos os 18 cenários BDD passando.",
     "2026-08-01: work-item-108 webhook-configuration (v0.6.0) — TDD cycle validado. Implementação pré-existente no master (DS-43). Todos os 15 cenários e2e passando: POST /webhooks (201 + secret), GET /webhooks (sem secret), DELETE /webhooks/:id, HTTPS enforcement, limite 10 webhooks, entrega fire-and-forget com HMAC-SHA256, falha de entrega sem bloquear pagamento, webhook inativo não recebe entrega. Eventos já registrados: pagamento.webhook.configuracao.webhook.registrado, pagamento.webhook.configuracao.webhook.removido, pagamento.webhook.entrega.pagamento.confirmado.entregue, pagamento.webhook.entrega.entrega.falhou. SLOs existentes: webhook_entregue_availability (95%), webhook_entrega_falhou_observability (100%).",
-    "2026-08-05: DS-61 split-payment-pix-boleto (v0.14.0, work-item 167) — TDD cycle validado. Implementação pré-existente no master (merge de v0.13.0). Todos os 9 cenários BDD passando: criação com PENDING_BOTH, confirmação Pix→COMPLETED, confirmação Boleto→COMPLETED (ordem inversa), idempotência, webhook duplicado, boleto expirado com Pix confirmado, boleto expirado sem pagamento, rejeição de soma incorreta, segurança de resposta de erro. Novos eventos: split_payment.created, split_payment.pix.confirmed, split_payment.boleto.confirmed, split_payment.completed, split_payment.boleto.expired, split_payment.creation_failed (e variantes _exception). Novos SLOs: split_payment_completed_availability (99%, latência 5s), split_payment_boleto_expired_latency (99%, latência 60min). Novo flow band: split_payment."
+    "2026-08-05: DS-61 split-payment-pix-boleto (v0.14.0, work-item 167) — TDD cycle validado. Implementação pré-existente no master (merge de v0.13.0). Todos os 9 cenários BDD passando: criação com PENDING_BOTH, confirmação Pix→COMPLETED, confirmação Boleto→COMPLETED (ordem inversa), idempotência, webhook duplicado, boleto expirado com Pix confirmado, boleto expirado sem pagamento, rejeição de soma incorreta, segurança de resposta de erro. Novos eventos: split_payment.created, split_payment.pix.confirmed, split_payment.boleto.confirmed, split_payment.completed, split_payment.boleto.expired, split_payment.creation_failed (e variantes _exception). Novos SLOs: split_payment_completed_availability (99%, latência 5s), split_payment_boleto_expired_latency (99%, latência 60min). Novo flow band: split_payment.",
+    "2026-08-11: DS-62 chargeback-handling (v0.15.0, work-item 173) — TDD cycle validado. Novos InvoiceStatus: CHARGEBACK_REQUESTED, CHARGEBACK_DISPUTE, CHARGEBACK_REVERSAL_PENDING. Novos switch cases em InvoiceService.processProviderWebhook: PAYMENT_CHARGEBACK_REQUESTED→CHARGEBACK_REQUESTED, PAYMENT_CHARGEBACK_DISPUTE→CHARGEBACK_DISPUTE, PAYMENT_AWAITING_CHARGEBACK_REVERSAL→CHARGEBACK_REVERSAL_PENDING. Regras: idempotência via saveRawProviderEvent, billingType≠CREDIT_CARD rejeitado com warn log, fora de ordem aceito, sem ação financeira automática. Novos eventos de domínio: payment.chargeback_requested, payment.chargeback_dispute, payment.chargeback_reversal_pending (e variantes _exception). Todos os 6 cenários BDD passando."
   ]
 }
