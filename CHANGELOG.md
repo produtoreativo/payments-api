@@ -7,6 +7,23 @@ export from `payments-api` (empirical upstream) when applicable.
 
 ---
 
+## [1.8.0] — 2026-08-12
+
+### Added
+
+- `prodops/scripts/setup-wsl.sh` — script de instalação automática de ambiente para
+  WSL2 (Ubuntu/Debian), cobrindo todas as ferramentas exigidas por `check-env.sh`:
+  - Instala `git`, `curl`, `jq`, `awk`, `diff`, `sed`, `uuid-runtime`, `python3`,
+    `PyYAML` via `apt` e `pip3`
+  - Instala `nvm` + `Node.js 20` e configura `~/.bashrc` / `~/.zshrc`
+  - Instala `gh` (GitHub CLI) via repositório oficial
+  - Valida presença do Docker e guia integração WSL2 com Docker Desktop
+  - Flag `--optional` instala `aws-cli v2`, `aws-cdk`, `cdklocal`, `awslocal`, `ripgrep`
+  - Orientações pós-instalação: `gh auth login` e `check-env.sh --fix-hints`
+  - Adicionado ao `export-manifest.yaml` e ao gate `validate-export-manifest.sh`
+
+---
+
 ## [1.7.0] — 2026-08-12
 
 ### Added

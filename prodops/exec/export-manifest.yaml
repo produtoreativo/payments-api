@@ -32,6 +32,7 @@ export:
     - scripts/validate-manifest.sh
     - scripts/validate-export-manifest.sh
     - scripts/check-env.sh
+    - scripts/setup-wsl.sh
     - scripts/install-prodops.sh
     - scripts/install-claude.sh
     - scripts/agents/materialize-agents.sh
