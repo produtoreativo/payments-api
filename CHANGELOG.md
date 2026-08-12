@@ -7,6 +7,20 @@ export from `payments-api` (empirical upstream) when applicable.
 
 ---
 
+## [1.7.0] — 2026-08-12
+
+### Added
+
+- `prodops/scripts/check-env.sh` — novo script canônico que verifica se todas as
+  ferramentas e configurações de runtime necessárias estão presentes no ambiente
+  de desenvolvimento:
+  - Suporte a `--fix-hints` para exibir comandos de instalação de cada ferramenta ausente
+  - Saída com símbolos ✅ / ⚠️ / ❌ e exit code `1` quando qualquer ferramenta está ausente
+  - Adicionado ao `export-manifest.yaml` como script canônico exportável
+  - Validação pelo `validate-export-manifest.sh` no gate de exports
+
+---
+
 ## [1.6.2] — 2026-08-11
 
 ### Fixed

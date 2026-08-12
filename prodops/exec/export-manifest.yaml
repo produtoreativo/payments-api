@@ -31,6 +31,7 @@ export:
     - scripts/doctor.sh
     - scripts/validate-manifest.sh
     - scripts/validate-export-manifest.sh
+    - scripts/check-env.sh
     - scripts/install-prodops.sh
     - scripts/install-claude.sh
     - scripts/agents/materialize-agents.sh
