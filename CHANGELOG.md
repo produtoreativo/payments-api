@@ -7,6 +7,22 @@ export from `payments-api` (empirical upstream) when applicable.
 
 ---
 
+## [1.9.0] — 2026-08-12
+
+### Changed
+
+- `prodops/scripts/setup-wsl.sh` — reescrito como bootstrap completo de ambiente:
+  - **Contexto A — Windows (Git Bash/MSYS2):** detecta Ubuntu no WSL2; se ausente,
+    instala `Ubuntu-24.04` via `wsl --install` e reinvoca o script dentro dele
+  - **Contexto B — Ubuntu/WSL2 ou nativo:** instala todas as dependências,
+    autentica `gh`, clona `payments-api`, executa `npm install` e valida com
+    `check-env.sh` ao final
+  - Suporte a `--optional` para `aws-cli v2`, `aws-cdk`, `cdklocal`, `awslocal`, `ripgrep`
+  - One-liner funcional: `curl -fsSL <url> | bash`
+  - Exit code `1` em SO não suportado ou falha fatal
+
+---
+
 ## [1.8.0] — 2026-08-12
 
 ### Added
