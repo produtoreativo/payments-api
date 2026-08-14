@@ -178,7 +178,9 @@ sudo apt-get update -qq
 ok "apt update concluído"
 
 step "Instalando dependências base"
-PKGS=(git curl jq gawk diffutils sed uuid-runtime python3 python3-pip unzip ca-certificates gnupg lsb-release)
+# uuid-runtime é excluído: o daemon uuidd requer systemd, indisponível no WSL2.
+# O check-env.sh usa python3 uuid como fallback automaticamente.
+PKGS=(git curl jq gawk diffutils sed python3 python3-pip unzip ca-certificates gnupg lsb-release)
 MISSING=()
 for pkg in "${PKGS[@]}"; do
   dpkg -s "$pkg" >/dev/null 2>&1 || MISSING+=("$pkg")
@@ -267,7 +269,9 @@ if [[ "$OPTIONAL" == true ]]; then
     skip "aws-cli $(aws --version 2>&1 | awk '{print $1}' | cut -d/ -f2)"
   else
     TMP=$(mktemp -d)
-    curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "${TMP}/awscliv2.zip"
+    ARCH=$(uname -m)
+    AWS_ARCH=$([[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]] && echo "aarch64" || echo "x86_64")
+    curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-${AWS_ARCH}.zip" -o "${TMP}/awscliv2.zip"
     unzip -q "${TMP}/awscliv2.zip" -d "${TMP}"
     sudo "${TMP}/aws/install"
     rm -rf "${TMP}"
