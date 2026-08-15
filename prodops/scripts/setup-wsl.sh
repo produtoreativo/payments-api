@@ -319,9 +319,19 @@ step "Autenticação GitHub CLI"
 if gh auth status >/dev/null 2>&1; then
   GH_USER=$(gh api user --jq '.login' 2>/dev/null || echo "desconhecido")
   skip "gh autenticado como @${GH_USER}"
+elif [[ -n "${GITHUB_TOKEN:-}" ]]; then
+  gh auth login --with-token <<< "${GITHUB_TOKEN}"
+  GH_USER=$(gh api user --jq '.login' 2>/dev/null || echo "desconhecido")
+  ok "gh autenticado via GITHUB_TOKEN como @${GH_USER}"
 else
-  note "É necessário autenticar o GitHub CLI para clonar e operar com o repositório."
-  echo ""
+  note "Nenhuma autenticação encontrada."
+  note "Para evitar o fluxo interativo de browser, defina GITHUB_TOKEN antes de rodar:"
+  note "  export GITHUB_TOKEN=ghp_seu_token"
+  note "  wget -qO- <url> | bash"
+  note ""
+  note "Gere um token em: github.com → Settings → Developer settings → Personal access tokens"
+  note "Escopo necessário: repo"
+  note ""
   gh auth login
 fi
 
