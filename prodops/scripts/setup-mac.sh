@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # setup-mac.sh — Bootstrap completo de ambiente de desenvolvimento ProdOps para macOS
+# ProdOps Framework v1.11.0
 #
 # Instala todas as ferramentas necessárias via Homebrew, clona o repositório
 # payments-api e prepara o projeto para desenvolvimento local.
@@ -18,6 +19,8 @@
 # Exit codes:
 #   0  sucesso
 #   1  macOS não detectado ou erro fatal
+
+PRODOPS_VERSION="v1.11.0"
 
 set -euo pipefail
 
@@ -71,6 +74,7 @@ echo "╔═══════════════════════�
 echo "║         ProdOps — setup-mac.sh                      ║"
 echo "╚══════════════════════════════════════════════════════╝"
 echo -e "${RESET}"
+echo "  Versão   : ${PRODOPS_VERSION}"
 echo "  Sistema  : $(sw_vers -productName) $(sw_vers -productVersion)"
 echo "  Arch     : ${ARCH}"
 echo "  Modo     : $([ "$OPTIONAL" = true ] && echo 'completo (--optional)' || echo 'essencial')"
@@ -116,21 +120,13 @@ fi
 
 step "Dependências base (git, curl, jq, gawk, diffutils, gnu-sed, python3)"
 
-declare -A BREW_PKGS=(
-  [git]="Controle de versão"
-  [curl]="Transferência HTTP/S"
-  [jq]="Parsing e manipulação de JSON"
-  [gawk]="Processamento de texto e manifests"
-  [diffutils]="Comparação de arquivos (sync e install)"
-  [gnu-sed]="sed GNU — scripts usam flags GNU (prepare-release, sync)"
-  [python3]="Runtime Python para scripts ProdOps"
-)
+# Array simples — compatível com bash 3.2 (padrão do macOS antes do brew)
+BREW_PKGS=(git curl jq gawk diffutils gnu-sed python3)
 
 INSTALLED_PKGS=()
-SKIPPED_PKGS=()
-for pkg in "${!BREW_PKGS[@]}"; do
+for pkg in "${BREW_PKGS[@]}"; do
   if brew list "$pkg" >/dev/null 2>&1; then
-    SKIPPED_PKGS+=("$pkg")
+    : # já instalado, segue
   else
     brew install "$pkg" --quiet
     INSTALLED_PKGS+=("$pkg")

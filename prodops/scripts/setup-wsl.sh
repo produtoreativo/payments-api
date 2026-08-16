@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # setup-wsl.sh — Bootstrap completo de ambiente de desenvolvimento ProdOps
+# ProdOps Framework v1.11.0
 #
 # Contextos de execução detectados automaticamente:
 #
@@ -20,6 +21,8 @@
 # Exit codes:
 #   0  sucesso (ou Ubuntu instalado e aguardando re-execução)
 #   1  erro fatal ou SO não suportado
+
+PRODOPS_VERSION="v1.11.0"
 
 # ── Cores e helpers ────────────────────────────────────────────────────────────
 
@@ -92,6 +95,7 @@ is_wsl() {
 if is_windows; then
   header "A: Windows"
   echo "  Objetivo : detectar/instalar Ubuntu WSL2 e preparar o ambiente dentro dele"
+  echo "  Versão   : ${PRODOPS_VERSION}"
   echo ""
 
   # Verifica wsl.exe
@@ -166,13 +170,14 @@ if is_windows; then
       note "Instalando Docker Desktop via winget (${DOCKER_ARCH})..."
       if powershell.exe -Command "winget install --id Docker.DockerDesktop --architecture ${WIN_ARCH} --silent --accept-package-agreements --accept-source-agreements" 2>/dev/null; then
         ok "Docker Desktop instalado via winget."
+        DOCKER_INSTALLED=true   # marca explicitamente para bloquear o fallback
       else
         note "winget falhou — tentando download direto..."
-        DOCKER_INSTALLED=false
+        # DOCKER_INSTALLED permanece false → fallback ativo
       fi
     fi
 
-    # Fallback: download direto do instalador
+    # Fallback: download direto do instalador (só executa se winget não instalou)
     if [[ "$DOCKER_INSTALLED" == false ]]; then
       DOCKER_URL="https://desktop.docker.com/win/main/${DOCKER_ARCH}/Docker%20Desktop%20Installer.exe"
       INSTALLER_PATH=$(powershell.exe -Command '$env:TEMP' 2>/dev/null | tr -d '\r\n' || echo "C:\\Windows\\Temp")
@@ -227,6 +232,7 @@ fi
 set -euo pipefail
 
 header "B: Ubuntu$(is_wsl && echo '/WSL2' || true)"
+echo "  Versão   : ${PRODOPS_VERSION}"
 echo "  Sistema  : $(grep PRETTY_NAME /etc/os-release 2>/dev/null | cut -d= -f2 | tr -d '"' || echo 'Ubuntu/Debian')"
 echo "  WSL      : $(is_wsl && echo 'sim' || echo 'não (ambiente nativo)')"
 echo "  Modo     : $([ "$OPTIONAL" = true ] && echo 'completo (--optional)' || echo 'essencial')"
