@@ -335,13 +335,52 @@ if already docker && docker info >/dev/null 2>&1; then
   skip "Docker ${DOCK_V} — daemon acessível"
   report_skip "Docker" "Containers para LocalStack (DynamoDB local)" "${DOCK_V} — daemon ativo"
 elif is_wsl; then
-  note "Docker não acessível via WSL."
-  note "Instale Docker Desktop no Windows e habilite a integração WSL2:"
-  note "  Settings → Resources → WSL Integration → Enable for this distro"
-  note "Alternativa (Docker Engine direto no WSL):"
-  note "  curl -fsSL https://get.docker.com | sh"
-  note "  sudo usermod -aG docker \$USER && newgrp docker"
-  report_warn "Docker" "Containers para LocalStack (DynamoDB local)" "Não acessível no WSL — habilite integração WSL2 no Docker Desktop"
+  # Dentro do WSL2: powershell.exe e winget.exe são acessíveis via interop do Windows
+  note "Docker não acessível — tentando instalar Docker Desktop via Windows..."
+
+  WIN_ARCH=$(powershell.exe -Command '$env:PROCESSOR_ARCHITECTURE' 2>/dev/null | tr -d '\r\n' || echo "AMD64")
+  case "${WIN_ARCH}" in
+    ARM64) DOCKER_ARCH="arm64" ;;
+    *)     DOCKER_ARCH="amd64" ;;
+  esac
+
+  DOCKER_WIN_OK=false
+
+  if powershell.exe -Command "Get-Command winget -ErrorAction SilentlyContinue" 2>/dev/null | grep -q "winget"; then
+    note "Instalando Docker Desktop via winget (${DOCKER_ARCH})..."
+    if powershell.exe -Command "winget install --id Docker.DockerDesktop --architecture ${WIN_ARCH} --silent --accept-package-agreements --accept-source-agreements" 2>/dev/null; then
+      ok "Docker Desktop instalado via winget."
+      DOCKER_WIN_OK=true
+    else
+      note "winget falhou — tentando download direto..."
+    fi
+  fi
+
+  if [[ "$DOCKER_WIN_OK" == false ]]; then
+    DOCKER_URL="https://desktop.docker.com/win/main/${DOCKER_ARCH}/Docker%20Desktop%20Installer.exe"
+    INSTALLER_PATH=$(powershell.exe -Command '$env:TEMP' 2>/dev/null | tr -d '\r\n' || echo 'C:\Windows\Temp')
+    INSTALLER_PATH="${INSTALLER_PATH}\\DockerDesktopInstaller.exe"
+    note "Baixando Docker Desktop (${DOCKER_ARCH}) — pode demorar alguns minutos..."
+    if powershell.exe -Command "Invoke-WebRequest -Uri '${DOCKER_URL}' -OutFile '${INSTALLER_PATH}' -UseBasicParsing" 2>/dev/null && \
+       powershell.exe -Command "Start-Process '${INSTALLER_PATH}' -Wait -ArgumentList 'install','--quiet','--accept-license'" 2>/dev/null; then
+      ok "Docker Desktop instalado via download direto."
+      DOCKER_WIN_OK=true
+    else
+      err "Não foi possível instalar o Docker Desktop automaticamente."
+      note "Instale manualmente: https://docs.docker.com/desktop/install/windows-install/"
+    fi
+  fi
+
+  if [[ "$DOCKER_WIN_OK" == true ]]; then
+    note "Reinicie o Docker Desktop e habilite a integração WSL2:"
+    note "  Settings → Resources → WSL Integration → Enable for this distro"
+    report_warn "Docker Desktop" "Containers para LocalStack (DynamoDB local)" "Instalado no Windows — reinicie e habilite integração WSL2"
+  else
+    note "Alternativa: instalar Docker Engine direto no WSL:"
+    note "  curl -fsSL https://get.docker.com | sh"
+    note "  sudo usermod -aG docker \$USER && newgrp docker"
+    report_warn "Docker Desktop" "Containers para LocalStack (DynamoDB local)" "Instalação automática falhou — siga as instruções acima"
+  fi
 else
   note "Docker não encontrado. Instale via: curl -fsSL https://get.docker.com | sh"
   report_warn "Docker" "Containers para LocalStack (DynamoDB local)" "Não encontrado — instale manualmente"
