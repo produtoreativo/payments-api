@@ -7,6 +7,22 @@ export from `payments-api` (empirical upstream) when applicable.
 
 ---
 
+## [1.11.0] — 2026-08-16
+
+### Added
+
+- `prodops/scripts/setup-mac.sh` — bootstrap completo para macOS via Homebrew:
+  - Instala Homebrew se ausente; configura `brew shellenv` em `.zshrc`/`.bash_profile` no Apple Silicon
+  - Instala `bash ≥ 4`, `git`, `curl`, `jq`, `gawk`, `diffutils`, `gnu-sed`, `python3`, `PyYAML`
+  - Instala `nvm` + `Node.js 20`, `gh` (GitHub CLI), `Docker Desktop` (via `brew cask`)
+  - Suporte a `GITHUB_TOKEN` para autenticação sem browser
+  - Clona `payments-api`, executa `npm install` e valida com `check-env.sh`
+  - Flag `--optional` instala `aws-cli`, `aws-cdk`, `cdklocal`, `awslocal`, `ripgrep`
+  - Relatório de instalação no final: tabela com nome, descrição, status e detalhe de cada ferramenta
+  - Adicionado ao `export-manifest.yaml` e ao gate `validate-export-manifest.sh`
+
+---
+
 ## [1.9.0] — 2026-08-12
 
 ### Changed

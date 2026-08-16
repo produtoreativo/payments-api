@@ -71,7 +71,7 @@ done
 
 # ── Canonical scripts included ────────────────────────────────────────────────
 
-for script in "scripts/doctor.sh" "scripts/validate-manifest.sh" "scripts/check-env.sh" "scripts/setup-wsl.sh"; do
+for script in "scripts/doctor.sh" "scripts/validate-manifest.sh" "scripts/check-env.sh" "scripts/setup-wsl.sh" "scripts/setup-mac.sh"; do
   if grep -qF "${script}" "${MANIFEST}" 2>/dev/null; then
     pass "canonical script included: ${script}"
   else
