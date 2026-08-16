@@ -22,7 +22,7 @@
 #   0  sucesso (ou Ubuntu instalado e aguardando re-execução)
 #   1  erro fatal ou SO não suportado
 
-PRODOPS_VERSION="v1.11.0"
+PRODOPS_VERSION="v1.11.1"
 
 # ── Cores e helpers ────────────────────────────────────────────────────────────
 
