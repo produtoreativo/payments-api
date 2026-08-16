@@ -131,6 +131,59 @@ if is_windows; then
     ok "${UBUNTU_DISTRO} instalado."
   fi
 
+  step "Verificando Docker Desktop"
+
+  DOCKER_INSTALLED=false
+  # Verifica se dockerd ou Docker Desktop já está acessível
+  if wsl.exe -d "${FOUND_DISTRO}" -- bash -c "command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1" 2>/dev/null; then
+    skip "Docker já acessível dentro do ${FOUND_DISTRO}"
+    DOCKER_INSTALLED=true
+  elif powershell.exe -Command "Get-Command docker -ErrorAction SilentlyContinue" 2>/dev/null | grep -q "docker"; then
+    ok "Docker Desktop detectado no Windows (integração WSL2 pode precisar ser habilitada)"
+    DOCKER_INSTALLED=true
+  fi
+
+  if [[ "$DOCKER_INSTALLED" == false ]]; then
+    note "Docker Desktop não encontrado — instalando via winget..."
+
+    # Detecta arquitetura do Windows
+    WIN_ARCH=$(powershell.exe -Command '$env:PROCESSOR_ARCHITECTURE' 2>/dev/null | tr -d '\r\n' || echo "AMD64")
+    case "${WIN_ARCH}" in
+      ARM64) DOCKER_ARCH="arm64" ;;
+      *)     DOCKER_ARCH="amd64" ;;
+    esac
+
+    # Tenta winget (disponível no Windows 10 1709+ e Windows 11)
+    if powershell.exe -Command "Get-Command winget -ErrorAction SilentlyContinue" 2>/dev/null | grep -q "winget"; then
+      note "Instalando Docker Desktop via winget (${DOCKER_ARCH})..."
+      if powershell.exe -Command "winget install --id Docker.DockerDesktop --architecture ${WIN_ARCH} --silent --accept-package-agreements --accept-source-agreements" 2>/dev/null; then
+        ok "Docker Desktop instalado via winget."
+      else
+        note "winget falhou — tentando download direto..."
+        DOCKER_INSTALLED=false
+      fi
+    fi
+
+    # Fallback: download direto do instalador
+    if [[ "$DOCKER_INSTALLED" == false ]]; then
+      DOCKER_URL="https://desktop.docker.com/win/main/${DOCKER_ARCH}/Docker%20Desktop%20Installer.exe"
+      INSTALLER_PATH=$(powershell.exe -Command '$env:TEMP' 2>/dev/null | tr -d '\r\n' || echo "C:\\Windows\\Temp")
+      INSTALLER_PATH="${INSTALLER_PATH}\\DockerDesktopInstaller.exe"
+      note "Baixando Docker Desktop (${DOCKER_ARCH}) — pode demorar alguns minutos..."
+      if powershell.exe -Command "Invoke-WebRequest -Uri '${DOCKER_URL}' -OutFile '${INSTALLER_PATH}' -UseBasicParsing" 2>/dev/null && \
+         powershell.exe -Command "Start-Process '${INSTALLER_PATH}' -Wait -ArgumentList 'install','--quiet','--accept-license'" 2>/dev/null; then
+        ok "Docker Desktop instalado via download direto."
+      else
+        err "Não foi possível instalar o Docker Desktop automaticamente."
+        note "Instale manualmente: https://docs.docker.com/desktop/install/windows-install/"
+        note "Depois habilite: Settings → Resources → WSL Integration → ${FOUND_DISTRO}"
+      fi
+    fi
+
+    note "Reinicie o Docker Desktop antes de continuar."
+    note "Habilite a integração WSL2: Settings → Resources → WSL Integration → ${FOUND_DISTRO}"
+  fi
+
   step "Reinvocando setup-wsl.sh dentro de ${FOUND_DISTRO}"
   note "Qualquer prompt sudo pedirá a senha do usuário Ubuntu, não do Windows."
   echo ""
