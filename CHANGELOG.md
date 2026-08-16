@@ -21,6 +21,33 @@ export from `payments-api` (empirical upstream) when applicable.
   - Relatório de instalação no final: tabela com nome, descrição, status e detalhe de cada ferramenta
   - Adicionado ao `export-manifest.yaml` e ao gate `validate-export-manifest.sh`
 
+### Changed
+
+- `setup-wsl.sh` e `setup-mac.sh` — `PRODOPS_VERSION` exibida no cabeçalho de execução
+
+### Fixed
+
+- `setup-wsl.sh` — `DOCKER_INSTALLED` não era marcado `true` após instalação via winget,
+  fazendo o fallback de download direto sempre executar mesmo com winget bem-sucedido
+- `setup-mac.sh` — `declare -A` (array associativo) substituído por array indexado simples,
+  corrigindo falha de syntax com bash 3.2 (padrão do macOS) antes da instalação do bash 4
+
+---
+
+## [1.10.0] — 2026-08-16
+
+### Added
+
+- `setup-wsl.sh` — instalação automática do Docker Desktop no contexto Windows (Contexto A):
+  - Detecta Docker via WSL e `Get-Command docker` no Windows
+  - Instala via `winget` (preferencial) com detecção de arquitetura AMD64/ARM64
+  - Fallback para download direto do instalador oficial
+  - Orienta habilitação da integração WSL2 após instalação
+
+- `setup-wsl.sh` — relatório de instalação no final do Contexto B (Ubuntu):
+  - Tabela com tecnologia, descrição, status (`OK` / `JÁ INSTALADO` / `ATENÇÃO` / `FALHOU`) e detalhe
+  - Contador de totais por categoria ao final
+
 ---
 
 ## [1.9.0] — 2026-08-12
