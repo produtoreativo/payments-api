@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # setup-mac.sh — Bootstrap completo de ambiente de desenvolvimento ProdOps para macOS
-# ProdOps Framework v1.11.0
+# ProdOps Framework v1.14.0
 #
 # Instala todas as ferramentas necessárias via Homebrew, clona o repositório
 # payments-api e prepara o projeto para desenvolvimento local.
@@ -20,7 +20,7 @@
 #   0  sucesso
 #   1  macOS não detectado ou erro fatal
 
-PRODOPS_VERSION="v1.11.1"
+PRODOPS_VERSION="v1.14.0"
 
 set -euo pipefail
 

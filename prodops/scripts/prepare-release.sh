@@ -231,12 +231,9 @@ step "Update prodops/runtime/runtime.yaml framework-version to ${VERSION}"
 
 RUNTIME_YAML="${ROOT_DIR}/prodops/runtime/runtime.yaml"
 
-if [[ ! -f "${RUNTIME_YAML}" ]]; then
-  warn "runtime.yaml not found — skipping"
-elif [[ "${DRY_RUN}" == "true" ]]; then
-  dry "Would update framework-version in prodops/runtime/runtime.yaml → ${VERSION}"
-else
-  if python3 - "${RUNTIME_YAML}" "${VERSION}" <<'PYEOF' 2>/dev/null; then
+_bump_framework_version() {
+  local path="$1" ver="$2"
+  python3 - "${path}" "${ver}" <<'PYEOF' 2>/dev/null
 import sys, re
 path, version = sys.argv[1], sys.argv[2]
 content = open(path).read()
@@ -247,11 +244,81 @@ content = re.sub(
 )
 open(path, 'w').write(content)
 PYEOF
+}
+
+if [[ ! -f "${RUNTIME_YAML}" ]]; then
+  warn "runtime.yaml not found — skipping"
+elif [[ "${DRY_RUN}" == "true" ]]; then
+  dry "Would update framework-version in prodops/runtime/runtime.yaml → ${VERSION}"
+else
+  if _bump_framework_version "${RUNTIME_YAML}" "${VERSION}"; then
     ok "Updated runtime.yaml framework-version → ${VERSION}"
   else
     warn "Could not update runtime.yaml automatically — update framework-version manually"
   fi
 fi
+
+# ── Step 6c: Bump framework-version in runtime.yaml.example ──────────────────
+
+step "Update prodops/runtime/runtime.yaml.example framework-version to ${VERSION}"
+
+RUNTIME_EXAMPLE="${ROOT_DIR}/prodops/runtime/runtime.yaml.example"
+
+if [[ ! -f "${RUNTIME_EXAMPLE}" ]]; then
+  warn "runtime.yaml.example not found — skipping"
+elif [[ "${DRY_RUN}" == "true" ]]; then
+  dry "Would update framework-version in prodops/runtime/runtime.yaml.example → ${VERSION}"
+else
+  if _bump_framework_version "${RUNTIME_EXAMPLE}" "${VERSION}"; then
+    ok "Updated runtime.yaml.example framework-version → ${VERSION}"
+  else
+    warn "Could not update runtime.yaml.example automatically — update framework-version manually"
+  fi
+fi
+
+# ── Step 6d: Bump PRODOPS_VERSION in setup-wsl.sh and setup-mac.sh ───────────
+
+step "Update PRODOPS_VERSION in setup-wsl.sh and setup-mac.sh to ${VERSION}"
+
+for _setup_script in \
+  "${ROOT_DIR}/prodops/scripts/setup-wsl.sh" \
+  "${ROOT_DIR}/prodops/scripts/setup-mac.sh"; do
+
+  _script_name="$(basename "${_setup_script}")"
+
+  if [[ ! -f "${_setup_script}" ]]; then
+    warn "${_script_name} not found — skipping"
+    continue
+  fi
+
+  if [[ "${DRY_RUN}" == "true" ]]; then
+    dry "Would update PRODOPS_VERSION and header comment in ${_script_name} → ${VERSION}"
+    continue
+  fi
+
+  if python3 - "${_setup_script}" "${VERSION}" <<'PYEOF' 2>/dev/null; then
+import sys, re
+path, version = sys.argv[1], sys.argv[2]
+content = open(path).read()
+# Update variable assignment: PRODOPS_VERSION="vX.Y.Z"
+content = re.sub(
+    r'(PRODOPS_VERSION=)["\'].*?["\']',
+    r'\g<1>"' + version + '"',
+    content,
+)
+# Update comment header: # ProdOps Framework vX.Y.Z
+content = re.sub(
+    r'(# ProdOps Framework )v[\d.]+',
+    r'\g<1>' + version,
+    content,
+)
+open(path, 'w').write(content)
+PYEOF
+    ok "Updated ${_script_name}: PRODOPS_VERSION → ${VERSION}"
+  else
+    warn "Could not update ${_script_name} automatically — update PRODOPS_VERSION manually"
+  fi
+done
 
 # ── Step 7: Print checklist for framework repo root READMEs ──────────────────
 

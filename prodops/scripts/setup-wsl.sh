@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # setup-wsl.sh — Bootstrap completo de ambiente de desenvolvimento ProdOps
-# ProdOps Framework v1.11.0
+# ProdOps Framework v1.14.0
 #
 # Contextos de execução detectados automaticamente:
 #
@@ -22,7 +22,7 @@
 #   0  sucesso (ou Ubuntu instalado e aguardando re-execução)
 #   1  erro fatal ou SO não suportado
 
-PRODOPS_VERSION="v1.11.1"
+PRODOPS_VERSION="v1.14.0"
 
 # ── Cores e helpers ────────────────────────────────────────────────────────────
 
@@ -372,9 +372,76 @@ elif is_wsl; then
   fi
 
   if [[ "$DOCKER_WIN_OK" == true ]]; then
-    note "Reinicie o Docker Desktop e habilite a integração WSL2:"
-    note "  Settings → Resources → WSL Integration → Enable for this distro"
-    report_warn "Docker Desktop" "Containers para LocalStack (DynamoDB local)" "Instalado no Windows — reinicie e habilite integração WSL2"
+    # Habilita integração WSL2 automaticamente via settings do Docker Desktop
+    _DISTRO="${WSL_DISTRO_NAME:-Ubuntu-24.04}"
+    _WIN_USER=$(powershell.exe -Command '$env:USERNAME' 2>/dev/null | tr -d '\r\n' || echo "")
+    _DOCKER_SETTINGS=""
+
+    if [[ -n "$_WIN_USER" ]]; then
+      _DOCKER_BASE="/mnt/c/Users/${_WIN_USER}/AppData/Roaming/Docker"
+      # Inicia Docker Desktop para que ele crie o arquivo de settings (primeira execução)
+      note "Iniciando Docker Desktop para criar as configurações iniciais..."
+      powershell.exe -Command \
+        "Start-Process 'C:\Program Files\Docker\Docker\Docker Desktop.exe' -ErrorAction SilentlyContinue" \
+        2>/dev/null || true
+      # Aguarda até 30 s pelo arquivo de settings
+      for _i in $(seq 1 15); do
+        for _sf in "settings-store.json" "settings.json"; do
+          if [[ -f "${_DOCKER_BASE}/${_sf}" ]]; then
+            _DOCKER_SETTINGS="${_DOCKER_BASE}/${_sf}"
+            break 2
+          fi
+        done
+        sleep 2
+      done
+    fi
+
+    if [[ -n "$_DOCKER_SETTINGS" ]]; then
+      cp "$_DOCKER_SETTINGS" "${_DOCKER_SETTINGS}.bak.$(date +%Y%m%d%H%M%S)" 2>/dev/null || true
+      _TMP=$(mktemp)
+      if jq --arg d "$_DISTRO" '
+        .wslEngineEnabled = true |
+        .enableIntegrationWithDefaultWslDistro = true |
+        if .integratedWslDistros == null then .integratedWslDistros = [$d]
+        elif (.integratedWslDistros | index($d)) == null then .integratedWslDistros += [$d]
+        else . end
+      ' "$_DOCKER_SETTINGS" > "$_TMP" 2>/dev/null && mv "$_TMP" "$_DOCKER_SETTINGS"; then
+        ok "Integração WSL2 habilitada para ${_DISTRO} em $(basename "$_DOCKER_SETTINGS")."
+        note "Reiniciando Docker Desktop para aplicar as configurações..."
+        powershell.exe -Command \
+          "Stop-Process -Name 'Docker Desktop' -Force -ErrorAction SilentlyContinue" \
+          2>/dev/null || true
+        sleep 3
+        powershell.exe -Command \
+          "Start-Process 'C:\Program Files\Docker\Docker\Docker Desktop.exe'" \
+          2>/dev/null || true
+        # Aguarda daemon ficar acessível (até 60 s)
+        _retries=30
+        while [[ $_retries -gt 0 ]]; do
+          docker info >/dev/null 2>&1 && break
+          sleep 2
+          _retries=$((_retries - 1))
+        done
+        if docker info >/dev/null 2>&1; then
+          DOCK_V=$(docker --version | awk '{print $3}' | tr -d ',')
+          ok "Docker daemon acessível — ${DOCK_V}"
+          report_ok "Docker Desktop" "Containers para LocalStack (DynamoDB local)" "${DOCK_V} — integração WSL2 habilitada"
+        else
+          report_warn "Docker Desktop" "Containers para LocalStack (DynamoDB local)" \
+            "Instalado e integração WSL2 configurada — daemon ainda não acessível (aguarde e tente novamente)"
+        fi
+      else
+        note "Falha ao atualizar $(basename "$_DOCKER_SETTINGS") — habilite manualmente:"
+        note "  Docker Desktop → Settings → Resources → WSL Integration → ${_DISTRO}"
+        report_warn "Docker Desktop" "Containers para LocalStack (DynamoDB local)" \
+          "Instalado — habilite integração WSL2 manualmente para ${_DISTRO}"
+      fi
+    else
+      note "Arquivo de settings do Docker Desktop não encontrado — pode ser necessário abri-lo uma vez."
+      note "Após abrir, habilite: Settings → Resources → WSL Integration → ${_DISTRO}"
+      report_warn "Docker Desktop" "Containers para LocalStack (DynamoDB local)" \
+        "Instalado — settings não encontrado; habilite integração WSL2 manualmente"
+    fi
   else
     note "Alternativa: instalar Docker Engine direto no WSL:"
     note "  curl -fsSL https://get.docker.com | sh"

@@ -247,6 +247,40 @@ for f in "${export_files[@]}"; do
   cp "${src}" "${dest}"
 done
 
+# ── Step 6b: Copy root files (AGENTS.md, CLAUDE.md) to framework repo root ───
+# These files are declared under export.root_files in export-manifest.yaml.
+# CLAUDE.md: if the destination already has a different version, back it up with
+# the framework version before overwriting, so history is never lost.
+
+FRAMEWORK_REPO_SRC="${ROOT_DIR}/prodops/scripts/framework-repo"
+if [[ -d "${FRAMEWORK_REPO_SRC}" ]]; then
+  FRAMEWORK_VERSION=$(python3 -c "
+import sys, re
+try:
+  content = open('${ROOT_DIR}/prodops/exec/framework-lock.yaml').read()
+  m = re.search(r'^\s*version:\s*[\"\'](.*?)[\"\']', content, re.M)
+  print(m.group(1) if m else 'unknown')
+except Exception:
+  print('unknown')
+" 2>/dev/null || echo "unknown")
+
+  if [[ -f "${FRAMEWORK_REPO_SRC}/CLAUDE.md" ]]; then
+    if [[ -f "${DEST_DIR}/CLAUDE.md" ]] && \
+       ! diff -q "${DEST_DIR}/CLAUDE.md" "${FRAMEWORK_REPO_SRC}/CLAUDE.md" >/dev/null 2>&1; then
+      CLAUDE_BAK="${DEST_DIR}/CLAUDE.md.${FRAMEWORK_VERSION}.bak"
+      cp "${DEST_DIR}/CLAUDE.md" "${CLAUDE_BAK}"
+      log "Versioned existing CLAUDE.md → CLAUDE.md.${FRAMEWORK_VERSION}.bak"
+    fi
+    cp "${FRAMEWORK_REPO_SRC}/CLAUDE.md" "${DEST_DIR}/CLAUDE.md"
+    log "Copied framework-repo/CLAUDE.md → repo root CLAUDE.md"
+  fi
+
+  if [[ -f "${FRAMEWORK_REPO_SRC}/AGENTS.md" ]]; then
+    cp "${FRAMEWORK_REPO_SRC}/AGENTS.md" "${DEST_DIR}/AGENTS.md"
+    log "Copied framework-repo/AGENTS.md → repo root AGENTS.md"
+  fi
+fi
+
 # ── Step 7: Validate exported file count ─────────────────────────────────────
 # doctor.sh is designed for product repos and expects artifacts/, exec/, skills/local/
 # which are intentionally absent from the framework repo. A dedicated framework-doctor.sh

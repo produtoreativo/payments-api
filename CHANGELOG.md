@@ -7,6 +7,97 @@ export from `payments-api` (empirical upstream) when applicable.
 
 ---
 
+## [1.14.0] — 2026-08-16
+
+### Fixed
+
+- `prodops/scripts/install-prodops.sh` — corrigidos todos os gaps de instalação em fresh install:
+
+  **Step 5b** — `runtime.yaml` auto-criado a partir de `runtime.yaml.example` quando ausente;
+  `framework-version` já atualizado para a versão instalada; emite manual step apenas para
+  preencher valores produto-específicos (org, project number, Datadog service, CloudEvents source).
+  Antes: pulava com SKIP e deixava o runtime completamente inoperante.
+
+  **Step 7** — `prodops/exec/manifest.yaml` pré-preenchido com `product.name`,
+  `product.repository` e `github.repository` derivados do `basename` do diretório-alvo;
+  manual step atualizado para listar apenas os 4 campos que realmente precisam de input humano
+  (`<GITHUB_ORG>`, `<SERVICE_NAME>`, `<PROJECT_NAME>`, `github.projects.number`).
+  Antes: todos os campos eram `<PLACEHOLDER>`, incluindo nome e repositório.
+
+  **Step 8** — novos arquivos seed criados para eliminar os 5 FAILs garantidos do `doctor.sh`:
+  - `prodops/README.md` — template com nome do produto, tabela de jornadas e links rápidos;
+    lido obrigatoriamente pelo agente na primeira sessão via AGENTS.md
+  - `prodops/skills/local/README.md` — README mínimo com nome do produto
+  - `prodops/skills/references/local/README.md` — README de referências
+  - `prodops/skills/references/local/engineering/clean-code/` — diretório com `.gitkeep`
+  - `prodops/skills/references/local/engineering/ddd/` — diretório com `.gitkeep`
+  - `prodops/scripts/local/README.md` — README de scripts locais
+  Antes: todos esses caminhos ficavam ausentes e causavam FAILs no doctor.sh a cada fresh install.
+
+- `prodops/scripts/check-env.sh` — banner de cabeçalho agora exibe o nome do produto
+  dinamicamente (derivado de `prodops/exec/manifest.yaml` → `git rev-parse --show-toplevel`
+  → "ProdOps" como fallback); caixa com largura adaptável ao tamanho do nome.
+  Antes: "clawfight" estava hardcoded no script canônico, exibindo o nome errado em qualquer
+  outro repositório consumidor.
+
+---
+
+## [1.13.0] — 2026-08-16
+
+### Added
+
+- `prodops/scripts/framework-repo/AGENTS.md` — guia do agente para o repositório
+  `prodops-framework` em si, exportado como `AGENTS.md` na raiz do framework:
+  - Seção ⚠️ prominente com a regra crítica de versionamento
+  - Tabela de arquivos que devem ser atualizados a cada bump de versão
+  - Protocolo de review de PRs de export
+  - Descrição da estrutura do repositório e o que pode ser editado diretamente
+
+- `prodops/scripts/framework-repo/CLAUDE.md` — instrução para Claude Code operando
+  no repositório do framework, exportado como `CLAUDE.md` na raiz do framework:
+  - Aponta para `AGENTS.md` como fonte de autoridade
+  - Repete a regra de versão de forma concisa para acesso rápido por agentes
+  - Avisa que scripts canônicos não devem ser editados diretamente no framework repo
+
+### Changed
+
+- `prodops/exec/export-manifest.yaml` — adicionada seção `root_files:` que declara
+  `AGENTS.md` e `CLAUDE.md` como arquivos exportados para a raiz do framework repo
+  (não sob `prodops/`); `CLAUDE.md` marcado como `versioned: true`
+
+- `prodops/scripts/export-framework.sh` — novo Step 6b que copia
+  `scripts/framework-repo/AGENTS.md` e `scripts/framework-repo/CLAUDE.md` para
+  a raiz do repo destino; `CLAUDE.md` é versionado antes de ser sobrescrito:
+  backup nomeado `CLAUDE.md.<versão>.bak` quando o conteúdo diverge
+
+- `prodops/scripts/install-prodops.sh` — backup de `CLAUDE.md` e `AGENTS.md`
+  em updates agora usa o número da versão anterior em vez de timestamp:
+  `CLAUDE.md.v1.X.Y.bak` / `AGENTS.md.v1.X.Y.bak` — identifica com clareza
+  qual versão do framework cada backup corresponde
+
+### Gate
+
+- `prodops/scripts/validate-export-manifest.sh` — dois novos checks:
+  1. **Versão sync**: `PRODOPS_VERSION` em `setup-wsl.sh` e `setup-mac.sh`
+     deve ser igual à versão em `framework-lock.yaml`; falha o export se divergir
+  2. **Root files presentes**: `scripts/framework-repo/AGENTS.md` e
+     `scripts/framework-repo/CLAUDE.md` devem existir antes do export
+
+---
+
+## [1.12.0] — 2026-08-16
+
+### Changed
+
+- `prodops/scripts/setup-wsl.sh` — integração WSL2 do Docker Desktop agora é habilitada automaticamente após a instalação:
+  - Inicia o Docker Desktop via PowerShell para gerar o arquivo de settings (`settings-store.json` / `settings.json`)
+  - Aguarda até 30 s pela criação do arquivo (primeira execução)
+  - Usa `jq` para habilitar `wslEngineEnabled`, `enableIntegrationWithDefaultWslDistro` e adicionar a distro atual a `integratedWslDistros`
+  - Reinicia o Docker Desktop via PowerShell e aguarda até 60 s pelo daemon
+  - Fallback com instrução manual caso o arquivo de settings não seja encontrado ou a atualização falhe
+
+---
+
 ## [1.11.0] — 2026-08-16
 
 ### Added

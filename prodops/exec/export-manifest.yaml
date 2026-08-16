@@ -38,6 +38,8 @@ export:
     - scripts/install-claude.sh
     - scripts/agents/materialize-agents.sh
     - scripts/agents/materialize-skills.sh
+    - scripts/framework-repo/AGENTS.md
+    - scripts/framework-repo/CLAUDE.md
     - agents/**
     - scripts/sync-from-framework.sh
     - scripts/README.md
@@ -65,6 +67,16 @@ export:
     - runtime/scripts/project-cleanup.sh
     - runtime/scripts/create-github-views.sh
     - runtime/runtime.yaml.example
+  root_files:
+    # Files placed at the ROOT of the framework repo (not under prodops/).
+    # Managed here and exported by export-framework.sh as a dedicated step.
+    # CLAUDE.md is versioned on update: existing file is backed up as CLAUDE.md.<version>.bak
+    - source: scripts/framework-repo/AGENTS.md
+      dest: AGENTS.md
+    - source: scripts/framework-repo/CLAUDE.md
+      dest: CLAUDE.md
+      versioned: true
+
   exclude:
     - skills/local/**
     - skills/references/local/**

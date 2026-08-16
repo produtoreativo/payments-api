@@ -52,6 +52,7 @@ update_lock_file() {
   if command -v python3 >/dev/null 2>&1; then
     python3 - "${lock_path}" "${new_version}" <<'PYEOF'
 import sys, re
+from datetime import date
 
 lock_file = sys.argv[1]
 new_version = sys.argv[2]
@@ -59,8 +60,7 @@ new_version = sys.argv[2]
 with open(lock_file, 'r') as f:
     content = f.read()
 
-# Replace version field under prodops_framework block.
-# Matches: "  version: ..." (indented, within prodops_framework section)
+# Replace version: (first occurrence — under prodops_framework block)
 content = re.sub(
     r'(\bversion:\s*)["\']?[^\n"\'#]+["\']?',
     lambda m: m.group(1) + '"' + new_version + '"',
@@ -68,10 +68,25 @@ content = re.sub(
     count=1
 )
 
-# Replace drift.status value
+# Replace installed_version and available_version in drift block
+for field in ('installed_version', 'available_version'):
+    content = re.sub(
+        r'(' + field + r':\s*)["\']?[^\n"\'#]+["\']?',
+        lambda m, v=new_version: m.group(1) + '"' + v + '"',
+        content,
+        count=1
+    )
+
+# Reset drift.status to ok and update last_checked
 content = re.sub(
     r'(drift:\s*\n\s*status:\s*)\S+',
     lambda m: m.group(1) + 'ok',
+    content,
+    count=1
+)
+content = re.sub(
+    r'(last_checked:\s*)["\']?[^\n"\'#]+["\']?',
+    lambda m: m.group(1) + '"' + date.today().isoformat() + '"',
     content,
     count=1
 )
@@ -79,14 +94,21 @@ content = re.sub(
 with open(lock_file, 'w') as f:
     f.write(content)
 PYEOF
-    info "Updated ${lock_path}: version=${new_version}, drift.status=ok (via python3)"
+    info "Updated ${lock_path}: version/installed_version/available_version=${new_version}, drift.status=ok, last_checked=$(date +%Y-%m-%d) (via python3)"
   else
-    # Portable sed: write to temp then move (avoids -i portability issues)
+    # Portable sed fallback
     local tmp
     tmp=$(mktemp)
-    sed "s/version: \"[^\"]*\"/version: \"${new_version}\"/" "${lock_path}" > "${tmp}"
-    mv "${tmp}" "${lock_path}"
-    info "Updated ${lock_path}: version=${new_version} (via sed; drift.status may need manual update)"
+    TODAY_DATE=$(date +%Y-%m-%d)
+    sed \
+      -e "s/\(installed_version: \)\"[^\"]*\"/\1\"${new_version}\"/" \
+      -e "s/\(available_version: \)\"[^\"]*\"/\1\"${new_version}\"/" \
+      -e "s/\(last_checked: \)\"[^\"]*\"/\1\"${TODAY_DATE}\"/" \
+      "${lock_path}" > "${tmp}"
+    # version: (first occurrence only, avoid matching installed_version)
+    sed -e "0,/\bversion: /s/\(version: \)\"[^\"]*\"/\1\"${new_version}\"/" "${tmp}" > "${lock_path}"
+    rm -f "${tmp}"
+    info "Updated ${lock_path}: all version fields → ${new_version} (via sed)"
   fi
 }
 

@@ -71,13 +71,73 @@ done
 
 # ── Canonical scripts included ────────────────────────────────────────────────
 
-for script in "scripts/doctor.sh" "scripts/validate-manifest.sh" "scripts/check-env.sh" "scripts/setup-wsl.sh" "scripts/setup-mac.sh"; do
+for script in "scripts/doctor.sh" "scripts/validate-manifest.sh" "scripts/check-env.sh" "scripts/setup-wsl.sh" "scripts/setup-mac.sh" "scripts/framework-repo/AGENTS.md" "scripts/framework-repo/CLAUDE.md"; do
   if grep -qF "${script}" "${MANIFEST}" 2>/dev/null; then
     pass "canonical script included: ${script}"
   else
     fail "canonical script not included: ${script}"
   fi
 done
+
+# ── Framework repo root files present ────────────────────────────────────────
+
+for root_file in "prodops/scripts/framework-repo/AGENTS.md" "prodops/scripts/framework-repo/CLAUDE.md"; do
+  check_path "${root_file}"
+done
+
+# ── PRODOPS_VERSION in scripts must match framework-lock.yaml ─────────────────
+# This gate enforces the rule: runtime version always tracks framework version.
+
+LOCK_FILE="prodops/exec/framework-lock.yaml"
+if [[ -f "${LOCK_FILE}" ]] && command -v python3 >/dev/null 2>&1; then
+  LOCK_VERSION=$(python3 -c "
+import sys, re
+content = open('${LOCK_FILE}').read()
+m = re.search(r'^\s*version:\s*[\"\'](.*?)[\"\']', content, re.M)
+print(m.group(1) if m else '')
+" 2>/dev/null || echo "")
+  if [[ -n "${LOCK_VERSION}" ]]; then
+    for script in "prodops/scripts/setup-wsl.sh" "prodops/scripts/setup-mac.sh"; do
+      if [[ -f "${script}" ]]; then
+        SCRIPT_VERSION=$(python3 -c "
+import sys, re
+content = open('${script}').read()
+m = re.search(r'PRODOPS_VERSION=[\"\'](.*?)[\"\']', content)
+print(m.group(1) if m else '')
+" 2>/dev/null || echo "")
+        if [[ "${SCRIPT_VERSION}" == "${LOCK_VERSION}" ]]; then
+          pass "PRODOPS_VERSION matches in $(basename "${script}"): ${SCRIPT_VERSION}"
+        else
+          fail "PRODOPS_VERSION mismatch in $(basename "${script}"): expected ${LOCK_VERSION}, got '${SCRIPT_VERSION}'"
+        fi
+      else
+        fail "Script not found for version check: ${script}"
+      fi
+    done
+
+    # runtime.yaml.example must also carry the current framework version
+    RUNTIME_EXAMPLE="prodops/runtime/runtime.yaml.example"
+    if [[ -f "${RUNTIME_EXAMPLE}" ]]; then
+      RUNTIME_VERSION=$(python3 -c "
+import sys, re
+content = open('${RUNTIME_EXAMPLE}').read()
+m = re.search(r'framework-version:\s*[\"\'](.*?)[\"\']', content)
+print(m.group(1) if m else '')
+" 2>/dev/null || echo "")
+      if [[ "${RUNTIME_VERSION}" == "${LOCK_VERSION}" ]]; then
+        pass "framework-version matches in runtime.yaml.example: ${RUNTIME_VERSION}"
+      else
+        fail "framework-version mismatch in runtime.yaml.example: expected ${LOCK_VERSION}, got '${RUNTIME_VERSION}'"
+      fi
+    else
+      fail "runtime.yaml.example not found — cannot verify framework-version"
+    fi
+  else
+    skip "Could not read version from framework-lock.yaml — version sync check skipped"
+  fi
+else
+  skip "framework-lock.yaml or python3 not available — version sync check skipped"
+fi
 
 # ── Exportable root directories exist ────────────────────────────────────────
 

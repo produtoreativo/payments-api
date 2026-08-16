@@ -53,10 +53,45 @@ sys.exit(0 if a >= b else 1)
 }
 
 # ── Cabeçalho ─────────────────────────────────────────────────────────────────
-echo ""
-echo -e "${BOLD}╔══════════════════════════════════════════╗${RESET}"
-echo -e "${BOLD}║   clawfight — verificação de ambiente    ║${RESET}"
-echo -e "${BOLD}╚══════════════════════════════════════════╝${RESET}"
+# Deriva o nome do produto: manifest.yaml > basename do repo git > "ProdOps"
+_PRODUCT=$(python3 -c "
+import re, os, subprocess, sys
+try:
+    c = open('prodops/exec/manifest.yaml').read()
+    m = re.search(r\"name:\s*[\\\"'](.*?)[\\\"']\", c, re.M)
+    if m and '<' not in m.group(1):
+        print(m.group(1)); sys.exit()
+except Exception:
+    pass
+try:
+    r = subprocess.run(['git', 'rev-parse', '--show-toplevel'],
+                       capture_output=True, text=True)
+    print(os.path.basename(r.stdout.strip()))
+except Exception:
+    print('ProdOps')
+" 2>/dev/null || basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")
+
+_banner_fallback() {
+  echo ""
+  echo -e "${BOLD}╔══════════════════════════════════════════╗${RESET}"
+  echo -e "${BOLD}║   ProdOps — verificação de ambiente      ║${RESET}"
+  echo -e "${BOLD}╚══════════════════════════════════════════╝${RESET}"
+}
+
+python3 - "${_PRODUCT}" <<'BANNER_EOF' 2>/dev/null || _banner_fallback
+import sys
+prod  = sys.argv[1]
+bold  = "\033[1m"
+reset = "\033[0m"
+inner = f"   {prod} — verificação de ambiente"
+width = max(42, len(inner) + 2)
+bar   = "═" * width
+line  = inner.ljust(width)
+print()
+print(f"{bold}╔{bar}╗{reset}")
+print(f"{bold}║{line}║{reset}")
+print(f"{bold}╚{bar}╝{reset}")
+BANNER_EOF
 
 # ══════════════════════════════════════════════════════════════════════════════
 section "1. Runtime — Node.js e npm"
