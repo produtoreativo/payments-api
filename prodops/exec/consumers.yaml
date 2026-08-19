@@ -2,3 +2,9 @@
 # Each entry receives a workflow_dispatch when a new framework release is published.
 consumers:
   - repo: produtoreativo/payments-api
+  - repo: produtoreativo/prodops-portfolio
+  - repo: produtoreativo/prodops-workspace
+  - repo: produtoreativo/webshop
+  - repo: produtoreativo/webshop-api
+  - repo: produtoreativo/search-api
+  - repo: produtoreativo/order-mngt-api
