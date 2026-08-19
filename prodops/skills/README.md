@@ -55,7 +55,7 @@ Framework não depende delas. Ver [`local/README.md`](local/README.md).
 
 | Skill | Propósito | Link |
 |---|---|---|
-| `payments-api-local-testing` | Execução e validação de testes locais com contratos de pagamento | [local/payments-api-local-testing/SKILL.md](local/payments-api-local-testing/SKILL.md) |
+| _(adicione aqui as skills locais deste produto)_ | — | — |
 
 ## Referências de engenharia
 

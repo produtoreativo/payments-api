@@ -366,6 +366,15 @@ prodops/scripts/local/
 
 # ── Product-local references ──────────────────────────────────────────────────
 prodops/skills/references/local/
+
+# ── Root-level files owned by the product ────────────────────────────────────
+# README.md and README.en.md are product documentation; the Framework ships its
+# own root README that only makes sense in the framework repository.
+# consumers.yaml belongs to the framework repo (lists its own consumers) and
+# must not land in product repositories.
+README.md
+README.en.md
+consumers.yaml
 IGNORE
   ok "Created .prodopsignore"
 else

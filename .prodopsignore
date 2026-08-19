@@ -37,3 +37,12 @@ prodops/skills/references/local/
 # Automações e adaptadores locais, não portáveis para outros produtos.
 # Scripts canônicos (doctor.sh, validate-manifest.sh) permanecem no root de scripts/.
 prodops/scripts/local/
+
+# ── Arquivos root do produto ─────────────────────────────────────────────────
+# README.md/README.en.md são documentação do produto; o Framework exporta seu
+# próprio README que só faz sentido no repositório canônico.
+# consumers.yaml pertence ao repositório do Framework (lista seus consumidores)
+# e não deve existir em repositórios de produto.
+README.md
+README.en.md
+consumers.yaml
