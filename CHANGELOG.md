@@ -7,6 +7,28 @@ export from `payments-api` (empirical upstream) when applicable.
 
 ---
 
+## [1.14.1] — 2026-08-20
+
+### Fixed
+
+- `.prodopsignore` — adicionadas entradas `README.md`, `README.en.md` e `consumers.yaml` ao
+  `.prodopsignore` raiz da RI; evita que o Framework sobrescreva documentação e `consumers.yaml`
+  do produto consumer a cada sync.
+
+- `prodops/scripts/install-prodops.sh` — seed do `.prodopsignore` gerado em fresh install agora
+  inclui as mesmas 3 entradas (`README.md`, `README.en.md`, `consumers.yaml`); sem esta correção,
+  o primeiro sync após a instalação sobrescrevia os arquivos root do produto.
+
+- `prodops/skills/README.md` + `README.en.md` — removida referência produto-específica
+  `payments-api-local-testing` que causava `BROKEN_LINK` no `doctor.sh` de qualquer repositório
+  consumer; substituída por placeholder genérico.
+
+- `prodops/exec/consumers.yaml` — registrados 6 repositórios consumidores
+  (`prodops-portfolio`, `prodops-workspace`, `webshop`, `webshop-api`, `search-api`,
+  `order-mngt-api`) para habilitar CI dispatch automático via `notify-consumers.yml`.
+
+---
+
 ## [1.14.0] — 2026-08-16
 
 ### Fixed

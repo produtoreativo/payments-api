@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # setup-wsl.sh — Bootstrap completo de ambiente de desenvolvimento ProdOps
-# ProdOps Framework v1.14.0
+# ProdOps Framework v1.14.1
 #
 # Contextos de execução detectados automaticamente:
 #
@@ -22,7 +22,7 @@
 #   0  sucesso (ou Ubuntu instalado e aguardando re-execução)
 #   1  erro fatal ou SO não suportado
 
-PRODOPS_VERSION="v1.14.0"
+PRODOPS_VERSION="v1.14.1"
 
 # ── Cores e helpers ────────────────────────────────────────────────────────────
 
