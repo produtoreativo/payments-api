@@ -4,7 +4,8 @@
 # Layout:
 #   Linha 1 (KPIs): Iteration Ativas | DONE | Bloqueios | Lead Time
 #   Linha 2 (Jornadas): Funil | Delivery Journey phases (×8) | Diligence Status (×4)
-#   Linha 3 (Exceptions): BLOQUEIO | DRIFT | REPAIR | CLOSED
+#   Linha 3 (Cycle Time): Cycle Time por Phase (×7)
+#   Linha 4 (Exceptions): BLOQUEIO | DRIFT | REPAIR | CLOSED
 #
 # Métricas:
 #   runtime.event.received        — delivery events (tag event = CE type)
@@ -22,7 +23,7 @@ DASHBOARDS_DIR="${SCRIPT_DIR}/dashboards"
 EVIDENCE_DIR="${REPO_ROOT}/prodops/artifacts/experiments/014-diligence-tracks-delivery/evidence/executive-dashboard"
 ARTIFACTS_DIR="${REPO_ROOT}/prodops/artifacts/runtime"
 DD_SITE="${DD_SITE:-datadoghq.com}"
-VERSION="3.4.0"
+VERSION="3.5.0"
 
 # ─── credentials ────────────────────────────────────────────────────────────
 if [[ ! -f "$ENV_FILE" ]]; then
@@ -50,7 +51,9 @@ echo ""
 # Grupo B — Funil        : y=3,  h=7  | 1 × ts  (x=0 w=12 h=6)
 # Grupo C — Delivery     : y=10, h=5  | 8 × qv  (4 por linha, w=3 h=2)
 # Grupo D — Diligence    : y=15, h=3  | 4 × qv  (x=0,3,6,9  w=3 h=2)
-# Grupo E — Exceptions   : y=18, h=3  | 4 × qv  (x=0,3,6,9  w=3 h=2)
+# Grupo E — Cycle Time S : y=18, h=4  | 7 × qv  (Started por phase)
+# Grupo F — Cycle Time C : y=22, h=4  | 7 × qv  (Completed por phase)
+# Grupo G — Exceptions   : y=26, h=3  | 4 × qv  (x=0,3,6,9  w=3 h=2)
 DASHBOARD_JSON=$(python3 - <<'PYEOF'
 import json
 
@@ -122,6 +125,16 @@ EXCEPTION = [
     ("✅ CLOSED",  "prodops.diligence.close.completed",      "white_on_green"),
 ]
 
+CYCLE_TIME_PHASES = [
+    ("Bootstrap", "prodops.delivery.bootstrap.started", "prodops.delivery.bootstrap.completed"),
+    ("Hack",      "prodops.delivery.hack.started",      "prodops.delivery.hack.completed"),
+    ("Sync",      "prodops.delivery.sync.started",      "prodops.delivery.sync.completed"),
+    ("Finish",    "prodops.delivery.finish.started",    "prodops.delivery.finish.completed"),
+    ("Ship",      "prodops.delivery.ship.started",      "prodops.delivery.ship.completed"),
+    ("Validate",  "prodops.delivery.validate.started",  "prodops.delivery.validate.completed"),
+    ("Promote",   "prodops.delivery.promote.started",   "prodops.delivery.promote.completed"),
+]
+
 # 4 sub-widgets na mesma linha, cada um w=3
 def four_across(items_fn):
     return [items_fn(i) for i in range(4)]
@@ -166,9 +179,30 @@ widgets = [
           for i, (label, event) in enumerate(DILIGENCE_PHASES)]
     ]),
 
-    # ── E — Exception Paths (y=18, h=3): 4 em linha ────────────────────────
-    group("E — Exception Paths — BLOQUEIO · DRIFT · REPAIR · CLOSED",
-          "vivid_red", gx=0, gy=18, gw=12, gh=3, sub_widgets=[
+    # ── E — Cycle Time por Phase (y=18, h=4): 7 fases de delivery ───────────
+    # Cycle time tracking: exibe contadores de Started e Completed por phase
+    # para análise de tendência de cycle time (ratio de completed/started)
+    # Futuro: implementar log-based metric ou gauge explícito para duração em segundos
+    group("E — Cycle Time Tracking por Phase", "vivid_yellow", gx=0, gy=18, gw=12, gh=4, sub_widgets=[
+        *[qv(f"{label} (S)",
+             f"sum:runtime.event.received{{event:{started},{BASE},iteration:$iteration_id}}.as_count()",
+             x=(i % 4) * 3, y=(i // 4) * 2, w=3, h=2,
+             palette="white_on_blue")
+          for i, (label, started, completed) in enumerate(CYCLE_TIME_PHASES)]
+    ]),
+
+    # ── F — Cycle Time Completed por Phase (y=22, h=4): 7 fases de delivery ───
+    group("F — Cycle Time Completed por Phase", "vivid_blue", gx=0, gy=22, gw=12, gh=4, sub_widgets=[
+        *[qv(f"{label} (C)",
+             f"sum:runtime.event.received{{event:{completed},{BASE},iteration:$iteration_id}}.as_count()",
+             x=(i % 4) * 3, y=(i // 4) * 2, w=3, h=2,
+             palette="white_on_green")
+          for i, (label, started, completed) in enumerate(CYCLE_TIME_PHASES)]
+    ]),
+
+    # ── G — Exception Paths (y=26, h=3): 4 em linha ────────────────────────
+    group("G — Exception Paths — BLOQUEIO · DRIFT · REPAIR · CLOSED",
+          "vivid_red", gx=0, gy=26, gw=12, gh=3, sub_widgets=[
         *[qv(label,
              f"sum:runtime.diligence.event.received{{event:{event},{BASE}}}.as_count()",
              x=i * 3, y=0, w=3, h=2, palette=palette)
@@ -179,8 +213,8 @@ widgets = [
 dashboard = {
     "title": "ProdOps Runtime — Delivery & Diligence v3",
     "description": (
-        "v3.4.0 | Ordered+fixed com grupos — layout 12-col responsivo. "
-        "A: KPIs | B: Funil | C: Delivery Journey ×8 | D: Diligence ×4 | E: Exception Paths ×4"
+        "v3.5.0 | Ordered+fixed com grupos — layout 12-col responsivo. "
+        "A: KPIs | B: Funil | C: Delivery Journey ×8 | D: Diligence ×4 | E: Cycle Time Started ×7 | F: Cycle Time Completed ×7 | G: Exception Paths ×4"
     ),
     "layout_type": "ordered",
     "reflow_type": "fixed",
@@ -189,7 +223,8 @@ dashboard = {
     "template_variables": [
         {"name": "service", "prefix": "service", "default": "payments-api"},
         {"name": "env",     "prefix": "env",     "default": "development"},
-        {"name": "issue",   "prefix": "issue",   "default": "*"}
+        {"name": "issue",   "prefix": "issue",   "default": "*"},
+        {"name": "iteration_id", "prefix": "iteration", "default": "*"}
     ]
 }
 print(json.dumps(dashboard, indent=2))
@@ -239,17 +274,19 @@ meta = {
     "version": "${VERSION}",
     "dashboard-id": "${DASH_ID}",
     "dashboard-url": "https://app.${DD_SITE}${DASH_URL}",
-    "title": "ProdOps Runtime — Delivery & Diligence v3.1",
+    "title": "ProdOps Runtime — Delivery & Diligence v3.5",
     "previous-dashboard-id": "84w-hbn-6pn",
     "widget-count": ${WIDGET_COUNT_API:-0},
-    "sections": 3,
+    "sections": 5,
     "created-at": "${NOW_ISO}",
     "layout": {
         "row1": "KPIs: Iteration Ativas, DONE, Falhas/Bloqueios, Lead Time (dias)",
         "row2": "Funil de Entrega (timeseries bars) | Delivery Journey x8 | Diligence Status x4",
-        "row3": "Exception Paths: BLOQUEIO, DRIFT, REPAIR, CLOSED"
+        "row3": "Cycle Time Started por Phase (Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote)",
+        "row4": "Cycle Time Completed por Phase (Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote)",
+        "row5": "Exception Paths: BLOQUEIO, DRIFT, REPAIR, CLOSED"
     },
-    "template-variables": ["service", "env", "issue"],
+    "template-variables": ["service", "env", "issue", "iteration_id"],
     "metrics": [
         "runtime.event.received",
         "runtime.diligence.event.received",
@@ -260,7 +297,12 @@ meta = {
         "Removida dependência de demo-run-id",
         "Sem live_span fixo — widgets herdam seletor global da dashboard",
         "Lead time via runtime.delivery.lead_time_days (gauge, emitido com send.sh --lead-time-days)",
-        "Funil usa timeseries bars agrupado por event tag (CE type)"
+        "Funil usa timeseries bars agrupado por event tag (CE type)",
+        "Adicionado template variable iteration_id para filtro por iteração",
+        "Adicionado grupos Cycle Time Started e Cycle Time Completed com 7 widgets cada",
+        "Cycle time tracking: exibe contadores de Started e Completed por phase para análise de tendência",
+        "Step 3 do OBC parcialmente implementado: contadores vs duração em segundos (pendente)",
+        "Futuro: implementar log-based metric ou gauge explícito para duração em segundos entre Started e Completed"
     ],
     "changelog": "prodops/runtime/datadog/dashboards/CHANGELOG.md"
 }

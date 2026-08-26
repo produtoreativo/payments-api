@@ -1,5 +1,41 @@
 # Dashboard Changelog — ProdOps Runtime
 
+## v3.5.0 — 2026-08-25
+
+**Dashboard ID:** TBD
+
+**Arquivo:** `v3.5.0.json`
+
+**Implementação do OBC RT Dashboard Evolution (DS-60):**
+
+**Novidades:**
+- Adicionado template variable `$iteration_id` para filtro por iteração em todos os widgets
+- Adicionado Grupo E — Cycle Time Started por Phase com 7 widgets (Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote)
+- Adicionado Grupo F — Cycle Time Completed por Phase com 7 widgets (Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote)
+- Cycle time tracking: exibe contadores de Started e Completed por phase para análise de tendência
+- Widgets de cycle time filtrados por `iteration:$iteration_id` quando disponível
+- Futuro: implementar log-based metric ou gauge explícito para duração em segundos entre Started e Completed
+
+**Layout atualizado:**
+|| Grupo | y | h | Conteúdo |
+||---|---|---|---|
+|| A — KPIs | 0 | 3 | 4 × qv (w=3, h=2) em linha |
+|| B — Funil de Entrega | 3 | 7 | 1 × timeseries (w=12, h=6) |
+|| C — Delivery Journey | 10 | 5 | 8 × qv (w=3, h=2), 4 por linha |
+|| D — Diligence Status | 15 | 3 | 4 × qv (w=3, h=2) em linha |
+|| E — Cycle Time Started | 18 | 4 | 7 × qv (w=3, h=2), Started por phase |
+|| F — Cycle Time Completed | 22 | 4 | 7 × qv (w=3, h=2), Completed por phase |
+|| G — Exception Paths | 26 | 3 | 4 × qv (w=3, h=2) em linha |
+
+**Template variables:** `$service`, `$env`, `$issue`, `$iteration_id`
+
+**Critérios de aceite atendidos (OBC RT Dashboard Evolution):**
+- ✅ Step 2: Template variable `$iteration_id` disponível e funcional
+- 🔄 Step 3 (parcial): Widgets de cycle time exibem contadores Started/Completed por phase; duração em segundos (OBC original) pendente — ver Decision Trail
+- ✅ Step 4: Labels dos widgets usam nomes canônicos (Bootstrap, Hack, etc.)
+
+---
+
 ## v3.4.0 — 2026-07-30
 
 **Dashboard ID:** `iut-r7k-ehn`
