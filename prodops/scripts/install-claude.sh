@@ -2,8 +2,8 @@
 # install-claude.sh — Install the .claude/ directory structure for Claude Code.
 #
 # Creates:
-#   .claude/skills/    — materialized ProdOps skills (via materialize-skills.sh)
-#   .claude/agents/    — agent definitions (from prodops/agents/)
+#   .claude/skills/    — copied from framework's pre-materialized .claude/skills/
+#   .claude/agents/    — copied from framework's pre-materialized .claude/agents/
 #   .claude/settings.json — permissions template (if absent)
 #
 # Requires prodops/ to be already installed (run install-prodops.sh first).
@@ -58,56 +58,87 @@ log "Creating .claude/ directory structure..."
 mkdir -p "${TARGET_DIR}/.claude/skills"
 mkdir -p "${TARGET_DIR}/.claude/agents"
 
-# ── 2. Materialize skills → .claude/skills/ ──────────────────────────────────
+# ── 2. Copy pre-materialized skills → .claude/skills/ ────────────────────────
+# The framework ships .claude/skills/ already materialized; copy it directly.
+# Falls back to running materialize-skills.sh for framework versions < v2.3.0.
 
-MATERIALIZE_SKILLS="${REPO_ROOT}/prodops/scripts/agents/materialize-skills.sh"
+FRAMEWORK_SKILLS_SRC="${REPO_ROOT}/.claude/skills"
 
-if [[ ! -f "${MATERIALIZE_SKILLS}" ]]; then
-  # Fall back to the target repo's copy if invoked from outside the source repo
+if [[ -d "${FRAMEWORK_SKILLS_SRC}" ]]; then
+  log "Copying pre-materialized skills → .claude/skills/..."
+  copied=0
+  skipped=0
+  while IFS= read -r src_file; do
+    rel="${src_file#${FRAMEWORK_SKILLS_SRC}/}"
+    dest="${TARGET_DIR}/.claude/skills/${rel}"
+    if [[ -f "${dest}" && "${FORCE}" == "false" ]]; then
+      log "  SKIP (exists): .claude/skills/${rel}"
+      skipped=$((skipped + 1))
+    else
+      mkdir -p "$(dirname "${dest}")"
+      cp "${src_file}" "${dest}"
+      log "  copied: .claude/skills/${rel}"
+      copied=$((copied + 1))
+    fi
+  done < <(find "${FRAMEWORK_SKILLS_SRC}" -type f | LC_ALL=C sort)
+  log "  skills: ${copied} copied, ${skipped} skipped"
+else
+  # Fallback: materialize from prodops/skills/ in the target repo
   MATERIALIZE_SKILLS="${TARGET_DIR}/prodops/scripts/agents/materialize-skills.sh"
+  if [[ -f "${MATERIALIZE_SKILLS}" ]]; then
+    log "Framework .claude/skills/ not found — falling back to materialize-skills.sh..."
+    (cd "${TARGET_DIR}" && bash "${MATERIALIZE_SKILLS}")
+  else
+    warn ".claude/skills/ source not found and materialize-skills.sh missing — .claude/skills/ will be empty"
+  fi
 fi
 
-if [[ -f "${MATERIALIZE_SKILLS}" ]]; then
-  log "Materializing skills → .claude/skills/..."
-  # Run from TARGET_DIR so materialize-skills.sh resolves REPO_ROOT to the consumer repo.
-  (cd "${TARGET_DIR}" && bash "${MATERIALIZE_SKILLS}")
-else
-  warn "materialize-skills.sh not found — skills will NOT be in .claude/skills/"
-  warn "Re-install with a framework version >= v1.6.0 to include the script, or run manually:"
-  warn "  bash prodops/scripts/agents/materialize-skills.sh"
-fi
+# ── 3. Copy pre-materialized agents → .claude/agents/ ────────────────────────
+# The framework ships .claude/agents/ already materialized; copy it directly.
+# Falls back to prodops/agents/ for framework versions < v2.3.0.
 
-# ── 3. Install agent definitions → .claude/agents/ ───────────────────────────
+FRAMEWORK_AGENTS_SRC="${REPO_ROOT}/.claude/agents"
 
-AGENTS_SRC="${TARGET_DIR}/prodops/agents"
-
-if [[ ! -d "${AGENTS_SRC}" ]]; then
-  warn "prodops/agents/ not found — skipping agent installation"
-  warn "The framework may not include agent definitions for this version."
-else
-  log "Installing agent definitions → .claude/agents/..."
+if [[ -d "${FRAMEWORK_AGENTS_SRC}" ]]; then
+  log "Copying pre-materialized agents → .claude/agents/..."
   installed=0
   skipped=0
-
   while IFS= read -r src_file; do
     agent_name="$(basename "${src_file}")"
     target_file="${TARGET_DIR}/.claude/agents/${agent_name}"
-
     if [[ -f "${target_file}" && "${FORCE}" == "false" ]]; then
       log "  SKIP (exists): .claude/agents/${agent_name}"
-      ((skipped++))
+      skipped=$((skipped + 1))
     else
       cp "${src_file}" "${target_file}"
-      if [[ "${FORCE}" == "true" && -f "${target_file}" ]]; then
-        log "  updated: .claude/agents/${agent_name}"
-      else
-        log "  created: .claude/agents/${agent_name}"
-      fi
-      ((installed++))
+      log "  copied: .claude/agents/${agent_name}"
+      installed=$((installed + 1))
     fi
-  done < <(find "${AGENTS_SRC}" -maxdepth 1 -name "*.md" | LC_ALL=C sort)
-
-  log "  agents: ${installed} installed, ${skipped} skipped"
+  done < <(find "${FRAMEWORK_AGENTS_SRC}" -maxdepth 1 -name "*.md" | LC_ALL=C sort)
+  log "  agents: ${installed} copied, ${skipped} skipped"
+else
+  # Fallback: copy from prodops/agents/ in the target repo
+  AGENTS_SRC="${TARGET_DIR}/prodops/agents"
+  if [[ -d "${AGENTS_SRC}" ]]; then
+    log "Framework .claude/agents/ not found — falling back to prodops/agents/..."
+    installed=0
+    skipped=0
+    while IFS= read -r src_file; do
+      agent_name="$(basename "${src_file}")"
+      target_file="${TARGET_DIR}/.claude/agents/${agent_name}"
+      if [[ -f "${target_file}" && "${FORCE}" == "false" ]]; then
+        log "  SKIP (exists): .claude/agents/${agent_name}"
+        skipped=$((skipped + 1))
+      else
+        cp "${src_file}" "${target_file}"
+        log "  copied: .claude/agents/${agent_name}"
+        installed=$((installed + 1))
+      fi
+    done < <(find "${AGENTS_SRC}" -maxdepth 1 -name "*.md" | LC_ALL=C sort)
+    log "  agents: ${installed} copied, ${skipped} skipped"
+  else
+    warn "prodops/agents/ not found — skipping agent installation"
+  fi
 fi
 
 # ── 4. Create .claude/settings.json template ─────────────────────────────────
