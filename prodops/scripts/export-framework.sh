@@ -281,6 +281,33 @@ except Exception:
   fi
 fi
 
+# ── Step 6c: Materialize .claude/ in the destination repo ────────────────────
+# After copying canonical sources, run materialize-skills.sh and
+# materialize-agents.sh inside the destination so .claude/ reflects the
+# exported skills and agents. --force overwrites the previous materialized
+# snapshot; divergence (product-specific overrides) is intentional here
+# because the framework repo owns a player-neutral copy.
+
+log "Materializing skills → .claude/skills/ in destination..."
+MATERIALIZE_SKILLS_DEST="${DEST_DIR}/prodops/scripts/agents/materialize-skills.sh"
+if [[ -f "${MATERIALIZE_SKILLS_DEST}" ]]; then
+  (cd "${DEST_DIR}" && bash "${MATERIALIZE_SKILLS_DEST}" --force) \
+    && log "  skills materialized." \
+    || log "  WARNING: materialize-skills.sh exited non-zero — check output above."
+else
+  log "  WARNING: materialize-skills.sh not found in destination — skipping."
+fi
+
+log "Materializing agents → .claude/agents/ in destination..."
+MATERIALIZE_AGENTS_DEST="${DEST_DIR}/prodops/scripts/agents/materialize-agents.sh"
+if [[ -f "${MATERIALIZE_AGENTS_DEST}" ]]; then
+  (cd "${DEST_DIR}" && bash "${MATERIALIZE_AGENTS_DEST}" --force) \
+    && log "  agents materialized." \
+    || log "  WARNING: materialize-agents.sh exited non-zero — check output above."
+else
+  log "  WARNING: materialize-agents.sh not found in destination — skipping."
+fi
+
 # ── Step 7: Validate exported file count ─────────────────────────────────────
 # doctor.sh is designed for product repos and expects artifacts/, exec/, skills/local/
 # which are intentionally absent from the framework repo. A dedicated framework-doctor.sh

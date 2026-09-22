@@ -84,23 +84,23 @@ materialize_agent() {
 
       if [[ "${target_content}" == "${src_content}" ]]; then
         log "✓ up-to-date  [${player}] ${agent_name}"
-        ((UP_TO_DATE_COUNT++))
+        UP_TO_DATE_COUNT=$((UP_TO_DATE_COUNT + 1))
         continue
       fi
 
       if [[ "${FORCE}" == "false" ]]; then
         warn "Divergence in [${player}] ${agent_name} — use --force to overwrite"
-        ((DRIFT_COUNT++))
+        DRIFT_COUNT=$((DRIFT_COUNT + 1))
         if [[ "${CHECK_ONLY}" == "false" ]]; then
           continue
         fi
       else
         log "↻ overwriting [${player}] ${agent_name} (--force)"
-        ((DRIFT_COUNT++))
+        DRIFT_COUNT=$((DRIFT_COUNT + 1))
       fi
     else
       log "✚ new         [${player}] ${agent_name}"
-      ((DRIFT_COUNT++))
+      DRIFT_COUNT=$((DRIFT_COUNT + 1))
     fi
 
     [[ "${CHECK_ONLY}" == "true" ]] && continue
@@ -108,7 +108,7 @@ materialize_agent() {
     mkdir -p "${target_dir}"
     cp "${agent_file}" "${target}"
     log "  → written: ${target_dir_rel}/${agent_name}"
-    ((WRITTEN_COUNT++))
+    WRITTEN_COUNT=$((WRITTEN_COUNT + 1))
   done
 }
 
