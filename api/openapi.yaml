@@ -1,0 +1,492 @@
+openapi: 3.0.3
+info:
+  title: Payments API
+  description: >
+    API de pagamentos com integração Asaas — invoices (boleto, PIX, cartão de crédito),
+    split-payments e configuração de webhooks. Deployada como AWS Lambda serverless.
+  version: 1.0.0
+  contact:
+    name: Team Payments
+    url: https://github.com/produtoreativo/payments-api
+
+servers:
+  - url: https://oj2st2d44b7bseur6rcd3nl77y0wlqec.lambda-url.us-east-1.on.aws
+    description: Staging (AWS Lambda us-east-1)
+  - url: http://localhost:3011
+    description: Local development
+
+tags:
+  - name: observability
+    description: Health e status do serviço
+  - name: invoices
+    description: Criação e gestão de invoices de pagamento
+  - name: split-payments
+    description: Pagamentos divididos entre múltiplos recebedores
+  - name: webhooks
+    description: Configuração de notificações assíncronas
+
+components:
+  securitySchemes:
+    ApiToken:
+      type: apiKey
+      in: header
+      name: X-Api-Token
+      description: Token gerado via POST /admin/tokens com x-admin-secret
+
+  schemas:
+    Customer:
+      type: object
+      required: [id, name, document]
+      properties:
+        id:
+          type: string
+          description: Identificador interno do cliente
+        name:
+          type: string
+        document:
+          type: string
+          description: CPF (11 dígitos) ou CNPJ (14 dígitos)
+        email:
+          type: string
+          format: email
+        mobilePhone:
+          type: string
+
+    CreateInvoiceRequest:
+      type: object
+      required: [tenantId, orderId, customer, amount, currency, dueDate, billingType]
+      properties:
+        tenantId:
+          type: string
+          description: Identificador do tenant (loja/empresa)
+        orderId:
+          type: string
+          description: Identificador do pedido no sistema origem (chave de idempotência de negócio)
+        customer:
+          $ref: '#/components/schemas/Customer'
+        amount:
+          type: number
+          format: float
+          minimum: 0.01
+          example: 159.90
+        currency:
+          type: string
+          enum: [BRL]
+          default: BRL
+        dueDate:
+          type: string
+          format: date
+          example: '2026-09-30'
+        billingType:
+          type: string
+          enum: [BOLETO, PIX, CREDIT_CARD, UNDEFINED]
+        provider:
+          type: string
+          enum: [ASAAS, ITAU]
+          default: ASAAS
+        description:
+          type: string
+
+    InvoiceResponse:
+      type: object
+      properties:
+        invoiceId:
+          type: string
+        orderId:
+          type: string
+        provider:
+          type: string
+          enum: [ASAAS, ITAU]
+        providerPaymentId:
+          type: string
+          description: ID da cobrança no provedor (ex. pay_123 do Asaas)
+        status:
+          type: string
+          enum: [OPEN, FAILED, PROVIDER_PENDING, CANCELLED]
+        amount:
+          type: number
+        currency:
+          type: string
+        billingType:
+          type: string
+        externalReference:
+          type: string
+          description: orderId usado como referência cruzada no provedor
+
+    SplitEntry:
+      type: object
+      properties:
+        walletId:
+          type: string
+          description: ID da carteira Asaas do recebedor
+        fixedValue:
+          type: number
+          description: Valor fixo a receber (exclusivo com percentualValue)
+        percentualValue:
+          type: number
+          description: Percentual do total a receber (exclusivo com fixedValue)
+
+    CreateSplitPaymentRequest:
+      type: object
+      required: [tenantId, orderId, customer, amount, currency, dueDate, billingType, splits]
+      properties:
+        tenantId:
+          type: string
+        orderId:
+          type: string
+        customer:
+          $ref: '#/components/schemas/Customer'
+        amount:
+          type: number
+        currency:
+          type: string
+          enum: [BRL]
+        dueDate:
+          type: string
+          format: date
+        billingType:
+          type: string
+          enum: [BOLETO, PIX]
+        splits:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/SplitEntry'
+
+    WebhookConfig:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+          description: URL que receberá os eventos via HTTP POST
+        events:
+          type: array
+          items:
+            type: string
+            enum:
+              - PAYMENT_CONFIRMED
+              - PAYMENT_RECEIVED
+              - PAYMENT_OVERDUE
+              - PAYMENT_DELETED
+              - PAYMENT_RESTORED
+              - PAYMENT_REFUNDED
+              - PAYMENT_CHARGEBACK_REQUESTED
+
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        error:
+          type: string
+
+security:
+  - ApiToken: []
+
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Health check
+      description: Retorna status do serviço, versão e configuração de observabilidade
+      tags: [observability]
+      security: []
+      responses:
+        '200':
+          description: Serviço saudável
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  service:
+                    type: string
+                    example: payments-api
+                  version:
+                    type: string
+                    example: '1.0.0'
+                  env:
+                    type: string
+                    example: production
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /invoices:
+    post:
+      operationId: createInvoice
+      summary: Criar invoice
+      description: >
+        Cria uma cobrança no provedor de pagamento configurado para o tenant.
+        A invoice só nasce como OPEN quando o providerPaymentId está confirmado.
+        Idempotente por Idempotency-Key — retentativas com a mesma chave retornam
+        a invoice existente sem nova cobrança no provedor.
+      tags: [invoices]
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: UUID v4 único por tentativa de criação de invoice
+          schema:
+            type: string
+            format: uuid
+        - name: X-Correlation-Id
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvoiceRequest'
+            example:
+              tenantId: magazinesiara
+              orderId: MS-100045
+              customer:
+                id: cust-001
+                name: João Silva
+                document: '11122233344'
+                email: joao@example.com
+              amount: 159.90
+              currency: BRL
+              dueDate: '2026-09-30'
+              billingType: PIX
+      responses:
+        '201':
+          description: Invoice criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Dados inválidos ou provedor rejeitou a criação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /invoices/{invoiceId}:
+    get:
+      operationId: getInvoice
+      summary: Buscar invoice
+      tags: [invoices]
+      parameters:
+        - name: invoiceId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Tenant-Id
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invoice encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceResponse'
+        '401':
+          description: Token inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Invoice não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      operationId: cancelInvoice
+      summary: Cancelar invoice
+      description: Cancela a invoice no provedor e atualiza o status para CANCELLED.
+      tags: [invoices]
+      parameters:
+        - name: invoiceId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Tenant-Id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Invoice cancelada
+        '404':
+          description: Invoice não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /invoices/{invoiceId}/refund:
+    post:
+      operationId: requestRefund
+      summary: Solicitar reembolso
+      description: Solicita reembolso de uma invoice paga ao provedor.
+      tags: [invoices]
+      parameters:
+        - name: invoiceId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Tenant-Id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+      responses:
+        '202':
+          description: Reembolso solicitado ao provedor
+        '404':
+          description: Invoice não encontrada
+
+  /split-payments:
+    post:
+      operationId: createSplitPayment
+      summary: Criar split payment
+      description: >
+        Cria uma cobrança com divisão automática do valor entre múltiplos recebedores
+        (carteiras Asaas). Suporta divisão por valor fixo ou percentual.
+      tags: [split-payments]
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSplitPaymentRequest'
+      responses:
+        '201':
+          description: Split payment criado
+        '401':
+          description: Token inválido
+
+  /split-payments/{splitPaymentId}:
+    get:
+      operationId: getSplitPayment
+      summary: Buscar split payment
+      tags: [split-payments]
+      parameters:
+        - name: splitPaymentId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Tenant-Id
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Split payment encontrado
+        '404':
+          description: Não encontrado
+
+  /webhooks:
+    post:
+      operationId: createWebhookConfig
+      summary: Registrar configuração de webhook
+      description: Registra uma URL para receber notificações de eventos de pagamento.
+      tags: [webhooks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookConfig'
+      responses:
+        '201':
+          description: Webhook registrado com sucesso
+        '401':
+          description: Token inválido
+
+    get:
+      operationId: listWebhookConfigs
+      summary: Listar webhooks configurados
+      tags: [webhooks]
+      responses:
+        '200':
+          description: Lista de webhooks do token
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebhookConfig'
+
+  /webhooks/{webhookId}:
+    delete:
+      operationId: deleteWebhookConfig
+      summary: Remover configuração de webhook
+      tags: [webhooks]
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Webhook removido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  removed:
+                    type: boolean
+                  webhookId:
+                    type: string
+        '404':
+          description: Webhook não encontrado

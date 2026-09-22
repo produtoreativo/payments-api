@@ -1,0 +1,43 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: payments-api
+  title: Payments API
+  description: >
+    API de pagamentos com integração Asaas — invoices, split-payments e webhooks.
+    Deployada como AWS Lambda (us-east-1). Referência de implementação do ProdOps Framework.
+  annotations:
+    github.com/project-slug: produtoreativo/payments-api
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - payments
+    - aws-lambda
+    - nodejs
+    - nestjs
+    - asaas
+spec:
+  type: service
+  lifecycle: production
+  owner: group:default/team-payments
+  system: spire
+  providesApis:
+    - payments-api-openapi
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: payments-api-openapi
+  title: Payments API — OpenAPI
+  description: >
+    Spec OpenAPI 3.0 da Payments API — invoices (boleto, PIX, cartão),
+    split-payments e configuração de webhooks Asaas.
+  tags:
+    - payments
+    - openapi
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:default/team-payments
+  system: spire
+  definition:
+    $text: ./api/openapi.yaml
