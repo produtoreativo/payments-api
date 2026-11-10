@@ -5,10 +5,10 @@
  * prodops/artifacts/bdd/payment-confirmation.feature
  *
  * Red → Green cycle target:
- *   - Canonical `payment.received` event emitted on PAYMENT_RECEIVED webhook
- *   - `payment.confirmed` NOT re-emitted on duplicate PAYMENT_CONFIRMED
+ *   - Canonical `payments.invoice.received` event emitted on PAYMENT_RECEIVED webhook
+ *   - `payments.invoice.confirmed` NOT re-emitted on duplicate PAYMENT_CONFIRMED
  *   - Token rejection never exposes the token value in logs/events
- *   - PAYMENT_OVERDUE does not emit `payment.confirmed`
+ *   - PAYMENT_OVERDUE does not emit `payments.invoice.confirmed`
  */
 
 import { UnauthorizedException } from '@nestjs/common';
@@ -123,7 +123,7 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
       repository.updateInvoice.mockResolvedValue(makeConfirmedInvoice());
     });
 
-    it('publica o evento canônico payment.confirmed com campos obrigatórios', async () => {
+    it('publica o evento canônico payments.invoice.confirmed com campos obrigatórios', async () => {
       await service.processProviderWebhook(
         makePaymentConfirmedWebhook(),
         undefined,
@@ -135,9 +135,14 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
         Record<string, unknown>,
       ][];
       const confirmedCall = calls.find(
-        ([name]) => name === 'payment.confirmed',
+        ([name]) => name === 'payments.invoice.confirmed',
       );
       expect(confirmedCall).toBeDefined();
+      // duplicata eliminada: um único evento de confirmação, sem o nome legado payment.confirmed
+      expect(
+        calls.filter(([name]) => name === 'payments.invoice.confirmed'),
+      ).toHaveLength(1);
+      expect(calls.some(([name]) => name === 'payment.confirmed')).toBe(false);
       const payload = confirmedCall![1];
       expect(payload.invoiceId).toBe('inv-100045');
       expect(payload.orderId).toBe('MS-100045');
@@ -197,7 +202,7 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
       repository.updateInvoice.mockResolvedValue(makeReceivedInvoice());
     });
 
-    it('publica o evento canônico payment.received para conciliação financeira', async () => {
+    it('publica o evento canônico payments.invoice.received para conciliação financeira', async () => {
       await service.processProviderWebhook(
         makePaymentReceivedWebhook(),
         undefined,
@@ -208,7 +213,9 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
         string,
         Record<string, unknown>,
       ][];
-      const receivedCall = calls.find(([name]) => name === 'payment.received');
+      const receivedCall = calls.find(
+        ([name]) => name === 'payments.invoice.received',
+      );
       expect(receivedCall).toBeDefined();
       const payload = receivedCall![1];
       expect(payload.invoiceId).toBe('inv-100045');
@@ -219,7 +226,7 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
       expect(typeof payload.receivedAt).toBe('string');
     });
 
-    it('nao publica payment.confirmed novamente no PAYMENT_RECEIVED', async () => {
+    it('nao publica payments.invoice.confirmed novamente no PAYMENT_RECEIVED', async () => {
       await service.processProviderWebhook(
         makePaymentReceivedWebhook(),
         undefined,
@@ -227,7 +234,7 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
       );
 
       const confirmedCalls = (eventEmitter.emit as jest.Mock).mock.calls.filter(
-        ([eventName]: [string]) => eventName === 'payment.confirmed',
+        ([eventName]: [string]) => eventName === 'payments.invoice.confirmed',
       );
       expect(confirmedCalls).toHaveLength(0);
     });
@@ -303,7 +310,7 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
   });
 
   // -------------------------------------------------------------------------
-  // Cenário 4: Webhook duplicado — deduplicação sem republica payment.confirmed
+  // Cenário 4: Webhook duplicado — deduplicação sem republica payments.invoice.confirmed
   // -------------------------------------------------------------------------
   describe('Cenário 4: Webhook duplicado — deduplicação (BDD scenario 4)', () => {
     beforeEach(() => {
@@ -314,7 +321,7 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
       );
     });
 
-    it('não publica payment.confirmed ao receber webhook duplicado', async () => {
+    it('não publica payments.invoice.confirmed ao receber webhook duplicado', async () => {
       await service.processProviderWebhook(
         makePaymentConfirmedWebhook(),
         undefined,
@@ -322,7 +329,7 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
       );
 
       const confirmedCalls = (eventEmitter.emit as jest.Mock).mock.calls.filter(
-        ([eventName]: [string]) => eventName === 'payment.confirmed',
+        ([eventName]: [string]) => eventName === 'payments.invoice.confirmed',
       );
       expect(confirmedCalls).toHaveLength(0);
     });
@@ -372,7 +379,7 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
       );
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(eventEmitter.emit).toHaveBeenCalledWith(
-        'payment.confirmed',
+        'payments.invoice.confirmed',
         expect.objectContaining({ invoiceId: 'inv-100045' }),
       );
     });
@@ -382,7 +389,7 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
   // Cenário 6: PAYMENT_OVERDUE — ignorado, sem liberar pedido
   // -------------------------------------------------------------------------
   describe('Cenário 6: PAYMENT_OVERDUE — evento ignorado (BDD scenario 6)', () => {
-    it('nao publica payment.confirmed para PAYMENT_OVERDUE', async () => {
+    it('nao publica payments.invoice.confirmed para PAYMENT_OVERDUE', async () => {
       const overdueWebhook: AsaasWebhookDto = {
         event: 'PAYMENT_OVERDUE',
         payment: { id: 'pay_asaas_123', status: 'OVERDUE' },
@@ -396,7 +403,7 @@ describe('DS-39 — Confirmação de Pagamento por Webhook', () => {
       });
 
       const confirmedCalls = (eventEmitter.emit as jest.Mock).mock.calls.filter(
-        ([eventName]: [string]) => eventName === 'payment.confirmed',
+        ([eventName]: [string]) => eventName === 'payments.invoice.confirmed',
       );
       expect(confirmedCalls).toHaveLength(0);
     });

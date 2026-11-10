@@ -114,7 +114,7 @@ describe('Cartão de Crédito — Entrada Hospedada (DS-41)', () => {
   });
 
   describe('Cenário 2: Confirmar pagamento de cartão hospedado por webhook', () => {
-    it('atualiza invoice para CONFIRMED e emite payment.confirmed uma única vez', async () => {
+    it('atualiza invoice para CONFIRMED e emite payments.invoice.confirmed uma única vez', async () => {
       const created = await criarInvoiceCartao('MS-300041:confirm');
 
       await enviarWebhookCartao(created, 'PAYMENT_CONFIRMED', {
@@ -195,7 +195,7 @@ describe('Cartão de Crédito — Entrada Hospedada (DS-41)', () => {
   });
 
   describe('Cenário 6: Mapear análise de risco reprovada', () => {
-    it('registra reprovação como recusado sem publicar payment.confirmed', async () => {
+    it('registra reprovação como recusado sem publicar payments.invoice.confirmed', async () => {
       const created = await criarInvoiceCartao('MS-300041:risk-reproved');
 
       await enviarWebhookCartao(created, 'PAYMENT_REPROVED_BY_RISK_ANALYSIS', {

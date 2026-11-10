@@ -4,6 +4,7 @@ import { createHmac, randomUUID } from 'crypto';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { WebhookRepository, WebhookRecord } from './webhook-repository.service';
 import type { WebhookEventType } from '../dto/create-webhook.dto';
+import { PaymentsEvent } from '../../../events/payments-events';
 
 interface PaymentConfirmedEvent {
   invoiceId: string;
@@ -34,7 +35,7 @@ export class WebhookDeliveryService {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  @OnEvent('payment.confirmed', { async: true })
+  @OnEvent(PaymentsEvent.InvoiceConfirmed, { async: true })
   async onPaymentConfirmed(event: PaymentConfirmedEvent): Promise<void> {
     if (!event.tenantId) return;
 
@@ -49,7 +50,7 @@ export class WebhookDeliveryService {
     });
   }
 
-  @OnEvent('payment.cancelled', { async: true })
+  @OnEvent(PaymentsEvent.InvoiceCancelled, { async: true })
   async onPaymentCancelled(event: PaymentCancelledEvent): Promise<void> {
     if (!event.tenantId) return;
 

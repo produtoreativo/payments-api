@@ -7,6 +7,7 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ulid } from 'ulid';
 import { AsaasService } from '../../infra/asaas.service';
+import { PaymentsEvent } from '../../events/payments-events';
 import {
   SplitPaymentCustomer,
   SplitPaymentRecord,
@@ -110,7 +111,7 @@ export class SplitPaymentService {
       const reason =
         error instanceof Error ? error.message : 'unknown_provider_error';
 
-      this.eventEmitter.emit('split_payment.creation_failed', {
+      this.eventEmitter.emit(PaymentsEvent.SplitPaymentCreationFailed, {
         orderId: dto.orderId,
         reason,
         correlationId: resolvedCorrelationId,
@@ -143,7 +144,7 @@ export class SplitPaymentService {
 
     await this.repository.save(record, idempotencyKey);
 
-    this.eventEmitter.emit('split_payment.created', {
+    this.eventEmitter.emit(PaymentsEvent.SplitPaymentCreated, {
       splitPaymentId: record.splitPaymentId,
       orderId: record.orderId,
       pixAmount: record.pixAmount,
@@ -178,7 +179,7 @@ export class SplitPaymentService {
       ...(newStatus === 'COMPLETED' ? { completedAt: confirmedAt } : {}),
     });
 
-    this.eventEmitter.emit('split_payment.pix.confirmed', {
+    this.eventEmitter.emit(PaymentsEvent.SplitPaymentPixConfirmed, {
       splitPaymentId: updated.splitPaymentId,
       orderId: updated.orderId,
       pixInvoiceId: updated.pixInvoiceId,
@@ -187,7 +188,7 @@ export class SplitPaymentService {
     });
 
     if (newStatus === 'COMPLETED') {
-      this.eventEmitter.emit('split_payment.completed', {
+      this.eventEmitter.emit(PaymentsEvent.SplitPaymentCompleted, {
         splitPaymentId: updated.splitPaymentId,
         orderId: updated.orderId,
         completedAt: updated.completedAt,
@@ -221,7 +222,7 @@ export class SplitPaymentService {
       ...(newStatus === 'COMPLETED' ? { completedAt: confirmedAt } : {}),
     });
 
-    this.eventEmitter.emit('split_payment.boleto.confirmed', {
+    this.eventEmitter.emit(PaymentsEvent.SplitPaymentBoletoConfirmed, {
       splitPaymentId: updated.splitPaymentId,
       orderId: updated.orderId,
       boletoInvoiceId: updated.boletoInvoiceId,
@@ -230,7 +231,7 @@ export class SplitPaymentService {
     });
 
     if (newStatus === 'COMPLETED') {
-      this.eventEmitter.emit('split_payment.completed', {
+      this.eventEmitter.emit(PaymentsEvent.SplitPaymentCompleted, {
         splitPaymentId: updated.splitPaymentId,
         orderId: updated.orderId,
         completedAt: updated.completedAt,
@@ -261,7 +262,7 @@ export class SplitPaymentService {
       { boletoStatus: 'EXPIRED' },
     );
 
-    this.eventEmitter.emit('split_payment.boleto.expired', {
+    this.eventEmitter.emit(PaymentsEvent.SplitPaymentBoletoExpired, {
       splitPaymentId: updated.splitPaymentId,
       orderId: updated.orderId,
       boletoInvoiceId: updated.boletoInvoiceId,

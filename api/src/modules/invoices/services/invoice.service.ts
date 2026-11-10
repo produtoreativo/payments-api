@@ -10,6 +10,7 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ulid } from 'ulid';
 import { AsaasWebhookDto } from '../../../dto/asaas-webhook.dto';
+import { PaymentsEvent } from '../../../events/payments-events';
 import { AsaasService } from '../../../infra/asaas.service';
 import { CreateInvoiceDto } from '../dto/create-invoice.dto';
 import { InvoiceResponseDto } from '../dto/invoice-response.dto';
@@ -51,7 +52,7 @@ export class InvoiceService {
         `Returning idempotent invoice ${existing.invoiceId} for order ${existing.orderId}`,
       );
       if (existing.billingType === 'BOLETO') {
-        this.eventEmitter.emit('payment.boleto.idempotency_hit', {
+        this.eventEmitter.emit(PaymentsEvent.InvoiceIdempotencyHit, {
           invoiceId: existing.invoiceId,
           orderId: existing.orderId,
           tenantId: existing.tenantId,
@@ -106,7 +107,7 @@ export class InvoiceService {
     };
 
     await this.repository.saveInvoice(invoice, idempotencyKey);
-    this.eventEmitter.emit('payments.invoice.created', {
+    this.eventEmitter.emit(PaymentsEvent.InvoiceCreated, {
       invoiceId: invoice.invoiceId,
       orderId: invoice.orderId,
       provider: invoice.provider,
@@ -191,37 +192,21 @@ export class InvoiceService {
         },
       );
 
-      this.eventEmitter.emit('payments.invoice.opened', {
+      // Um único evento "invoice aberta/pagável" para qualquer meio de pagamento.
+      // Substitui payment.boleto.created e payment.card.hosted_invoice.created, que
+      // eram emitidos logo após este com um subconjunto/variação do mesmo payload.
+      this.eventEmitter.emit(PaymentsEvent.InvoiceOpened, {
         invoiceId: openInvoice.invoiceId,
         orderId: openInvoice.orderId,
+        tenantId: openInvoice.tenantId,
         provider: openInvoice.provider,
         providerPaymentId: openInvoice.providerPaymentId,
         status: openInvoice.status,
+        billingType: openInvoice.billingType,
+        dueDate: openInvoice.dueDate,
+        correlationId: resolvedCorrelationId,
         timestamp: openInvoice.updatedAt,
       });
-
-      if (openInvoice.billingType === 'BOLETO') {
-        this.eventEmitter.emit('payment.boleto.created', {
-          invoiceId: openInvoice.invoiceId,
-          orderId: openInvoice.orderId,
-          tenantId: openInvoice.tenantId,
-          providerPaymentId: openInvoice.providerPaymentId,
-          billingType: openInvoice.billingType,
-          dueDate: openInvoice.dueDate,
-          correlationId: resolvedCorrelationId,
-        });
-      }
-
-      if (openInvoice.billingType === 'CREDIT_CARD') {
-        this.eventEmitter.emit('payment.card.hosted_invoice.created', {
-          tenantId: openInvoice.tenantId,
-          orderId: openInvoice.orderId,
-          invoiceId: openInvoice.invoiceId,
-          providerPaymentId: openInvoice.providerPaymentId,
-          provider: openInvoice.provider,
-          correlationId: resolvedCorrelationId,
-        });
-      }
       this.emitObservable('pagamento.processamento.pagamentos.fatura.criada', {
         invoice: openInvoice,
         correlationId: resolvedCorrelationId,
@@ -251,23 +236,19 @@ export class InvoiceService {
         failureReason: message,
       });
 
-      this.eventEmitter.emit('payments.invoice.provider_failed', {
+      // Um único evento de falha de criação para qualquer meio de pagamento.
+      // Substitui payments.invoice.provider_failed e payment.boleto.creation_failed
+      // (a mesma falha, emitida duas vezes em sequência).
+      this.eventEmitter.emit(PaymentsEvent.InvoiceCreationFailed, {
         invoiceId: pendingInvoice.invoiceId,
         orderId: pendingInvoice.orderId,
+        tenantId: pendingInvoice.tenantId,
         provider: pendingInvoice.provider,
-        message,
+        billingType: pendingInvoice.billingType,
+        reason: message,
+        correlationId: resolvedCorrelationId,
         timestamp: new Date().toISOString(),
       });
-
-      if (pendingInvoice.billingType === 'BOLETO') {
-        this.eventEmitter.emit('payment.boleto.creation_failed', {
-          invoiceId: pendingInvoice.invoiceId,
-          orderId: pendingInvoice.orderId,
-          tenantId: pendingInvoice.tenantId,
-          reason: message,
-          correlationId: resolvedCorrelationId,
-        });
-      }
       this.emitObservable(
         'pagamento.processamento.pagamentos.pagamento.pendente_exception',
         {
@@ -452,8 +433,8 @@ export class InvoiceService {
       providerPaymentId: cancelledInvoice.providerPaymentId,
       cancelledAt: cancelledInvoice.updatedAt,
     };
-    this.eventEmitter.emit('payment.cancelled', eventPayload);
-    this.eventEmitter.emit('payments.invoice.cancelled', {
+    // Substitui o par payment.cancelled + payments.invoice.cancelled (mesmo fato, mesmo payload).
+    this.eventEmitter.emit(PaymentsEvent.InvoiceCancelled, {
       ...eventPayload,
       timestamp: cancelledInvoice.updatedAt,
     });
@@ -517,7 +498,7 @@ export class InvoiceService {
       refundInvoice,
     );
 
-    this.eventEmitter.emit('payment.card.refund.requested', {
+    this.eventEmitter.emit(PaymentsEvent.InvoiceRefundRequested, {
       tenantId: refundInvoice.tenantId,
       orderId: refundInvoice.orderId,
       invoiceId: refundInvoice.invoiceId,
@@ -646,19 +627,19 @@ export class InvoiceService {
         return this.handleChargebackEvent(
           payload,
           'CHARGEBACK_REQUESTED',
-          'payment.chargeback_requested',
+          PaymentsEvent.InvoiceChargebackRequested,
         );
       case 'PAYMENT_CHARGEBACK_DISPUTE':
         return this.handleChargebackEvent(
           payload,
           'CHARGEBACK_DISPUTE',
-          'payment.chargeback_dispute',
+          PaymentsEvent.InvoiceChargebackDisputed,
         );
       case 'PAYMENT_AWAITING_CHARGEBACK_REVERSAL':
         return this.handleChargebackEvent(
           payload,
           'CHARGEBACK_REVERSAL_PENDING',
-          'payment.chargeback_reversal_pending',
+          PaymentsEvent.InvoiceChargebackReversalPending,
         );
       case 'PAYMENT_OVERDUE':
         return this.expireBoletoInvoice(payload);
@@ -697,8 +678,8 @@ export class InvoiceService {
       confirmedAt: payload.payment?.confirmedDate ?? confirmedInvoice.updatedAt,
     };
 
-    this.eventEmitter.emit('payment.confirmed', eventPayload);
-    this.eventEmitter.emit('payments.invoice.confirmed', {
+    // Substitui o par payment.confirmed + payments.invoice.confirmed (mesmo fato, mesmo payload).
+    this.eventEmitter.emit(PaymentsEvent.InvoiceConfirmed, {
       ...eventPayload,
       timestamp: confirmedInvoice.updatedAt,
     });
@@ -734,7 +715,7 @@ export class InvoiceService {
       this.webhookProviderAttrs(invoice, payload),
     );
 
-    this.eventEmitter.emit('payment.received', {
+    this.eventEmitter.emit(PaymentsEvent.InvoiceReceived, {
       invoiceId: receivedInvoice.invoiceId,
       orderId: receivedInvoice.orderId,
       tenantId: receivedInvoice.tenantId,
@@ -977,7 +958,7 @@ export class InvoiceService {
     };
 
     await this.repository.saveCustomerLink(link);
-    this.eventEmitter.emit('payments.customer.provider_linked', {
+    this.eventEmitter.emit(PaymentsEvent.CustomerProviderLinked, {
       tenantId: invoice.tenantId,
       customerId: invoice.customer.id,
       provider,
@@ -1152,7 +1133,7 @@ export class InvoiceService {
     const expectedToken = process.env.ASAAS_WEBHOOK_TOKEN;
 
     if (expectedToken && accessToken !== expectedToken) {
-      this.eventEmitter.emit('payments.security.webhook_rejected', {
+      this.eventEmitter.emit(PaymentsEvent.SecurityWebhookRejected, {
         provider: 'ASAAS',
         reason: 'invalid_token',
         timestamp: new Date().toISOString(),

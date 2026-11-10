@@ -165,7 +165,7 @@ describe('InvoiceService — Falhas de provedor Boleto', () => {
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(eventEmitter.emit).toHaveBeenCalledWith(
-        'payment.boleto.creation_failed',
+        'payments.invoice.creation_failed',
         expect.objectContaining({ reason: 'timeout calling Asaas' }),
       );
     });
