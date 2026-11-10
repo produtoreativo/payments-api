@@ -169,7 +169,7 @@ A Feature Flag que habilita o novo Gateway permanece desativada devido a um bug 
 
 ## Evidência Upstream requerida
 
-O experimento `prodops/framework/journeys/discovery/experiments/004-feature-flag-readiness/experiment.md`
+O experimento `prodops/artifacts/experiments/004-feature-flag-readiness/experiment.md`
 classifica esta incerteza como P0 e requer evidências de Checkout antes da
 promoção final:
 
@@ -389,7 +389,7 @@ A linha digitável (`identificationField`) não está mapeada no `ProviderCharge
 **Capability:** dependency-security-update
 **Severidade:** Média
 **Probabilidade:** Média (multer 1.x → 2.x é upgrade de major; demais são minor/patch)
-**Status:** Parcialmente resolvido — DS-44 entregue (PR #116, v0.7.0). `postcss` HIGH restante em `validation-workbench/` ([#117](https://github.com/produtoreativo/payments-api/issues/117)). `aws-sdk` moderate — aceite de risco registrado. Ver [Tracking List](../product/backlogs/tracking-list.md#55).
+**Status:** Parcialmente resolvido — DS-44 entregue (PR #116, v0.7.0). `postcss` HIGH restante em `validation-workbench/` ([#117](https://github.com/produtoreativo/payments-api/issues/117)). `aws-sdk` moderate — aceite de risco registrado. Ver [Tracking List](../product/backlogs/tracking-list.md).
 
 ## Descrição
 

@@ -56,7 +56,7 @@ aws sqs get-queue-attributes \
 - [ ] DLQ message volume returned to baseline.
 - [ ] Logs without `uncorrelated webhook` above baseline.
 
-**Record:** date/time, scope of affected orders, decision made → `prodops/artifacts/trails/operational-trail.md`
+**Record:** date/time, scope of affected orders, decision made → `prodops/framework/journeys/operation/operational-trail.md`
 
 ---
 
@@ -104,7 +104,7 @@ aws sqs get-queue-attributes \
 - [ ] No `orderId` with two `OPEN` invoices in DynamoDB.
 - [ ] Idempotency verified: same `orderId` + same `Idempotency-Key` returns 201 with the original invoice.
 
-**Record:** → `prodops/artifacts/trails/operational-trail.md`
+**Record:** → `prodops/framework/journeys/operation/operational-trail.md`
 
 ---
 
@@ -157,7 +157,7 @@ If there is no immediate resolution, support can confirm payment status by query
 - [ ] Customer received communication (confirmed by send log or by support).
 - [ ] DLQ event volume returned to baseline.
 
-**Record:** → `prodops/artifacts/trails/operational-trail.md`
+**Record:** → `prodops/framework/journeys/operation/operational-trail.md`
 
 ---
 
@@ -202,7 +202,7 @@ aws sqs receive-message \
 - [ ] Event recorded in `RawProviderEvents` table with corresponding `eventKey`.
 - [ ] DLQ at baseline volume.
 
-**Record:** → `prodops/artifacts/trails/operational-trail.md`
+**Record:** → `prodops/framework/journeys/operation/operational-trail.md`
 
 ---
 

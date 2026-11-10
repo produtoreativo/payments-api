@@ -42,7 +42,7 @@ criteria.
 
 ## Preconditions
 
-1. `prodops/skills/prodops-emit-event/SKILL.en.md` has been read and the agent
+1. `prodops/skills/prodops-emit-event/SKILL.md` has been read and the agent
    understands how to invoke the tool.
 2. The tool is available at `prodops/runtime/tools/emit-event/scripts/emit-event`.
 
@@ -120,7 +120,7 @@ Feature listed in Required context above.
 `start → tdd → commit` are **sequential steps**. Security, quality, and
 documentation validations are **not** extra steps — they are transversal and run
 inside each cycle's Yellow Bar. See
-[`../../framework/journeys/delivery/phases/hack/README.md`](../../framework/journeys/delivery/phases/hack/README.md#steps-sequenciais-vs-validações-transversais).
+[`../../framework/journeys/delivery/phases/hack/quality-gates.en.md`](../../framework/journeys/delivery/phases/hack/quality-gates.en.md#sequential-steps-vs-transversal-validations).
 
 ## Quality Gates (mandatory — cycle exit criteria)
 

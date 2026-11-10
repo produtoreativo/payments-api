@@ -31,7 +31,7 @@ Skills **não** são documentação conceitual, templates ou capabilities.
 | Upstream | Discovery — exploração, experimentos, protótipos | [upstream/SKILL.md](upstream/SKILL.md) |
 | Downstream | Modo Downstream — readiness e delivery governado | [downstream/SKILL.md](downstream/SKILL.md) |
 | Diligence | Diligence — sincronização, drift e reconciliação de workspace | [diligence/SKILL.md](diligence/SKILL.md) |
-| OBC | Transversal — criar ou corrigir um Local OBC conforme o template, com verificação (`scripts/check-obc.sh`) | [obc/SKILL.md](obc/SKILL.md) |
+| OBC | Transversal — criar ou corrigir um Local OBC conforme o template, com verificação (`prodops/skills/obc/scripts/check-obc.sh`) | [obc/SKILL.md](obc/SKILL.md) |
 
 ### Steps de Upstream
 

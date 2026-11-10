@@ -56,7 +56,7 @@ aws sqs get-queue-attributes \
 - [ ] Volume de mensagens no DLQ retornou ao baseline.
 - [ ] Logs sem `uncorrelated webhook` acima do baseline.
 
-**Registrar:** data/hora, escopo de pedidos afetados, decisão tomada → `prodops/artifacts/trails/operational-trail.md`
+**Registrar:** data/hora, escopo de pedidos afetados, decisão tomada → `prodops/framework/journeys/operation/operational-trail.md`
 
 ---
 
@@ -104,7 +104,7 @@ aws sqs get-queue-attributes \
 - [ ] Nenhum `orderId` com duas invoices `OPEN` no DynamoDB.
 - [ ] Idempotência verificada: mesmo `orderId` + mesma `Idempotency-Key` retorna 201 com a invoice original.
 
-**Registrar:** → `prodops/artifacts/trails/operational-trail.md`
+**Registrar:** → `prodops/framework/journeys/operation/operational-trail.md`
 
 ---
 
@@ -157,7 +157,7 @@ Se não houver resolução imediata, o atendimento pode confirmar o status do pa
 - [ ] Cliente recebeu comunicação (confirmado pelo log de envio ou pelo atendimento).
 - [ ] Volume de eventos na DLQ retornou ao baseline.
 
-**Registrar:** → `prodops/artifacts/trails/operational-trail.md`
+**Registrar:** → `prodops/framework/journeys/operation/operational-trail.md`
 
 ---
 
@@ -202,7 +202,7 @@ aws sqs receive-message \
 - [ ] Evento registrado na tabela `RawProviderEvents` com `eventKey` correspondente.
 - [ ] DLQ com volume de baseline.
 
-**Registrar:** → `prodops/artifacts/trails/operational-trail.md`
+**Registrar:** → `prodops/framework/journeys/operation/operational-trail.md`
 
 ---
 

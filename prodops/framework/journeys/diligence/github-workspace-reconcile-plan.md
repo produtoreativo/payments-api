@@ -915,7 +915,7 @@ Este plano está completo e documentado. Nenhuma ação foi executada.
 
 - Inspect: `prodops/artifacts/diligence/reports/github-workspace-inspection-2026-07-24.yaml`
 - Inspect MD: `prodops/artifacts/diligence/reports/github-workspace-inspection-2026-07-24.md`
-- Execution Report (Inspect): `prodops/documentation-review-diligence-github-inspection.md`
+- Execution Report (Inspect): `prodops/artifacts/experiments/013-runtime-validation/evidence/documentation-review-diligence-github-inspection.md`
 - Schema: `prodops/framework/journeys/diligence/github-workspace-schema.yaml`
 - Specification: `prodops/framework/journeys/diligence/github-workspace.md`
 - Readiness Protocol: `prodops/framework/journeys/diligence/github-workspace-readiness.md`

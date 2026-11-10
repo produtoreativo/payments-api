@@ -32,7 +32,7 @@ The Feature Flag that enables the new Gateway remains disabled due to a known bu
 
 ## Required Upstream Evidence
 
-The experiment `prodops/framework/journeys/discovery/experiments/004-feature-flag-readiness/experiment.md`
+The experiment `prodops/artifacts/experiments/004-feature-flag-readiness/experiment.md`
 classifies this uncertainty as P0 and requires evidence from Checkout before
 final promotion:
 

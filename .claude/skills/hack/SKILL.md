@@ -6,7 +6,7 @@ description: Execute implementation work with TDD. Use when changing code, behav
      Source:    prodops/skills/hack/SKILL.md
      Player:    claude
      Generator: prodops/scripts/agents/materialize-skills.sh
-     Generated: 2026-08-06T13:38:14Z
+     Generated: 2026-11-10T16:41:20Z
      To update: bash prodops/scripts/agents/materialize-skills.sh --skill hack
 -->
 
@@ -127,7 +127,7 @@ Feature listed in Required context above.
 `start → tdd → commit` are **sequential steps**. Security, quality, and
 documentation validations are **not** extra steps — they are transversal and run
 inside each cycle's Yellow Bar. See
-[`../../framework/journeys/delivery/phases/hack/README.md`](../../framework/journeys/delivery/phases/hack/README.md#steps-sequenciais-vs-validações-transversais).
+[`../../framework/journeys/delivery/phases/hack/quality-gates.md`](../../framework/journeys/delivery/phases/hack/quality-gates.md#steps-sequenciais-vs-validações-transversais).
 
 ## Quality Gates (mandatory — cycle exit criteria)
 

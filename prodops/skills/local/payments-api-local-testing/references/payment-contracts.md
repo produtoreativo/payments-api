@@ -42,7 +42,7 @@ Expected local response:
 
 ## POST /payments
 
-Controller: `api/src/app.controller.ts`
+Controller: removido — o antigo `app.controller` não existe mais e a API não tem rota `POST /payments`. O fluxo equivalente é `POST /invoices`, em `api/src/modules/invoices/controllers/invoice.controller.ts`. **O contrato abaixo está desatualizado e precisa de revisão.**
 
 Headers:
 

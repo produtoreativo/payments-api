@@ -158,7 +158,7 @@ Record for the Postmortem:
 
 ### Closure
 
-**Record in:** `prodops/artifacts/trails/operational-trail.md` (append-only).
+**Record in:** `prodops/framework/journeys/operation/operational-trail.md` (append-only).
 
 Required fields: date/time, Runbook executed, root cause identified, decision made, impact scope, evidence.
 

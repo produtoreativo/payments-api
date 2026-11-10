@@ -195,4 +195,4 @@ Estas perguntas devem ser respondidas durante a execução — não são bloquea
 | Release Draft | [release-draft-pilot.md](./release-draft-pilot.md) |
 | Experimento base | [EXP-013](../experiments/013-runtime-validation/experiment.md) |
 | Discovery Report do EXP-013 | [runtime-validation-discovery-report.md](../experiments/013-runtime-validation/runtime-validation-discovery-report.md) |
-| Documentação de revisão | [documentation-review-product-discovery-pilot.md](../../documentation-review-product-discovery-pilot.md) |
+| Documentação de revisão | [documentation-review-product-discovery-pilot.md](../experiments/013-runtime-validation/evidence/documentation-review-product-discovery-pilot.md) |

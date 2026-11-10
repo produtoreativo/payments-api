@@ -29,7 +29,7 @@ Define, maintain, and verify contracts that describe the expected behavior of th
 
 ## Dependencies
 
-- Product Deck (`prodops/artifacts/product/product-deck.md`)
+- Product Deck (`prodops/artifacts/product/context/product-deck.md`)
 - Reliability Plan (`prodops/framework/journeys/assessment/reliability-plans/`)
 
 ## References

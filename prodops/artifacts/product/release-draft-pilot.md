@@ -210,4 +210,4 @@ Se o critério de não-conclusão for atingido, o próximo passo é **Opção B 
 | Discovery Report | [discovery-report-pilot.md](./discovery-report-pilot.md) |
 | Roadmap | [roadmap-pilot.md](./roadmap-pilot.md) |
 | Experimento base | [EXP-013](../experiments/013-runtime-validation/experiment.md) |
-| Documentação de revisão | [documentation-review-product-discovery-pilot.md](../../documentation-review-product-discovery-pilot.md) |
+| Documentação de revisão | [documentation-review-product-discovery-pilot.md](../experiments/013-runtime-validation/evidence/documentation-review-product-discovery-pilot.md) |

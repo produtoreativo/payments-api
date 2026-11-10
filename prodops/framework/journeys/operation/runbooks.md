@@ -158,7 +158,7 @@ Registrar para o Postmortem:
 
 ### Closure
 
-**Registrar em:** `prodops/artifacts/trails/operational-trail.md` (append-only).
+**Registrar em:** `prodops/framework/journeys/operation/operational-trail.md` (append-only).
 
 Campos obrigatórios: data/hora, Runbook executado, causa raiz identificada, decisão tomada, escopo de impacto, evidências.
 

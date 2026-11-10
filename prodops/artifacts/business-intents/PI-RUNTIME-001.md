@@ -141,5 +141,5 @@ Criar experimento em `prodops/artifacts/experiments/` com escopo de validação 
 | Artefato | Localização | Status |
 |---|---|---|
 | Business Signal de origem | [BS-RUNTIME-001](../business-signals/BS-RUNTIME-001.md) | Criado |
-| Relatório de revisão | [documentation-review-runtime-business-signal-intent.md](../../documentation-review-runtime-business-signal-intent.md) | Criado |
+| Relatório de revisão | [documentation-review-runtime-business-signal-intent.md](../experiments/013-runtime-validation/evidence/documentation-review-runtime-business-signal-intent.md) | Criado |
 | Experimento de validação | `prodops/artifacts/experiments/013-runtime-validation/` | Pendente — próximo passo |

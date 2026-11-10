@@ -3,7 +3,7 @@
 Os objetivos canônicos da release estão atualmente definidos em:
 
 - `prodops/artifacts/plans/iteration-plan.md`
-- `prodops/framework/journeys/assessment/reliability-plans/README.md`
+- `prodops/artifacts/plans/reliability/README.md`
 - `prodops/artifacts/product/context/product-deck.md`
 - `prodops/artifacts/product/context/service-decks/compra-com-pix.md`
 

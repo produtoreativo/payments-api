@@ -31,7 +31,7 @@ Skills are **not** conceptual documentation, templates, or capabilities.
 | Upstream | Discovery — exploration, experiments, prototypes | [upstream/SKILL.md](upstream/SKILL.md) |
 | Downstream | Downstream mode — readiness and governed delivery | [downstream/SKILL.md](downstream/SKILL.md) |
 | Diligence | Diligence — synchronization, drift, and workspace reconciliation | [diligence/SKILL.md](diligence/SKILL.md) |
-| OBC | Cross-cutting — create or fix a Local OBC according to the template, with verification (`scripts/check-obc.sh`) | [obc/SKILL.en.md](obc/SKILL.en.md) |
+| OBC | Cross-cutting — create or fix a Local OBC according to the template, with verification (`prodops/skills/obc/scripts/check-obc.sh`) | [obc/SKILL.en.md](obc/SKILL.en.md) |
 
 ### Upstream Steps
 

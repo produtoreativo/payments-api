@@ -42,7 +42,7 @@ Expected local response:
 
 ## POST /payments
 
-Controller: `api/src/app.controller.ts`
+Controller: removed — the old `app.controller` no longer exists and the API has no `POST /payments` route. The equivalent flow is `POST /invoices`, in `api/src/modules/invoices/controllers/invoice.controller.ts`. **The contract below is outdated and needs review.**
 
 Headers:
 
