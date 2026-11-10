@@ -32,6 +32,7 @@ Skills are **not** conceptual documentation, templates, or capabilities.
 | Downstream | Downstream mode — readiness and governed delivery | [downstream/SKILL.md](downstream/SKILL.md) |
 | Diligence | Diligence — synchronization, drift, and workspace reconciliation | [diligence/SKILL.md](diligence/SKILL.md) |
 | OBC | Cross-cutting — create or fix a Local OBC according to the template, with verification (`prodops/skills/obc/scripts/check-obc.sh`) | [obc/SKILL.en.md](obc/SKILL.en.md) |
+| Event Storming | Cross-cutting — Event Storming script, documentation, Datadog dashboard and publishing from a JSON spec (`prodops/skills/event-storming/scripts/`) | [event-storming/SKILL.en.md](event-storming/SKILL.en.md) |
 
 ### Upstream Steps
 
