@@ -1,7 +1,7 @@
 # Product Deck — Payments
 
 > Artefato vivo. Atualizar em cada mudança de serviço, arquitetura, time ou SLO.
-> Última atualização: 2026-08-10
+> Última atualização: 2026-11-10
 
 ---
 
@@ -33,6 +33,29 @@ Cada entrada é um Product Service com Service Deck associado. O número de conf
 | **Configuração e Entrega de Webhook** | Service | Consumidor registra endpoint e recebe eventos de pagamento com assinatura verificável | `[apurar]` | `[apurar]` | [configuracao-e-entrega-de-webhook.md](service-decks/configuracao-e-entrega-de-webhook.md) | webhook-configuration |
 
 > Um serviço sem Local OBC committed não aparece como Product Service — é sinalizado como pendente de contrato observável.
+
+### Validação dos Service Decks (2026-11-10)
+
+Critérios: o deck existe em `service-decks/`, segue as 7 seções canônicas ([`service-deck.md`](../../../framework/service-deck.md)), referencia Local OBC existente em `prodops/artifacts/obcs/` e todos os links internos resolvem.
+
+| Service Deck | 7 seções canônicas | Local OBC existe | Links resolvem | Situação |
+|---|---|---|---|---|
+| [compra-com-boleto.md](service-decks/compra-com-boleto.md) | ✅ | ✅ | ✅ | Válido |
+| [compra-com-cartao-de-credito.md](service-decks/compra-com-cartao-de-credito.md) | ✅ | ✅ | ✅ | Válido |
+| [split-payment-pix-boleto.md](service-decks/split-payment-pix-boleto.md) | ✅ | ✅ | ✅ | Válido |
+| [cancelamento-de-invoice.md](service-decks/cancelamento-de-invoice.md) | ✅ | ✅ | ✅ | Válido |
+| [autenticacao-api-token.md](service-decks/autenticacao-api-token.md) | ✅ | ✅ | ✅ | Válido |
+| [configuracao-e-entrega-de-webhook.md](service-decks/configuracao-e-entrega-de-webhook.md) | ✅ | ✅ | ✅ | Válido |
+| [compra-com-pix.md](service-decks/compra-com-pix.md) | ❌ formato legado (13 seções, "Service Blueprint") | ✅ | ✅ | Listado, **pendente de migração** para o formato canônico |
+
+**Com Local OBC committed, sem Service Deck (pendentes):**
+
+| Capability | OBC | Observação |
+|---|---|---|
+| Chargeback Handling (DS-62) | [chargeback-handling](../../obcs/chargeback-handling.md) | Entregue na v0.15.0 (PR #176). Não consta como Product Service até existir Service Deck |
+| Boleto Auto-Cancellation (DS-63) | [boleto-auto-cancellation](../../obcs/boleto-auto-cancellation.md) | Entregue na v0.15.0 (PR #177). Candidato a compor o Value Stream *Compra com Boleto* |
+
+> OBCs de plataforma e framework (`observability-datadog`, `dynamodb-optimization`, `production-cicd-pipeline`, `dependency-security-update`, `postcss-security`, `prodops-framework-*`, `rt-*`) descrevem capacidades internas, não serviços consumíveis pelo produto, e por isso não são Product Services.
 
 ---
 
@@ -150,7 +173,7 @@ Logs: CloudWatch /aws/lambda/{env}-payments-api  (retenção 30d)
 |---|---|---|---|
 | % de invoices Pix criadas com sucesso | 99,5% em até 3s | OBC `create-invoice` | Tempo real |
 | % de pagamentos confirmados refletidos em Orders | 99% em até 30s | OBC `payment-confirmation` | Tempo real |
-| % de webhooks entregues ao consumidor | 99% | OBC pendente | Tempo real |
+| % de webhooks entregues ao consumidor | 99% | OBC `webhook-configuration` (SLO ainda não formalizado no OBC) | Tempo real |
 | p95 de criação de invoice (qualquer billing type) | < 3s | Datadog APM | Tempo real |
 | DLQ depth (`payments-webhook-dlq`) | 0 mensagens | CloudWatch | Tempo real |
 
@@ -188,7 +211,13 @@ Logs: CloudWatch /aws/lambda/{env}-payments-api  (retenção 30d)
 | Artefato | Localização |
 |---|---|
 | Architecture Overview | [`prodops/artifacts/architecture/overview.md`](../../architecture/overview.md) |
-| Service Deck — Compra com Pix | [`prodops/artifacts/product/context/service-decks/compra-com-pix.md`](service-decks/compra-com-pix.md) |
+| Service Deck — Compra com Pix (formato legado) | [`service-decks/compra-com-pix.md`](service-decks/compra-com-pix.md) |
+| Service Deck — Compra com Boleto | [`service-decks/compra-com-boleto.md`](service-decks/compra-com-boleto.md) |
+| Service Deck — Compra com Cartão de Crédito | [`service-decks/compra-com-cartao-de-credito.md`](service-decks/compra-com-cartao-de-credito.md) |
+| Service Deck — Split Payment Pix + Boleto | [`service-decks/split-payment-pix-boleto.md`](service-decks/split-payment-pix-boleto.md) |
+| Service Deck — Cancelamento de Invoice | [`service-decks/cancelamento-de-invoice.md`](service-decks/cancelamento-de-invoice.md) |
+| Service Deck — Autenticação via API Token | [`service-decks/autenticacao-api-token.md`](service-decks/autenticacao-api-token.md) |
+| Service Deck — Configuração e Entrega de Webhook | [`service-decks/configuracao-e-entrega-de-webhook.md`](service-decks/configuracao-e-entrega-de-webhook.md) |
 | OBCs committed | [`prodops/artifacts/obcs/`](../../obcs/) |
 | Release Trail | [`prodops/artifacts/trails/release-trail.md`](../../trails/release-trail.md) |
 | Iteration Plan atual | [`prodops/artifacts/plans/iteration-plan.md`](../../plans/iteration-plan.md) |
