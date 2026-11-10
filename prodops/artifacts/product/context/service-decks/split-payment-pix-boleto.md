@@ -22,6 +22,16 @@ este serviço **cria e acompanha as duas porções como unidade coesa, garante i
 
 > Fonte: OBC [`prodops/artifacts/obcs/split-payment-pix-boleto.md`](../../../obcs/split-payment-pix-boleto.md)
 
+### Mapa de nós
+
+Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops/framework/service-deck.md`.
+
+| Nó | Local OBC | Estado do OBC | Papel no serviço | Contratos neste deck |
+|---|---|---|---|---|
+| `split-payment-pix-boleto` | [`split-payment-pix-boleto.md`](../../../obcs/split-payment-pix-boleto.md) | In Delivery | Criação, confirmação Pix + Boleto e expiração do Split Payment | ✅ completo |
+
+> **Contratos neste deck:** resultado da comparação (2026-11-10) entre os eventos do OBC e os eventos citados neste deck — ✅ completo, ⚠️ parcial, ❌ não superficiado.
+
 ### APIs públicas
 
 | Endpoint | Contrato | Resultado |

@@ -21,6 +21,22 @@ este serviço **desacopla o Checkout dos contratos do PSP, garante idempotência
 
 > Fonte: OBC [`prodops/artifacts/obcs/create-invoice-boleto.md`](../../../obcs/create-invoice-boleto.md) + [`prodops/artifacts/obcs/payment-confirmation.md`](../../../obcs/payment-confirmation.md)
 
+### Mapa de nós
+
+Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops/framework/service-deck.md`.
+
+| Nó | Local OBC | Estado do OBC | Papel no serviço | Contratos neste deck |
+|---|---|---|---|---|
+| `create-invoice-boleto` | [`create-invoice-boleto.md`](../../../obcs/create-invoice-boleto.md) | In Delivery | Criação da invoice via Boleto Bancário | ✅ completo |
+| `payment-confirmation` | [`payment-confirmation.md`](../../../obcs/payment-confirmation.md) | In Delivery | Confirmação do pagamento por webhook do provedor | ⚠️ parcial |
+| `boleto-auto-cancellation` *(candidato)* | [`boleto-auto-cancellation.md`](../../../obcs/boleto-auto-cancellation.md) | In Delivery | Cancelamento automático de boleto vencido (`PAYMENT_OVERDUE`) | ❌ não superficiado |
+
+> **Nó compartilhado:** `payment-confirmation` também é nó de `compra-com-pix`, `compra-com-cartao-de-credito`. O OBC é a fonte única; este deck apenas o referencia.
+
+> **Nó candidato:** o OBC já está committed e se restringe a este meio de pagamento, mas sua incorporação ao serviço depende de confirmação do dono do serviço.
+
+> **Contratos neste deck:** resultado da comparação (2026-11-10) entre os eventos do OBC e os eventos citados neste deck — ✅ completo, ⚠️ parcial, ❌ não superficiado.
+
 ### APIs públicas
 
 | Endpoint | Contrato | Resultado |

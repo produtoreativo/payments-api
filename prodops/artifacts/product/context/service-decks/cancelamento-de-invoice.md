@@ -22,6 +22,16 @@ este serviço **protege contra duplicação, impede cancelamento pós-pagamento,
 
 > Fonte: OBC [`prodops/artifacts/obcs/cancel-invoice.md`](../../../obcs/cancel-invoice.md)
 
+### Mapa de nós
+
+Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops/framework/service-deck.md`.
+
+| Nó | Local OBC | Estado do OBC | Papel no serviço | Contratos neste deck |
+|---|---|---|---|---|
+| `cancel-invoice` | [`cancel-invoice.md`](../../../obcs/cancel-invoice.md) | In Delivery | Cancelamento de invoice pendente com idempotência | ✅ completo |
+
+> **Contratos neste deck:** resultado da comparação (2026-11-10) entre os eventos do OBC e os eventos citados neste deck — ✅ completo, ⚠️ parcial, ❌ não superficiado.
+
 ### APIs públicas
 
 | Endpoint | Contrato | Resultado |

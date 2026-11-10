@@ -23,6 +23,22 @@ este serviço **centraliza a criação da invoice hospedada, desacopla o Checkou
 
 > Fonte: OBC [`prodops/artifacts/obcs/credit-card-authorization-confirmation.md`](../../../obcs/credit-card-authorization-confirmation.md)
 
+### Mapa de nós
+
+Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops/framework/service-deck.md`.
+
+| Nó | Local OBC | Estado do OBC | Papel no serviço | Contratos neste deck |
+|---|---|---|---|---|
+| `credit-card-authorization-confirmation` | [`credit-card-authorization-confirmation.md`](../../../obcs/credit-card-authorization-confirmation.md) | In Delivery | Autorização e confirmação do pagamento com cartão hospedado (risco, recusa e refund) | ⚠️ parcial |
+| `payment-confirmation` | [`payment-confirmation.md`](../../../obcs/payment-confirmation.md) | In Delivery | Confirmação do pagamento por webhook do provedor | ⚠️ parcial |
+| `chargeback-handling` *(candidato)* | [`chargeback-handling.md`](../../../obcs/chargeback-handling.md) | In Delivery | Rastreio do ciclo de vida de chargeback (apenas `CREDIT_CARD`) | ❌ não superficiado |
+
+> **Nó compartilhado:** `payment-confirmation` também é nó de `compra-com-pix`, `compra-com-boleto`. O OBC é a fonte única; este deck apenas o referencia.
+
+> **Nó candidato:** o OBC já está committed e se restringe a este meio de pagamento, mas sua incorporação ao serviço depende de confirmação do dono do serviço.
+
+> **Contratos neste deck:** resultado da comparação (2026-11-10) entre os eventos do OBC e os eventos citados neste deck — ✅ completo, ⚠️ parcial, ❌ não superficiado.
+
 ### APIs públicas
 
 | Endpoint | Contrato | Resultado |

@@ -21,6 +21,16 @@ este serviço **associa cada token a um `tenantId` e `tokenId` rastreáveis, reg
 
 > Fonte: OBC [`prodops/artifacts/obcs/api-token-validation.md`](../../../obcs/api-token-validation.md)
 
+### Mapa de nós
+
+Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops/framework/service-deck.md`.
+
+| Nó | Local OBC | Estado do OBC | Papel no serviço | Contratos neste deck |
+|---|---|---|---|---|
+| `api-token-validation` | [`api-token-validation.md`](../../../obcs/api-token-validation.md) | In Delivery | Autenticação por token de API e isolamento por tenant | ✅ completo |
+
+> **Contratos neste deck:** resultado da comparação (2026-11-10) entre os eventos do OBC e os eventos citados neste deck — ✅ completo, ⚠️ parcial, ❌ não superficiado.
+
 ### APIs públicas
 
 | Endpoint | Contrato | Resultado |

@@ -21,6 +21,16 @@ este serviço **entrega proativamente cada `payment.confirmed` e `payment.cancel
 
 > Fonte: OBC [`prodops/artifacts/obcs/webhook-configuration.md`](../../../obcs/webhook-configuration.md)
 
+### Mapa de nós
+
+Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops/framework/service-deck.md`.
+
+| Nó | Local OBC | Estado do OBC | Papel no serviço | Contratos neste deck |
+|---|---|---|---|---|
+| `webhook-configuration` | [`webhook-configuration.md`](../../../obcs/webhook-configuration.md) | In Delivery | Registro de endpoint e entrega de eventos ao consumidor | ✅ completo |
+
+> **Contratos neste deck:** resultado da comparação (2026-11-10) entre os eventos do OBC e os eventos citados neste deck — ✅ completo, ⚠️ parcial, ❌ não superficiado.
+
 ### APIs públicas
 
 | Endpoint | Contrato | Resultado |

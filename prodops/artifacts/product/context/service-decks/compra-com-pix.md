@@ -66,6 +66,19 @@
 
 ## 6. Observable Business Contract
 
+### Mapa de nós
+
+Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops/framework/service-deck.md`.
+
+| Nó | Local OBC | Estado do OBC | Papel no serviço | Contratos neste deck |
+|---|---|---|---|---|
+| `create-invoice` | [`create-invoice.md`](../../../obcs/create-invoice.md) | In Delivery | Criação da invoice (Pix) no gateway e no provedor | ❌ não superficiado |
+| `payment-confirmation` | [`payment-confirmation.md`](../../../obcs/payment-confirmation.md) | In Delivery | Confirmação do pagamento por webhook do provedor | ❌ não superficiado |
+
+> **Nó compartilhado:** `payment-confirmation` também é nó de `compra-com-boleto`, `compra-com-cartao-de-credito`. O OBC é a fonte única; este deck apenas o referencia.
+
+> **Contratos neste deck:** resultado da comparação (2026-11-10) entre os eventos do OBC e os eventos citados neste deck — ✅ completo, ⚠️ parcial, ❌ não superficiado.
+
 | Evento | SLI | SLO/limite inicial | Impacto | Resposta | Dono |
 | --- | --- | --- | --- | --- | --- |
 | `PixQRCodeGerado` | Percentual de QR Codes gerados com sucesso. | 99.5% em até 3s | Cliente não consegue pagar com Pix. | Verificar Pix Provider, Payments API e timeout. | Payments |
