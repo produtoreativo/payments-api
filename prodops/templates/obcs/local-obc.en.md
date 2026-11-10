@@ -101,9 +101,11 @@
 <!-- Required for Committed. List all observable events this capability emits.
      Include success, failure, idempotency, and edge-case events.
 
-     NAMING RULE: the name in the "Event" column must be IDENTICAL to the event_key (or EventEmitter event name)
-     actually emitted in the code. Do not invent contract names the code does not use.
-     Check api/src and prodops/artifacts/event-storming/plan.json before writing.
+     NAMING RULE: business events follow `payments.<aggregate>.<fact>` (lowercase, snake_case, English) and the
+     name in the "Event" column must be IDENTICAL to the one emitted in the code — single source:
+     api/src/events/payments-events.ts. Catalog and rules: prodops/artifacts/architecture/domain-events.en.md.
+     Do not invent contract names the code does not use, nor emit the same fact under two names.
+     Observability keys (event_key) and external webhook types do not follow this convention.
 
      "Status" column: `Emitted` = already exists in the code; `Planned` = does not exist yet (it is part of the
      implementation scope and must not be treated as a current contract). Do not leave a `Planned` event in an

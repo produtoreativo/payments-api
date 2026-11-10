@@ -64,7 +64,9 @@ Never fill a section by assumption. Each one has a source:
 
 ## Event naming rule (the most important one)
 
-The name in the `Event` column must be **identical** to the event actually emitted in the code. To find out what exists:
+Business events follow the **`payments.<aggregate>.<fact>`** convention (lowercase, snake_case, English) — rules, catalog and eliminated duplicates in [`prodops/artifacts/architecture/domain-events.en.md`](../../artifacts/architecture/domain-events.en.md). The single source of names in the code is `api/src/events/payments-events.ts`.
+
+The name in the `Event` column must be **identical** to the event actually emitted in the code. Observability keys (`event_key`) and external webhook types do not follow this convention. To find out what exists:
 
 ```bash
 # domain events (EventEmitter)

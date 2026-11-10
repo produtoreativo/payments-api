@@ -6,7 +6,7 @@ description: Cria ou corrige um Local OBC seguindo o template prodops/templates/
      Source:    prodops/skills/obc/SKILL.md
      Player:    copilot
      Generator: prodops/scripts/agents/materialize-skills.sh
-     Generated: 2026-11-10T15:51:12Z
+     Generated: 2026-11-10T17:04:50Z
      To update: bash prodops/scripts/agents/materialize-skills.sh --skill obc
 -->
 
@@ -71,7 +71,9 @@ Nunca preencha uma seção por suposição. Cada uma tem uma fonte:
 
 ## Regra de nomes de evento (a mais importante)
 
-O nome na coluna `Event` deve ser **idêntico** ao evento realmente emitido no código. Para descobrir o que existe:
+Eventos de negócio seguem a convenção **`payments.<agregado>.<fato>`** (minúsculas, snake_case, inglês) — regras, catálogo e duplicatas eliminadas em [`prodops/artifacts/architecture/domain-events.md`](../../artifacts/architecture/domain-events.md). A fonte única dos nomes no código é `api/src/events/payments-events.ts`.
+
+O nome na coluna `Event` deve ser **idêntico** ao evento realmente emitido no código. Chaves de observabilidade (`event_key`) e tipos de webhook externo não seguem esta convenção. Para descobrir o que existe:
 
 ```bash
 # eventos de domínio (EventEmitter)

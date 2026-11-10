@@ -101,9 +101,11 @@
 <!-- Obrigatória para Committed. Liste todos os eventos observáveis que esta capability emite.
      Inclua eventos de sucesso, falha, idempotência e casos especiais.
 
-     REGRA DE NOMENCLATURA: o nome na coluna "Event" deve ser IDÊNTICO ao event_key (ou nome do evento do
-     EventEmitter) realmente emitido no código. Não invente nomes de contrato que o código não usa.
-     Confira em api/src e em prodops/artifacts/event-storming/plan.json antes de escrever.
+     REGRA DE NOMENCLATURA: eventos de negócio seguem `payments.<agregado>.<fato>` (minúsculas, snake_case,
+     em inglês) e o nome na coluna "Event" deve ser IDÊNTICO ao emitido no código — fonte única:
+     api/src/events/payments-events.ts. Catálogo e regras: prodops/artifacts/architecture/domain-events.md.
+     Não invente nomes de contrato que o código não usa, nem emita o mesmo fato sob dois nomes.
+     Chaves de observabilidade (event_key) e tipos de webhook externo não seguem esta convenção.
 
      Coluna "Situação": `Emitido` = já existe no código; `Planejado` = ainda não existe (entra no escopo de
      implementação e não pode ser tratado como contrato vigente). Não deixe evento `Planejado` num OBC Operational.
