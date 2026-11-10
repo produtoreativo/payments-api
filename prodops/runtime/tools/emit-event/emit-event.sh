@@ -177,25 +177,32 @@ log "Derived state: $DERIVED_STATE"
 
 # ── Step 4: Datadog ───────────────────────────────────────────────────────────
 DD_STATUS="success"
+DD_ERR=""
 log "Sending Datadog metric..."
-if ! bash "$DATADOG" \
+if ! DD_OUT=$(bash "$DATADOG" \
     --issue          "$WORK_ITEM_ID" \
     --event          "$CE_TYPE" \
     --state          "$DERIVED_STATE" \
-    --correlation-id "$CORRELATION_ID" >/dev/null 2>&1; then
-  log "WARNING: Datadog sync failed (non-fatal)"
+    --correlation-id "$CORRELATION_ID" 2>&1); then
+  # Keep the reason: the last ERROR/WARNING line of the consumer (or its last line).
+  DD_ERR=$(printf '%s\n' "$DD_OUT" | grep -E "ERROR|WARNING|Error" | tail -n 1 | cut -c1-300)
+  [[ -z "$DD_ERR" ]] && DD_ERR=$(printf '%s\n' "$DD_OUT" | tail -n 1 | cut -c1-300)
+  log "WARNING: Datadog sync failed (non-fatal): ${DD_ERR:-no output}"
   DD_STATUS="error"
 fi
 
 # ── Step 5: GitHub sync ───────────────────────────────────────────────────────
 GH_STATUS="success"
+GH_ERR=""
 log "Syncing GitHub Project..."
-if ! bash "$GITHUB" \
+if ! GH_OUT=$(bash "$GITHUB" \
     --issue          "$WORK_ITEM_ID" \
     --state          "$DERIVED_STATE" \
     --last-event     "$CE_TYPE" \
-    --correlation-id "$CORRELATION_ID" >/dev/null 2>&1; then
-  log "WARNING: GitHub sync failed (non-fatal)"
+    --correlation-id "$CORRELATION_ID" 2>&1); then
+  GH_ERR=$(printf '%s\n' "$GH_OUT" | grep -E "ERROR|HINT|WARNING" | tail -n 2 | tr '\n' ' ' | cut -c1-400)
+  [[ -z "$GH_ERR" ]] && GH_ERR=$(printf '%s\n' "$GH_OUT" | tail -n 1 | cut -c1-300)
+  log "WARNING: GitHub sync failed (non-fatal): ${GH_ERR:-no output}"
   GH_STATUS="error"
 fi
 
@@ -207,6 +214,8 @@ jq -n \
   --arg derived_state  "$DERIVED_STATE" \
   --arg github_sync    "$GH_STATUS" \
   --arg datadog_sync   "$DD_STATUS" \
+  --arg dd_err         "$DD_ERR" \
+  --arg gh_err         "$GH_ERR" \
   '{
     "status":         "accepted",
     "event-id":       $event_id,
@@ -215,5 +224,9 @@ jq -n \
     "derived-state":  $derived_state,
     "github-sync":    $github_sync,
     "datadog-sync":   $datadog_sync,
-    "errors":         []
+    "errors":         [],
+    "consumer-errors": ([
+      (if $dd_err != "" then "datadog-sync: " + $dd_err else empty end),
+      (if $gh_err != "" then "github-sync: "  + $gh_err else empty end)
+    ])
   }'
