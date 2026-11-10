@@ -59,6 +59,8 @@ run_test "08 bootstrap-intermediate-events (pipeline completeness)" "$TESTS_DIR/
 run_test "09 finish-started → FINISHING derived-state"              "$TESTS_DIR/09-finish-started-finishing-state.sh"
 run_test "10 send-sh iteration tag in Datadog payload"              "$TESTS_DIR/10-send-sh-iteration-tag.sh"
 run_test "11 github sync fails loudly (no false success)"          "$TESTS_DIR/11-github-sync-failure-handling.sh"
+run_test "12 datadog gets iteration tag and lead time"               "$TESTS_DIR/12-datadog-iteration-and-lead-time.sh"
+run_test "13 consumer failures are explained (consumer-errors)"      "$TESTS_DIR/13-consumer-errors-reported.sh"
 
 echo "────────────────────────────────────────────────"
 echo "Results: $PASSED passed, $FAILED failed"
