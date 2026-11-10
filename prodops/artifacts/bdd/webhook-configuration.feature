@@ -64,7 +64,7 @@ Funcionalidade: Configuração de webhook associado ao token de API
     Quando a Payments API tentar entregar o evento "invoice.confirmed"
     Então a Payments API deve registrar o evento "webhook.delivery.failed" com "statusCode" e "reason"
     E a invoice deve continuar com status "CONFIRMED"
-    E o evento "payment.confirmed" deve ter sido publicado normalmente
+    E o evento "payments.invoice.confirmed" deve ter sido publicado normalmente
 
   Cenário: Não entregar evento para webhook inativo
     Dado que o webhook "wh_001" foi removido

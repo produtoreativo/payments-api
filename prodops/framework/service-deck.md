@@ -99,7 +99,7 @@ A coluna **Contratos neste deck** diz se os eventos, APIs e SLIs do OBC do nó j
 | Categoria | Exemplos |
 |---|---|
 | **APIs públicas** | `POST /payments`, `GET /invoices/{id}` — contrato de request/response |
-| **Eventos publicados** | `payment.confirmed`, `invoice.issued` — schema e canal |
+| **Eventos publicados** | `payments.invoice.confirmed`, `payments.invoice.opened` — schema e canal |
 | **Eventos consumidos** | `order.created`, `refund.requested` — contrato de consumo |
 | **Schemas externos** | Modelos de dados expostos para integrações |
 

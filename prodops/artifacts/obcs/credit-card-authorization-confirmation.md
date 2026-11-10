@@ -83,18 +83,18 @@ Derivados dos cenários de `prodops/artifacts/bdd/credit-card-authorization-conf
 
 | Event | Situação | Meaning | Required dimensions |
 |---|---|---|---|
-| `payment.card.hosted_invoice.created` | Emitido | Hosted Asaas invoice/card entry was created. | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `provider`, `correlationId` |
-| `payment.card.saved.listed` | Planejado | Saved card metadata was listed for Checkout. | `tenantId`, `userId`, `provider`, `cardsCount`, `correlationId` |
-| `payment.card.saved.selected` | Planejado | Checkout selected a saved card for payment. | `tenantId`, `userId`, `orderId`, `invoiceId`, `cardId`, `brand`, `last4` |
-| `payment.card.token.registration_requested` | Planejado | New card tokenization was requested. | `tenantId`, `userId`, `provider`, `correlationId`, `hasRemoteIp` |
-| `payment.card.token.registered` | Planejado | Provider token was created and safe metadata was stored. | `tenantId`, `userId`, `cardId`, `provider`, `brand`, `last4`, `expiryMonth`, `expiryYear` |
-| `payment.card.authorization.requested` | Planejado | Tokenized card payment was submitted to provider. | `tenantId`, `orderId`, `invoiceId`, `provider`, `correlationId`, `hasToken` |
-| `payment.card.authorized` | Planejado | Provider authorized card payment before final confirmation. — *equivalente provável no código (a confirmar): `pagamento.cartao.webhook.pagamento.autorizado`* | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `providerStatus` |
-| `payment.card.risk_analysis.awaiting` | Planejado | Provider placed card payment under risk analysis. — *equivalente provável no código (a confirmar): `pagamento.cartao.webhook.analise_risco.aguardando`* | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId` |
-| `payment.card.refused` | Planejado | Card authorization or capture was refused. — *equivalente provável no código (a confirmar): `pagamento.cartao.webhook.captura_recusada`* | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `reasonCode` |
-| `payment.confirmed` | Emitido | Payment was confirmed and can release the order. | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `confirmedAt` |
-| `payment.card.refund.requested` | Emitido | Refund/reversal was requested for confirmed card payment. | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `amount`, `reason` |
-| `payment.card.refund.required` | Planejado | A confirmed card payment cannot be cancelled by delete and needs refund/reversal flow. | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId` |
+| `payments.invoice.opened` | Emitido | Hosted Asaas invoice/card entry was created. — *duplicata eliminada (`payment.card.hosted_invoice.created`); passa a ser `payments.invoice.opened`, com `billingType` etc. no payload* | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `provider`, `correlationId` |
+| `payments.card.saved_listed` | Planejado | Saved card metadata was listed for Checkout. — *substitui `payment.card.saved.listed`* | `tenantId`, `userId`, `provider`, `cardsCount`, `correlationId` |
+| `payments.card.saved_selected` | Planejado | Checkout selected a saved card for payment. — *substitui `payment.card.saved.selected`* | `tenantId`, `userId`, `orderId`, `invoiceId`, `cardId`, `brand`, `last4` |
+| `payments.card.token_registration_requested` | Planejado | New card tokenization was requested. — *substitui `payment.card.token.registration_requested`* | `tenantId`, `userId`, `provider`, `correlationId`, `hasRemoteIp` |
+| `payments.card.token_registered` | Planejado | Provider token was created and safe metadata was stored. — *substitui `payment.card.token.registered`* | `tenantId`, `userId`, `cardId`, `provider`, `brand`, `last4`, `expiryMonth`, `expiryYear` |
+| `payments.invoice.card_authorization_requested` | Planejado | Tokenized card payment was submitted to provider. — *substitui `payment.card.authorization.requested`* | `tenantId`, `orderId`, `invoiceId`, `provider`, `correlationId`, `hasToken` |
+| `payments.invoice.card_authorized` | Planejado | Provider authorized card payment before final confirmation. — *substitui `payment.card.authorized`* | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `providerStatus` |
+| `payments.invoice.card_risk_analysis_awaiting` | Planejado | Provider placed card payment under risk analysis. — *substitui `payment.card.risk_analysis.awaiting`* | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId` |
+| `payments.invoice.card_refused` | Planejado | Card authorization or capture was refused. — *substitui `payment.card.refused`* | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `reasonCode` |
+| `payments.invoice.confirmed` | Emitido | Payment was confirmed and can release the order. — *substitui `payment.confirmed`* | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `confirmedAt` |
+| `payments.invoice.refund_requested` | Emitido | Refund/reversal was requested for confirmed card payment. — *substitui `payment.card.refund.requested`* | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `amount`, `reason` |
+| `payments.invoice.refund_required` | Planejado | A confirmed card payment cannot be cancelled by delete and needs refund/reversal flow. — *substitui `payment.card.refund.required`* | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId` |
 
 ## Initial SLIs
 

@@ -66,9 +66,9 @@ Derived from the scenarios in `prodops/artifacts/bdd/create-invoice-boleto.featu
 
 | Event | Status | Meaning | Required dimensions |
 |---|---|---|---|
-| `payment.boleto.created` | Emitted | Boleto Invoice successfully created at the provider — bankSlipUrl available. | `invoiceId`, `orderId`, `tenantId`, `providerPaymentId`, `billingType`, `dueDate`, `correlationId` |
-| `payment.boleto.creation_failed` | Emitted | Failed to create boleto at the provider — invoice remains in PROVIDER_PENDING or FAILED. | `invoiceId`, `orderId`, `tenantId`, `reason`, `correlationId` |
-| `payment.boleto.idempotency_hit` | Emitted | Retry with the same idempotency key — existing invoice returned without a new charge. | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
+| `payments.invoice.opened` | Emitted | Boleto Invoice successfully created at the provider — bankSlipUrl available. — *duplicate eliminated (`payment.boleto.created`); now `payments.invoice.opened`, with `billingType` etc. in the payload* | `invoiceId`, `orderId`, `tenantId`, `providerPaymentId`, `billingType`, `dueDate`, `correlationId` |
+| `payments.invoice.creation_failed` | Emitted | Failed to create boleto at the provider — invoice remains in PROVIDER_PENDING or FAILED. — *duplicate eliminated (`payment.boleto.creation_failed`); now `payments.invoice.creation_failed`, with `billingType` etc. in the payload* | `invoiceId`, `orderId`, `tenantId`, `reason`, `correlationId` |
+| `payments.invoice.idempotency_hit` | Emitted | Retry with the same idempotency key — existing invoice returned without a new charge. — *replaces `payment.boleto.idempotency_hit`* | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
 
 ## Initial SLIs
 
@@ -86,7 +86,7 @@ Derived from the scenarios in `prodops/artifacts/bdd/create-invoice-boleto.featu
 - The response to Checkout must include `bankSlipUrl` (boleto PDF link) and `identificationField` (typed line). If the provider does not return `bankSlipUrl`, the invoice is marked as `FAILED` and the error is observable.
 - `bankSlipUrl` and `identificationField` must not be logged — they contain traceable billing data. Log only `invoiceId` and `providerPaymentId`.
 - The invoice status remains `OPEN` after successful creation. Payment confirmation is asynchronous (provider webhook) and may occur days after issuance.
-- Expired boleto (past due date without payment) must not be treated as an operational error — it is a natural state of the cycle. The `payment.boleto.expired` event must be observable when the provider webhook communicates the expiry.
+- Expired boleto (past due date without payment) must not be treated as an operational error — it is a natural state of the cycle. The `payments.invoice.expired` event must be observable when the provider webhook communicates the expiry.
 - Idempotency: the same `Idempotency-Key` must return the existing invoice without a new provider call. Identical behavior to Pix.
 - Transient provider failure (timeout, 5xx) does not alter idempotency behavior — the retry with the same key can be safely resent by Checkout.
 - `billingType=BOLETO` in the creation payload is mandatory. The gateway must not infer the charge type.

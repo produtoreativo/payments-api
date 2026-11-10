@@ -10,19 +10,19 @@ Feature: Chargeback Handling
   Scenario: Chargeback solicitado pelo portador
     When o PSP envia webhook com event "PAYMENT_CHARGEBACK_REQUESTED" para paymentId "pay_123"
     Then a invoice deve estar no status "CHARGEBACK_REQUESTED"
-    And o evento "payment.chargeback_requested" deve ser publicado
+    And o evento "payments.invoice.chargeback_requested" deve ser publicado
 
   Scenario: Chargeback entra em fase de disputa
     Given a invoice está no status "CHARGEBACK_REQUESTED"
     When o PSP envia webhook com event "PAYMENT_CHARGEBACK_DISPUTE" para paymentId "pay_123"
     Then a invoice deve estar no status "CHARGEBACK_DISPUTE"
-    And o evento "payment.chargeback_dispute" deve ser publicado
+    And o evento "payments.invoice.chargeback_disputed" deve ser publicado
 
   Scenario: Aguardando reversão de chargeback
     Given a invoice está no status "CHARGEBACK_DISPUTE"
     When o PSP envia webhook com event "PAYMENT_AWAITING_CHARGEBACK_REVERSAL" para paymentId "pay_123"
     Then a invoice deve estar no status "CHARGEBACK_REVERSAL_PENDING"
-    And o evento "payment.chargeback_reversal_pending" deve ser publicado
+    And o evento "payments.invoice.chargeback_reversal_pending" deve ser publicado
 
   Scenario: Webhook de chargeback duplicado é tratado de forma idempotente
     Given a invoice já está no status "CHARGEBACK_REQUESTED"
@@ -40,4 +40,4 @@ Feature: Chargeback Handling
     Given a invoice está no status "CONFIRMED"
     When o PSP envia webhook com event "PAYMENT_CHARGEBACK_DISPUTE" para paymentId "pay_123"
     Then a invoice deve estar no status "CHARGEBACK_DISPUTE"
-    And o evento "payment.chargeback_dispute" deve ser publicado
+    And o evento "payments.invoice.chargeback_disputed" deve ser publicado

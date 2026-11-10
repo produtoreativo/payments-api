@@ -116,7 +116,7 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 | Type | Feature |
 | Problem/opportunity | Confirmed payment needs to release the order exactly once, even with a duplicate, delayed or out-of-order webhook received before the invoice's internal consolidation. |
 | User/customer | Magazine Siara Ecommerce, Order Management, Payments, Finance, Customer Service. |
-| Expected outcome | Canonical `payment.confirmed` event published exactly once per confirmed payment, with updated invoice and auditable raw event. |
+| Expected outcome | Canonical `payments.invoice.confirmed` event published exactly once per confirmed payment, with updated invoice and auditable raw event. |
 | Current evidence | Feature `Payment confirmation by webhook`; need for reliable confirmation, reconciliation and duplicate protection. |
 | MVP scope | Validate Asaas token, persist raw event, process `PAYMENT_CONFIRMED`, process `PAYMENT_RECEIVED`, deduplicate events, correlate by `providerPaymentId` or `externalReference`. |
 | Out of scope | Full financial dashboard, dispute, chargeback, advanced multi-provider reconciliation rules. |
@@ -142,18 +142,18 @@ Score = ((Reach * Impact * Confidence) + Operational Risk) / Effort
 | User/customer | Magazine Siara Ecommerce, Checkout, Payments, Customer Service, Operations. |
 | Expected outcome | Open invoice can be cancelled safely, without a duplicate provider call and without an incorrect canonical event. |
 | Current evidence | Feature `Cancel invoice in the payment gateway`; need to cancel still-active charges. |
-| MVP scope | Cancel `OPEN` invoice in Asaas, record `CANCEL_REQUESTED`, confirm `CANCELLED`, publish `payment.cancelled`, prevent cancellation after `CONFIRMED`, handle provider 404. |
+| MVP scope | Cancel `OPEN` invoice in Asaas, record `CANCEL_REQUESTED`, confirm `CANCELLED`, publish `payments.invoice.cancelled`, prevent cancellation after `CONFIRMED`, handle provider 404. |
 | Out of scope | Refund after confirmed payment, financial dispute, partial cancellation, advanced reconciliation policies. |
-| Dependencies | Invoice state policy, Asaas endpoint `DELETE /v3/payments/{id}`, cancellation idempotency, `payment.cancelled` event, 404 policy. |
+| Dependencies | Invoice state policy, Asaas endpoint `DELETE /v3/payments/{id}`, cancellation idempotency, `payments.invoice.cancelled` event, 404 policy. |
 | Risks | Charge remaining payable after local cancellation, cancellation publication without provider confirmation, undue cancellation after payment, duplicate event. |
 | Minimum telemetry | Cancel request, provider delete latency/error, status transition, idempotency hit/miss, webhook `PAYMENT_DELETED`, canonical cancellation published. |
-| Acceptance criteria | Scenarios in [cancel-invoice.feature](../../bdd/cancel-invoice.feature) pass; `CONFIRMED` invoice is not cancelled; retry with the same key does not call the provider; 404 does not publish `payment.cancelled` without explicit decision. |
+| Acceptance criteria | Scenarios in [cancel-invoice.feature](../../bdd/cancel-invoice.feature) pass; `CONFIRMED` invoice is not cancelled; retry with the same key does not call the provider; 404 does not publish `payments.invoice.cancelled` without explicit decision. |
 | Score | Reach 3, Impact 4, Confidence 4, Effort 4, Operational Risk 2 = 13.7 |
 | Status | Ready for Delivery — OBC committed at `prodops/artifacts/obcs/cancel-invoice.md`. Deferred to next iteration. |
 
 **Discovery questions**
 
-- Should the `payment.cancelled` event be published on the cancel command or only after the `PAYMENT_DELETED` webhook?
+- Should the `payments.invoice.cancelled` event be published on the cancel command or only after the `PAYMENT_DELETED` webhook?
 - What operational policy should be applied when Asaas returns 404?
 - Which statuses allow cancellation and which require a refund flow?
 
@@ -191,7 +191,7 @@ An item should only leave the icebox for delivery when it meets the criteria bel
 | ID | Decision | Impact | Owner | Status |
 | --- | --- | --- | --- | --- |
 | DEC-001 | Define canonical invoice contract between ecommerce and Payments API. | Blocks API stability and contract tests. | Tech Lead Payments | Open |
-| DEC-002 | Define publication policy for `payment.confirmed`, `payment.received` and `payment.cancelled`. | Affects Orders, ecommerce and reconciliation. | PM Payments + Tech Lead Payments | Open |
+| DEC-002 | Define publication policy for `payments.invoice.confirmed`, `payments.invoice.received` and `payments.invoice.cancelled`. | Affects Orders, ecommerce and reconciliation. | PM Payments + Tech Lead Payments | Open |
 | DEC-003 | Define policy for Asaas 404, 409, 422, 5xx and timeout errors. | Affects retry, support and invoice final state. | Payments Engineering | Open |
 | DEC-004 | Define retention and masking of raw webhook events. | Affects audit, security and LGPD. | Security + Payments | Open |
 | DEC-005 | Define initial payment confirmation SLO. | Affects dashboards, alerts and operational readiness. | SRE + Payments | Open |

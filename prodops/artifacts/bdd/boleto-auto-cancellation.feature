@@ -10,7 +10,7 @@ Feature: Boleto Auto-Cancellation
   Scenario: Boleto vencido é automaticamente expirado
     When o PSP envia webhook com event "PAYMENT_OVERDUE" para paymentId "pay_boleto_123"
     Then a invoice deve estar no status "EXPIRED"
-    And o evento "payment.boleto.expired" deve ser publicado
+    And o evento "payments.invoice.expired" deve ser publicado
 
   Scenario: Boleto criado com configuração de cancelamento automático
     When uma invoice de BOLETO é criada com daysAfterDueDateToRegistrationCancellation 1

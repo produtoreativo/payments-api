@@ -21,27 +21,27 @@ Funcionalidade: Split Payment — Pix + Boleto em uma mesma compra
     Então o sistema deve criar o Split Payment com status "PENDING_BOTH"
     E deve gerar uma cobrança Pix com "pixInvoiceId" válido
     E deve gerar uma cobrança Boleto com "boletoInvoiceId" e data de vencimento válidos
-    E deve emitir o evento "split_payment.created" com "splitPaymentId", "orderId", "pixAmount", "boletoAmount" e "correlationId"
+    E deve emitir o evento "payments.split_payment.created" com "splitPaymentId", "orderId", "pixAmount", "boletoAmount" e "correlationId"
     E deve retornar "splitPaymentId", "pixInvoiceId", "boletoInvoiceId" e "status" ao Checkout
 
   Cenário: Pedido liberado após confirmação dos dois meios
     Dado que existe um Split Payment "spl_001" para o pedido "MS-200001" com status "PENDING_BOTH"
     Quando o provedor confirmar o pagamento Pix
-    Então o sistema deve emitir "split_payment.pix.confirmed" e atualizar status para "PIX_CONFIRMED"
+    Então o sistema deve emitir "payments.split_payment.pix_confirmed" e atualizar status para "PIX_CONFIRMED"
     Quando o provedor confirmar o pagamento Boleto
-    Então o sistema deve emitir "split_payment.boleto.confirmed"
-    E deve emitir "split_payment.completed" com "splitPaymentId", "orderId" e "completedAt"
+    Então o sistema deve emitir "payments.split_payment.boleto_confirmed"
+    E deve emitir "payments.split_payment.completed" com "splitPaymentId", "orderId" e "completedAt"
     E deve atualizar status para "COMPLETED"
     E o pedido "MS-200001" deve ser liberado
 
   Cenário: Confirmação na ordem inversa — Boleto antes do Pix
     Dado que existe um Split Payment "spl_002" com status "PENDING_BOTH"
     Quando o provedor confirmar o pagamento Boleto primeiro
-    Então o sistema deve emitir "split_payment.boleto.confirmed" e atualizar status para "BOLETO_CONFIRMED"
+    Então o sistema deve emitir "payments.split_payment.boleto_confirmed" e atualizar status para "BOLETO_CONFIRMED"
     E o pedido não deve ser liberado
     Quando o provedor confirmar o pagamento Pix
-    Então o sistema deve emitir "split_payment.pix.confirmed"
-    E deve emitir "split_payment.completed"
+    Então o sistema deve emitir "payments.split_payment.pix_confirmed"
+    E deve emitir "payments.split_payment.completed"
     E o pedido deve ser liberado
 
   # ---------------------------------------------------------------------------
@@ -57,7 +57,7 @@ Funcionalidade: Split Payment — Pix + Boleto em uma mesma compra
   Cenário: Webhook duplicado de confirmação do Pix
     Dado que o Pix do Split Payment "spl_001" já foi confirmado
     Quando o provedor enviar o webhook de confirmação Pix novamente
-    Então o sistema não deve emitir "split_payment.pix.confirmed" pela segunda vez
+    Então o sistema não deve emitir "payments.split_payment.pix_confirmed" pela segunda vez
     E não deve alterar o status atual do Split Payment
 
   # ---------------------------------------------------------------------------
@@ -69,7 +69,7 @@ Funcionalidade: Split Payment — Pix + Boleto em uma mesma compra
     E o Pix foi confirmado
     E o Boleto ainda não foi pago
     Quando a data de vencimento do Boleto for atingida sem pagamento
-    Então o sistema deve emitir "split_payment.boleto.expired" com "pixStatus: confirmed"
+    Então o sistema deve emitir "payments.split_payment.boleto_expired" com "pixStatus: confirmed"
     E deve atualizar status para "PENDING_INVESTIGATION"
     E não deve cancelar o pedido automaticamente
     E não deve estornar o Pix automaticamente
@@ -79,7 +79,7 @@ Funcionalidade: Split Payment — Pix + Boleto em uma mesma compra
     Dado que existe um Split Payment "spl_004" com status "PENDING_BOTH"
     E nenhum dos dois meios foi pago
     Quando a data de vencimento do Boleto for atingida sem pagamento
-    Então o sistema deve emitir "split_payment.boleto.expired" com "pixStatus: pending"
+    Então o sistema deve emitir "payments.split_payment.boleto_expired" com "pixStatus: pending"
     E deve atualizar status para "PENDING_INVESTIGATION"
     E não deve cancelar o pedido automaticamente
 

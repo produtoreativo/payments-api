@@ -50,18 +50,18 @@ Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops
 
 | Evento | Significado | Dimensões obrigatórias |
 |---|---|---|
-| `payment.boleto.created` | Boleto criado com sucesso — `bankSlipUrl` disponível | `invoiceId`, `orderId`, `tenantId`, `providerPaymentId`, `billingType`, `dueDate`, `correlationId` |
-| `payment.boleto.creation_failed` | Falha ao criar boleto no provedor | `invoiceId`, `orderId`, `tenantId`, `reason`, `correlationId` |
-| `payment.boleto.idempotency_hit` | Retentativa com mesma chave — invoice existente retornada | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
-| `payment.confirmed` | Boleto pago e confirmado — pedido pode ser liberado | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `confirmedAt`, `correlationId` |
-| `payment.received` | Liquidação financeira — para conciliação (não libera pedido novamente) | `invoiceId`, `orderId`, `tenantId`, `receivedAt`, `correlationId` |
-| `webhook.received` | Evento bruto do provedor persistido para auditoria | `tenantId`, `provider`, `eventType`, `providerPaymentId`, `correlationId` |
+| `payments.invoice.opened` | Boleto criado com sucesso — `bankSlipUrl` disponível | `invoiceId`, `orderId`, `tenantId`, `providerPaymentId`, `billingType`, `dueDate`, `correlationId` |
+| `payments.invoice.creation_failed` | Falha ao criar boleto no provedor | `invoiceId`, `orderId`, `tenantId`, `reason`, `correlationId` |
+| `payments.invoice.idempotency_hit` | Retentativa com mesma chave — invoice existente retornada | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
+| `payments.invoice.confirmed` | Boleto pago e confirmado — pedido pode ser liberado | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `confirmedAt`, `correlationId` |
+| `payments.invoice.received` | Liquidação financeira — para conciliação (não libera pedido novamente) | `invoiceId`, `orderId`, `tenantId`, `receivedAt`, `correlationId` |
+| `payments.webhook.received` | Evento bruto do provedor persistido para auditoria | `tenantId`, `provider`, `eventType`, `providerPaymentId`, `correlationId` |
 
 ### Eventos consumidos
 
 | Evento | Origem | Ação |
 |---|---|---|
-| `PAYMENT_RECEIVED` (Asaas webhook) | Asaas PSP → `POST /webhook/payments` | Confirma pagamento; publica `payment.confirmed` |
+| `PAYMENT_RECEIVED` (Asaas webhook) | Asaas PSP → `POST /webhook/payments` | Confirma pagamento; publica `payments.invoice.confirmed` |
 | `PAYMENT_OVERDUE` (Asaas webhook) | Asaas PSP → `POST /webhook/payments` | Registra expiração; atualiza estado operacional |
 | `PAYMENT_DELETED` (Asaas webhook) | Asaas PSP → `POST /webhook/payments` | Confirma cancelamento para `CANCEL_REQUESTED` |
 
@@ -122,7 +122,7 @@ Asaas → POST /webhook/payments  (PAYMENT_RECEIVED / PAYMENT_OVERDUE)
 AsaasWebhookController → InvoiceService
     ├─ valida asaas-access-token
     ├─ persiste evento bruto
-    ├─ publica payment.confirmed → EventEmitter2
+    ├─ publica payments.invoice.confirmed → EventEmitter2
     │     └─ WebhookDeliveryService → HTTPS POST consumer
     └─ DynamoDB PaymentsTable (atualiza status)
 ```
@@ -147,15 +147,15 @@ AsaasWebhookController → InvoiceService
 | Invoices Boleto criadas com `bankSlipUrl` presente na resposta | 99,9% | 30 dias |
 | `dueDate` no passado rejeitada antes de chamar o provedor | 100% | — |
 | Retentativas com mesma `Idempotency-Key` retornam invoice existente | 100% | — |
-| `payment.confirmed` publicado exatamente uma vez por pagamento | 100% | — |
+| `payments.invoice.confirmed` publicado exatamente uma vez por pagamento | 100% | — |
 | Eventos brutos do webhook persistidos antes do processamento | 99,9% | — |
 
 ### SLIs observáveis
 
 | SLI | Fonte |
 |---|---|
-| Taxa de sucesso na criação de boletos (`bankSlipUrl` presente) | Datadog — evento `payment.boleto.created` |
-| Taxa de confirmação via webhook (`payment.confirmed` / boletos criados) | Datadog — eventos de lifecycle |
+| Taxa de sucesso na criação de boletos (`bankSlipUrl` presente) | Datadog — evento `payments.invoice.opened` |
+| Taxa de confirmação via webhook (`payments.invoice.confirmed` / boletos criados) | Datadog — eventos de lifecycle |
 | Latência p95 de criação | Datadog APM — `POST /invoices` |
 | DLQ depth (modo async) | CloudWatch — `payments-webhook-dlq` |
 
@@ -168,7 +168,7 @@ AsaasWebhookController → InvoiceService
 
 ### Regras de confiabilidade
 
-- Boleto expirado sem pagamento não é erro operacional — é estado natural do ciclo. `payment.boleto.expired` deve ser observável.
+- Boleto expirado sem pagamento não é erro operacional — é estado natural do ciclo. `payments.invoice.expired` deve ser observável.
 - `bankSlipUrl` e `identificationField` nunca aparecem em logs, traces ou respostas de erro.
 - Invoice com status `OPEN` retornada apenas após `providerPaymentId` consolidado.
 
@@ -179,8 +179,8 @@ AsaasWebhookController → InvoiceService
 | Indicador | Pergunta que responde | Fonte | Cadência |
 |---|---|---|---|
 | Volume de boletos criados / dia | Adoção do meio de pagamento Boleto | Datadog | Diária |
-| Taxa de criação bem-sucedida | Problemas no provedor? | `payment.boleto.created` / tentativas | Tempo real |
-| Taxa de confirmação de boletos | Clientes estão pagando? | `payment.confirmed` / boletos emitidos | Diária |
+| Taxa de criação bem-sucedida | Problemas no provedor? | `payments.invoice.opened` / tentativas | Tempo real |
+| Taxa de confirmação de boletos | Clientes estão pagando? | `payments.invoice.confirmed` / boletos emitidos | Diária |
 | Taxa de vencimento sem pagamento | Boletos expiram sem conversão? | `PAYMENT_OVERDUE` / emitidos | Diária |
 | Latência p95 de emissão | Boleto está sendo entregue rápido? | Datadog APM | Tempo real |
 | DLQ depth | Webhooks do provedor estão sendo processados? | CloudWatch | Tempo real |
@@ -192,9 +192,9 @@ AsaasWebhookController → InvoiceService
 | Consumidor | Tipo | Dependência | Impacto de degradação |
 |---|---|---|---|
 | Checkout | Direto (API) | `POST /invoices` → `bankSlipUrl` + `identificationField` | Cliente sem boleto para pagar |
-| Order Management | Indireto (evento) | `payment.confirmed` via webhook configurado | Pedido não liberado após pagamento |
-| Notification Service | Indireto (evento) | `payment.confirmed` / `payment.boleto.created` | Cliente sem confirmação de status |
-| Financeiro / Conciliação | Indireto (evento) | `payment.received` | Conciliação manual sem dado de liquidação |
+| Order Management | Indireto (evento) | `payments.invoice.confirmed` via webhook configurado | Pedido não liberado após pagamento |
+| Notification Service | Indireto (evento) | `payments.invoice.confirmed` / `payments.invoice.opened` | Cliente sem confirmação de status |
+| Financeiro / Conciliação | Indireto (evento) | `payments.invoice.received` | Conciliação manual sem dado de liquidação |
 | Atendimento | Operacional | `GET /invoices/:invoiceId` — status e rastreabilidade | Suporte sem resposta confiável ao cliente |
 
 ---

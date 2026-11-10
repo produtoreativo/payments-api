@@ -19,7 +19,7 @@ For each runbook: diagnosis → immediate containment → resolution → verific
 
 - Orders with `invoiceId` created in Payments continue receiving webhooks after the flag is turned off.
 - Checkout creates new orders in the old flow, but continues sending events to Payments.
-- `payment.confirmed` emitted without a corresponding invoice in Payments.
+- `payments.invoice.confirmed` emitted without a corresponding invoice in Payments.
 
 ### Diagnosis
 
@@ -112,20 +112,20 @@ aws sqs get-queue-attributes \
 
 **Origin scenario:** PMT-PRE-002 — Customer pays but does not receive confirmation.
 
-**When to use:** `payment.confirmed` was emitted by Payments but the customer did not receive communication, or the Notification Service reported a failure.
+**When to use:** `payments.invoice.confirmed` was emitted by Payments but the customer did not receive communication, or the Notification Service reported a failure.
 
 ### Alert Signals
 
 - Invoice with status `CONFIRMED` in DynamoDB but no notification entry in Notification Service logs.
 - Increase in tickets: "I paid but did not receive confirmation".
-- `payment.confirmed` event in Payments logs without a corresponding event in Notification Service.
+- `payments.invoice.confirmed` event in Payments logs without a corresponding event in Notification Service.
 
 ### Diagnosis
 
 ```bash
 # 1. Check if the event was emitted by Payments
 # CloudWatch Logs — Payments
-# Search for: invoiceId + "payment.confirmed" (structured log)
+# Search for: invoiceId + "payments.invoice.confirmed" (structured log)
 # Confirm: tenantId, orderId, invoiceId, correlationId present
 
 # 2. Check if the event reached Notification Service
@@ -153,7 +153,7 @@ If there is no immediate resolution, support can confirm payment status by query
 
 ### Post-Resolution Verification
 
-- [ ] `payment.confirmed` with the affected `invoiceId` appears in Notification Service logs.
+- [ ] `payments.invoice.confirmed` with the affected `invoiceId` appears in Notification Service logs.
 - [ ] Customer received communication (confirmed by send log or by support).
 - [ ] DLQ event volume returned to baseline.
 

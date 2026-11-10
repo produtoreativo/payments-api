@@ -72,12 +72,12 @@ Derivados dos cenários de `prodops/artifacts/bdd/create-invoice.feature`; marca
 
 | Event | Situação | Meaning | Required dimensions |
 |---|---|---|---|
-| `invoice.created` | Planejado | Invoice criada com sucesso no provedor — status `OPEN`, `providerPaymentId` presente. — *equivalente provável no código (a confirmar): `payments.invoice.created`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `billingType`, `correlationId` |
-| `invoice.creation_failed` | Planejado | Falha ao criar invoice no provedor — invoice em `FAILED` ou `PROVIDER_PENDING`. | `invoiceId`, `orderId`, `tenantId`, `reason`, `provider`, `correlationId` |
-| `invoice.idempotency_hit` | Planejado | Retentativa com mesma chave de idempotência — invoice existente retornada sem nova cobrança. | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
-| `invoice.provider_rejected` | Planejado | Provedor rejeitou a criação por dados inválidos — invoice marcada como `FAILED`. | `invoiceId`, `orderId`, `tenantId`, `providerErrorCode`, `correlationId` |
-| `invoice.customer_created` | Planejado | Cliente Asaas criado antes da invoice por ausência de vínculo. — *equivalente provável no código (a confirmar): `pagamento.cobranca.cadastrada.cliente.cadastrado`* | `tenantId`, `customerId`, `providerCustomerId`, `correlationId` |
-| `invoice.access_rejected` | Planejado | Tentativa de criar invoice com provedor desabilitado para o tenant. | `tenantId`, `provider`, `correlationId` |
+| `payments.invoice.created` | Emitido | Invoice criada com sucesso no provedor — status `OPEN`, `providerPaymentId` presente. — *substitui `invoice.created`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `billingType`, `correlationId` |
+| `payments.invoice.creation_failed` | Emitido | Falha ao criar invoice no provedor — invoice em `FAILED` ou `PROVIDER_PENDING`. — *substitui `invoice.creation_failed`* | `invoiceId`, `orderId`, `tenantId`, `reason`, `provider`, `correlationId` |
+| `payments.invoice.idempotency_hit` | Emitido | Retentativa com mesma chave de idempotência — invoice existente retornada sem nova cobrança. — *substitui `invoice.idempotency_hit`* | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
+| `payments.invoice.provider_rejected` | Planejado | Provedor rejeitou a criação por dados inválidos — invoice marcada como `FAILED`. — *substitui `invoice.provider_rejected`* | `invoiceId`, `orderId`, `tenantId`, `providerErrorCode`, `correlationId` |
+| `payments.customer.provider_linked` | Emitido | Cliente Asaas criado antes da invoice por ausência de vínculo. — *substitui `invoice.customer_created`* | `tenantId`, `customerId`, `providerCustomerId`, `correlationId` |
+| `payments.invoice.access_rejected` | Planejado | Tentativa de criar invoice com provedor desabilitado para o tenant. — *substitui `invoice.access_rejected`* | `tenantId`, `provider`, `correlationId` |
 
 ## Initial SLIs
 

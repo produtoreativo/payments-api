@@ -27,7 +27,7 @@
 
 ## Business Outcome
 
-O ecommerce Magazine Siará recebe confirmação confiável de pagamento e libera o pedido exatamente uma vez, mesmo quando o webhook do provedor chega duplicado, atrasado ou antes da consolidação interna da invoice. O evento canônico `payment.confirmed` é publicado apenas após validação do token de autenticação e correlação com a invoice correta. Eventos brutos do provedor são sempre persistidos para auditoria, independente do resultado do processamento.
+O ecommerce Magazine Siará recebe confirmação confiável de pagamento e libera o pedido exatamente uma vez, mesmo quando o webhook do provedor chega duplicado, atrasado ou antes da consolidação interna da invoice. O evento canônico `payments.invoice.confirmed` é publicado apenas após validação do token de autenticação e correlação com a invoice correta. Eventos brutos do provedor são sempre persistidos para auditoria, independente do resultado do processamento.
 
 ### Em linguagem executiva
 
@@ -76,32 +76,32 @@ Derivados dos cenários de `prodops/artifacts/bdd/payment-confirmation.feature`;
 
 | Event | Situação | Meaning | Required dimensions |
 |---|---|---|---|
-| `payment.confirmed` | Emitido | Pagamento aprovado — pedido pode ser liberado pelo ecommerce. Publicado exatamente uma vez. | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `confirmedAt`, `correlationId` |
-| `payment.received` | Emitido | Liquidação financeira confirmada — para conciliação. Não libera pedido pela segunda vez. | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `receivedAt`, `correlationId` |
-| `webhook.received` | Planejado | Evento bruto do provedor persistido antes de qualquer processamento. | `tenantId`, `provider`, `eventType`, `providerPaymentId`, `correlationId` |
-| `webhook.rejected` | Planejado | Webhook recebido com token inválido — rejeitado sem alteração de estado. | `tenantId`, `provider`, `reason`, `correlationId` |
-| `webhook.deduplicated` | Planejado | Webhook duplicado reconhecido — sucesso técnico retornado sem reprocessamento. | `invoiceId`, `tenantId`, `provider`, `eventType`, `correlationId` |
-| `webhook.correlated_by_reference` | Planejado | Evento correlacionado por `externalReference` na ausência de `providerPaymentId` interno. | `invoiceId`, `orderId`, `tenantId`, `externalReference`, `correlationId` |
+| `payments.invoice.confirmed` | Emitido | Pagamento aprovado — pedido pode ser liberado pelo ecommerce. Publicado exatamente uma vez. — *substitui `payment.confirmed`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `confirmedAt`, `correlationId` |
+| `payments.invoice.received` | Emitido | Liquidação financeira confirmada — para conciliação. Não libera pedido pela segunda vez. — *substitui `payment.received`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `receivedAt`, `correlationId` |
+| `payments.webhook.received` | Planejado | Evento bruto do provedor persistido antes de qualquer processamento. — *substitui `webhook.received`* | `tenantId`, `provider`, `eventType`, `providerPaymentId`, `correlationId` |
+| `payments.security.webhook_rejected` | Emitido | Webhook recebido com token inválido — rejeitado sem alteração de estado. — *substitui `webhook.rejected`* | `tenantId`, `provider`, `reason`, `correlationId` |
+| `payments.webhook.deduplicated` | Planejado | Webhook duplicado reconhecido — sucesso técnico retornado sem reprocessamento. — *substitui `webhook.deduplicated`* | `invoiceId`, `tenantId`, `provider`, `eventType`, `correlationId` |
+| `payments.webhook.correlated_by_reference` | Planejado | Evento correlacionado por `externalReference` na ausência de `providerPaymentId` interno. — *substitui `webhook.correlated_by_reference`* | `invoiceId`, `orderId`, `tenantId`, `externalReference`, `correlationId` |
 
 ## Initial SLIs
 
 | SLI | Initial target | Fonte |
 |---|---|---|
-| Eventos `payment.confirmed` publicados exatamente uma vez por pagamento aprovado. | 100% | [apurar] |
+| Eventos `payments.invoice.confirmed` publicados exatamente uma vez por pagamento aprovado. | 100% | [apurar] |
 | Webhooks com token inválido rejeitados sem alteração de invoice. | 100% | [apurar] |
-| Webhooks duplicados retornam sucesso técnico sem republicar `payment.confirmed`. | 100% | [apurar] |
-| Evento `payment.received` não dispara segunda liberação de pedido. | 100% | [apurar] |
+| Webhooks duplicados retornam sucesso técnico sem republicar `payments.invoice.confirmed`. | 100% | [apurar] |
+| Evento `payments.invoice.received` não dispara segunda liberação de pedido. | 100% | [apurar] |
 | Token de autenticação Asaas não exposto em logs ou respostas de erro. | 100% | [apurar] |
 | Eventos brutos persistidos antes de qualquer processamento. | 99.9% | [apurar] |
 
 ## Reliability Rules
 
-- O evento `payment.confirmed` é publicado exatamente uma vez por `providerPaymentId`. Deduplicação obrigatória: segunda chamada reconhece a duplicidade e retorna sucesso técnico ao provedor sem republicar o evento canônico.
+- O evento `payments.invoice.confirmed` é publicado exatamente uma vez por `providerPaymentId`. Deduplicação obrigatória: segunda chamada reconhece a duplicidade e retorna sucesso técnico ao provedor sem republicar o evento canônico.
 - Toda requisição de webhook deve ter o header `asaas-access-token` válido antes de qualquer leitura ou alteração de estado. Requisição inválida é rejeitada; nenhum dado do payload é processado.
 - Token de autenticação nunca é logado — nem no sucesso nem na rejeição. Log registra apenas o resultado da validação.
 - Webhook recebido antes da consolidação interna da invoice é correlacionado por `externalReference`. O gateway localiza a invoice correta e conclui a confirmação sem criar duplicidade.
-- `PAYMENT_RECEIVED` atualiza a invoice para `RECEIVED` e registra para conciliação financeira, mas não publica um segundo `payment.confirmed` — o pedido já foi liberado pelo `PAYMENT_CONFIRMED`.
-- Eventos que não liberam pedido no MVP (ex.: `PAYMENT_OVERDUE`) são registrados e atualizam estado operacional quando aplicável, mas não publicam `payment.confirmed`.
+- `PAYMENT_RECEIVED` atualiza a invoice para `RECEIVED` e registra para conciliação financeira, mas não publica um segundo `payments.invoice.confirmed` — o pedido já foi liberado pelo `PAYMENT_CONFIRMED`.
+- Eventos que não liberam pedido no MVP (ex.: `PAYMENT_OVERDUE`) são registrados e atualizam estado operacional quando aplicável, mas não publicam `payments.invoice.confirmed`.
 - Evento bruto do provedor é persistido independente do resultado do processamento — garantia de auditoria mesmo em caso de falha.
 
 ## Riscos

@@ -33,7 +33,7 @@ Items explicitly ignored for not having a decision of exactly `In`: `Payment sta
 | --- | --- | --- | --- |
 | Enable new gateway for Checkout on the prioritized journey | No Feature Flag implementation in this repository; Premortem reports that Checkout is ready, but the flag remains disabled due to a bug. | Checkout, Feature Flag, Checkout -> Payments contract, Payments API. | Critical external dependency not yet evidenced as ready. |
 | Create invoice via Pix | `POST /invoices` receives `CreateInvoiceDto`, requires `Idempotency-Key`, resolves provider, creates Asaas customer/charge and updates invoice to `OPEN`. | Asaas `/customers`, Asaas `/payments`, Payments DB, customer binding. | Implemented and covered by in-memory tests; Dynamo path and provider timeout still weaken reliability. |
-| Payment confirmation | `POST /webhook/payments` validates token when configured, persists raw event, deduplicates and processes `PAYMENT_CONFIRMED`, `PAYMENT_RECEIVED` and `PAYMENT_OVERDUE`. | Asaas webhook, `ASAAS_WEBHOOK_TOKEN`, Payments DB, canonical event `payment.confirmed`. | Rules covered in memory and in Dynamo mock for correlation by `providerPaymentId` and `externalReference`; uncorrelated webhook emits observable event. |
+| Payment confirmation | `POST /webhook/payments` validates token when configured, persists raw event, deduplicates and processes `PAYMENT_CONFIRMED`, `PAYMENT_RECEIVED` and `PAYMENT_OVERDUE`. | Asaas webhook, `ASAAS_WEBHOOK_TOKEN`, Payments DB, canonical event `payments.invoice.confirmed`. | Rules covered in memory and in Dynamo mock for correlation by `providerPaymentId` and `externalReference`; uncorrelated webhook emits observable event. |
 
 **Relevant Inconsistencies for the Approved Scope**
 
@@ -126,7 +126,7 @@ Items explicitly ignored for not having a decision of exactly `In`: `Payment sta
 - `findByProviderPaymentId` and `findByExternalReference` work in memory and have implementation/coverage with Dynamo mock.
 - `processProviderWebhook` may respond with technical success when it did not find an invoice, but now emits a specific observable event for non-correlation.
 - `PAYMENT_RECEIVED` updates to `RECEIVED`; needs to preserve the rule of not republishing confirmation.
-- `payment.confirmed` is emitted via local EventEmitter; no durability evidenced for external consumers.
+- `payments.invoice.confirmed` is emitted via local EventEmitter; no durability evidenced for external consumers.
 - Webhook token depends on environment configuration.
 
 **Dependencies**
@@ -135,7 +135,7 @@ Items explicitly ignored for not having a decision of exactly `In`: `Payment sta
 - `ASAAS_WEBHOOK_TOKEN`.
 - Payments DB.
 - Query indexes by provider payment and external reference.
-- Canonical event `payment.confirmed`.
+- Canonical event `payments.invoice.confirmed`.
 
 **Points of Attention**
 
@@ -147,7 +147,7 @@ Items explicitly ignored for not having a decision of exactly `In`: `Payment sta
 
 - Validate Dynamo queries to find invoice by `providerPaymentId` and `externalReference` against the real environment's tables/indexes.
 - Connect the uncorrelated webhook event to an operational dashboard/alert and define reprocessing.
-- Define a durable mechanism or explicit boundary for the canonical event `payment.confirmed`.
+- Define a durable mechanism or explicit boundary for the canonical event `payments.invoice.confirmed`.
 - Require webhook token in Release environments and fail unsafe configuration.
 
 ## Reliability Roadmap
@@ -167,7 +167,7 @@ Items explicitly ignored for not having a decision of exactly `In`: `Payment sta
 | Payment confirmation | Cover webhook with Dynamo/local mock repository | Validate confirmation, deduplication and correlation in the Release persistence path. | P0 | False confidence from in-memory tests. | Medium | DynamoService, LocalStack or `DYNAMO_MOCK`. |
 | Payment confirmation | Observable event for uncorrelated webhook | Provide a clear signal when the provider sends payment without a found invoice. | P0 | Paid event operationally invisible. | Low | InvoiceService, observable events. |
 | Payment confirmation | Validate mandatory webhook token configuration | Prevent Release environment from accepting webhook without `ASAAS_WEBHOOK_TOKEN`. | P0 | Security failure due to missing configuration. | Low | ConfigModule, deploy environment. |
-| Payment confirmation | Define durability of `payment.confirmed` event | Ensure the approved confirmation does not depend solely on a local listener without persistence. | P1 | Loss of canonical event on process restart/failure. | Medium/High | Current EventEmitter, future broker or architectural decision. |
+| Payment confirmation | Define durability of `payments.invoice.confirmed` event | Ensure the approved confirmation does not depend solely on a local listener without persistence. | P1 | Loss of canonical event on process restart/failure. | Medium/High | Current EventEmitter, future broker or architectural decision. |
 | Payment confirmation | Minimum confirmation dashboard | Expose received, confirmed, duplicate, invalid and uncorrelated webhooks. | P1 | High MTTR on confirmation failure. | Medium | Webhook events, DataDog/APM. |
 
 ## Quick Wins

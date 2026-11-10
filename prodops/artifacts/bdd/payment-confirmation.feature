@@ -15,7 +15,7 @@ Funcionalidade: Confirmacao de pagamento por webhook
     E o header "asaas-access-token" for valido
     Então o gateway deve persistir o evento bruto recebido
     E deve atualizar a invoice para status "CONFIRMED"
-    E deve publicar o evento canonico "payment.confirmed" para o ecommerce
+    E deve publicar o evento canonico "payments.invoice.confirmed" para o ecommerce
     E o evento deve conter "invoiceId", "orderId", "provider", "providerPaymentId" e data de confirmacao
 
   Cenário: Conciliar recebimento financeiro com evento PAYMENT_RECEIVED
@@ -37,7 +37,7 @@ Funcionalidade: Confirmacao de pagamento por webhook
     Quando o mesmo webhook for recebido novamente
     Então o gateway deve reconhecer a duplicidade
     E deve responder com sucesso tecnico para evitar novas retentativas do provedor
-    E nao deve publicar outro "payment.confirmed"
+    E nao deve publicar outro "payments.invoice.confirmed"
 
   Cenário: Receber webhook antes da resposta da criacao da invoice
     Dado que existe uma tentativa de criacao de invoice com "externalReference" igual a "MS-100045"
@@ -51,5 +51,5 @@ Funcionalidade: Confirmacao de pagamento por webhook
     Quando a Asaas enviar um evento "PAYMENT_OVERDUE"
     Então o gateway deve registrar o evento
     E deve atualizar o estado operacional quando aplicavel
-    E nao deve publicar "payment.confirmed" ao ecommerce
+    E nao deve publicar "payments.invoice.confirmed" ao ecommerce
 

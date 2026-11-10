@@ -14,7 +14,7 @@ a **Value Stream Split Payment Pix + Boleto**
 que **garante que o pedido só é liberado quando ambas as porções são confirmadas, com rastreabilidade completa por `splitPaymentId`, `pixInvoiceId` e `boletoInvoiceId`, e tratamento explícito de Boleto vencido sem cancelamento automático**.
 
 Diferente de **criar dois pagamentos independentes e conciliar manualmente**,
-este serviço **cria e acompanha as duas porções como unidade coesa, garante idempotência na criação, publica `split_payment.completed` apenas com ambas confirmadas e sinaliza a operação quando o Boleto expira com o Pix já pago**.
+este serviço **cria e acompanha as duas porções como unidade coesa, garante idempotência na criação, publica `payments.split_payment.completed` apenas com ambas confirmadas e sinaliza a operação quando o Boleto expira com o Pix já pago**.
 
 ---
 
@@ -46,20 +46,20 @@ Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops
 
 | Evento | Significado | Dimensões obrigatórias |
 |---|---|---|
-| `split_payment.created` | Split Payment criado — Pix e Boleto definidos | `splitPaymentId`, `orderId`, `pixAmount`, `boletoAmount`, `totalAmount`, `correlationId` |
-| `split_payment.pix.confirmed` | Porção Pix confirmada pelo provedor | `splitPaymentId`, `orderId`, `pixInvoiceId`, `confirmedAt`, `correlationId` |
-| `split_payment.boleto.confirmed` | Porção Boleto confirmada pelo provedor | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `confirmedAt`, `correlationId` |
-| `split_payment.completed` | Ambas as porções confirmadas — pedido liberado | `splitPaymentId`, `orderId`, `completedAt`, `correlationId` |
-| `split_payment.boleto.expired` | Boleto venceu sem pagamento — pedido pendente para investigação manual | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `expiredAt`, `pixStatus`, `correlationId` |
-| `split_payment.creation_failed` | Falha na criação do Split Payment | `orderId`, `reason`, `correlationId` |
+| `payments.split_payment.created` | Split Payment criado — Pix e Boleto definidos | `splitPaymentId`, `orderId`, `pixAmount`, `boletoAmount`, `totalAmount`, `correlationId` |
+| `payments.split_payment.pix_confirmed` | Porção Pix confirmada pelo provedor | `splitPaymentId`, `orderId`, `pixInvoiceId`, `confirmedAt`, `correlationId` |
+| `payments.split_payment.boleto_confirmed` | Porção Boleto confirmada pelo provedor | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `confirmedAt`, `correlationId` |
+| `payments.split_payment.completed` | Ambas as porções confirmadas — pedido liberado | `splitPaymentId`, `orderId`, `completedAt`, `correlationId` |
+| `payments.split_payment.boleto_expired` | Boleto venceu sem pagamento — pedido pendente para investigação manual | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `expiredAt`, `pixStatus`, `correlationId` |
+| `payments.split_payment.creation_failed` | Falha na criação do Split Payment | `orderId`, `reason`, `correlationId` |
 
 ### Eventos consumidos
 
 | Evento | Origem | Ação |
 |---|---|---|
-| Webhook Pix (provedor) | Asaas → `POST /webhooks/split-payment/pix/:id` | Publica `split_payment.pix.confirmed`; se Boleto já confirmado, publica `split_payment.completed` |
-| Webhook Boleto (provedor) | Asaas → `POST /webhooks/split-payment/boleto/:id` | Publica `split_payment.boleto.confirmed`; se Pix já confirmado, publica `split_payment.completed` |
-| Webhook Boleto expire | Asaas → `POST /webhooks/split-payment/boleto/:id/expire` | Publica `split_payment.boleto.expired` com `pixStatus` |
+| Webhook Pix (provedor) | Asaas → `POST /webhooks/split-payment/pix/:id` | Publica `payments.split_payment.pix_confirmed`; se Boleto já confirmado, publica `payments.split_payment.completed` |
+| Webhook Boleto (provedor) | Asaas → `POST /webhooks/split-payment/boleto/:id` | Publica `payments.split_payment.boleto_confirmed`; se Pix já confirmado, publica `payments.split_payment.completed` |
+| Webhook Boleto expire | Asaas → `POST /webhooks/split-payment/boleto/:id/expire` | Publica `payments.split_payment.boleto_expired` com `pixStatus` |
 
 ### Schema de resposta (criação)
 
@@ -126,18 +126,18 @@ SplitPaymentService
 Asaas Pix → POST /webhooks/split-payment/pix/:splitPaymentId
     → SplitPaymentWebhookController → SplitPaymentService
     ├─ atualiza porção Pix (CONFIRMED)
-    ├─ se Boleto CONFIRMED → emite split_payment.completed → EventEmitter2
+    ├─ se Boleto CONFIRMED → emite payments.split_payment.completed → EventEmitter2
     └─ DynamoDB PaymentsTable
 
 Asaas Boleto → POST /webhooks/split-payment/boleto/:splitPaymentId
     → SplitPaymentWebhookController → SplitPaymentService
     ├─ atualiza porção Boleto (CONFIRMED)
-    ├─ se Pix CONFIRMED → emite split_payment.completed → EventEmitter2
+    ├─ se Pix CONFIRMED → emite payments.split_payment.completed → EventEmitter2
     └─ DynamoDB PaymentsTable
 
 Asaas Boleto Expire → POST /webhooks/split-payment/boleto/:splitPaymentId/expire
     → SplitPaymentWebhookController → SplitPaymentService
-    ├─ emite split_payment.boleto.expired (com pixStatus)
+    ├─ emite payments.split_payment.boleto_expired (com pixStatus)
     ├─ NÃO cancela automaticamente, NÃO estorna Pix
     └─ status → PENDING_INVESTIGATION
 ```
@@ -153,8 +153,8 @@ Asaas Boleto Expire → POST /webhooks/split-payment/boleto/:splitPaymentId/expi
 | SLO | Meta | Janela |
 |---|---|---|
 | Criação com mesma `Idempotency-Key` retorna o mesmo `splitPaymentId` | 100% | — |
-| `split_payment.completed` emitido em até 5s após segunda confirmação | 99% | 30 dias |
-| `split_payment.boleto.expired` emitido em até 60min após vencimento | 99% | — |
+| `payments.split_payment.completed` emitido em até 5s após segunda confirmação | 99% | 30 dias |
+| `payments.split_payment.boleto_expired` emitido em até 60min após vencimento | 99% | — |
 | Pedido nunca liberado com apenas uma das porções confirmadas | 100% | — |
 | `splitPaymentId` único por combinação `orderId` + meios | 100% | — |
 
@@ -162,9 +162,9 @@ Asaas Boleto Expire → POST /webhooks/split-payment/boleto/:splitPaymentId/expi
 
 | SLI | Fonte |
 |---|---|
-| Taxa de criação bem-sucedida (split_payment.created / tentativas) | Datadog |
-| Taxa de completion (split_payment.completed / created) | Datadog |
-| Taxa de boleto vencido com Pix pago (PENDING_INVESTIGATION) | Datadog — `split_payment.boleto.expired` com `pixStatus: confirmed` |
+| Taxa de criação bem-sucedida (payments.split_payment.created / tentativas) | Datadog |
+| Taxa de completion (payments.split_payment.completed / created) | Datadog |
+| Taxa de boleto vencido com Pix pago (PENDING_INVESTIGATION) | Datadog — `payments.split_payment.boleto_expired` com `pixStatus: confirmed` |
 | Latência p95 de criação | Datadog APM |
 
 ### Regras de confiabilidade
@@ -179,9 +179,9 @@ Asaas Boleto Expire → POST /webhooks/split-payment/boleto/:splitPaymentId/expi
 
 | Indicador | Pergunta que responde | Fonte | Cadência |
 |---|---|---|---|
-| Volume de Split Payments criados | Adoção do novo meio | `split_payment.created` | Diária |
-| Taxa de completion | Clientes completam os dois pagamentos? | `split_payment.completed` / `created` | Diária |
-| Boletos vencidos com Pix pago | Operação manual necessária? | `split_payment.boleto.expired` (pixStatus=confirmed) | Diária / alert |
+| Volume de Split Payments criados | Adoção do novo meio | `payments.split_payment.created` | Diária |
+| Taxa de completion | Clientes completam os dois pagamentos? | `payments.split_payment.completed` / `created` | Diária |
+| Boletos vencidos com Pix pago | Operação manual necessária? | `payments.split_payment.boleto_expired` (pixStatus=confirmed) | Diária / alert |
 | Tempo médio entre criação e completion | Quanto tempo leva para o cliente concluir? | Datadog — timestamp delta | Semanal |
 | Ticket médio de Split Payment | Split Payment é usado em compras de alto valor? | Datadog — `totalAmount` | Semanal |
 
@@ -192,9 +192,9 @@ Asaas Boleto Expire → POST /webhooks/split-payment/boleto/:splitPaymentId/expi
 | Consumidor | Tipo | Dependência | Impacto de degradação |
 |---|---|---|---|
 | Checkout | Direto (API) | `POST /split-payments` → `pixQrCode` + `bankSlipUrl` | Cliente sem Split Payment disponível |
-| Order Management | Indireto (evento) | `split_payment.completed` via webhook | Pedido não liberado |
-| Notification Service | Indireto (evento) | `split_payment.completed` / `split_payment.boleto.expired` | Cliente sem feedback |
-| Operação / CX | Operacional | `GET /split-payments/:id` + `split_payment.boleto.expired` | Incapaz de investigar boleto vencido |
+| Order Management | Indireto (evento) | `payments.split_payment.completed` via webhook | Pedido não liberado |
+| Notification Service | Indireto (evento) | `payments.split_payment.completed` / `payments.split_payment.boleto_expired` | Cliente sem feedback |
+| Operação / CX | Operacional | `GET /split-payments/:id` + `payments.split_payment.boleto_expired` | Incapaz de investigar boleto vencido |
 | Financeiro / Conciliação | Indireto | Histórico de porções confirmadas | Conciliação de Split pendente |
 
 ---

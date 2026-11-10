@@ -26,7 +26,7 @@
 
 ## Business Outcome
 
-Magazine Siará ecommerce can cancel a pending invoice via the Payments gateway without direct coupling to the Asaas provider. The cancellation guarantees idempotency by order key, prevents cancellation after payment confirmation, and publishes the canonical event `payment.cancelled` only when cancellation is effectively confirmed. Provider divergences (404, timeout) are handled with an explicit operational decision — no event published without confirmation.
+Magazine Siará ecommerce can cancel a pending invoice via the Payments gateway without direct coupling to the Asaas provider. The cancellation guarantees idempotency by order key, prevents cancellation after payment confirmation, and publishes the canonical event `payments.invoice.cancelled` only when cancellation is effectively confirmed. Provider divergences (404, timeout) are handled with an explicit operational decision — no event published without confirmation.
 
 ## Scope
 
@@ -64,12 +64,12 @@ Derived from the scenarios in `prodops/artifacts/bdd/cancel-invoice.feature`; ti
 
 | Event | Status | Meaning | Required dimensions |
 |---|---|---|---|
-| `payment.cancelled` | Emitted | Invoice cancelled with confirmation — charge removed from provider. | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `cancelledAt`, `correlationId` |
-| `invoice.cancel_requested` | Planned | Cancellation initiated — invoice in `CANCEL_REQUESTED`, provider call pending. — *likely equivalent in the code (to be confirmed): `pagamento.cancelamento.cobranca.cancelamento.solicitado`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `correlationId` |
-| `invoice.cancel_rejected` | Planned | Cancellation rejected by business rule — invoice in non-cancellable state (e.g.: `CONFIRMED`). | `invoiceId`, `tenantId`, `currentStatus`, `correlationId` |
-| `invoice.cancel_idempotency_hit` | Planned | Cancellation retry with same key — already cancelled invoice returned without new call. | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
-| `invoice.cancel_provider_not_found` | Planned | Provider returned 404 — invoice awaiting operational reconciliation decision. — *likely equivalent in the code (to be confirmed): `pagamento.cancelamento.cobranca.conciliacao.requerida`* | `invoiceId`, `tenantId`, `provider`, `providerPaymentId`, `correlationId` |
-| `webhook.payment_deleted` | Planned | Provider `PAYMENT_DELETED` webhook confirms cancellation for `CANCEL_REQUESTED`. — *likely equivalent in the code (to be confirmed): `pagamento.cancelamento.webhook.cancelamento.confirmado`* | `invoiceId`, `tenantId`, `provider`, `providerPaymentId`, `correlationId` |
+| `payments.invoice.cancelled` | Emitted | Invoice cancelled with confirmation — charge removed from provider. — *replaces `payment.cancelled`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `cancelledAt`, `correlationId` |
+| `payments.invoice.cancel_requested` | Planned | Cancellation initiated — invoice in `CANCEL_REQUESTED`, provider call pending. — *replaces `invoice.cancel_requested`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `correlationId` |
+| `payments.invoice.cancel_rejected` | Planned | Cancellation rejected by business rule — invoice in non-cancellable state (e.g.: `CONFIRMED`). — *replaces `invoice.cancel_rejected`* | `invoiceId`, `tenantId`, `currentStatus`, `correlationId` |
+| `payments.invoice.cancel_idempotency_hit` | Planned | Cancellation retry with same key — already cancelled invoice returned without new call. — *replaces `invoice.cancel_idempotency_hit`* | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
+| `payments.invoice.cancel_provider_not_found` | Planned | Provider returned 404 — invoice awaiting operational reconciliation decision. — *replaces `invoice.cancel_provider_not_found`* | `invoiceId`, `tenantId`, `provider`, `providerPaymentId`, `correlationId` |
+| `payments.webhook.payment_deleted` | Planned | Provider `PAYMENT_DELETED` webhook confirms cancellation for `CANCEL_REQUESTED`. — *replaces `webhook.payment_deleted`* | `invoiceId`, `tenantId`, `provider`, `providerPaymentId`, `correlationId` |
 
 ## Initial SLIs
 
@@ -77,16 +77,16 @@ Derived from the scenarios in `prodops/artifacts/bdd/cancel-invoice.feature`; ti
 |---|---|---|
 | Invoices with `CONFIRMED` status rejected at cancellation without provider call. | 100% | [to be determined] |
 | Retries with the same `Idempotency-Key` return `CANCELLED` without a new provider call. | 100% | [to be determined] |
-| `payment.cancelled` not published without confirmed removal or explicit reconciliation decision. | 100% | [to be determined] |
-| `payment.cancelled` not duplicated when `PAYMENT_DELETED` webhook arrives after command publication. | 100% | [to be determined] |
+| `payments.invoice.cancelled` not published without confirmed removal or explicit reconciliation decision. | 100% | [to be determined] |
+| `payments.invoice.cancelled` not duplicated when `PAYMENT_DELETED` webhook arrives after command publication. | 100% | [to be determined] |
 | Invoice in `CANCEL_REQUESTED` transitioned to `CANCELLED` upon receiving `PAYMENT_DELETED` webhook. | 99.9% | [to be determined] |
 
 ## Reliability Rules
 
 - Invoice with `CONFIRMED` status cannot be cancelled. Post-confirmation cancellation requires a separate refund flow. The gateway rejects the operation with a clear business error without calling the provider.
 - Idempotency by `Idempotency-Key`: a second cancellation call with the same key returns the current status without a new Asaas call.
-- `payment.cancelled` is published exactly once. If the event was published in the cancellation command, the `PAYMENT_DELETED` webhook confirms the state but does not republish the canonical event.
-- Provider returning 404 upon cancellation is not treated as confirmed cancellation. The invoice enters an operational investigation state; `payment.cancelled` is not published without an explicit decision.
+- `payments.invoice.cancelled` is published exactly once. If the event was published in the cancellation command, the `PAYMENT_DELETED` webhook confirms the state but does not republish the canonical event.
+- Provider returning 404 upon cancellation is not treated as confirmed cancellation. The invoice enters an operational investigation state; `payments.invoice.cancelled` is not published without an explicit decision.
 - The cancellation command updates the invoice to `CANCEL_REQUESTED` before calling the provider — auditable intermediate state, safe for retry.
 - Invoice with final `CANCELLED` status confirmed only when: (a) provider confirms removal in the command response, or (b) `PAYMENT_DELETED` webhook is received.
 

@@ -86,7 +86,7 @@ Events with suffix `*_failed`, `*_rejected`, `*_refused`, `*_error` correlated w
 **How to measure:** count of idempotency and refund events per time window.
 
 **OBC event pattern feeding this metric:**
-Events with suffix `*_idempotency_hit`, `*_refund.requested`, `*_refund.required`, `*_retry`. Product example (payments-api): `invoice.idempotency_hit`, `payment.card.refund.requested`.
+Events with suffix `*_idempotency_hit`, `*_refund.requested`, `*_refund.required`, `*_retry`. Product example (payments-api): `payments.invoice.idempotency_hit`, `payments.invoice.refund_requested`.
 
 ---
 

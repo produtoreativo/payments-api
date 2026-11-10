@@ -1219,38 +1219,38 @@
       "sectionType": "problems",
       "widgets": [
         {
-          "id": "split_payment_negative_kpis_1_flow:split-payment:step:1:event:split_payment.created",
+          "id": "split_payment_negative_kpis_1_flow:split-payment:step:1:event:payments.split_payment.created",
           "title": "Split Payment Criado - Exceções | Split Payment",
           "widgetType": "query_value",
-          "query": "tags:(event_key:split_payment.created_exception env:dev)",
+          "query": "tags:(event_key:payments.split_payment.created_exception env:dev)",
           "stage": "split_payment_criado",
           "sectionType": "problems",
-          "sourceEventKeys": ["split_payment.created_exception"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:split_payment.created"],
+          "sourceEventKeys": ["payments.split_payment.created_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:payments.split_payment.created"],
           "visualRole": "kpi",
           "palette": "alert"
         },
         {
-          "id": "split_payment_negative_kpis_2_flow:split-payment:step:2:event:split_payment.completed",
+          "id": "split_payment_negative_kpis_2_flow:split-payment:step:2:event:payments.split_payment.completed",
           "title": "Split Payment Completado - Exceções | Split Payment",
           "widgetType": "query_value",
-          "query": "tags:(event_key:split_payment.completed_exception env:dev)",
+          "query": "tags:(event_key:payments.split_payment.completed_exception env:dev)",
           "stage": "split_payment_completed",
           "sectionType": "problems",
-          "sourceEventKeys": ["split_payment.completed_exception"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:split_payment.completed"],
+          "sourceEventKeys": ["payments.split_payment.completed_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:payments.split_payment.completed"],
           "visualRole": "kpi",
           "palette": "alert"
         },
         {
-          "id": "split_payment_negative_kpis_3_flow:split-payment:step:3:event:split_payment.boleto.expired",
+          "id": "split_payment_negative_kpis_3_flow:split-payment:step:3:event:payments.split_payment.boleto_expired",
           "title": "Boleto Expirado - Exceções | Split Payment",
           "widgetType": "query_value",
-          "query": "tags:(event_key:split_payment.boleto.expired_exception env:dev)",
+          "query": "tags:(event_key:payments.split_payment.boleto_expired_exception env:dev)",
           "stage": "split_payment_boleto_expirado",
           "sectionType": "problems",
-          "sourceEventKeys": ["split_payment.boleto.expired_exception"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:split_payment.boleto.expired"],
+          "sourceEventKeys": ["payments.split_payment.boleto_expired_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:payments.split_payment.boleto_expired"],
           "visualRole": "kpi",
           "palette": "alert"
         }
@@ -1262,38 +1262,38 @@
       "sectionType": "problems",
       "widgets": [
         {
-          "id": "split_payment_negative_trends_1_flow:split-payment:step:1:event:split_payment.created",
+          "id": "split_payment_negative_trends_1_flow:split-payment:step:1:event:payments.split_payment.created",
           "title": "Split Payment Criado - Exceções | Split Payment",
           "widgetType": "timeseries",
-          "query": "tags:(event_key:split_payment.created_exception env:dev)",
+          "query": "tags:(event_key:payments.split_payment.created_exception env:dev)",
           "stage": "split_payment_criado",
           "sectionType": "problems",
-          "sourceEventKeys": ["split_payment.created_exception"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:split_payment.created"],
+          "sourceEventKeys": ["payments.split_payment.created_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:payments.split_payment.created"],
           "visualRole": "trend",
           "palette": "alert"
         },
         {
-          "id": "split_payment_negative_trends_2_flow:split-payment:step:2:event:split_payment.completed",
+          "id": "split_payment_negative_trends_2_flow:split-payment:step:2:event:payments.split_payment.completed",
           "title": "Split Payment Completado - Exceções | Split Payment",
           "widgetType": "timeseries",
-          "query": "tags:(event_key:split_payment.completed_exception env:dev)",
+          "query": "tags:(event_key:payments.split_payment.completed_exception env:dev)",
           "stage": "split_payment_completed",
           "sectionType": "problems",
-          "sourceEventKeys": ["split_payment.completed_exception"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:split_payment.completed"],
+          "sourceEventKeys": ["payments.split_payment.completed_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:payments.split_payment.completed"],
           "visualRole": "trend",
           "palette": "alert"
         },
         {
-          "id": "split_payment_negative_trends_3_flow:split-payment:step:3:event:split_payment.boleto.expired",
+          "id": "split_payment_negative_trends_3_flow:split-payment:step:3:event:payments.split_payment.boleto_expired",
           "title": "Boleto Expirado - Exceções | Split Payment",
           "widgetType": "timeseries",
-          "query": "tags:(event_key:split_payment.boleto.expired_exception env:dev)",
+          "query": "tags:(event_key:payments.split_payment.boleto_expired_exception env:dev)",
           "stage": "split_payment_boleto_expirado",
           "sectionType": "problems",
-          "sourceEventKeys": ["split_payment.boleto.expired_exception"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:split_payment.boleto.expired"],
+          "sourceEventKeys": ["payments.split_payment.boleto_expired_exception"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:payments.split_payment.boleto_expired"],
           "visualRole": "trend",
           "palette": "alert"
         }
@@ -1305,38 +1305,38 @@
       "sectionType": "normal",
       "widgets": [
         {
-          "id": "split_payment_positive_kpis_1_flow:split-payment:step:1:event:split_payment.created",
+          "id": "split_payment_positive_kpis_1_flow:split-payment:step:1:event:payments.split_payment.created",
           "title": "Split Payment Criado | Split Payment",
           "widgetType": "query_value",
-          "query": "tags:(event_key:split_payment.created env:dev)",
+          "query": "tags:(event_key:payments.split_payment.created env:dev)",
           "stage": "split_payment_criado",
           "sectionType": "normal",
-          "sourceEventKeys": ["split_payment.created"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:split_payment.created"],
+          "sourceEventKeys": ["payments.split_payment.created"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:payments.split_payment.created"],
           "visualRole": "kpi",
           "palette": "success"
         },
         {
-          "id": "split_payment_positive_kpis_2_flow:split-payment:step:2:event:split_payment.completed",
+          "id": "split_payment_positive_kpis_2_flow:split-payment:step:2:event:payments.split_payment.completed",
           "title": "Split Payment Completado | Split Payment",
           "widgetType": "query_value",
-          "query": "tags:(event_key:split_payment.completed env:dev)",
+          "query": "tags:(event_key:payments.split_payment.completed env:dev)",
           "stage": "split_payment_completed",
           "sectionType": "normal",
-          "sourceEventKeys": ["split_payment.completed"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:split_payment.completed"],
+          "sourceEventKeys": ["payments.split_payment.completed"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:payments.split_payment.completed"],
           "visualRole": "kpi",
           "palette": "success"
         },
         {
-          "id": "split_payment_positive_kpis_3_flow:split-payment:step:3:event:split_payment.boleto.expired",
+          "id": "split_payment_positive_kpis_3_flow:split-payment:step:3:event:payments.split_payment.boleto_expired",
           "title": "Boleto Expirado | Split Payment",
           "widgetType": "query_value",
-          "query": "tags:(event_key:split_payment.boleto.expired env:dev)",
+          "query": "tags:(event_key:payments.split_payment.boleto_expired env:dev)",
           "stage": "split_payment_boleto_expirado",
           "sectionType": "normal",
-          "sourceEventKeys": ["split_payment.boleto.expired"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:split_payment.boleto.expired"],
+          "sourceEventKeys": ["payments.split_payment.boleto_expired"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:payments.split_payment.boleto_expired"],
           "visualRole": "kpi",
           "palette": "success"
         }
@@ -1348,38 +1348,38 @@
       "sectionType": "normal",
       "widgets": [
         {
-          "id": "split_payment_positive_trends_1_flow:split-payment:step:1:event:split_payment.created",
+          "id": "split_payment_positive_trends_1_flow:split-payment:step:1:event:payments.split_payment.created",
           "title": "Split Payment Criado | Split Payment",
           "widgetType": "timeseries",
-          "query": "tags:(event_key:split_payment.created env:dev)",
+          "query": "tags:(event_key:payments.split_payment.created env:dev)",
           "stage": "split_payment_criado",
           "sectionType": "normal",
-          "sourceEventKeys": ["split_payment.created"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:split_payment.created"],
+          "sourceEventKeys": ["payments.split_payment.created"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:1:event:payments.split_payment.created"],
           "visualRole": "trend",
           "palette": "success"
         },
         {
-          "id": "split_payment_positive_trends_2_flow:split-payment:step:2:event:split_payment.completed",
+          "id": "split_payment_positive_trends_2_flow:split-payment:step:2:event:payments.split_payment.completed",
           "title": "Split Payment Completado | Split Payment",
           "widgetType": "timeseries",
-          "query": "tags:(event_key:split_payment.completed env:dev)",
+          "query": "tags:(event_key:payments.split_payment.completed env:dev)",
           "stage": "split_payment_completed",
           "sectionType": "normal",
-          "sourceEventKeys": ["split_payment.completed"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:split_payment.completed"],
+          "sourceEventKeys": ["payments.split_payment.completed"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:2:event:payments.split_payment.completed"],
           "visualRole": "trend",
           "palette": "success"
         },
         {
-          "id": "split_payment_positive_trends_3_flow:split-payment:step:3:event:split_payment.boleto.expired",
+          "id": "split_payment_positive_trends_3_flow:split-payment:step:3:event:payments.split_payment.boleto_expired",
           "title": "Boleto Expirado | Split Payment",
           "widgetType": "timeseries",
-          "query": "tags:(event_key:split_payment.boleto.expired env:dev)",
+          "query": "tags:(event_key:payments.split_payment.boleto_expired env:dev)",
           "stage": "split_payment_boleto_expirado",
           "sectionType": "normal",
-          "sourceEventKeys": ["split_payment.boleto.expired"],
-          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:split_payment.boleto.expired"],
+          "sourceEventKeys": ["payments.split_payment.boleto_expired"],
+          "sourceOccurrenceKeys": ["flow:split-payment:step:3:event:payments.split_payment.boleto_expired"],
           "visualRole": "trend",
           "palette": "success"
         }
@@ -1838,10 +1838,10 @@
       "aggregation_key": "webhook_registrado"
     },
     {
-      "title": "payment.boleto.created",
-      "text": "Invoice Boleto created successfully on provider — bankSlipUrl available",
+      "title": "payments.invoice.opened",
+      "text": "Invoice opened and payable at the provider — billingType-specific data (dueDate, bankSlipUrl, hostedPaymentUrl) in the payload",
       "tags": [
-        "event_key:payment.boleto.created",
+        "event_key:payments.invoice.opened",
         "env:dev",
         "stage:fatura_boleto_criada",
         "actor:system",
@@ -1856,10 +1856,10 @@
       "aggregation_key": "boleto_criado"
     },
     {
-      "title": "payment.boleto.creation_failed",
+      "title": "payments.invoice.creation_failed",
       "text": "Failed to create Boleto on provider — invoice marked FAILED",
       "tags": [
-        "event_key:payment.boleto.creation_failed",
+        "event_key:payments.invoice.creation_failed",
         "env:dev",
         "stage:fatura_boleto_criada",
         "actor:system",
@@ -1874,10 +1874,10 @@
       "aggregation_key": "boleto_criado"
     },
     {
-      "title": "payment.boleto.idempotency_hit",
+      "title": "payments.invoice.idempotency_hit",
       "text": "Retry with same Idempotency-Key returned existing Boleto invoice without new charge",
       "tags": [
-        "event_key:payment.boleto.idempotency_hit",
+        "event_key:payments.invoice.idempotency_hit",
         "env:dev",
         "stage:idempotencia_boleto",
         "actor:system",
@@ -1982,28 +1982,10 @@
       "aggregation_key": "webhook_entrega_falhou"
     },
     {
-      "title": "payment.card.hosted_invoice.created",
-      "text": "Hosted Asaas credit card invoice created — hostedPaymentUrl available for customer to complete payment",
-      "tags": [
-        "event_key:payment.card.hosted_invoice.created",
-        "env:dev",
-        "stage:fatura_cartao_hospedada_criada",
-        "actor:system",
-        "service:pagamento",
-        "touch_point:criacao_cartao_hospedado",
-        "business_domain:pagamento",
-        "source:odd"
-      ],
-      "alert_type": "success",
-      "priority": "normal",
-      "source_type_name": "odd-business-event",
-      "aggregation_key": "cartao_hospedado_criado"
-    },
-    {
-      "title": "payment.card.hosted_invoice.created_exception",
+      "title": "payments.invoice.opened_exception",
       "text": "Exception during hosted credit card invoice creation",
       "tags": [
-        "event_key:payment.card.hosted_invoice.created_exception",
+        "event_key:payments.invoice.opened_exception",
         "env:dev",
         "stage:fatura_cartao_hospedada_criada",
         "actor:system",
@@ -2127,7 +2109,7 @@
     },
     {
       "title": "pagamento.cartao.webhook.analise_risco.reprovada",
-      "text": "Risk analysis reproved — invoice marked FAILED, payment.confirmed NOT published",
+      "text": "Risk analysis reproved — invoice marked FAILED, payments.invoice.confirmed NOT published",
       "tags": [
         "event_key:pagamento.cartao.webhook.analise_risco.reprovada",
         "env:dev",
@@ -2198,10 +2180,10 @@
       "aggregation_key": "cartao_captura_recusada"
     },
     {
-      "title": "payment.card.refund.requested",
+      "title": "payments.invoice.refund_requested",
       "text": "Refund requested for confirmed card payment — provider evidence awaited before marking complete",
       "tags": [
-        "event_key:payment.card.refund.requested",
+        "event_key:payments.invoice.refund_requested",
         "env:dev",
         "stage:estorno_solicitado",
         "actor:system",
@@ -2216,10 +2198,10 @@
       "aggregation_key": "cartao_estorno_solicitado"
     },
     {
-      "title": "payment.card.refund.requested_exception",
+      "title": "payments.invoice.refund_requested_exception",
       "text": "Exception during card refund request",
       "tags": [
-        "event_key:payment.card.refund.requested_exception",
+        "event_key:payments.invoice.refund_requested_exception",
         "env:dev",
         "stage:estorno_solicitado",
         "actor:system",
@@ -2270,10 +2252,10 @@
       "aggregation_key": "cartao_estorno_solicitado"
     },
     {
-      "title": "payment.received",
+      "title": "payments.invoice.received",
       "text": "PAYMENT_RECEIVED webhook processed — invoice updated to RECEIVED for financial reconciliation. Does not trigger a second order release.",
       "tags": [
-        "event_key:payment.received",
+        "event_key:payments.invoice.received",
         "env:dev",
         "stage:webhook_recebimento",
         "actor:system",
@@ -2288,10 +2270,10 @@
       "aggregation_key": "pagamento_recebido"
     },
     {
-      "title": "payment.received_exception",
+      "title": "payments.invoice.received_exception",
       "text": "Exception during PAYMENT_RECEIVED webhook processing — invoice reconciliation state may be inconsistent.",
       "tags": [
-        "event_key:payment.received_exception",
+        "event_key:payments.invoice.received_exception",
         "env:dev",
         "stage:webhook_recebimento",
         "actor:system",
@@ -2306,10 +2288,10 @@
       "aggregation_key": "pagamento_recebido"
     },
     {
-      "title": "split_payment.created",
+      "title": "payments.split_payment.created",
       "text": "Split Payment created with Pix and Boleto charges defined",
       "tags": [
-        "event_key:split_payment.created",
+        "event_key:payments.split_payment.created",
         "env:dev",
         "stage:split_payment_criado",
         "actor:system",
@@ -2324,10 +2306,10 @@
       "aggregation_key": "split_payment_criado"
     },
     {
-      "title": "split_payment.created_exception",
+      "title": "payments.split_payment.created_exception",
       "text": "Exception occurred during Split Payment creation",
       "tags": [
-        "event_key:split_payment.created_exception",
+        "event_key:payments.split_payment.created_exception",
         "env:dev",
         "stage:split_payment_criado",
         "actor:system",
@@ -2342,10 +2324,10 @@
       "aggregation_key": "split_payment_criado"
     },
     {
-      "title": "split_payment.pix.confirmed",
+      "title": "payments.split_payment.pix_confirmed",
       "text": "Pix portion of Split Payment confirmed by provider",
       "tags": [
-        "event_key:split_payment.pix.confirmed",
+        "event_key:payments.split_payment.pix_confirmed",
         "env:dev",
         "stage:split_payment_pix_confirmado",
         "actor:system",
@@ -2360,10 +2342,10 @@
       "aggregation_key": "split_payment_pix_confirmado"
     },
     {
-      "title": "split_payment.pix.confirmed_exception",
+      "title": "payments.split_payment.pix_confirmed_exception",
       "text": "Exception during Pix confirmation processing",
       "tags": [
-        "event_key:split_payment.pix.confirmed_exception",
+        "event_key:payments.split_payment.pix_confirmed_exception",
         "env:dev",
         "stage:split_payment_pix_confirmado",
         "actor:system",
@@ -2378,10 +2360,10 @@
       "aggregation_key": "split_payment_pix_confirmado"
     },
     {
-      "title": "split_payment.boleto.confirmed",
+      "title": "payments.split_payment.boleto_confirmed",
       "text": "Boleto portion of Split Payment confirmed by provider",
       "tags": [
-        "event_key:split_payment.boleto.confirmed",
+        "event_key:payments.split_payment.boleto_confirmed",
         "env:dev",
         "stage:split_payment_boleto_confirmado",
         "actor:system",
@@ -2396,10 +2378,10 @@
       "aggregation_key": "split_payment_boleto_confirmado"
     },
     {
-      "title": "split_payment.boleto.confirmed_exception",
+      "title": "payments.split_payment.boleto_confirmed_exception",
       "text": "Exception during Boleto confirmation processing",
       "tags": [
-        "event_key:split_payment.boleto.confirmed_exception",
+        "event_key:payments.split_payment.boleto_confirmed_exception",
         "env:dev",
         "stage:split_payment_boleto_confirmado",
         "actor:system",
@@ -2414,10 +2396,10 @@
       "aggregation_key": "split_payment_boleto_confirmado"
     },
     {
-      "title": "split_payment.completed",
+      "title": "payments.split_payment.completed",
       "text": "Both Pix and Boleto confirmed — order released",
       "tags": [
-        "event_key:split_payment.completed",
+        "event_key:payments.split_payment.completed",
         "env:dev",
         "stage:split_payment_completed",
         "actor:system",
@@ -2432,10 +2414,10 @@
       "aggregation_key": "split_payment_completed"
     },
     {
-      "title": "split_payment.completed_exception",
+      "title": "payments.split_payment.completed_exception",
       "text": "Exception during Split Payment completion processing",
       "tags": [
-        "event_key:split_payment.completed_exception",
+        "event_key:payments.split_payment.completed_exception",
         "env:dev",
         "stage:split_payment_completed",
         "actor:system",
@@ -2450,10 +2432,10 @@
       "aggregation_key": "split_payment_completed"
     },
     {
-      "title": "split_payment.boleto.expired",
+      "title": "payments.split_payment.boleto_expired",
       "text": "Boleto expired without payment — order moved to PENDING_INVESTIGATION",
       "tags": [
-        "event_key:split_payment.boleto.expired",
+        "event_key:payments.split_payment.boleto_expired",
         "env:dev",
         "stage:split_payment_boleto_expirado",
         "actor:system",
@@ -2468,10 +2450,10 @@
       "aggregation_key": "split_payment_boleto_expirado"
     },
     {
-      "title": "split_payment.boleto.expired_exception",
+      "title": "payments.split_payment.boleto_expired_exception",
       "text": "Exception during Boleto expiration processing",
       "tags": [
-        "event_key:split_payment.boleto.expired_exception",
+        "event_key:payments.split_payment.boleto_expired_exception",
         "env:dev",
         "stage:split_payment_boleto_expirado",
         "actor:system",
@@ -2486,10 +2468,10 @@
       "aggregation_key": "split_payment_boleto_expirado"
     },
     {
-      "title": "split_payment.creation_failed",
+      "title": "payments.split_payment.creation_failed",
       "text": "Split Payment creation failed due to provider error",
       "tags": [
-        "event_key:split_payment.creation_failed",
+        "event_key:payments.split_payment.creation_failed",
         "env:dev",
         "stage:split_payment_criacao_falhou",
         "actor:system",
@@ -2504,10 +2486,10 @@
       "aggregation_key": "split_payment_criacao_falhou"
     },
     {
-      "title": "split_payment.creation_failed_exception",
+      "title": "payments.split_payment.creation_failed_exception",
       "text": "Exception during Split Payment creation failure handling",
       "tags": [
-        "event_key:split_payment.creation_failed_exception",
+        "event_key:payments.split_payment.creation_failed_exception",
         "env:dev",
         "stage:split_payment_criacao_falhou",
         "actor:system",
@@ -2522,10 +2504,10 @@
       "aggregation_key": "split_payment_criacao_falhou"
     },
     {
-      "title": "payment.chargeback_requested",
+      "title": "payments.invoice.chargeback_requested",
       "text": "Chargeback requested by cardholder — invoice moved to CHARGEBACK_REQUESTED",
       "tags": [
-        "event_key:payment.chargeback_requested",
+        "event_key:payments.invoice.chargeback_requested",
         "env:dev",
         "stage:chargeback_solicitado",
         "actor:system",
@@ -2540,10 +2522,10 @@
       "aggregation_key": "chargeback_solicitado"
     },
     {
-      "title": "payment.chargeback_requested_exception",
+      "title": "payments.invoice.chargeback_requested_exception",
       "text": "Exception while processing chargeback_requested webhook",
       "tags": [
-        "event_key:payment.chargeback_requested_exception",
+        "event_key:payments.invoice.chargeback_requested_exception",
         "env:dev",
         "stage:chargeback_solicitado",
         "actor:system",
@@ -2558,10 +2540,10 @@
       "aggregation_key": "chargeback_solicitado"
     },
     {
-      "title": "payment.chargeback_dispute",
+      "title": "payments.invoice.chargeback_disputed",
       "text": "Chargeback entered dispute phase — invoice moved to CHARGEBACK_DISPUTE",
       "tags": [
-        "event_key:payment.chargeback_dispute",
+        "event_key:payments.invoice.chargeback_disputed",
         "env:dev",
         "stage:chargeback_disputa",
         "actor:system",
@@ -2576,10 +2558,10 @@
       "aggregation_key": "chargeback_disputa"
     },
     {
-      "title": "payment.chargeback_dispute_exception",
+      "title": "payments.invoice.chargeback_disputed_exception",
       "text": "Exception while processing chargeback_dispute webhook",
       "tags": [
-        "event_key:payment.chargeback_dispute_exception",
+        "event_key:payments.invoice.chargeback_disputed_exception",
         "env:dev",
         "stage:chargeback_disputa",
         "actor:system",
@@ -2594,10 +2576,10 @@
       "aggregation_key": "chargeback_disputa"
     },
     {
-      "title": "payment.chargeback_reversal_pending",
+      "title": "payments.invoice.chargeback_reversal_pending",
       "text": "Chargeback reversal pending — invoice moved to CHARGEBACK_REVERSAL_PENDING",
       "tags": [
-        "event_key:payment.chargeback_reversal_pending",
+        "event_key:payments.invoice.chargeback_reversal_pending",
         "env:dev",
         "stage:chargeback_reversao_pendente",
         "actor:system",
@@ -2612,10 +2594,10 @@
       "aggregation_key": "chargeback_reversao_pendente"
     },
     {
-      "title": "payment.chargeback_reversal_pending_exception",
+      "title": "payments.invoice.chargeback_reversal_pending_exception",
       "text": "Exception while processing awaiting_chargeback_reversal webhook",
       "tags": [
-        "event_key:payment.chargeback_reversal_pending_exception",
+        "event_key:payments.invoice.chargeback_reversal_pending_exception",
         "env:dev",
         "stage:chargeback_reversao_pendente",
         "actor:system",
@@ -2752,12 +2734,12 @@
       "target": "99.9%",
       "rationale": "SLI crítico do fluxo Boleto: sem bankSlipUrl, o cliente não consegue pagar. Qualquer ausência deve ser observável imediatamente.",
       "sourceEventKeys": [
-        "payment.boleto.created"
+        "payments.invoice.opened"
       ],
       "sourceOccurrenceKeys": [
-        "flow:caminho-boleto:step:1:event:payment.boleto.created"
+        "flow:caminho-boleto:step:1:event:payments.invoice.opened"
       ],
-      "queryHint": "tags:(event_key:payment.boleto.created env:dev)"
+      "queryHint": "tags:(event_key:payments.invoice.opened env:dev)"
     },
     {
       "id": "webhook_entrega_falhou_observability",
@@ -2782,20 +2764,20 @@
       "target": "99%",
       "rationale": "SLI crítico do fluxo cartão hospedado (DS-41): sem hostedPaymentUrl, o cliente não consegue completar o pagamento no ambiente Asaas. OBC target: 99% em 5 minutos.",
       "sourceEventKeys": [
-        "payment.card.hosted_invoice.created"
+        "payments.invoice.opened"
       ],
       "sourceOccurrenceKeys": [
-        "flow:caminho-cartao-hospedado:step:1:event:payment.card.hosted_invoice.created"
+        "flow:caminho-cartao-hospedado:step:1:event:payments.invoice.opened"
       ],
-      "queryHint": "tags:(event_key:payment.card.hosted_invoice.created env:dev)"
+      "queryHint": "tags:(event_key:payments.invoice.opened env:dev)"
     },
     {
       "id": "cartao_confirmacao_unica_availability",
       "name": "Confirmações de Cartão Publicadas Uma Única Vez",
-      "objective": "Garantir que payment.confirmed seja publicado exatamente uma vez por PAYMENT_CONFIRMED e nunca re-emitido em PAYMENT_RECEIVED.",
+      "objective": "Garantir que payments.invoice.confirmed seja publicado exatamente uma vez por PAYMENT_CONFIRMED e nunca re-emitido em PAYMENT_RECEIVED.",
       "sliType": "availability",
       "target": "99%",
-      "rationale": "OBC DS-41: payment.confirmed deve ser publicado uma única vez. Dupla emissão pode causar liberação duplicada de pedido.",
+      "rationale": "OBC DS-41: payments.invoice.confirmed deve ser publicado uma única vez. Dupla emissão pode causar liberação duplicada de pedido.",
       "sourceEventKeys": [
         "pagamento.confirmacao.webhook.pagamento.confirmado"
       ],
@@ -2807,47 +2789,47 @@
     {
       "id": "payment_received_reconciliation_availability",
       "name": "Recebimentos Financeiros Registrados com Sucesso",
-      "objective": "Garantir que payment.received seja publicado para cada PAYMENT_RECEIVED do provedor, habilitando conciliação financeira.",
+      "objective": "Garantir que payments.invoice.received seja publicado para cada PAYMENT_RECEIVED do provedor, habilitando conciliação financeira.",
       "sliType": "availability",
       "target": "99.9%",
-      "rationale": "OBC DS-39: payment.received é o evento canônico para conciliação financeira. Ausência do evento impede rastreabilidade de liquidação.",
+      "rationale": "OBC DS-39: payments.invoice.received é o evento canônico para conciliação financeira. Ausência do evento impede rastreabilidade de liquidação.",
       "sourceEventKeys": [
-        "payment.received"
+        "payments.invoice.received"
       ],
       "sourceOccurrenceKeys": [
-        "flow:confirmacao:step:2:event:payment.received"
+        "flow:confirmacao:step:2:event:payments.invoice.received"
       ],
-      "queryHint": "tags:(event_key:payment.received env:dev)"
+      "queryHint": "tags:(event_key:payments.invoice.received env:dev)"
     },
     {
       "id": "split_payment_completed_availability",
       "name": "Split Payment Completado em até 5s",
-      "objective": "Garantir que split_payment.completed seja emitido em até 5s após confirmação do segundo meio de pagamento.",
+      "objective": "Garantir que payments.split_payment.completed seja emitido em até 5s após confirmação do segundo meio de pagamento.",
       "sliType": "latency",
       "target": "99%",
       "rationale": "OBC DS-61: ambas as porções confirmadas liberam o pedido. Latência acima de 5s impacta o SLA de liberação do pedido para o cliente.",
       "sourceEventKeys": [
-        "split_payment.completed"
+        "payments.split_payment.completed"
       ],
       "sourceOccurrenceKeys": [
-        "flow:split-payment:step:2:event:split_payment.completed"
+        "flow:split-payment:step:2:event:payments.split_payment.completed"
       ],
-      "queryHint": "tags:(event_key:split_payment.completed env:dev)"
+      "queryHint": "tags:(event_key:payments.split_payment.completed env:dev)"
     },
     {
       "id": "split_payment_boleto_expired_latency",
       "name": "Boleto Expirado Detectado em até 60min",
-      "objective": "Garantir que split_payment.boleto.expired seja emitido em até 60min após o vencimento do boleto.",
+      "objective": "Garantir que payments.split_payment.boleto_expired seja emitido em até 60min após o vencimento do boleto.",
       "sliType": "latency",
       "target": "99%",
       "rationale": "OBC DS-61: detecção tardia de boleto vencido mantém pedido no estado PENDING_INVESTIGATION além do tempo aceitável para investigação manual.",
       "sourceEventKeys": [
-        "split_payment.boleto.expired"
+        "payments.split_payment.boleto_expired"
       ],
       "sourceOccurrenceKeys": [
-        "flow:split-payment:step:3:event:split_payment.boleto.expired"
+        "flow:split-payment:step:3:event:payments.split_payment.boleto_expired"
       ],
-      "queryHint": "tags:(event_key:split_payment.boleto.expired env:dev)"
+      "queryHint": "tags:(event_key:payments.split_payment.boleto_expired env:dev)"
     }
   ],
   "assumptions": [
@@ -2856,13 +2838,13 @@
     "Todo evento de negócio possui um contraparte _exception para observabilidade de falhas internas.",
     "Fluxos cobertos: caminho-feliz (confirmação + webhook), alternativo-cliente-novo, cancelamento, token-rejeitado, webhook-configuracao, boleto.",
     "Atualizar este arquivo sempre que um novo emit() de domínio for adicionado ao código ou um flow existente mudar de sequência.",
-    "2026-07-29: adicionados eventos do fluxo Boleto (payment.boleto.created, payment.boleto.creation_failed, payment.boleto.idempotency_hit) conforme OBC create-invoice-boleto.",
+    "2026-07-29: adicionados eventos do fluxo Boleto (payments.invoice.opened, payments.invoice.creation_failed, payments.invoice.idempotency_hit) conforme OBC create-invoice-boleto.",
     "2026-07-31: DS-43 webhook-configuration — adicionados eventos webhook.deleted, webhook.delivery.failed e sloSuggestion para falha de entrega observável.",
-    "2026-07-31: DS-41 credit-card-authorization-confirmation — adicionados eventos: payment.card.hosted_invoice.created, pagamento.cartao.webhook.pagamento.autorizado, pagamento.cartao.webhook.analise_risco.aguardando/aprovada/reprovada, pagamento.cartao.webhook.captura_recusada, payment.card.refund.requested, pagamento.estorno.cobranca.estorno.solicitado (e respectivos _exception). Novos sloSuggestions: cartao_hospedado_criado_availability, cartao_confirmacao_unica_availability.",
-    "2026-08-01: DS-39 payment-confirmation — adicionado evento canônico payment.received (e payment.received_exception) emitido via eventEmitter no processamento de PAYMENT_RECEIVED webhook. Novo sloSuggestion: payment_received_reconciliation_availability. Evento garante conciliação financeira sem republicar payment.confirmed.",
+    "2026-07-31: DS-41 credit-card-authorization-confirmation — adicionados eventos: payments.invoice.opened, pagamento.cartao.webhook.pagamento.autorizado, pagamento.cartao.webhook.analise_risco.aguardando/aprovada/reprovada, pagamento.cartao.webhook.captura_recusada, payments.invoice.refund_requested, pagamento.estorno.cobranca.estorno.solicitado (e respectivos _exception). Novos sloSuggestions: cartao_hospedado_criado_availability, cartao_confirmacao_unica_availability.",
+    "2026-08-01: DS-39 payment-confirmation — adicionado evento canônico payments.invoice.received (e payments.invoice.received_exception) emitido via eventEmitter no processamento de PAYMENT_RECEIVED webhook. Novo sloSuggestion: payment_received_reconciliation_availability. Evento garante conciliação financeira sem republicar payments.invoice.confirmed.",
     "2026-08-01: work-item-107 api-token-validation — TDD cycle validado. Eventos api.token.validated e api.token.rejected (ODD: pagamento.autenticacao.api.token.validado/rejeitado) já registrados desde 2026-07-03. Implementação completa em AuthModule (ApiTokenGuard, ApiTokenService, TokenRepository, AdminTokenController). Todos os 18 cenários BDD passando.",
     "2026-08-01: work-item-108 webhook-configuration (v0.6.0) — TDD cycle validado. Implementação pré-existente no master (DS-43). Todos os 15 cenários e2e passando: POST /webhooks (201 + secret), GET /webhooks (sem secret), DELETE /webhooks/:id, HTTPS enforcement, limite 10 webhooks, entrega fire-and-forget com HMAC-SHA256, falha de entrega sem bloquear pagamento, webhook inativo não recebe entrega. Eventos já registrados: pagamento.webhook.configuracao.webhook.registrado, pagamento.webhook.configuracao.webhook.removido, pagamento.webhook.entrega.pagamento.confirmado.entregue, pagamento.webhook.entrega.entrega.falhou. SLOs existentes: webhook_entregue_availability (95%), webhook_entrega_falhou_observability (100%).",
-    "2026-08-05: DS-61 split-payment-pix-boleto (v0.14.0, work-item 167) — TDD cycle validado. Implementação pré-existente no master (merge de v0.13.0). Todos os 9 cenários BDD passando: criação com PENDING_BOTH, confirmação Pix→COMPLETED, confirmação Boleto→COMPLETED (ordem inversa), idempotência, webhook duplicado, boleto expirado com Pix confirmado, boleto expirado sem pagamento, rejeição de soma incorreta, segurança de resposta de erro. Novos eventos: split_payment.created, split_payment.pix.confirmed, split_payment.boleto.confirmed, split_payment.completed, split_payment.boleto.expired, split_payment.creation_failed (e variantes _exception). Novos SLOs: split_payment_completed_availability (99%, latência 5s), split_payment_boleto_expired_latency (99%, latência 60min). Novo flow band: split_payment.",
-    "2026-08-11: DS-62 chargeback-handling (v0.15.0, work-item 173) — TDD cycle validado. Novos InvoiceStatus: CHARGEBACK_REQUESTED, CHARGEBACK_DISPUTE, CHARGEBACK_REVERSAL_PENDING. Novos switch cases em InvoiceService.processProviderWebhook: PAYMENT_CHARGEBACK_REQUESTED→CHARGEBACK_REQUESTED, PAYMENT_CHARGEBACK_DISPUTE→CHARGEBACK_DISPUTE, PAYMENT_AWAITING_CHARGEBACK_REVERSAL→CHARGEBACK_REVERSAL_PENDING. Regras: idempotência via saveRawProviderEvent, billingType≠CREDIT_CARD rejeitado com warn log, fora de ordem aceito, sem ação financeira automática. Novos eventos de domínio: payment.chargeback_requested, payment.chargeback_dispute, payment.chargeback_reversal_pending (e variantes _exception). Todos os 6 cenários BDD passando."
+    "2026-08-05: DS-61 split-payment-pix-boleto (v0.14.0, work-item 167) — TDD cycle validado. Implementação pré-existente no master (merge de v0.13.0). Todos os 9 cenários BDD passando: criação com PENDING_BOTH, confirmação Pix→COMPLETED, confirmação Boleto→COMPLETED (ordem inversa), idempotência, webhook duplicado, boleto expirado com Pix confirmado, boleto expirado sem pagamento, rejeição de soma incorreta, segurança de resposta de erro. Novos eventos: payments.split_payment.created, payments.split_payment.pix_confirmed, payments.split_payment.boleto_confirmed, payments.split_payment.completed, payments.split_payment.boleto_expired, payments.split_payment.creation_failed (e variantes _exception). Novos SLOs: split_payment_completed_availability (99%, latência 5s), split_payment_boleto_expired_latency (99%, latência 60min). Novo flow band: split_payment.",
+    "2026-08-11: DS-62 chargeback-handling (v0.15.0, work-item 173) — TDD cycle validado. Novos InvoiceStatus: CHARGEBACK_REQUESTED, CHARGEBACK_DISPUTE, CHARGEBACK_REVERSAL_PENDING. Novos switch cases em InvoiceService.processProviderWebhook: PAYMENT_CHARGEBACK_REQUESTED→CHARGEBACK_REQUESTED, PAYMENT_CHARGEBACK_DISPUTE→CHARGEBACK_DISPUTE, PAYMENT_AWAITING_CHARGEBACK_REVERSAL→CHARGEBACK_REVERSAL_PENDING. Regras: idempotência via saveRawProviderEvent, billingType≠CREDIT_CARD rejeitado com warn log, fora de ordem aceito, sem ação financeira automática. Novos eventos de domínio: payments.invoice.chargeback_requested, payments.invoice.chargeback_disputed, payments.invoice.chargeback_reversal_pending (e variantes _exception). Todos os 6 cenários BDD passando."
   ]
 }

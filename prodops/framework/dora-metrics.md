@@ -86,7 +86,7 @@ Eventos com sufixo `*_failed`, `*_rejected`, `*_refused`, `*_error` correlaciona
 **Como medir:** contagem de eventos de idempotência e estorno por janela de tempo.
 
 **Padrão de eventos de OBC que alimentam esta métrica:**
-Eventos com sufixo `*_idempotency_hit`, `*_refund.requested`, `*_refund.required`, `*_retry`. Exemplo de produto (payments-api): `invoice.idempotency_hit`, `payment.card.refund.requested`.
+Eventos com sufixo `*_idempotency_hit`, `*_refund.requested`, `*_refund.required`, `*_retry`. Exemplo de produto (payments-api): `payments.invoice.idempotency_hit`, `payments.invoice.refund_requested`.
 
 ---
 

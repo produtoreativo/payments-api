@@ -112,8 +112,8 @@ Lambda Function URL  (AWS — AuthType: NONE · CORS *)
          ├─ Asaas (PSP externo)  POST /v3/payments · POST /v3/customers
          │
          ├─ EventEmitter2 ───────► WebhookDeliveryService → HTTPS POST (Consumer)
-         │  payment.confirmed              X-Payments-Signature
-         │  payment.cancelled             X-Payments-Delivery-Id
+         │  payments.invoice.confirmed              X-Payments-Signature
+         │  payments.invoice.cancelled             X-Payments-Delivery-Id
          │  split_payment.*
          │
          └─ ObservabilityListener → Datadog APM / Métricas / Logs
@@ -137,7 +137,7 @@ Logs: CloudWatch /aws/lambda/{env}-payments-api  (retenção 30d)
 | Asaas (PSP externo) | Execução de cobranças Pix, Boleto, Cartão | Crítica | Financeiro / Payments |
 | Datadog APM | Traces, métricas, alertas | Crítica | Plataforma / SRE |
 | Checkout (consumidor) | Origem das solicitações de pagamento | Crítica | Checkout |
-| Order Management (consumidor) | Liberação de pedido após `payment.confirmed` | Crítica | Orders |
+| Order Management (consumidor) | Liberação de pedido após `payments.invoice.confirmed` | Crítica | Orders |
 
 ---
 
@@ -146,11 +146,11 @@ Logs: CloudWatch /aws/lambda/{env}-payments-api  (retenção 30d)
 | Value Stream / Nó | Dependência | Falha possível | Impacto no cliente | Sinal de detecção | Acionamento |
 |---|---|---|---|---|---|
 | Compra com Pix | Asaas (PSP) | QR Code não gerado (timeout / erro) | Cliente não inicia pagamento; queda de conversão | Taxa de erro `invoice.creation_failed`; latência p95 > 3s | Payments + SRE |
-| Compra com Pix | Asaas webhook | Pagamento Pix pago sem evento de confirmação | Pedido fica parado; chamados de atendimento | `payment.confirmed` ausente > N min após liquidação | Payments + Financeiro |
+| Compra com Pix | Asaas webhook | Pagamento Pix pago sem evento de confirmação | Pedido fica parado; chamados de atendimento | `payments.invoice.confirmed` ausente > N min após liquidação | Payments + Financeiro |
 | Compra com Boleto | Asaas (PSP) | Boleto não gerado | Cliente sem cobrança para pagar | Taxa de erro em `create-invoice-boleto` | Payments + SRE |
 | Compra com Cartão | Asaas hosted flow | Redirecionamento falha ou retorno ignorado | Autorização perdida; cliente sem feedback | Aumento de timeout em `hostedPaymentUrl`; erro em refund | Payments |
-| Split Payment | Asaas (PSP) | Pix confirmado, Boleto vencido sem resolução | Pedido em limbo; operação manual necessária | `split_payment.boleto.expired` sem ação de operação | Payments + Operação |
-| Entrega de webhook | Consumer endpoint | HTTPS POST falha; DLQ crescente | Consumidor perde eventos de `payment.confirmed` | DLQ lag crescente; erro de entrega em Datadog | Payments + Plataforma |
+| Split Payment | Asaas (PSP) | Pix confirmado, Boleto vencido sem resolução | Pedido em limbo; operação manual necessária | `payments.split_payment.boleto_expired` sem ação de operação | Payments + Operação |
+| Entrega de webhook | Consumer endpoint | HTTPS POST falha; DLQ crescente | Consumidor perde eventos de `payments.invoice.confirmed` | DLQ lag crescente; erro de entrega em Datadog | Payments + Plataforma |
 | Autenticação | TenantsTable (DynamoDB) | Tabela indisponível | Toda a API inacessível | 5xx generalizado + Datadog trace errors | SRE + Payments |
 | Worker Lambda | SQS / DynamoDB | Worker parado; fila crescendo | Modo async degradado; webhooks do PSP não processados | SQS ApproximateNumberOfMessagesNotVisible ↑ | SRE + Payments |
 
@@ -198,7 +198,7 @@ Logs: CloudWatch /aws/lambda/{env}-payments-api  (retenção 30d)
 |---|---|---|---|
 | Área de Negócios / Magazine Siará | Conversão, GMV, prazo de lançamento com parceiros | Prioridade de escopo e prazo (ex.: Split Payment em 15 dias) | `[link]` |
 | Produto Checkout | Experiência de pagamento no fluxo de compra | Priorização de UX, API contract com Payments | `[link]` |
-| Produto Order Management | Consistência pedido ↔ pagamento | Contratos de evento `payment.confirmed` e liberação de pedido | `[link]` |
+| Produto Order Management | Consistência pedido ↔ pagamento | Contratos de evento `payments.invoice.confirmed` e liberação de pedido | `[link]` |
 | Financeiro / Conciliação | Custo por transação, chargeback, conciliação com Asaas | Regras financeiras, limites de Split, política de cancelamento | `[link]` |
 | Atendimento / CX | Redução de chamados; status confiável por paymentId / orderId | Procedimentos de suporte; acesso a ferramentas de consulta | `[link]` |
 | Plataforma / SRE | Operabilidade, SLOs, on-call e incidentes | Padrões de observabilidade, alertas e runbooks | `[link]` |

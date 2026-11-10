@@ -26,7 +26,7 @@ Prazo máximo de investigação: **a definir pelo time de operação antes do go
 
 - Criar runbook para investigação manual de `PENDING_INVESTIGATION` antes do Ship
 - Definir prazo máximo de investigação com o time de operação
-- Alerta imediato para operação quando `split_payment.boleto.expired` for emitido
+- Alerta imediato para operação quando `payments.split_payment.boleto_expired` for emitido
 - Revisar política em Assessment após primeiros 30 dias em produção — avaliar automatização do estorno
 
 ---
@@ -290,7 +290,7 @@ O provedor Asaas pode retornar a cobrança sem `bankSlipUrl` em cenários de ins
 
 ### Mitigações
 
-- Validar presença de `bankSlipUrl` na resposta do provedor antes de retornar status `OPEN`. Se ausente, marcar invoice como `FAILED` e logar `payment.boleto.creation_failed`.
+- Validar presença de `bankSlipUrl` na resposta do provedor antes de retornar status `OPEN`. Se ausente, marcar invoice como `FAILED` e logar `payments.invoice.creation_failed`.
 - Acceptance test deve verificar que `bankSlipUrl` está presente na resposta.
 
 ---
@@ -525,8 +525,8 @@ O upgrade para multer >=2.2.0 foi aplicado via `npm audit fix` sem alteração e
 
 - Cancelamento de invoice já `CONFIRMED` — mitigado por validação de estado antes de chamar o provedor; invoice confirmada não pode ser cancelada.
 - Chamada duplicada ao provedor Asaas — mitigado por idempotência: retry com mesma chave não gera segunda chamada.
-- Provedor retorna 404 para invoice já cancelada — mitigado por política explícita documentada no OBC; 404 não publica `payment.cancelled` sem decisão.
-- Publicação de `payment.cancelled` sem confirmação do provedor — mitigado por aguardar resposta de sucesso antes de emitir o evento canônico.
+- Provedor retorna 404 para invoice já cancelada — mitigado por política explícita documentada no OBC; 404 não publica `payments.invoice.cancelled` sem decisão.
+- Publicação de `payments.invoice.cancelled` sem confirmação do provedor — mitigado por aguardar resposta de sucesso antes de emitir o evento canônico.
 
 ## Referências
 
@@ -799,7 +799,7 @@ O upgrade para multer >=2.2.0 foi aplicado via `npm audit fix` sem alteração e
 - **Risco:** O sistema apenas rastreia chargebacks sem acionar ação financeira automática; a operação precisa agir manualmente para estornos ou contestações.
 - **Probabilidade:** Alta (todo chargeback exige ação manual)
 - **Impacto:** Baixo para o sistema — o risco é operacional, não técnico.
-- **Mitigação:** Evento `payment.chargeback_requested` sinaliza imediatamente a operação via webhook delivery.
+- **Mitigação:** Evento `payments.invoice.chargeback_requested` sinaliza imediatamente a operação via webhook delivery.
 - **Aceite:** Explícito — design intencional (sem freeze automático).
 
 ## Referências

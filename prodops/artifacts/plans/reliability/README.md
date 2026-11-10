@@ -33,7 +33,7 @@ Itens explicitamente ignorados por não terem decisão exatamente `Entrou`: `Not
 | --- | --- | --- | --- |
 | Habilitar novo gateway para o Checkout na jornada priorizada | Não há implementação de Feature Flag neste repositório; Premortem informa que o Checkout está preparado, mas a flag segue desabilitada por bug. | Checkout, Feature Flag, contrato Checkout -> Payments, Payments API. | Dependência externa crítica e ainda não evidenciada como pronta. |
 | Criar invoice via Pix | `POST /invoices` recebe `CreateInvoiceDto`, exige `Idempotency-Key`, resolve provider, cria cliente/cobrança Asaas e atualiza invoice para `OPEN`. | Asaas `/customers`, Asaas `/payments`, Payments DB, customer binding. | Implementado e coberto por testes em memória; caminho Dynamo e timeout de provider ainda fragilizam a confiabilidade. |
-| Confirmação de pagamento | `POST /webhook/payments` valida token quando configurado, persiste evento bruto, deduplica e processa `PAYMENT_CONFIRMED`, `PAYMENT_RECEIVED` e `PAYMENT_OVERDUE`. | Webhook Asaas, `ASAAS_WEBHOOK_TOKEN`, Payments DB, evento canônico `payment.confirmed`. | Regras cobertas em memória e em Dynamo mock para correlação por `providerPaymentId` e `externalReference`; webhook não correlacionado emite evento observável. |
+| Confirmação de pagamento | `POST /webhook/payments` valida token quando configurado, persiste evento bruto, deduplica e processa `PAYMENT_CONFIRMED`, `PAYMENT_RECEIVED` e `PAYMENT_OVERDUE`. | Webhook Asaas, `ASAAS_WEBHOOK_TOKEN`, Payments DB, evento canônico `payments.invoice.confirmed`. | Regras cobertas em memória e em Dynamo mock para correlação por `providerPaymentId` e `externalReference`; webhook não correlacionado emite evento observável. |
 
 **Inconsistências relevantes para o escopo aprovado**
 
@@ -126,7 +126,7 @@ Itens explicitamente ignorados por não terem decisão exatamente `Entrou`: `Not
 - `findByProviderPaymentId` e `findByExternalReference` funcionam em memória e possuem implementação/cobertura com Dynamo mock.
 - `processProviderWebhook` pode responder sucesso técnico quando não encontrou invoice, mas agora emite evento observável específico de não correlação.
 - `PAYMENT_RECEIVED` atualiza para `RECEIVED`; precisa preservar a regra de não republicar confirmação.
-- `payment.confirmed` é emitido via EventEmitter local; não há durabilidade evidenciada para consumidores externos.
+- `payments.invoice.confirmed` é emitido via EventEmitter local; não há durabilidade evidenciada para consumidores externos.
 - Token de webhook depende de configuração de ambiente.
 
 **Dependências**
@@ -135,7 +135,7 @@ Itens explicitamente ignorados por não terem decisão exatamente `Entrou`: `Not
 - `ASAAS_WEBHOOK_TOKEN`.
 - Payments DB.
 - Índices de consulta por provider payment e referência externa.
-- Evento canônico `payment.confirmed`.
+- Evento canônico `payments.invoice.confirmed`.
 
 **Pontos de atenção**
 
@@ -147,7 +147,7 @@ Itens explicitamente ignorados por não terem decisão exatamente `Entrou`: `Not
 
 - Validar consultas Dynamo para encontrar invoice por `providerPaymentId` e `externalReference` contra tabela/índices reais do ambiente.
 - Conectar o evento de webhook não correlacionado a dashboard/alerta operacional e definir reprocessamento.
-- Definir mecanismo durável ou limite explícito do evento canônico `payment.confirmed`.
+- Definir mecanismo durável ou limite explícito do evento canônico `payments.invoice.confirmed`.
 - Exigir token de webhook em ambientes de Release e falhar configuração insegura.
 
 ## Reliability Roadmap
@@ -167,7 +167,7 @@ Itens explicitamente ignorados por não terem decisão exatamente `Entrou`: `Not
 | Confirmação de pagamento | Cobrir webhook com repositório Dynamo/local mock | Validar confirmação, deduplicação e correlação no caminho de persistência da Release. | P0 | Falsa segurança dos testes em memória. | Médio | DynamoService, LocalStack ou `DYNAMO_MOCK`. |
 | Confirmação de pagamento | Evento observável para webhook não correlacionado | Dar sinal claro quando o provider envia pagamento sem invoice encontrada. | P0 | Evento pago invisível operacionalmente. | Baixo | InvoiceService, eventos observáveis. |
 | Confirmação de pagamento | Validar configuração obrigatória do token de webhook | Impedir ambiente de Release aceitando webhook sem `ASAAS_WEBHOOK_TOKEN`. | P0 | Falha de segurança por configuração ausente. | Baixo | ConfigModule, ambiente de deploy. |
-| Confirmação de pagamento | Definir durabilidade do evento `payment.confirmed` | Garantir que a confirmação aprovada não dependa apenas de listener local sem persistência. | P1 | Perda de evento canônico em restart/falha de processo. | Médio/alto | EventEmitter atual, broker futuro ou decisão arquitetural. |
+| Confirmação de pagamento | Definir durabilidade do evento `payments.invoice.confirmed` | Garantir que a confirmação aprovada não dependa apenas de listener local sem persistência. | P1 | Perda de evento canônico em restart/falha de processo. | Médio/alto | EventEmitter atual, broker futuro ou decisão arquitetural. |
 | Confirmação de pagamento | Dashboard mínimo de confirmação | Expor webhooks recebidos, confirmados, duplicados, inválidos e não correlacionados. | P1 | MTTR alto em falha de confirmação. | Médio | Eventos de webhook, DataDog/APM. |
 
 ## Quick Wins
@@ -204,12 +204,12 @@ As métricas DORA estendidas complementam o Reliability Plan com uma visão de m
 | Criar invoice via Pix | `invoice.created` com `providerPaymentId` — 99.9% | Availability |
 | Criar invoice via Pix | `invoice.creation_failed` correlacionado com deploy | Change Fail Rate |
 | Criar invoice via Pix | Latência de criação | Reaction Time |
-| Confirmação de pagamento | `payment.confirmed` publicado 1x — 100% | Availability |
-| Confirmação de pagamento | `webhook.received` → `payment.confirmed` gap | Reaction Time |
+| Confirmação de pagamento | `payments.invoice.confirmed` publicado 1x — 100% | Availability |
+| Confirmação de pagamento | `webhook.received` → `payments.invoice.confirmed` gap | Reaction Time |
 | Confirmação de pagamento | `webhook.delivery.failed` → `webhook.delivery.sent` gap | MTTR |
-| Criar invoice via Boleto | `payment.boleto.created` — 99.9% | Availability |
+| Criar invoice via Boleto | `payments.invoice.opened` — 99.9% | Availability |
 | Cartão de Crédito | Card outcome em até 5min — 99% | Reaction Time |
-| Cartão de Crédito | `payment.card.refund.requested` taxa | Rate of Return |
+| Cartão de Crédito | `payments.invoice.refund_requested` taxa | Rate of Return |
 | Webhook Configuration | `webhook.delivery.sent` em até 5s — 95% | Reaction Time + Availability |
 | API Token Validation | `api.token.validated` sem latência adicional >5ms — 99.9% | Availability + Reaction Time |
 
@@ -291,7 +291,7 @@ Fora do escopo desta release: Split com Cartão de Crédito (fase posterior).
 
 **Pontos de atenção**
 
-- O evento `split_payment.boleto.expired` com `pixStatus: confirmed` é o sinal mais crítico — precisa de alerta imediato para operação
+- O evento `payments.split_payment.boleto_expired` com `pixStatus: confirmed` é o sinal mais crítico — precisa de alerta imediato para operação
 - A ausência de implementação prévia elimina risco de dívida técnica, mas elimina também qualquer evidência de comportamento real em produção
 - 15 dias inclui Bootstrap, Hack, Sync, Finish, Ship, Validate e Promote — sem margem para surpresas
 
@@ -311,11 +311,11 @@ Fora do escopo desta release: Split com Cartão de Crédito (fase posterior).
 | Levantar requisitos técnicos do fornecedor | Validar Response Contract antes de construir | P0 — pré-Bootstrap | RISK-SP-006 | Baixo (call com fornecedor) |
 | Implementar idempotência por `orderId` + meios | Evitar cobrança duplicada em retry | P0 — Bootstrap | RISK-SP-002 | Médio |
 | Validar soma `pixAmount + boletoAmount = totalAmount` | Rejeitar antes de chamar provedor | P0 — Bootstrap | RISK-SP-003 | Baixo |
-| Alerta para `split_payment.boleto.expired` com `pixStatus: confirmed` | Operação é notificada imediatamente | P0 — Ship | RISK-SP-001 | Baixo |
+| Alerta para `payments.split_payment.boleto_expired` com `pixStatus: confirmed` | Operação é notificada imediatamente | P0 — Ship | RISK-SP-001 | Baixo |
 | Runbook para `PENDING_INVESTIGATION` | Atendimento tem procedimento claro | P0 — antes do Promote | RISK-SP-001 | Baixo |
 | Dashboard mínimo de Split Payment | Visibilidade de criação, confirmações, vencimentos e erros | P1 — Ship | RISK-SP-004 | Médio |
 | Criar Premortem de Split Payment | Antecipar cenários de falha antes do go-live | P1 — antes do Ship | RISK-SP-004 | Médio |
-| Evento `split_payment.creation_failed` com contexto de validação | Diagnóstico de falhas de criação sem expor dados sensíveis | P1 — Hack | RISK-SP-003 | Baixo |
+| Evento `payments.split_payment.creation_failed` com contexto de validação | Diagnóstico de falhas de criação sem expor dados sensíveis | P1 — Hack | RISK-SP-003 | Baixo |
 
 ## Quick Wins
 

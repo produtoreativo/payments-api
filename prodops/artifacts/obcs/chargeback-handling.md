@@ -49,9 +49,9 @@ O sistema rastreia e publica os eventos de chargeback recebidos do PSP Asaas, tr
 
 | Evento do PSP (`event`) | InvoiceStatus | Evento de domínio emitido |
 |---|---|---|
-| `PAYMENT_CHARGEBACK_REQUESTED` | `CHARGEBACK_REQUESTED` | `payment.chargeback_requested` |
-| `PAYMENT_CHARGEBACK_DISPUTE` | `CHARGEBACK_DISPUTE` | `payment.chargeback_dispute` |
-| `PAYMENT_AWAITING_CHARGEBACK_REVERSAL` | `CHARGEBACK_REVERSAL_PENDING` | `payment.chargeback_reversal_pending` |
+| `PAYMENT_CHARGEBACK_REQUESTED` | `CHARGEBACK_REQUESTED` | `payments.invoice.chargeback_requested` |
+| `PAYMENT_CHARGEBACK_DISPUTE` | `CHARGEBACK_DISPUTE` | `payments.invoice.chargeback_disputed` |
+| `PAYMENT_AWAITING_CHARGEBACK_REVERSAL` | `CHARGEBACK_REVERSAL_PENDING` | `payments.invoice.chargeback_reversal_pending` |
 
 **Regras**
 
@@ -83,9 +83,9 @@ Derivados dos cenários de `prodops/artifacts/bdd/chargeback-handling.feature`; 
 
 | Event | Situação | Meaning | Required dimensions |
 |---|---|---|---|
-| `payment.chargeback_requested` | Emitido | Transição para `CHARGEBACK_REQUESTED` bem-sucedida. | `invoiceId`, `orderId`, `tenantId`, `amount`, `occurredAt` |
-| `payment.chargeback_dispute` | Emitido | Transição para `CHARGEBACK_DISPUTE` bem-sucedida. | `invoiceId`, `orderId`, `tenantId`, `amount`, `occurredAt` |
-| `payment.chargeback_reversal_pending` | Emitido | Transição para `CHARGEBACK_REVERSAL_PENDING` bem-sucedida. | `invoiceId`, `orderId`, `tenantId`, `amount`, `occurredAt` |
+| `payments.invoice.chargeback_requested` | Emitido | Transição para `CHARGEBACK_REQUESTED` bem-sucedida. — *substitui `payment.chargeback_requested`* | `invoiceId`, `orderId`, `tenantId`, `amount`, `occurredAt` |
+| `payments.invoice.chargeback_disputed` | Emitido | Transição para `CHARGEBACK_DISPUTE` bem-sucedida. — *substitui `payment.chargeback_dispute`* | `invoiceId`, `orderId`, `tenantId`, `amount`, `occurredAt` |
+| `payments.invoice.chargeback_reversal_pending` | Emitido | Transição para `CHARGEBACK_REVERSAL_PENDING` bem-sucedida. — *substitui `payment.chargeback_reversal_pending`* | `invoiceId`, `orderId`, `tenantId`, `amount`, `occurredAt` |
 
 > As dimensões acima são as que o código emite (`invoice.service.ts`, `handleChargebackEvent`). O template exige `correlationId` em todo evento e o payload atual **não o inclui** — pendência de decisão do dono do OBC (adicionar ao evento ou aceitar a exceção).
 

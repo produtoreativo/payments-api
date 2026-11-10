@@ -145,7 +145,7 @@ The Asaas provider may return the charge without `bankSlipUrl` in instability sc
 
 ### Mitigations
 
-- Validate the presence of `bankSlipUrl` in the provider response before returning status `OPEN`. If absent, mark the invoice as `FAILED` and log `payment.boleto.creation_failed`.
+- Validate the presence of `bankSlipUrl` in the provider response before returning status `OPEN`. If absent, mark the invoice as `FAILED` and log `payments.invoice.creation_failed`.
 - Acceptance test must verify that `bankSlipUrl` is present in the response.
 
 ---

@@ -8,7 +8,7 @@
 | `payments.invoice.opened` | Cobrança criada no provedor | Observabilidade |
 | `payments.invoice.confirmed` | Webhook `PAYMENT_CONFIRMED` processado | Notificação, Order fulfillment |
 | `payments.invoice.cancelled` | Cancelamento aplicado | Notificação, Order reversal |
-| `payments.invoice.provider_failed` | Falha na criação no provedor | Alertas, retry |
+| `payments.invoice.creation_failed` | Falha na criação no provedor | Alertas, retry |
 | `payments.customer.provider_linked` | Customer vinculado ao Asaas | Observabilidade |
 
 Eventos nomeados em `domínio.contexto.ação` com verbo no passado.

@@ -80,12 +80,12 @@ Derivados dos cenários de `prodops/artifacts/bdd/split-payment-pix-boleto.featu
 
 | Event | Situação | Significado | Dimensões obrigatórias |
 |---|---|---|---|
-| `split_payment.created` | Emitido | Split Payment criado com Pix e Boleto definidos | `splitPaymentId`, `orderId`, `pixAmount`, `boletoAmount`, `totalAmount`, `correlationId` |
-| `split_payment.pix.confirmed` | Emitido | Porção Pix confirmada pelo provedor | `splitPaymentId`, `orderId`, `pixInvoiceId`, `confirmedAt`, `correlationId` |
-| `split_payment.boleto.confirmed` | Emitido | Porção Boleto confirmada pelo provedor | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `confirmedAt`, `correlationId` |
-| `split_payment.completed` | Emitido | Ambas as porções confirmadas — pedido liberado | `splitPaymentId`, `orderId`, `completedAt`, `correlationId` |
-| `split_payment.boleto.expired` | Emitido | Boleto venceu sem pagamento — pedido pendente para investigação manual | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `expiredAt`, `pixStatus`, `correlationId` |
-| `split_payment.creation_failed` | Emitido | Falha na criação do Split Payment | `orderId`, `reason`, `correlationId` |
+| `payments.split_payment.created` | Emitido | Split Payment criado com Pix e Boleto definidos — *substitui `split_payment.created`* | `splitPaymentId`, `orderId`, `pixAmount`, `boletoAmount`, `totalAmount`, `correlationId` |
+| `payments.split_payment.pix_confirmed` | Emitido | Porção Pix confirmada pelo provedor — *substitui `split_payment.pix.confirmed`* | `splitPaymentId`, `orderId`, `pixInvoiceId`, `confirmedAt`, `correlationId` |
+| `payments.split_payment.boleto_confirmed` | Emitido | Porção Boleto confirmada pelo provedor — *substitui `split_payment.boleto.confirmed`* | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `confirmedAt`, `correlationId` |
+| `payments.split_payment.completed` | Emitido | Ambas as porções confirmadas — pedido liberado — *substitui `split_payment.completed`* | `splitPaymentId`, `orderId`, `completedAt`, `correlationId` |
+| `payments.split_payment.boleto_expired` | Emitido | Boleto venceu sem pagamento — pedido pendente para investigação manual — *substitui `split_payment.boleto.expired`* | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `expiredAt`, `pixStatus`, `correlationId` |
+| `payments.split_payment.creation_failed` | Emitido | Falha na criação do Split Payment — *substitui `split_payment.creation_failed`* | `orderId`, `reason`, `correlationId` |
 
 ---
 
@@ -94,8 +94,8 @@ Derivados dos cenários de `prodops/artifacts/bdd/split-payment-pix-boleto.featu
 | SLI | Meta inicial | Fonte |
 |---|---|---|
 | Criação de Split Payment com mesma chave de idempotência retorna o mesmo resultado | 100% | [apurar] |
-| Evento `split_payment.completed` emitido em até 5s após confirmação do segundo meio | 99% | [apurar] |
-| Evento `split_payment.boleto.expired` emitido em até 60min após vencimento do Boleto | 99% | [apurar] |
+| Evento `payments.split_payment.completed` emitido em até 5s após confirmação do segundo meio | 99% | [apurar] |
+| Evento `payments.split_payment.boleto_expired` emitido em até 60min após vencimento do Boleto | 99% | [apurar] |
 | Pedido nunca liberado com apenas uma das porções confirmadas | 100% | [apurar] |
 | `splitPaymentId` único por combinação de `orderId` + meios de pagamento | 100% | [apurar] |
 
@@ -105,7 +105,7 @@ Derivados dos cenários de `prodops/artifacts/bdd/split-payment-pix-boleto.featu
 
 - **Idempotência:** a criação de Split Payment com o mesmo `orderId` e mesma configuração de meios deve retornar o mesmo `splitPaymentId` — retentativas não criam cobranças duplicadas.
 - **Liberação somente com ambas as porções:** o pedido nunca é liberado com apenas Pix ou apenas Boleto confirmado. A transição para `completed` exige confirmação dos dois meios.
-- **Boleto vencido com Pix pago:** o sistema **não cancela automaticamente** nem estorna o Pix. O estado passa para pendente e o evento `split_payment.boleto.expired` é emitido com `pixStatus: confirmed` para sinalizar à operação que há investigação manual necessária.
+- **Boleto vencido com Pix pago:** o sistema **não cancela automaticamente** nem estorna o Pix. O estado passa para pendente e o evento `payments.split_payment.boleto_expired` é emitido com `pixStatus: confirmed` para sinalizar à operação que há investigação manual necessária.
 - **Soma dos valores:** `pixAmount + boletoAmount` deve ser igual ao `totalAmount` do pedido — validado antes de qualquer chamada ao provedor externo.
 - **Isolamento de falha:** falha no provedor de um dos meios não deve afetar o estado do outro meio já confirmado.
 - **Auditoria:** `splitPaymentId`, `orderId`, `pixInvoiceId` e `boletoInvoiceId` presentes em todos os logs. Dados financeiros (valores, status) nunca expostos em respostas de erro públicas.

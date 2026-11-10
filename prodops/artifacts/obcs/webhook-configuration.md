@@ -101,8 +101,8 @@ Derivados dos cenários de `prodops/artifacts/bdd/webhook-configuration.feature`
 
 | Evento interno | Nome no payload externo | Trigger |
 | --- | --- | --- |
-| `payment.confirmed` | `invoice.confirmed` | Pagamento confirmado pelo provedor |
-| `payment.cancelled` | `invoice.cancelled` | Invoice cancelada |
+| `payments.invoice.confirmed` | `invoice.confirmed` | Pagamento confirmado pelo provedor |
+| `payments.invoice.cancelled` | `invoice.cancelled` | Invoice cancelada |
 
 ## Webhook Payload Contract
 

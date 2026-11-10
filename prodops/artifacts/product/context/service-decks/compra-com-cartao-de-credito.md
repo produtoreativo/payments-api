@@ -13,7 +13,7 @@ a **Value Stream Compra com Cartão de Crédito**
 que **entrega estados terminais conhecidos (autorizado, recusado, em análise de risco) com eventos de domínio rastreáveis e sem que o Payments API manipule dados brutos de cartão**.
 
 Diferente de **integrar o Asaas hosted flow diretamente no Checkout**,
-este serviço **centraliza a criação da invoice hospedada, desacopla o Checkout dos contratos do PSP, publica `payment.confirmed` exatamente uma vez e suporta o fluxo de refund com evento canônico**.
+este serviço **centraliza a criação da invoice hospedada, desacopla o Checkout dos contratos do PSP, publica `payments.invoice.confirmed` exatamente uma vez e suporta o fluxo de refund com evento canônico**.
 
 > **Escopo do slice atual (Downstream):** hosted card entry apenas. Tokenização, card salvo e raw card capture estão em Upstream até decisão de PCI boundary, consentimento e token storage.
 
@@ -52,20 +52,20 @@ Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops
 
 | Evento | Significado | Dimensões obrigatórias |
 |---|---|---|
-| `payment.card.hosted_invoice.created` | Invoice hospedada criada — `hostedPaymentUrl` disponível | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `provider`, `correlationId` |
-| `payment.card.authorized` | Provedor autorizou antes da confirmação final | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `providerStatus` |
-| `payment.card.risk_analysis.awaiting` | Pagamento em análise de risco no provedor | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId` |
-| `payment.card.refused` | Autorização ou captura recusada | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `reasonCode` |
-| `payment.confirmed` | Pagamento confirmado — pedido pode ser liberado | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `confirmedAt`, `correlationId` |
-| `payment.card.refund.requested` | Refund solicitado para invoice confirmada | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `amount`, `reason` |
-| `payment.card.refund.required` | Invoice confirmada não pode ser cancelada por DELETE — exige refund | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId` |
+| `payments.invoice.opened` | Invoice hospedada criada — `hostedPaymentUrl` disponível | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `provider`, `correlationId` |
+| `payments.invoice.card_authorized` | Provedor autorizou antes da confirmação final | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `providerStatus` |
+| `payments.invoice.card_risk_analysis_awaiting` | Pagamento em análise de risco no provedor | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId` |
+| `payments.invoice.card_refused` | Autorização ou captura recusada | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `reasonCode` |
+| `payments.invoice.confirmed` | Pagamento confirmado — pedido pode ser liberado | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `confirmedAt`, `correlationId` |
+| `payments.invoice.refund_requested` | Refund solicitado para invoice confirmada | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId`, `amount`, `reason` |
+| `payments.invoice.refund_required` | Invoice confirmada não pode ser cancelada por DELETE — exige refund | `tenantId`, `orderId`, `invoiceId`, `providerPaymentId` |
 
 ### Eventos consumidos
 
 | Evento | Origem | Ação |
 |---|---|---|
-| `PAYMENT_CONFIRMED` (Asaas webhook) | Asaas → `POST /webhook/payments` | Publica `payment.confirmed` exatamente uma vez |
-| `PAYMENT_REFUSED` (Asaas webhook) | Asaas → `POST /webhook/payments` | Publica `payment.card.refused` com `reasonCode` |
+| `PAYMENT_CONFIRMED` (Asaas webhook) | Asaas → `POST /webhook/payments` | Publica `payments.invoice.confirmed` exatamente uma vez |
+| `PAYMENT_REFUSED` (Asaas webhook) | Asaas → `POST /webhook/payments` | Publica `payments.invoice.card_refused` com `reasonCode` |
 | `PAYMENT_REFUNDED` (Asaas webhook) | Asaas → `POST /webhook/payments` | Confirma conclusão do refund |
 
 ### Schema de resposta (criação hosted)
@@ -125,7 +125,7 @@ Asaas → POST /webhook/payments  (PAYMENT_CONFIRMED / PAYMENT_REFUSED)
 AsaasWebhookController → InvoiceService
     ├─ valida asaas-access-token
     ├─ persiste evento bruto
-    ├─ publica payment.confirmed → EventEmitter2
+    ├─ publica payments.invoice.confirmed → EventEmitter2
     │     └─ WebhookDeliveryService → HTTPS POST consumer
     └─ DynamoDB PaymentsTable (atualiza status)
 
@@ -133,7 +133,7 @@ Refund:
 Checkout → POST /invoices/:id/refund
     → InvoiceController → InvoiceService
     → Asaas POST /v3/payments/:id/refund
-    → emite payment.card.refund.requested
+    → emite payments.invoice.refund_requested
 ```
 
 **Dependências críticas:**
@@ -162,15 +162,15 @@ Checkout → POST /invoices/:id/refund
 
 | SLI | Fonte |
 |---|---|
-| Taxa de confirmação (PAYMENT_CONFIRMED / hosted invoices criadas) | Datadog — evento `payment.confirmed` |
-| Taxa de recusa com reasonCode (PAYMENT_REFUSED com código mapeado) | Datadog — `payment.card.refused` |
+| Taxa de confirmação (PAYMENT_CONFIRMED / hosted invoices criadas) | Datadog — evento `payments.invoice.confirmed` |
+| Taxa de recusa com reasonCode (PAYMENT_REFUSED com código mapeado) | Datadog — `payments.invoice.card_refused` |
 | Latência p95 de criação de invoice hospedada | Datadog APM |
 | Taxa de refund completado | Datadog — `PAYMENT_REFUNDED` webhook |
 
 ### Regras de confiabilidade
 
-- Invoice confirmada não pode ser cancelada por `DELETE` — exige fluxo de refund. O gateway emite `payment.card.refund.required` se `DELETE` for tentado.
-- `payment.confirmed` é idempotente: webhook duplicado `PAYMENT_CONFIRMED` retorna sucesso sem republicar.
+- Invoice confirmada não pode ser cancelada por `DELETE` — exige fluxo de refund. O gateway emite `payments.invoice.refund_required` se `DELETE` for tentado.
+- `payments.invoice.confirmed` é idempotente: webhook duplicado `PAYMENT_CONFIRMED` retorna sucesso sem republicar.
 - Dados sensíveis de cartão nunca transitam pelo Payments API neste slice (hosted flow).
 
 ---
@@ -180,10 +180,10 @@ Checkout → POST /invoices/:id/refund
 | Indicador | Pergunta que responde | Fonte | Cadência |
 |---|---|---|---|
 | Volume de pagamentos iniciados por cartão | Adoção do meio de pagamento | Datadog | Diária |
-| Taxa de confirmação de cartão | Autorização está funcionando? | `payment.confirmed` / invoices criadas | Tempo real |
-| Taxa de recusa por `reasonCode` | Qual o motivo de recusa mais frequente? | `payment.card.refused.reasonCode` | Diária |
-| Taxa de análise de risco | PSP está barrando muito ou pouco? | `payment.card.risk_analysis.awaiting` | Diária |
-| Volume e taxa de sucesso de refunds | Estornos estão sendo processados? | `payment.card.refund.requested` + webhook | Diária |
+| Taxa de confirmação de cartão | Autorização está funcionando? | `payments.invoice.confirmed` / invoices criadas | Tempo real |
+| Taxa de recusa por `reasonCode` | Qual o motivo de recusa mais frequente? | `payments.invoice.card_refused.reasonCode` | Diária |
+| Taxa de análise de risco | PSP está barrando muito ou pouco? | `payments.invoice.card_risk_analysis_awaiting` | Diária |
+| Volume e taxa de sucesso de refunds | Estornos estão sendo processados? | `payments.invoice.refund_requested` + webhook | Diária |
 | Latência p95 de criação de invoice | Hosted flow está rápido? | Datadog APM | Tempo real |
 
 ---
@@ -193,8 +193,8 @@ Checkout → POST /invoices/:id/refund
 | Consumidor | Tipo | Dependência | Impacto de degradação |
 |---|---|---|---|
 | Checkout | Direto (API) | `POST /invoices` → `hostedPaymentUrl` | Cliente sem URL de pagamento; conversão impactada |
-| Order Management | Indireto (evento) | `payment.confirmed` via webhook | Pedido não liberado após autorização |
-| Notification Service | Indireto (evento) | `payment.confirmed` / `payment.card.refused` | Cliente sem feedback sobre resultado |
+| Order Management | Indireto (evento) | `payments.invoice.confirmed` via webhook | Pedido não liberado após autorização |
+| Notification Service | Indireto (evento) | `payments.invoice.confirmed` / `payments.invoice.card_refused` | Cliente sem feedback sobre resultado |
 | Financeiro / Conciliação | Indireto (evento) | Histórico de refunds e confirmações | Conciliação manual |
 | Atendimento | Operacional | Status via `GET /invoices/:id` | Suporte sem rastreabilidade do resultado |
 

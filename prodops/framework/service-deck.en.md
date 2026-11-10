@@ -99,7 +99,7 @@ The **Contracts in this deck** column says whether the events, APIs and SLIs of 
 | Category | Examples |
 |---|---|
 | **Public APIs** | `POST /payments`, `GET /invoices/{id}` — request/response contract |
-| **Published events** | `payment.confirmed`, `invoice.issued` — schema and channel |
+| **Published events** | `payments.invoice.confirmed`, `payments.invoice.opened` — schema and channel |
 | **Consumed events** | `order.created`, `refund.requested` — consumption contract |
 | **External schemas** | Data models exposed for integrations |
 

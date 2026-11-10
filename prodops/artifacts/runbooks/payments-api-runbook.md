@@ -19,7 +19,7 @@ Para cada runbook: diagnóstico → contenção imediata → resolução → ver
 
 - Pedidos com `invoiceId` criados no Payments continuam recebendo webhooks depois da flag desligada.
 - Checkout cria novos pedidos no fluxo antigo, mas continua enviando eventos ao Payments.
-- `payment.confirmed` emitido sem invoice correspondente no Payments.
+- `payments.invoice.confirmed` emitido sem invoice correspondente no Payments.
 
 ### Diagnóstico
 
@@ -112,20 +112,20 @@ aws sqs get-queue-attributes \
 
 **Cenário de origem:** PMT-PRE-002 — Cliente paga, mas não recebe confirmação.
 
-**Quando usar:** `payment.confirmed` foi emitido pelo Payments mas o cliente não recebeu comunicação, ou o Notification Service reportou falha.
+**Quando usar:** `payments.invoice.confirmed` foi emitido pelo Payments mas o cliente não recebeu comunicação, ou o Notification Service reportou falha.
 
 ### Sinais de alerta
 
 - Invoice com status `CONFIRMED` no DynamoDB mas sem entrada de notificação nos logs do Notification Service.
 - Aumento de chamados: "paguei mas não recebi confirmação".
-- Evento `payment.confirmed` nos logs do Payments sem evento correspondente no Notification Service.
+- Evento `payments.invoice.confirmed` nos logs do Payments sem evento correspondente no Notification Service.
 
 ### Diagnóstico
 
 ```bash
 # 1. Verificar se o evento foi emitido pelo Payments
 # CloudWatch Logs — Payments
-# Buscar por: invoiceId + "payment.confirmed" (log estruturado)
+# Buscar por: invoiceId + "payments.invoice.confirmed" (log estruturado)
 # Confirmar: tenantId, orderId, invoiceId, correlationId presentes
 
 # 2. Verificar se o evento chegou ao Notification Service
@@ -153,7 +153,7 @@ Se não houver resolução imediata, o atendimento pode confirmar o status do pa
 
 ### Verificação pós-resolução
 
-- [ ] `payment.confirmed` com o `invoiceId` afetado aparece nos logs do Notification Service.
+- [ ] `payments.invoice.confirmed` com o `invoiceId` afetado aparece nos logs do Notification Service.
 - [ ] Cliente recebeu comunicação (confirmado pelo log de envio ou pelo atendimento).
 - [ ] Volume de eventos na DLQ retornou ao baseline.
 

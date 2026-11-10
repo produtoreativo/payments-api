@@ -8,7 +8,7 @@
 | `payments.invoice.opened` | Charge created with provider | Observability |
 | `payments.invoice.confirmed` | `PAYMENT_CONFIRMED` webhook processed | Notification, Order fulfillment |
 | `payments.invoice.cancelled` | Cancellation applied | Notification, Order reversal |
-| `payments.invoice.provider_failed` | Provider creation failure | Alerts, retry |
+| `payments.invoice.creation_failed` | Provider creation failure | Alerts, retry |
 | `payments.customer.provider_linked` | Customer linked to Asaas | Observability |
 
 Events named as `domain.context.action` with verb in past tense.

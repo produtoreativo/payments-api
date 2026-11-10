@@ -16,7 +16,7 @@ Funcionalidade: Cancelar invoice no gateway de pagamentos
     Então o gateway deve atualizar a invoice para "CANCEL_REQUESTED"
     E deve chamar o endpoint Asaas "DELETE /v3/payments/pay_asaas_123"
     E deve atualizar a invoice para "CANCELLED"
-    E deve publicar o evento canonico "payment.cancelled" para o ecommerce
+    E deve publicar o evento canonico "payments.invoice.cancelled" para o ecommerce
 
   Cenário: Cancelamento idempotente
     Dado que a invoice "inv-100045" ja foi cancelada com a chave de idempotencia "MS-100045:cancel"
@@ -36,12 +36,12 @@ Funcionalidade: Cancelar invoice no gateway de pagamentos
     Quando a Asaas retornar "404" ao cancelar "pay_asaas_123"
     Então o gateway deve consultar a politica de conciliacao
     E deve manter a invoice em estado que permita investigacao operacional
-    E nao deve publicar "payment.cancelled" sem confirmacao de remocao ou decisao explicita de reconciliacao
+    E nao deve publicar "payments.invoice.cancelled" sem confirmacao de remocao ou decisao explicita de reconciliacao
 
   Cenário: Webhook de remocao confirma cancelamento
     Dado que a invoice "inv-100045" esta com status "CANCEL_REQUESTED"
     Quando a Asaas enviar o webhook "PAYMENT_DELETED" para "pay_asaas_123"
     Então o gateway deve confirmar o status "CANCELLED"
     E deve registrar o evento bruto para auditoria
-    E nao deve duplicar o evento "payment.cancelled" se ele ja tiver sido publicado no comando de cancelamento
+    E nao deve duplicar o evento "payments.invoice.cancelled" se ele ja tiver sido publicado no comando de cancelamento
 

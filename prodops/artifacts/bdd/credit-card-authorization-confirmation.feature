@@ -22,7 +22,7 @@ Funcionalidade: Pagamento com cartao de credito no gateway de pagamentos
     E o cliente concluiu o pagamento no ambiente hospedado da Asaas
     Quando a Asaas enviar "PAYMENT_CONFIRMED"
     Então o gateway deve atualizar a invoice para "CONFIRMED"
-    E deve publicar o evento canonico "payment.confirmed" uma unica vez
+    E deve publicar o evento canonico "payments.invoice.confirmed" uma unica vez
     E deve manter a rastreabilidade por "orderId", "invoiceId", "providerPaymentId" e "correlationId"
 
   Cenário: Conciliar recebimento financeiro de cartao
@@ -45,7 +45,7 @@ Funcionalidade: Pagamento com cartao de credito no gateway de pagamentos
     Quando o carrinho solicitar "GET /users/{userId}/payment-methods/credit-cards"
     Então o gateway deve retornar apenas "cardId", bandeira, ultimos 4 digitos, validade e status
     E nao deve retornar "creditCardToken", numero completo, CVV ou payload bruto do provedor
-    E deve registrar o evento observavel "payment.card.saved.listed"
+    E deve registrar o evento observavel "payments.card.saved_listed"
 
   Cenário: Impedir acesso a cartao salvo de outro usuario ou tenant
     Dado que existe um "cardId" associado a outro usuario ou tenant
@@ -91,7 +91,7 @@ Funcionalidade: Pagamento com cartao de credito no gateway de pagamentos
     Quando a Asaas enviar "PAYMENT_REPROVED_BY_RISK_ANALYSIS"
     Então o gateway deve registrar a reprovacao da analise de risco
     E deve emitir evento observavel de pagamento recusado
-    E nao deve publicar "payment.confirmed"
+    E nao deve publicar "payments.invoice.confirmed"
 
   Cenário: Mapear analise de risco manual
     Dado que a invoice de cartao esta associada ao provedor "ASAAS"
@@ -109,7 +109,7 @@ Funcionalidade: Pagamento com cartao de credito no gateway de pagamentos
     Dado que a invoice de cartao esta associada ao provedor "ASAAS"
     Quando a Asaas enviar "PAYMENT_CONFIRMED"
     Então o gateway deve atualizar a invoice para "CONFIRMED"
-    E deve publicar o evento canonico "payment.confirmed" uma unica vez
+    E deve publicar o evento canonico "payments.invoice.confirmed" uma unica vez
 
   Cenário: Simular pagamento aprovado na sandbox Asaas
     Dado que o ambiente utilizado e a sandbox da Asaas
@@ -135,7 +135,7 @@ Funcionalidade: Pagamento com cartao de credito no gateway de pagamentos
   Cenário: Solicitar estorno de pagamento confirmado
     Dado que a invoice de cartao esta com status "CONFIRMED" ou "RECEIVED"
     Quando o ecommerce solicitar "POST /invoices/{invoiceId}/refund"
-    Então o gateway deve registrar "payment.card.refund.requested"
+    Então o gateway deve registrar "payments.invoice.refund_requested"
     E deve aguardar evidencia do provedor antes de tratar o estorno como concluido
     E deve impedir duplicidade de estorno por idempotencia
 

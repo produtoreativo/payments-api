@@ -13,7 +13,7 @@ o **Serviço de Configuração e Entrega de Webhook**
 que **permite ao consumidor verificar autenticidade de cada entrega, garante que falhas de entrega não bloqueiam o fluxo de confirmação de pagamento e registra toda tentativa de entrega como evento observável**.
 
 Diferente de **o consumidor fazer polling em `GET /invoices/:id`**,
-este serviço **entrega proativamente cada `payment.confirmed` e `payment.cancelled` em até 5 segundos, com cabeçalho de assinatura verificável e `deliveryId` rastreável**.
+este serviço **entrega proativamente cada `payments.invoice.confirmed` e `payments.invoice.cancelled` em até 5 segundos, com cabeçalho de assinatura verificável e `deliveryId` rastreável**.
 
 ---
 
@@ -52,8 +52,8 @@ Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops
 
 | Evento interno | Payload entregue ao consumer | Trigger |
 |---|---|---|
-| `payment.confirmed` | `invoice.confirmed` | `InvoiceService` → `EventEmitter2` → `WebhookDeliveryService` |
-| `payment.cancelled` | `invoice.cancelled` | `InvoiceService` → `EventEmitter2` → `WebhookDeliveryService` |
+| `payments.invoice.confirmed` | `invoice.confirmed` | `InvoiceService` → `EventEmitter2` → `WebhookDeliveryService` |
+| `payments.invoice.cancelled` | `invoice.cancelled` | `InvoiceService` → `EventEmitter2` → `WebhookDeliveryService` |
 
 ### Payload entregue ao consumer
 
@@ -123,10 +123,10 @@ ApiTokenGuard → WebhookConfigController → WebhookService
 (entrega disparada por evento interno)
 
 InvoiceService
-    │ emit payment.confirmed | payment.cancelled
+    │ emit payments.invoice.confirmed | payments.invoice.cancelled
     ▼
 EventEmitter2
-    │ @OnEvent payment.confirmed | payment.cancelled
+    │ @OnEvent payments.invoice.confirmed | payments.invoice.cancelled
     ▼
 WebhookDeliveryService
     ├─ DynamoDB WebhooksTable (busca por tenant via GSI1)
@@ -140,7 +140,7 @@ WebhookDeliveryService
 
 Fila SQS (modo async para Worker Lambda):
 Worker → InvoiceService.processProviderWebhook
-    → emit payment.confirmed → mesmo caminho acima
+    → emit payments.invoice.confirmed → mesmo caminho acima
 ```
 
 **Dependências:**
@@ -151,7 +151,7 @@ Worker → InvoiceService.processProviderWebhook
 | Consumer endpoint (HTTPS) | Dependência externa | Falha de entrega não bloqueia confirmação |
 | EventEmitter2 | Alta | Bus interno; falha impede disparos de entrega |
 
-**Invariante:** entrega de webhook é **fire-and-forget** — falha não bloqueia `payment.confirmed` nem o fluxo de liberação de pedido.
+**Invariante:** entrega de webhook é **fire-and-forget** — falha não bloqueia `payments.invoice.confirmed` nem o fluxo de liberação de pedido.
 
 ---
 
@@ -194,7 +194,7 @@ Worker → InvoiceService.processProviderWebhook
 | Volume de falhas de entrega por consumer | Qual consumer tem endpoint instável? | `webhook.delivery.failed.tenantId` | Diária / alert |
 | Latência p95 de entrega | Eventos chegam rápido ao consumer? | `durationMs` | Tempo real |
 | Webhooks ativos vs. registrados | Quantos tenants usam notificações? | WebhooksTable | Semanal |
-| Tempo entre `payment.confirmed` e entrega | SLO de 5s está sendo cumprido? | Datadog — delta timestamp | Tempo real |
+| Tempo entre `payments.invoice.confirmed` e entrega | SLO de 5s está sendo cumprido? | Datadog — delta timestamp | Tempo real |
 
 ---
 

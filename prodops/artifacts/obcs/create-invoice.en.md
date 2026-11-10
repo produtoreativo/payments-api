@@ -66,12 +66,12 @@ Derived from the scenarios in `prodops/artifacts/bdd/create-invoice.feature`; ti
 
 | Event | Status | Meaning | Required dimensions |
 |---|---|---|---|
-| `invoice.created` | Planned | Invoice successfully created at the provider — status `OPEN`, `providerPaymentId` present. — *likely equivalent in the code (to be confirmed): `payments.invoice.created`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `billingType`, `correlationId` |
-| `invoice.creation_failed` | Planned | Failed to create invoice at the provider — invoice in `FAILED` or `PROVIDER_PENDING`. | `invoiceId`, `orderId`, `tenantId`, `reason`, `provider`, `correlationId` |
-| `invoice.idempotency_hit` | Planned | Retry with same idempotency key — existing invoice returned without a new charge. | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
-| `invoice.provider_rejected` | Planned | Provider rejected creation due to invalid data — invoice marked as `FAILED`. | `invoiceId`, `orderId`, `tenantId`, `providerErrorCode`, `correlationId` |
-| `invoice.customer_created` | Planned | Asaas customer created before invoice due to missing binding. — *likely equivalent in the code (to be confirmed): `pagamento.cobranca.cadastrada.cliente.cadastrado`* | `tenantId`, `customerId`, `providerCustomerId`, `correlationId` |
-| `invoice.access_rejected` | Planned | Attempt to create invoice with a provider disabled for the tenant. | `tenantId`, `provider`, `correlationId` |
+| `payments.invoice.created` | Emitted | Invoice successfully created at the provider — status `OPEN`, `providerPaymentId` present. — *replaces `invoice.created`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `billingType`, `correlationId` |
+| `payments.invoice.creation_failed` | Emitted | Failed to create invoice at the provider — invoice in `FAILED` or `PROVIDER_PENDING`. — *replaces `invoice.creation_failed`* | `invoiceId`, `orderId`, `tenantId`, `reason`, `provider`, `correlationId` |
+| `payments.invoice.idempotency_hit` | Emitted | Retry with same idempotency key — existing invoice returned without a new charge. — *replaces `invoice.idempotency_hit`* | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
+| `payments.invoice.provider_rejected` | Planned | Provider rejected creation due to invalid data — invoice marked as `FAILED`. — *replaces `invoice.provider_rejected`* | `invoiceId`, `orderId`, `tenantId`, `providerErrorCode`, `correlationId` |
+| `payments.customer.provider_linked` | Emitted | Asaas customer created before invoice due to missing binding. — *replaces `invoice.customer_created`* | `tenantId`, `customerId`, `providerCustomerId`, `correlationId` |
+| `payments.invoice.access_rejected` | Planned | Attempt to create invoice with a provider disabled for the tenant. — *replaces `invoice.access_rejected`* | `tenantId`, `provider`, `correlationId` |
 
 ## Initial SLIs
 

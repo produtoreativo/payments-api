@@ -27,7 +27,7 @@
 
 ## Business Outcome
 
-Magazine Siará ecommerce receives reliable payment confirmation and releases the order exactly once, even when the provider webhook arrives duplicated, delayed, or before the internal invoice consolidation. The canonical event `payment.confirmed` is published only after authentication token validation and correlation with the correct invoice. Raw provider events are always persisted for audit, regardless of processing outcome.
+Magazine Siará ecommerce receives reliable payment confirmation and releases the order exactly once, even when the provider webhook arrives duplicated, delayed, or before the internal invoice consolidation. The canonical event `payments.invoice.confirmed` is published only after authentication token validation and correlation with the correct invoice. Raw provider events are always persisted for audit, regardless of processing outcome.
 
 ## Scope
 
@@ -66,32 +66,32 @@ Derived from the scenarios in `prodops/artifacts/bdd/payment-confirmation.featur
 
 | Event | Status | Meaning | Required dimensions |
 |---|---|---|---|
-| `payment.confirmed` | Emitted | Payment approved — order can be released by ecommerce. Published exactly once. | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `confirmedAt`, `correlationId` |
-| `payment.received` | Emitted | Financial settlement confirmed — for reconciliation. Does not release order a second time. | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `receivedAt`, `correlationId` |
-| `webhook.received` | Planned | Raw provider event persisted before any processing. | `tenantId`, `provider`, `eventType`, `providerPaymentId`, `correlationId` |
-| `webhook.rejected` | Planned | Webhook received with invalid token — rejected without state change. | `tenantId`, `provider`, `reason`, `correlationId` |
-| `webhook.deduplicated` | Planned | Duplicate webhook recognized — technical success returned without reprocessing. | `invoiceId`, `tenantId`, `provider`, `eventType`, `correlationId` |
-| `webhook.correlated_by_reference` | Planned | Event correlated by `externalReference` in the absence of internal `providerPaymentId`. | `invoiceId`, `orderId`, `tenantId`, `externalReference`, `correlationId` |
+| `payments.invoice.confirmed` | Emitted | Payment approved — order can be released by ecommerce. Published exactly once. — *replaces `payment.confirmed`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `confirmedAt`, `correlationId` |
+| `payments.invoice.received` | Emitted | Financial settlement confirmed — for reconciliation. Does not release order a second time. — *replaces `payment.received`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `receivedAt`, `correlationId` |
+| `payments.webhook.received` | Planned | Raw provider event persisted before any processing. — *replaces `webhook.received`* | `tenantId`, `provider`, `eventType`, `providerPaymentId`, `correlationId` |
+| `payments.security.webhook_rejected` | Emitted | Webhook received with invalid token — rejected without state change. — *replaces `webhook.rejected`* | `tenantId`, `provider`, `reason`, `correlationId` |
+| `payments.webhook.deduplicated` | Planned | Duplicate webhook recognized — technical success returned without reprocessing. — *replaces `webhook.deduplicated`* | `invoiceId`, `tenantId`, `provider`, `eventType`, `correlationId` |
+| `payments.webhook.correlated_by_reference` | Planned | Event correlated by `externalReference` in the absence of internal `providerPaymentId`. — *replaces `webhook.correlated_by_reference`* | `invoiceId`, `orderId`, `tenantId`, `externalReference`, `correlationId` |
 
 ## Initial SLIs
 
 | SLI | Initial target | Source |
 |---|---|---|
-| `payment.confirmed` events published exactly once per approved payment. | 100% | [to be determined] |
+| `payments.invoice.confirmed` events published exactly once per approved payment. | 100% | [to be determined] |
 | Webhooks with invalid token rejected without invoice state change. | 100% | [to be determined] |
-| Duplicate webhooks return technical success without republishing `payment.confirmed`. | 100% | [to be determined] |
-| `payment.received` event does not trigger a second order release. | 100% | [to be determined] |
+| Duplicate webhooks return technical success without republishing `payments.invoice.confirmed`. | 100% | [to be determined] |
+| `payments.invoice.received` event does not trigger a second order release. | 100% | [to be determined] |
 | Asaas authentication token not exposed in logs or error responses. | 100% | [to be determined] |
 | Raw events persisted before any processing. | 99.9% | [to be determined] |
 
 ## Reliability Rules
 
-- The `payment.confirmed` event is published exactly once per `providerPaymentId`. Deduplication is mandatory: a second call recognizes the duplicate and returns technical success to the provider without republishing the canonical event.
+- The `payments.invoice.confirmed` event is published exactly once per `providerPaymentId`. Deduplication is mandatory: a second call recognizes the duplicate and returns technical success to the provider without republishing the canonical event.
 - Every webhook request must carry a valid `asaas-access-token` header before any state read or change. An invalid request is rejected; no payload data is processed.
 - Authentication token is never logged — neither on success nor on rejection. Log records only the validation result.
 - A webhook received before internal invoice consolidation is correlated by `externalReference`. The gateway finds the correct invoice and completes confirmation without creating duplicates.
-- `PAYMENT_RECEIVED` updates the invoice to `RECEIVED` and records for financial reconciliation, but does not publish a second `payment.confirmed` — the order was already released by `PAYMENT_CONFIRMED`.
-- Events that do not release orders in the MVP (e.g.: `PAYMENT_OVERDUE`) are recorded and update operational state when applicable, but do not publish `payment.confirmed`.
+- `PAYMENT_RECEIVED` updates the invoice to `RECEIVED` and records for financial reconciliation, but does not publish a second `payments.invoice.confirmed` — the order was already released by `PAYMENT_CONFIRMED`.
+- Events that do not release orders in the MVP (e.g.: `PAYMENT_OVERDUE`) are recorded and update operational state when applicable, but do not publish `payments.invoice.confirmed`.
 - Raw provider event is persisted regardless of processing outcome — audit guarantee even in case of failure.
 
 ## Risks
