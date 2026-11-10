@@ -7,7 +7,7 @@ set -euo pipefail
 # ============================
 STACK_NAME="payments-gateway-dynamodb"
 TEMPLATE_FILE="infra/dynamodb.yaml"
-AWS_PROFILE="dev-schola"
+AWS_PROFILE="dev-payments-api"
 AWS_REGION="us-east-1"
 
 # ============================
