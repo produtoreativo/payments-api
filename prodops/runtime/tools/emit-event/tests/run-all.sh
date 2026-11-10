@@ -34,11 +34,11 @@ run_test() {
   local file="$2"
   if bash "$file" 2>/dev/null; then
     printf "${GREEN}✓ PASS${RESET}: %s\n" "$name"
-    ((PASSED++))
+    PASSED=$((PASSED + 1))
     RESULTS+=("PASS: $name")
   else
     printf "${RED}✗ FAIL${RESET}: %s\n" "$name"
-    ((FAILED++))
+    FAILED=$((FAILED + 1))
     RESULTS+=("FAIL: $name")
   fi
 }
@@ -58,6 +58,7 @@ run_test "07 plan-level null work-item-id → iteration-id" "$TESTS_DIR/07-plan-
 run_test "08 bootstrap-intermediate-events (pipeline completeness)" "$TESTS_DIR/08-bootstrap-intermediate-events.sh"
 run_test "09 finish-started → FINISHING derived-state"              "$TESTS_DIR/09-finish-started-finishing-state.sh"
 run_test "10 send-sh iteration tag in Datadog payload"              "$TESTS_DIR/10-send-sh-iteration-tag.sh"
+run_test "11 github sync fails loudly (no false success)"          "$TESTS_DIR/11-github-sync-failure-handling.sh"
 
 echo "────────────────────────────────────────────────"
 echo "Results: $PASSED passed, $FAILED failed"
