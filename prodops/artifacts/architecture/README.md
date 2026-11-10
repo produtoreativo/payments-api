@@ -6,3 +6,4 @@ Contexto arquitetural necessário para operar o produto. Este diretório NÃO do
 |---|---|
 | [overview.md](overview.md) | Visão geral da arquitetura operacional — sistemas, integrações e limites |
 | [decision-trail.md](decision-trail.md) | Histórico de decisões arquiteturais relevantes para o produto |
+| [domain-events.md](domain-events.md) | Catálogo e convenção de nomes dos eventos de negócio (`payments.<agregado>.<fato>`), com as duplicatas eliminadas |

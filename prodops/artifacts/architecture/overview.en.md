@@ -52,7 +52,7 @@ graph TB
         subgraph Services["Services"]
             InvSvc["InvoiceService"]
             WkSvc["WebhookService"]
-            WkDelivery["WebhookDeliveryService\n@OnEvent payment.confirmed\n@OnEvent payment.cancelled"]
+            WkDelivery["WebhookDeliveryService\n@OnEvent payments.invoice.confirmed\n@OnEvent payments.invoice.cancelled"]
             ObsListener["ObservabilityListener\n@OnEvent payments.observability"]
             EventBus(["EventEmitter2\n─────────────\npayment.confirmed\npayment.cancelled\npayments.observability"])
         end
