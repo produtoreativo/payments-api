@@ -69,10 +69,13 @@ Utilize o template em [`prodops/templates/business-intents/`](../../templates/bu
 | [PI-PILOT-001 — Invoice PIX — Happy Path Completo](./PI-PILOT-001.md) | Team · Technology | Em Discovery |
 | [PI-PILOT-002 — Invoice Cartão — Happy Path sem Armazenar PAN](./PI-PILOT-002.md) | Team · Technology | Em Discovery |
 | [PI-PILOT-003 — Confirmação de Pagamento — Happy Path via Webhook](./PI-PILOT-003.md) | Team · Technology | Em Discovery |
+| [PI-PILOT-004 — Split Payment — Conflito no Sync](./PI-PILOT-004.md) | Team · Technology | Em Discovery |
+| [PI-PILOT-005 — Split Payment Reversal — Rework](./PI-PILOT-005.md) | Team · Technology | Em Discovery |
+| [PI-PILOT-006 — Split Payment Settlement — Blocking e Lookback](./PI-PILOT-006.md) | Team · Technology | Em Discovery |
 | [PI-RT-001 — Event Pipeline Completeness — Bootstrap intermediários e sync de oem-state](./PI-RT-001.md) | Technology | Promovido para Product Backlog — 2026-08-04 |
 | [PI-RT-002 — Continuous Operational Trail — trail contínuo por phase durante execução](./PI-RT-002.md) | Technology | Promovido para Product Backlog — 2026-08-04 |
 | [PI-RT-003 — Dashboard Evolution — cycle time, iteration filter e labels](./PI-RT-003.md) | Technology | Promovido para Product Backlog — 2026-08-04 |
 | [PI-RT-004 — Iteration Lifecycle Automation — auto-close e assignees](./PI-RT-004.md) | Technology | Promovido para Product Backlog — 2026-08-04 |
 | [PI-RUNTIME-001 — Validate the ProdOps Operational Runtime on payments-api](./PI-RUNTIME-001.md) | Team · Technology | Em Exploration |
 
-> Os identificadores `PI-003` a `PI-017` (exceto os temáticos `PI-PILOT-*`, `PI-RT-*` e `PI-RUNTIME-*`) são **registros retroativos** criados em 2026-11-10 para ligar cada OBC à sua origem. O Business Signal de cada Intent está na linha "Business Signal" do arquivo — arquivo `BS-*` em `prodops/artifacts/business-signals/` ou Issue do GitHub com o label `artifact-type:business-signal`.
+> Os identificadores `PI-003` a `PI-017` (exceto os temáticos `PI-PILOT-*`, `PI-RT-*` e `PI-RUNTIME-*`) e `PI-PILOT-004` a `PI-PILOT-006` são **registros retroativos** criados em 2026-11-10 para ligar cada OBC e cada documento do piloto à sua origem. O Business Signal de cada Intent está na linha "Business Signal" do arquivo — arquivo `BS-*` em `prodops/artifacts/business-signals/` ou Issue do GitHub com o label `artifact-type:business-signal`.
