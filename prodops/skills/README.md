@@ -32,6 +32,7 @@ Skills **não** são documentação conceitual, templates ou capabilities.
 | Downstream | Modo Downstream — readiness e delivery governado | [downstream/SKILL.md](downstream/SKILL.md) |
 | Diligence | Diligence — sincronização, drift e reconciliação de workspace | [diligence/SKILL.md](diligence/SKILL.md) |
 | OBC | Transversal — criar ou corrigir um Local OBC conforme o template, com verificação (`prodops/skills/obc/scripts/check-obc.sh`) | [obc/SKILL.md](obc/SKILL.md) |
+| Event Storming | Transversal — roteiro do Event Storming, documentação, dashboard e publicação no Datadog a partir de um spec JSON (`prodops/skills/event-storming/scripts/`) | [event-storming/SKILL.md](event-storming/SKILL.md) |
 
 ### Steps de Upstream
 
