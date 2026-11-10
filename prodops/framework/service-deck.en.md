@@ -4,6 +4,8 @@ The Service Deck is a single-page canvas that represents a service as if it were
 
 A service listed in the **Product Services** section of a Product Deck has exactly one Service Deck. The Service Deck is the artifact that details what the Product Deck merely enumerates.
 
+A Service Deck brings together **one or more Local OBCs**. Each OBC is a **node** of the service — a capability with its own observable contract — and the set of nodes listed in the Service Deck is the **complete list** of what makes up that service.
+
 ---
 
 ## Types of Product Service
@@ -17,23 +19,44 @@ A Product Service can be one of two types, and the Service Deck applies to both:
 
 ---
 
-## Link to the Local OBC: the Data dimension
+## Link to the Local OBCs: the nodes of the service
 
-Each Service Deck corresponds to exactly one **Local OBC**. The OBC is where the service's data contracts live:
+A Service Deck consumes **one or more Local OBCs**. Each OBC represents a **node** of the service: a capability with its own observable contract (for example, create invoice, confirm payment, cancel invoice). The Service Deck's list of nodes is the **complete list** of what makes up the service — a service behavior that has no node (OBC) has no observable contract.
+
+| Situation | Nodes (OBCs) in the Service Deck |
+|---|---|
+| Service with a single capability | 1 |
+| Service with several capabilities | N — one per capability |
+| Value Stream | N — the nodes of the constituent Services that collaborate toward the business outcome |
+
+Rules:
+
+- **Node map.** The Service Deck lists all nodes at the start of the Service Endpoints section (node, OBC, OBC state, role in the service, contracts surfaced in the deck).
+- **A node is a Local OBC.** The OBC remains the contract of **one** capability and belongs to a single product.
+- **Shared node.** An OBC may be a node of more than one Service Deck when the capability is shared across services or Value Streams (for example, payment confirmation used by several payment methods). The OBC remains the single source of truth; each Service Deck only references it.
+- **No OBC, no node.** A service needs at least one node with a committed Local OBC to be a Product Service. A capability of the service that has no committed OBC yet is flagged as a node pending an observable contract.
+
+The data contracts of the service live in the OBC of each node:
 
 - Public APIs (endpoints, request/response contracts)
 - Published and consumed events (event domain)
 - Externally relevant persistence schemas
 - Observable SLIs (Service Level Indicators)
 
-The Service Deck does not duplicate the OBC — it **surfaces** it in the Service Endpoints section, making the Data dimension visible as part of the service's operational view. The OBC is the source of truth; the Service Deck is the consolidated reading point.
+The Service Deck does not duplicate the OBCs — it **surfaces** them in the Service Endpoints section, organized by node, making the Data dimension visible as part of the service's operational view. The OBCs are the source of truth; the Service Deck is the consolidated reading point.
 
 ```
 Service Deck
-  └── consumes → Local OBC
-        ├── Data: APIs, events, schemas
-        ├── SLIs → reliability number (surfaced in the Product Deck)
-        └── Reliability Rules → Reliability Plan
+  ├── node 1 → Local OBC A
+  │     ├── Data: APIs, events, schemas
+  │     ├── SLIs ─────────────┐
+  │     └── Reliability Rules → Reliability Plan
+  ├── node 2 → Local OBC B
+  │     ├── Data: APIs, events, schemas
+  │     ├── SLIs ─────────────┤
+  │     └── Reliability Rules → Reliability Plan
+  └── service SLO  ←──── derived from the nodes' SLIs
+        └── reliability number (surfaced in the Product Deck)
 ```
 
 ---
@@ -64,7 +87,14 @@ this service [decisive benefit].
 
 **Question:** What are the data contracts of this service?
 
-This is the section that materializes the **Data dimension** of the Product Topology at the service level. Source: Local OBC.
+This is the section that materializes the **Data dimension** of the Product Topology at the service level. Source: the Local OBCs of the nodes. The section starts with the **node map** and organizes the contracts below it, **by node**:
+
+| Node | Local OBC | OBC state | Role in the service | Contracts in this deck |
+|---|---|---|---|---|
+| `<capability name>` | `prodops/artifacts/obcs/<slug>.md` | Committed / In Delivery / Operational | `<what this node does in the service>` | ✅ complete / ⚠️ partial / ❌ not surfaced |
+
+The **Contracts in this deck** column says whether the events, APIs and SLIs of the node's OBC are already surfaced in this Service Deck. A node with a committed OBC and unsurfaced contracts is a deck gap, not an OBC gap.
+
 
 | Category | Examples |
 |---|---|
@@ -73,7 +103,7 @@ This is the section that materializes the **Data dimension** of the Product Topo
 | **Consumed events** | `order.created`, `refund.requested` — consumption contract |
 | **External schemas** | Data models exposed for integrations |
 
-A service without defined Service Endpoints has no observable contract — it cannot be listed as a Product Service in the Product Deck.
+A service without defined Service Endpoints (at least one node with a committed Local OBC) has no observable contract — it cannot be listed as a Product Service in the Product Deck.
 
 ---
 
@@ -82,7 +112,7 @@ A service without defined Service Endpoints has no observable contract — it ca
 **Question:** Who is responsible for building and operating this service?
 
 Same structure as the Product Team section of the Product Deck, but scoped to the service:
-- **Owner:** responsible for the OBC and the SLO
+- **Owner:** responsible for the OBCs (nodes) and the SLO
 - **On-call:** who to activate during incidents, with channel and expected response time
 - **Consumers:** teams or services that depend on this service
 
@@ -107,12 +137,12 @@ Corresponds to the **`Components` Product Dimension** scoped to the service. For
 
 | Field | Source | Description |
 |---|---|---|
-| **SLO** | Local OBC | Formal availability/latency commitment |
-| **SLIs** | Local OBC | Observable metrics that prove the SLO |
+| **SLO** | Local OBCs (per node) | Formal availability/latency commitment |
+| **SLIs** | Local OBCs (per node) | Observable metrics that prove the SLO |
 | **Error Budget** | SLO − current SLI | Available margin before a violation |
 | **MTTR** | Release Trail + Incidents | Mean time to recovery |
 
-For a Value Stream, the consolidated SLO is derived from the SLOs of its constituent Services — usually the most restrictive one or the combination that reflects the critical path.
+When the service has more than one node, the consolidated SLO is derived from the nodes' SLOs and SLIs — usually the most restrictive one or the combination that reflects the critical path. For a Value Stream, the nodes are those of the constituent Services. The Service Deck records the SLO of each node and the consolidated SLO of the service; the consolidated one is what the Product Deck shows as the reliability number.
 
 ---
 
@@ -141,14 +171,14 @@ The term "internal customer" is rejected. Consumers are **contract partners** �
 ## Canonical path
 
 ```
-prodops/artifacts/services/<service-slug>/service-deck.md
+prodops/artifacts/product/context/service-decks/<service-slug>.md
 ```
 
 A service has exactly one Service Deck. For Value Streams:
 
 ```
-prodops/artifacts/services/<value-stream-slug>/service-deck.md
-prodops/artifacts/services/<value-stream-slug>/services/<service-slug>/service-deck.md  ← optional per constituent
+prodops/artifacts/product/context/service-decks/<value-stream-slug>.md
+prodops/artifacts/product/context/service-decks/<service-slug>.md  ← optional per constituent
 ```
 
 ---
@@ -159,7 +189,7 @@ The Service Deck is a **living artifact**, updated whenever the service state or
 
 | Moment | Expected update |
 |---|---|
-| **Local OBC committed** | Create or update Service Endpoints with OBC contracts |
+| **Local OBC committed (new or existing node)** | Add or update the node in the node map and the Service Endpoints with the OBC contracts |
 | **New capability becomes Operational** | Update Service Endpoints, Service Reliability, and Service Analytics |
 | **SLO change** | Update Service Reliability and reflect in the reliability number in the Product Deck |
 | **Service architecture change** | Update Service Architecture |
@@ -173,11 +203,11 @@ The Service Deck is a **living artifact**, updated whenever the service state or
 ```
 Service Deck
   ├── is referenced by → Product Deck  [Product Services]
-  ├── consumes → Local OBC  [Service Endpoints: APIs, events, schemas, SLIs]
+  ├── consumes → Local OBCs  [one per node — Service Endpoints: APIs, events, schemas, SLIs]
   ├── consumes → Reliability Plan  [Service Reliability: SLOs, risk analysis]
   ├── consumes → Release Trail  [Service Analytics: post-delivery metrics]
   ├── references → Product Topology: Components  [Service Architecture]
-  ├── references → Product Topology: Data  [Service Endpoints — via Local OBC]
+  ├── references → Product Topology: Data  [Service Endpoints — via Local OBCs]
   └── feeds → Product Deck Reliability Matrix  [Service Consumers + SLO]
 ```
 

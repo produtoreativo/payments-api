@@ -753,7 +753,7 @@ See [`flow.en.md`](flow.en.md), [`journeys/discovery/README.en.md`](journeys/dis
 
 **Distinction:** _Execution Model_ is the framework; _Execution Mode_ is one of the two individual modes (Upstream or Downstream). "Execution mode" translates Execution Mode — not Execution Model.
 
-→ Full definition: [`ontology.md — Execution Model`](ontology.md#cross-cutting-modifier-execution-model) · [`execution-model/README.en.md`](execution-model/README.en.md)
+→ Full definition: [`ontology.md — Execution Model`](ontology.en.md#transversal-modifier-execution-model) · [`execution-model/README.en.md`](execution-model/README.en.md)
 
 ---
 
@@ -919,7 +919,7 @@ See [`prodops/framework/execution-model/downstream.en.md`](execution-model/downs
 
 **When not to use:** The Product Deck does not replace the Local OBC (which defines the observable contract for each capability), the Reliability Plan (which details risk analysis), or the Release Trail (which records delivery evidence). Each of these artifacts is a source of input for the Product Deck — not the other way around.
 
-**Location:** `prodops/artifacts/product/product-deck.md` (one per product).
+**Location:** `prodops/artifacts/product/context/product-deck.md` (one per product).
 
 **Relationship with other concepts:** Consumes `local-obc` (SLOs), `reliability-plan` (Reliability Matrix), `release-trail` (Product Analytics). Consumed by premortems (Execution Architecture), Assessment, and Bootstrap.
 
@@ -933,11 +933,11 @@ See [`prodops/framework/execution-model/downstream.en.md`](execution-model/downs
 
 **Two types of Product Service:** `Service` (single deployable unit with its own responsibility and SLO) or `Value Stream` (logical grouping of one or more Services that together deliver a specific business outcome).
 
-**Link to Data:** the Service Deck corresponds to exactly one Local OBC. The Service Endpoints section of the Service Deck surfaces the OBC's contracts — APIs, events, schemas, SLIs — making the **Data dimension** visible at the service's operational level. The OBC is the source of truth; the Service Deck is the consolidated reading point.
+**Link to Data:** the Service Deck consumes **one or more Local OBCs**; each OBC is a **node** of the service, and the list of nodes is the complete list of what makes up the service. The Service Endpoints section of the Service Deck surfaces the OBCs' contracts — APIs, events, schemas, SLIs — organized by node, making the **Data dimension** visible at the service's operational level. An OBC may be a node of more than one Service Deck when the capability is shared. The OBCs are the source of truth; the Service Deck is the consolidated reading point.
 
-**When to use:** when a service is listed in the Product Deck with a committed Local OBC. A service without a committed OBC must not have a Service Deck — it must be flagged as pending an observable contract.
+**When to use:** when a service is listed in the Product Deck with at least one committed Local OBC. A service without any committed OBC must not have a Service Deck — it must be flagged as pending an observable contract.
 
-**Location:** `prodops/artifacts/services/<service-slug>/service-deck.md`.
+**Location:** `prodops/artifacts/product/context/service-decks/<service-slug>.md`.
 
 **Relationship with other concepts:** referenced by the Product Deck (Product Services); consumes `local-obc` (Service Endpoints), `reliability-plan` (Service Reliability), and `release-trail` (Service Analytics); feeds the Product Deck's Reliability Matrix.
 

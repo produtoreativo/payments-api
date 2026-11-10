@@ -185,7 +185,7 @@ Artefatos de execução (`Iteration Plan`, `Context Capsule`, `Release Trail`) s
 
 **Jornada:** transversal — consumido por Assessment (premortems, avaliação de maturidade), Discovery (alinhamento de escopo), Delivery (contexto de Bootstrap) e Operation (atualização contínua de métricas).
 
-**Caminho canônico:** `prodops/artifacts/product/product-deck.md` (um por produto)
+**Caminho canônico:** `prodops/artifacts/product/context/product-deck.md` (um por produto)
 
 **Relações:** consome `local-obc` (SLOs dos serviços), `reliability-plan` (Reliability Matrix) e `release-trail` (Product Analytics); é consumido como insumo de premortems e Assessment.
 
@@ -197,13 +197,13 @@ Artefatos de execução (`Iteration Plan`, `Context Capsule`, `Release Trail`) s
 
 **O que é:** canvas de página única que representa um serviço como um produto — mesmas seções do Product Deck, mas scoped ao serviço. Um Product Service pode ser um `Service` (unidade deployável única) ou um `Value Stream` (agrupamento lógico de múltiplos services). O Service Deck é o artefato que detalha cada entrada do Product Services.
 
-**Nasce quando:** um serviço é listado no Product Deck com um Local OBC committed — o Service Deck materializa os contratos desse OBC como visão operacional do serviço.
+**Nasce quando:** um serviço é listado no Product Deck com ao menos um Local OBC committed — o Service Deck materializa os contratos dos OBCs (um por nó do serviço) como visão operacional do serviço.
 
 **Jornada:** transversal — criado quando o OBC atinge Committed; atualizado em Operation (métricas, SLOs) e Assessment (revisão de risco e contratos).
 
-**Caminho canônico:** `prodops/artifacts/services/<service-slug>/service-deck.md`
+**Caminho canônico:** `prodops/artifacts/product/context/service-decks/<service-slug>.md`
 
-**Relações:** é referenciado pelo `product-deck` (Product Services); consome `local-obc` (Service Endpoints: APIs, eventos, schemas, SLIs) e `reliability-plan`; alimenta a Reliability Matrix do Product Deck.
+**Relações:** é referenciado pelo `product-deck` (Product Services); consome um ou mais `local-obc`, um por nó do serviço (Service Endpoints: APIs, eventos, schemas, SLIs), e `reliability-plan`; alimenta a Reliability Matrix do Product Deck.
 
 → Definição completa: [`service-deck.md`](service-deck.md)
 

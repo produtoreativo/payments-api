@@ -4,6 +4,8 @@ O Service Deck é um canvas de página única que representa um serviço como se
 
 Um serviço listado no **Product Services** de um Product Deck possui exatamente um Service Deck. O Service Deck é o artefato que detalha aquilo que o Product Deck apenas enumera.
 
+Um Service Deck reúne **um ou mais Local OBCs**. Cada OBC é um **nó** do serviço — uma capability com contrato observável próprio — e o conjunto de nós listados no Service Deck é a **lista completa** do que compõe aquele serviço.
+
 ---
 
 ## Tipos de Product Service
@@ -17,23 +19,44 @@ Um Product Service pode ser de dois tipos, e o Service Deck aplica-se a ambos:
 
 ---
 
-## Elo com o Local OBC: a dimensão Data
+## Elo com os Local OBCs: os nós do serviço
 
-Cada Service Deck corresponde a exatamente um **Local OBC**. É no OBC que vivem os contratos de dados do serviço:
+Um Service Deck consome **um ou mais Local OBCs**. Cada OBC representa um **nó** do serviço: uma capability com contrato observável próprio (por exemplo, criar invoice, confirmar pagamento, cancelar invoice). A lista de nós do Service Deck é a **lista completa** do que compõe o serviço — um comportamento do serviço que não tem nó (OBC) não tem contrato observável.
+
+| Situação | Nós (OBCs) do Service Deck |
+|---|---|
+| Service com uma única capability | 1 |
+| Service com várias capabilities | N — um por capability |
+| Value Stream | N — os nós dos Services constituintes que colaboram para o resultado de negócio |
+
+Regras:
+
+- **Mapa de nós.** O Service Deck lista todos os nós no início da seção Service Endpoints (nó, OBC, estado do OBC, papel no serviço, contratos superficiados no deck).
+- **Um nó é um Local OBC.** O OBC continua sendo o contrato de **uma** capability e pertence a um único produto.
+- **Nó compartilhado.** Um OBC pode ser nó de mais de um Service Deck quando a capability é compartilhada entre serviços ou Value Streams (por exemplo, a confirmação de pagamento usada por vários meios de pagamento). O OBC segue sendo a fonte de verdade única; cada Service Deck apenas o referencia.
+- **Sem OBC não há nó.** Um serviço precisa ter ao menos um nó com Local OBC committed para ser um Product Service. Uma capability do serviço que ainda não tem OBC committed é sinalizada como nó pendente de contrato observável.
+
+É no OBC de cada nó que vivem os contratos de dados do serviço:
 
 - APIs públicas (endpoints, contratos de request/response)
 - Eventos publicados e consumidos (domínio de eventos)
 - Schemas de persistência relevantes externamente
 - SLIs (Service Level Indicators) observáveis
 
-O Service Deck não duplica o OBC — ele o **superficia** na seção Service Endpoints, tornando a dimensão Data visível como parte da visão operacional do serviço. O OBC é a fonte de verdade; o Service Deck é o ponto de leitura consolidado.
+O Service Deck não duplica os OBCs — ele os **superficia** na seção Service Endpoints, organizados por nó, tornando a dimensão Data visível como parte da visão operacional do serviço. Os OBCs são a fonte de verdade; o Service Deck é o ponto de leitura consolidado.
 
 ```
 Service Deck
-  └── consome → Local OBC
-        ├── Data: APIs, eventos, schemas
-        ├── SLIs → número de confiabilidade (surfaced no Product Deck)
-        └── Reliability Rules → Reliability Plan
+  ├── nó 1 → Local OBC A
+  │     ├── Data: APIs, eventos, schemas
+  │     ├── SLIs ─────────────┐
+  │     └── Reliability Rules → Reliability Plan
+  ├── nó 2 → Local OBC B
+  │     ├── Data: APIs, eventos, schemas
+  │     ├── SLIs ─────────────┤
+  │     └── Reliability Rules → Reliability Plan
+  └── SLO do serviço  ←──── derivado dos SLIs dos nós
+        └── número de confiabilidade (surfaced no Product Deck)
 ```
 
 ---
@@ -64,7 +87,14 @@ este serviço [benefício decisivo].
 
 **Pergunta:** Quais são os contratos de dados deste serviço?
 
-Esta é a seção que materializa a **dimensão Data** da Product Topology a nível de serviço. Fonte: Local OBC.
+Esta é a seção que materializa a **dimensão Data** da Product Topology a nível de serviço. Fonte: os Local OBCs dos nós. A seção começa pelo **mapa de nós** e organiza os contratos abaixo, **por nó**:
+
+| Nó | Local OBC | Estado do OBC | Papel no serviço | Contratos neste deck |
+|---|---|---|---|---|
+| `<nome da capability>` | `prodops/artifacts/obcs/<slug>.md` | Committed / In Delivery / Operational | `<o que este nó faz no serviço>` | ✅ completo / ⚠️ parcial / ❌ não superficiado |
+
+A coluna **Contratos neste deck** diz se os eventos, APIs e SLIs do OBC do nó já estão superficiados neste Service Deck. Um nó com OBC committed e contratos não superficiados é uma pendência do deck, não do OBC.
+
 
 | Categoria | Exemplos |
 |---|---|
@@ -73,7 +103,7 @@ Esta é a seção que materializa a **dimensão Data** da Product Topology a ní
 | **Eventos consumidos** | `order.created`, `refund.requested` — contrato de consumo |
 | **Schemas externos** | Modelos de dados expostos para integrações |
 
-Um serviço sem Service Endpoints definidos não tem contrato observável — não pode ser listado como Product Service no Product Deck.
+Um serviço sem Service Endpoints definidos (ao menos um nó com Local OBC committed) não tem contrato observável — não pode ser listado como Product Service no Product Deck.
 
 ---
 
@@ -82,7 +112,7 @@ Um serviço sem Service Endpoints definidos não tem contrato observável — n�
 **Pergunta:** Quem é responsável por construir e operar este serviço?
 
 Mesma estrutura do Product Team do Product Deck, mas scoped ao serviço:
-- **Owner:** responsável pelo OBC e pelo SLO
+- **Owner:** responsável pelos OBCs (nós) e pelo SLO
 - **On-call:** quem acionar em incidentes, com canal e tempo de resposta
 - **Consumers:** times ou serviços que dependem deste serviço
 
@@ -107,12 +137,12 @@ Corresponde à **Product Dimension `Components`** no escopo do serviço. Para um
 
 | Campo | Fonte | Descrição |
 |---|---|---|
-| **SLO** | Local OBC | Compromisso formal de disponibilidade/latência |
-| **SLIs** | Local OBC | Métricas observáveis que provam o SLO |
+| **SLO** | Local OBCs (por nó) | Compromisso formal de disponibilidade/latência |
+| **SLIs** | Local OBCs (por nó) | Métricas observáveis que provam o SLO |
 | **Error Budget** | SLO − SLI atual | Margem disponível antes de violação |
 | **MTTR** | Release Trail + Incidents | Tempo médio de recuperação |
 
-Para um Value Stream, o SLO consolidado é derivado dos SLOs dos Services constituintes — geralmente o mais restritivo ou a combinação que reflita o caminho crítico.
+Quando o serviço tem mais de um nó, o SLO consolidado é derivado dos SLOs e SLIs dos nós — geralmente o mais restritivo ou a combinação que reflita o caminho crítico. Para um Value Stream, os nós são os dos Services constituintes. O Service Deck registra o SLO de cada nó e o consolidado do serviço; é o consolidado que o Product Deck exibe como número de confiabilidade.
 
 ---
 
@@ -141,14 +171,14 @@ O termo "cliente interno" é rejeitado. Consumidores são **parceiros de contrat
 ## Localização canônica
 
 ```
-prodops/artifacts/services/<service-slug>/service-deck.md
+prodops/artifacts/product/context/service-decks/<service-slug>.md
 ```
 
 Um serviço tem exatamente um Service Deck. Para Value Streams:
 
 ```
-prodops/artifacts/services/<value-stream-slug>/service-deck.md
-prodops/artifacts/services/<value-stream-slug>/services/<service-slug>/service-deck.md  ← opcional por constituinte
+prodops/artifacts/product/context/service-decks/<value-stream-slug>.md
+prodops/artifacts/product/context/service-decks/<service-slug>.md  ← opcional por constituinte
 ```
 
 ---
@@ -159,7 +189,7 @@ O Service Deck é um artefato **vivo**, atualizado sempre que o estado do servi�
 
 | Momento | Atualização esperada |
 |---|---|
-| **Local OBC committed** | Criar ou atualizar Service Endpoints com contratos do OBC |
+| **Local OBC committed (novo nó ou nó existente)** | Adicionar ou atualizar o nó no mapa de nós e os Service Endpoints com os contratos do OBC |
 | **Nova capability em Operational** | Atualizar Service Endpoints, Service Reliability e Service Analytics |
 | **Mudança de SLO** | Atualizar Service Reliability e refletir no número de confiabilidade do Product Deck |
 | **Mudança de arquitetura do serviço** | Atualizar Service Architecture |
@@ -173,11 +203,11 @@ O Service Deck é um artefato **vivo**, atualizado sempre que o estado do servi�
 ```
 Service Deck
   ├── é referenciado por → Product Deck [Product Services]
-  ├── consome → Local OBC  [Service Endpoints: APIs, eventos, schemas, SLIs]
+  ├── consome → Local OBCs  [um por nó — Service Endpoints: APIs, eventos, schemas, SLIs]
   ├── consome → Reliability Plan  [Service Reliability: SLOs, análise de risco]
   ├── consome → Release Trail  [Service Analytics: métricas pós-entrega]
   ├── referencia → Product Topology: Components  [Service Architecture]
-  ├── referencia → Product Topology: Data  [Service Endpoints — via Local OBC]
+  ├── referencia → Product Topology: Data  [Service Endpoints — via Local OBCs]
   └── alimenta → Reliability Matrix do Product Deck  [Service Consumers + SLO]
 ```
 

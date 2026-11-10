@@ -63,19 +63,19 @@ In the Product Deck, each entry is listed with two mandatory indicators:
 
 | Field | Description | Source |
 |---|---|---|
-| **Reliability number** | Current SLO in production (e.g., 99.5%) | Local OBC → SLI |
+| **Reliability number** | Current SLO in production (e.g., 99.5%) | Local OBCs (service nodes) → SLI |
 | **Lead-time** | Average time to deliver changes to the service | Release Trail → DORA |
 
-**Link to the Data dimension:** each Product Service has exactly one **Local OBC**. The OBC is where the service's data contracts live — APIs, published and consumed events, schemas, SLIs. The Service Deck exposes these contracts in the Service Endpoints section, making the Data dimension visible at the service level without duplicating the OBC.
+**Link to the Data dimension:** each Product Service has **one or more Local OBCs**, and each OBC is a **node** of the service — a capability with its own observable contract. The Service Deck's list of nodes is the complete list of what makes up the service. The data contracts live in the OBC of each node — APIs, published and consumed events, schemas, SLIs. The Service Deck exposes these contracts in the Service Endpoints section, organized by node, making the Data dimension visible at the service level without duplicating the OBCs.
 
 ```
 Product Service (listed in the Product Deck)
     └── references → Service Deck
-          ├── consumes → Local OBC  [Data: APIs, events, schemas, SLIs]
+          ├── consumes → Local OBCs  [one per node — Data: APIs, events, schemas, SLIs]
           └── consumes → Reliability Plan  [SLOs, risk analysis]
 ```
 
-A service without a committed Local OBC must not appear as a Product Service — it must be flagged as pending an observable contract.
+A service without any committed Local OBC must not appear as a Product Service — it must be flagged as pending an observable contract. The service's reliability number is consolidated from the SLIs of all its nodes.
 
 → Full definition of Service Deck: [`service-deck.en.md`](service-deck.en.md)
 
@@ -186,7 +186,7 @@ This complete traceability is what allows Assessment to reconstruct the product'
 ## Canonical path
 
 ```
-prodops/artifacts/product/product-deck.md
+prodops/artifacts/product/context/product-deck.md
 ```
 
 A product has exactly one Product Deck. There is no Product Deck per feature, per release, or per iteration. The Product Deck represents the product as a whole in its current state.

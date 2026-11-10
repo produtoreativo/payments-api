@@ -185,7 +185,7 @@ Execution artifacts (`Iteration Plan`, `Context Capsule`, `Release Trail`) are p
 
 **Journey:** cross-cutting — consumed by Assessment (premortems, maturity evaluation), Discovery (scope alignment), Delivery (Bootstrap context), and Operation (continuous metrics update).
 
-**Canonical path:** `prodops/artifacts/product/product-deck.md` (one per product)
+**Canonical path:** `prodops/artifacts/product/context/product-deck.md` (one per product)
 
 **Relations:** consumes `local-obc` (service SLOs), `reliability-plan` (Reliability Matrix), and `release-trail` (Product Analytics); consumed as input by premortems and Assessment.
 
@@ -197,13 +197,13 @@ Execution artifacts (`Iteration Plan`, `Context Capsule`, `Release Trail`) are p
 
 **What it is:** a single-page canvas that represents a service as a product — same sections as the Product Deck, but scoped to the service. A Product Service can be a `Service` (single deployable unit) or a `Value Stream` (logical grouping of multiple services). The Service Deck is the artifact that details each Product Services entry.
 
-**Born when:** a service is listed in the Product Deck with a committed Local OBC — the Service Deck materializes that OBC's contracts as the operational view of the service.
+**Born when:** a service is listed in the Product Deck with at least one committed Local OBC — the Service Deck materializes the OBCs' contracts (one per node of the service) as the operational view of the service.
 
 **Journey:** cross-cutting — created when the OBC reaches Committed; updated in Operation (metrics, SLOs) and Assessment (risk and contract review).
 
-**Canonical path:** `prodops/artifacts/services/<service-slug>/service-deck.md`
+**Canonical path:** `prodops/artifacts/product/context/service-decks/<service-slug>.md`
 
-**Relations:** referenced by `product-deck` (Product Services); consumes `local-obc` (Service Endpoints: APIs, events, schemas, SLIs) and `reliability-plan`; feeds the Product Deck's Reliability Matrix.
+**Relations:** referenced by `product-deck` (Product Services); consumes one or more `local-obc`, one per node of the service (Service Endpoints: APIs, events, schemas, SLIs), and `reliability-plan`; feeds the Product Deck's Reliability Matrix.
 
 → Full definition: [`service-deck.en.md`](service-deck.en.md)
 

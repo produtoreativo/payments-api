@@ -63,19 +63,19 @@ No Product Deck, cada entrada é listada com dois indicadores obrigatórios:
 
 | Campo | Descrição | Fonte |
 |---|---|---|
-| **Número de confiabilidade** | SLO atual em produção (ex.: 99,5%) | Local OBC → SLI |
+| **Número de confiabilidade** | SLO atual em produção (ex.: 99,5%) | Local OBCs (nós do serviço) → SLI |
 | **Lead-time** | Tempo médio de entrega de mudanças no serviço | Release Trail → DORA |
 
-**Elo com a dimensão Data:** cada Product Service possui exatamente um **Local OBC**. É no OBC que vivem os contratos de dados do serviço — APIs, eventos publicados e consumidos, schemas, SLIs. O Service Deck expõe esses contratos na seção Service Endpoints, tornando a dimensão Data visível a nível de serviço sem duplicar o OBC.
+**Elo com a dimensão Data:** cada Product Service possui **um ou mais Local OBCs**, e cada OBC é um **nó** do serviço — uma capability com contrato observável próprio. A lista de nós do Service Deck é a lista completa do que compõe o serviço. É no OBC de cada nó que vivem os contratos de dados — APIs, eventos publicados e consumidos, schemas, SLIs. O Service Deck expõe esses contratos na seção Service Endpoints, organizados por nó, tornando a dimensão Data visível a nível de serviço sem duplicar os OBCs.
 
 ```
 Product Service (listado no Product Deck)
     └── referencia → Service Deck
-          ├── consome → Local OBC  [Data: APIs, eventos, schemas, SLIs]
+          ├── consome → Local OBCs  [um por nó — Data: APIs, eventos, schemas, SLIs]
           └── consome → Reliability Plan  [SLOs, análise de risco]
 ```
 
-Um serviço sem Local OBC committed não deve aparecer como Product Service — deve ser sinalizado como pendente de contrato observável.
+Um serviço sem nenhum Local OBC committed não deve aparecer como Product Service — deve ser sinalizado como pendente de contrato observável. O número de confiabilidade do serviço é consolidado a partir dos SLIs de todos os seus nós.
 
 → Definição completa do Service Deck: [`service-deck.md`](service-deck.md)
 
@@ -186,7 +186,7 @@ Esse rastreamento completo é o que permite ao Assessment reconstruir a históri
 ## Localização canônica
 
 ```
-prodops/artifacts/product/product-deck.md
+prodops/artifacts/product/context/product-deck.md
 ```
 
 Um produto tem exatamente um Product Deck. Não existe Product Deck por feature, por release ou por iteração. O Product Deck representa o produto como um todo em seu estado atual.

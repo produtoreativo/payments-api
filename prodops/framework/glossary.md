@@ -872,7 +872,7 @@ Ver [`prodops/framework/execution-model/downstream.md`](execution-model/downstre
 
 **Quando não usar:** O Product Deck não substitui o Local OBC (que define o contrato observável de cada capability), o Reliability Plan (que detalha análise de risco) nem o Release Trail (que registra evidências de entrega). Cada um desses artefatos é uma fonte de insumo para o Product Deck — não o contrário.
 
-**Localização:** `prodops/artifacts/product/product-deck.md` (um por produto).
+**Localização:** `prodops/artifacts/product/context/product-deck.md` (um por produto).
 
 **Relação com outros conceitos:** Consome `local-obc` (SLOs), `reliability-plan` (Reliability Matrix), `release-trail` (Product Analytics). É consumido por premortems (Execution Architecture), Assessment e Bootstrap.
 
@@ -886,11 +886,11 @@ Ver [`prodops/framework/execution-model/downstream.md`](execution-model/downstre
 
 **Dois tipos de Product Service:** `Service` (unidade deployável única com responsabilidade e SLO próprios) ou `Value Stream` (agrupamento lógico de um ou mais Services que juntos entregam um resultado de negócio específico).
 
-**Elo com Data:** o Service Deck corresponde a exatamente um Local OBC. A seção Service Endpoints do Service Deck superficia os contratos do OBC — APIs, eventos, schemas, SLIs — tornando a **dimensão Data** visível no nível operacional do serviço. O OBC é a fonte de verdade; o Service Deck é o ponto de leitura consolidado.
+**Elo com Data:** o Service Deck consome **um ou mais Local OBCs**; cada OBC é um **nó** do serviço, e a lista de nós é a lista completa do que compõe o serviço. A seção Service Endpoints do Service Deck superficia os contratos dos OBCs — APIs, eventos, schemas, SLIs —, organizados por nó, tornando a **dimensão Data** visível no nível operacional do serviço. Um OBC pode ser nó de mais de um Service Deck quando a capability é compartilhada. Os OBCs são a fonte de verdade; o Service Deck é o ponto de leitura consolidado.
 
-**Quando usar:** quando um serviço é listado no Product Deck com Local OBC committed. Um serviço sem OBC committed não deve ter Service Deck — deve ser sinalizado como pendente de contrato observável.
+**Quando usar:** quando um serviço é listado no Product Deck com ao menos um Local OBC committed. Um serviço sem nenhum OBC committed não deve ter Service Deck — deve ser sinalizado como pendente de contrato observável.
 
-**Localização:** `prodops/artifacts/services/<service-slug>/service-deck.md`.
+**Localização:** `prodops/artifacts/product/context/service-decks/<service-slug>.md`.
 
 **Relação com outros conceitos:** é referenciado pelo Product Deck (Product Services); consome `local-obc` (Service Endpoints), `reliability-plan` (Service Reliability) e `release-trail` (Service Analytics); alimenta a Reliability Matrix do Product Deck.
 
