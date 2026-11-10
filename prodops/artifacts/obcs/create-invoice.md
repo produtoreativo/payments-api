@@ -1,8 +1,29 @@
 # OBC - Criar Invoice via Gateway
 
+## Metadados
+
+| Campo | Valor |
+|---|---|
+| Owner | [apurar] |
+| DS-ID | DS-38 |
+| Iteração | v0.4.0 |
+| Última atualização | 2026-11-10 |
+
 ## Status
 
-Downstream. Status `Entrou` em `prodops/artifacts/plans/iteration-plan.md` (seção "Iteration Plan recomendado") — jornada Pix como primeiro billing type habilitado.
+**Estado:** In Delivery
+**Rastreado em:** DS-38 (#38) — v0.4.0, PR #89. Registro anterior: Downstream. Status `Entrou` em `prodops/artifacts/plans/iteration-plan.md` (seção "Iteration Plan recomendado") — jornada Pix como primeiro billing type habilitado.
+**Pendência:** iteração concluída (PR #89); candidato a `Operational` — confirmar implantação em produção antes de promover. Fonte: `prodops/artifacts/plans/iteration-plan.md`.
+
+## Origem
+
+| Elo | Referência |
+|---|---|
+| Business Signal | [BS-003](../business-signals/BS-003.md) |
+| Business Intent | [PI-003](../business-intents/PI-003.md) |
+| Product Tracking Item | issue #38 (DS-38), ver `prodops/artifacts/plans/iteration-plan.md` |
+| Icebox | PAY-ICE-001 — [`icebox-backlog.md`](../product/backlogs/icebox-backlog.md) |
+| Relacionado | [PI-PILOT-001](../business-intents/PI-PILOT-001.md) |
 
 ## Business Outcome
 
@@ -14,26 +35,59 @@ Uma cobrança só é considerada criada quando o Asaas confirma que a recebeu e 
 
 Isso protege o Magazine Siará de dois problemas: (1) mostrar ao cliente uma cobrança que o Asaas nunca chegou a registrar, e (2) cobrar duas vezes o mesmo pedido em caso de retentativa — o sistema reconhece a chave do pedido e devolve a cobrança já existente sem criar uma nova.
 
+## Escopo
+
+**Dentro do escopo**
+
+- [apurar]
+
+**Fora de escopo**
+
+- [apurar]
+
+## Regras de Negócio
+
+- [apurar]
+
+## Critérios de Aceite
+
+Derivados dos cenários de `prodops/artifacts/bdd/create-invoice.feature`; marcar após verificação.
+
+- [ ] Criar invoice com sucesso no Asaas usando cliente ja vinculado
+- [ ] Criar cliente Asaas antes da invoice quando nao houver vinculo
+- [ ] Evitar duplicidade em retentativa do ecommerce
+- [ ] Rejeitar provedor nao habilitado
+- [ ] Falha transiente ao criar cobranca no provedor
+- [ ] Falha de validacao retornada pelo provedor
+
+## Contexto Enterprise
+
+| Item | Conteúdo |
+|---|---|
+| Value Stream / Product Service | Service Deck: [compra-com-pix](../product/context/service-decks/compra-com-pix.md) |
+| Stakeholders | [apurar] |
+| Compliance | [apurar] |
+
 ## Observable Events
 
-| Event | Meaning | Required dimensions |
-|---|---|---|
-| `invoice.created` | Invoice criada com sucesso no provedor — status `OPEN`, `providerPaymentId` presente. | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `billingType`, `correlationId` |
-| `invoice.creation_failed` | Falha ao criar invoice no provedor — invoice em `FAILED` ou `PROVIDER_PENDING`. | `invoiceId`, `orderId`, `tenantId`, `reason`, `provider`, `correlationId` |
-| `invoice.idempotency_hit` | Retentativa com mesma chave de idempotência — invoice existente retornada sem nova cobrança. | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
-| `invoice.provider_rejected` | Provedor rejeitou a criação por dados inválidos — invoice marcada como `FAILED`. | `invoiceId`, `orderId`, `tenantId`, `providerErrorCode`, `correlationId` |
-| `invoice.customer_created` | Cliente Asaas criado antes da invoice por ausência de vínculo. | `tenantId`, `customerId`, `providerCustomerId`, `correlationId` |
-| `invoice.access_rejected` | Tentativa de criar invoice com provedor desabilitado para o tenant. | `tenantId`, `provider`, `correlationId` |
+| Event | Situação | Meaning | Required dimensions |
+|---|---|---|---|
+| `invoice.created` | Planejado | Invoice criada com sucesso no provedor — status `OPEN`, `providerPaymentId` presente. — *equivalente provável no código (a confirmar): `payments.invoice.created`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `billingType`, `correlationId` |
+| `invoice.creation_failed` | Planejado | Falha ao criar invoice no provedor — invoice em `FAILED` ou `PROVIDER_PENDING`. | `invoiceId`, `orderId`, `tenantId`, `reason`, `provider`, `correlationId` |
+| `invoice.idempotency_hit` | Planejado | Retentativa com mesma chave de idempotência — invoice existente retornada sem nova cobrança. | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
+| `invoice.provider_rejected` | Planejado | Provedor rejeitou a criação por dados inválidos — invoice marcada como `FAILED`. | `invoiceId`, `orderId`, `tenantId`, `providerErrorCode`, `correlationId` |
+| `invoice.customer_created` | Planejado | Cliente Asaas criado antes da invoice por ausência de vínculo. — *equivalente provável no código (a confirmar): `pagamento.cobranca.cadastrada.cliente.cadastrado`* | `tenantId`, `customerId`, `providerCustomerId`, `correlationId` |
+| `invoice.access_rejected` | Planejado | Tentativa de criar invoice com provedor desabilitado para o tenant. | `tenantId`, `provider`, `correlationId` |
 
 ## Initial SLIs
 
-| SLI | Initial target |
-|---|---|
-| Invoices criadas com `providerPaymentId` presente na resposta ao Checkout. | 99.9% |
-| Retentativas com mesma `Idempotency-Key` retornam invoice existente sem nova chamada ao provedor. | 100% |
-| Invoice `OPEN` nunca retornada ao Checkout sem `providerPaymentId` consolidado. | 100% |
-| Erros de validação do provedor retornados sem segredo ou payload sensível exposto. | 100% |
-| Solicitações com provedor desabilitado para o tenant rejeitadas antes de chamar a API do provedor. | 100% |
+| SLI | Initial target | Fonte |
+|---|---|---|
+| Invoices criadas com `providerPaymentId` presente na resposta ao Checkout. | 99.9% | [apurar] |
+| Retentativas com mesma `Idempotency-Key` retornam invoice existente sem nova chamada ao provedor. | 100% | [apurar] |
+| Invoice `OPEN` nunca retornada ao Checkout sem `providerPaymentId` consolidado. | 100% | [apurar] |
+| Erros de validação do provedor retornados sem segredo ou payload sensível exposto. | 100% | [apurar] |
+| Solicitações com provedor desabilitado para o tenant rejeitadas antes de chamar a API do provedor. | 100% | [apurar] |
 
 ## Reliability Rules
 
@@ -63,9 +117,29 @@ O gateway deve retornar ao Checkout:
 }
 ```
 
+## Riscos
+
+| Risco | Severidade | Tratamento |
+|---|---|---|
+| [apurar] | [apurar] | ver `prodops/artifacts/risks/risks.md` |
+
+## Dependências
+
+| Tipo | Dependência | Observação |
+|---|---|---|
+| Serviço interno | DynamoDB | Crítica (Product Deck, seção 4) |
+| Serviço externo | Asaas (PSP) | Crítica (Product Deck, seção 4) |
+
+## Decisões
+
+| Data | Decisão | Justificativa | Fonte |
+|---|---|---|---|
+| 2026-11-10 | Migração para o template `local-obc.md`: seções adicionadas, Status normalizado, eventos classificados por Situação e SLIs com Fonte. | Aderência ao template e à regra de que o nome do evento é o emitido no código. Campos sem fonte marcados `[apurar]`. | skill `obc` (modo `fix`); `check-obc.sh` |
+
 ## Related Artifacts
 
 - BDD: `prodops/artifacts/bdd/create-invoice.feature`
 - Iteration Plan: `prodops/artifacts/plans/iteration-plan.md`
 - Icebox: `prodops/artifacts/product/backlogs/icebox-backlog.md` — PAY-ICE-001
 - OBCs relacionados: `prodops/artifacts/obcs/payment-confirmation.md`, `prodops/artifacts/obcs/cancel-invoice.md`
+- Service Deck: `prodops/artifacts/product/context/service-decks/compra-com-pix.md`

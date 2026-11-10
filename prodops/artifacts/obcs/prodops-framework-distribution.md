@@ -1,8 +1,28 @@
 # OBC - ProdOps Framework Distribution
 
+## Metadados
+
+| Campo | Valor |
+|---|---|
+| Owner | [apurar] |
+| DS-ID | DS-53 · DS-54 · DS-55 · DS-56 |
+| Iteração | v0.11.0 |
+| Última atualização | 2026-11-10 |
+
 ## Status
 
-Committed. Business Intent: POPS-ICE-001. Business Signal: #129. Iteration Plan: v0.11.0 — DS-53 · DS-54 · DS-55 · DS-56.
+**Estado:** In Delivery
+**Rastreado em:** DS-53 · DS-54 · DS-55 · DS-56 (#130 · #131 · #132 · #133) — v0.11.0, PR #136 · #137 · #138 · #139. Registro anterior: Committed. Business Intent: POPS-ICE-001. Business Signal: #129. Iteration Plan: v0.11.0 — DS-53 · DS-54 · DS-55 · DS-56.
+**Pendência:** iteração concluída (PR #136 · #137 · #138 · #139); candidato a `Operational` — confirmar implantação em produção antes de promover. Fonte: `prodops/artifacts/plans/iteration-plan.md`.
+
+## Origem
+
+| Elo | Referência |
+|---|---|
+| Business Signal | [#129](https://github.com/produtoreativa/payments-api/issues/129) |
+| Business Intent | [PI-015](../business-intents/PI-015.md) |
+| Product Tracking Item | issue #130 · #131 · #132 · #133 (DS-53 · DS-54 · DS-55 · DS-56), ver `prodops/artifacts/plans/iteration-plan.md` |
+| Icebox | POPS-ICE-001 — [`icebox-backlog.md`](../product/backlogs/icebox-backlog.md) |
 
 ## Business Outcome
 
@@ -14,41 +34,7 @@ O mecanismo opera em 4 camadas sequenciais: Export (extração canônica do fram
 
 Hoje o ProdOps Framework evolui no `payments-api` e qualquer equipe que queira adotá-lo precisa copiar manualmente os arquivos — sem saber o que copiar, sem garantia de integridade e sem como receber melhorias futuras. Este trabalho cria o equivalente a um instalador e um mecanismo de atualização: instala uma vez, atualiza automaticamente quando o framework evolui, nunca sobrescreve o trabalho do produto.
 
-## Premortem
-
-Riscos identificados antes do início da Delivery:
-
-| Risco | Probabilidade | Impacto | Mitigação |
-|---|---|---|---|
-| Export script sobrescreve áreas do consumidor (`artifacts/`, `skills/local/`) | Alta sem controle | Crítico — perda de artefatos do produto | `.prodopsignore` obrigatório; invariantes no sync script |
-| Links relativos quebram após cópia para `prodops-framework` | Média | Alto — framework inutilizável | `doctor.sh` antes e depois; validação de links em `validate-export-manifest.sh` |
-| Versão instalada fica fora de sync silenciosamente | Média | Médio — framework desatualizado sem aviso | `framework-lock.yaml` com `drift.status`; CI notifica |
-| Conteúdo produto-específico de `payments-api` exportado como canônico | Baixa (transforms já aplicadas) | Alto — contamina o framework canônico | `validate-export-manifest.sh` + transforms declaradas no manifest |
-| CI propaga versão quebrada para todos os consumidores simultaneamente | Baixa | Alto — impacto em N repos | PR revisável por repo; nunca commit direto em `main` |
-| prodops-framework sem LICENSE bloqueia adoção | Baixa | Médio — bloqueio legal | Camada 1 inclui LICENSE como critério de entrada |
-
-## Observable Events
-
-Não aplicável nesta fase — o mecanismo de distribuição não emite eventos OEM. Métricas de operação serão definidas no estado Committed se necessário.
-
-## Initial SLIs
-
-| SLI | Initial target |
-|---|---|
-| Repositório consumidor instalado sem sobrescrita de `artifacts/` ou `skills/local/` | 100% |
-| Export script passa em `validate-export-manifest.sh` antes de abrir PR | 100% |
-| `doctor.sh` passa com exit 0 antes e depois de cada sync | 100% |
-| Sync cria PR revisável — nunca commit direto em `main` | 100% |
-
-## Reliability Rules
-
-- O sync script nunca sobrescreve paths declarados em `.prodopsignore`.
-- Nenhuma Camada (2, 3, 4) é executável sem a Camada 1 estar completa (versão publicada no `prodops-framework`).
-- `doctor.sh` deve passar com exit 0 antes de qualquer push para o `prodops-framework`.
-- Todo sync resulta em PR — nunca em commit direto. O PR deve conter diff revisável.
-- `framework-lock.yaml` é atualizado pelo sync script — nunca manualmente após a Camada 2.
-
-## Scope
+## Escopo
 
 ### Camada 1 — Export (desbloqueadora)
 `export-framework.sh`: lê `export-manifest.yaml`, copia conteúdo exportável de `payments-api` para clone local de `prodops-framework`, aplica transforms declaradas, abre PR. Publica `v0.1.0` com tag + LICENSE + CHANGELOG.
@@ -68,6 +54,43 @@ Não aplicável nesta fase — o mecanismo de distribuição não emite eventos 
 - Publicação no NPM ou qualquer registry de pacotes
 - Suporte a múltiplas versões do framework instaladas simultaneamente
 
+## Regras de Negócio
+
+- [apurar]
+
+## Critérios de Aceite
+
+- [ ] [apurar]
+
+## Contexto Enterprise
+
+| Item | Conteúdo |
+|---|---|
+| Value Stream / Product Service | n/a — capacidade de plataforma/framework, não é Product Service |
+| Stakeholders | [apurar] |
+| Compliance | [apurar] |
+
+## Observable Events
+
+Não aplicável nesta fase — o mecanismo de distribuição não emite eventos OEM. Métricas de operação serão definidas no estado Committed se necessário.
+
+## Initial SLIs
+
+| SLI | Initial target | Fonte |
+|---|---|---|
+| Repositório consumidor instalado sem sobrescrita de `artifacts/` ou `skills/local/` | 100% | [apurar] |
+| Export script passa em `validate-export-manifest.sh` antes de abrir PR | 100% | [apurar] |
+| `doctor.sh` passa com exit 0 antes e depois de cada sync | 100% | [apurar] |
+| Sync cria PR revisável — nunca commit direto em `main` | 100% | [apurar] |
+
+## Reliability Rules
+
+- O sync script nunca sobrescreve paths declarados em `.prodopsignore`.
+- Nenhuma Camada (2, 3, 4) é executável sem a Camada 1 estar completa (versão publicada no `prodops-framework`).
+- `doctor.sh` deve passar com exit 0 antes de qualquer push para o `prodops-framework`.
+- Todo sync resulta em PR — nunca em commit direto. O PR deve conter diff revisável.
+- `framework-lock.yaml` é atualizado pelo sync script — nunca manualmente após a Camada 2.
+
 ## Critérios de aceite (por camada)
 
 | DS | Camada | Critério verificável |
@@ -76,6 +99,31 @@ Não aplicável nesta fase — o mecanismo de distribuição não emite eventos 
 | DS-54 | Install | `install-prodops.sh` cria estrutura `prodops/` completa; `framework-lock.yaml` com `status: consumer`; `doctor.sh` com exit 0 no repo consumidor |
 | DS-55 | Sync | `sync-from-framework.sh` abre PR sem tocar em paths do `.prodopsignore`; `framework-lock.yaml` atualizado com nova versão e `drift.status: ok`; `doctor.sh` passa antes e depois |
 | DS-56 | CI | `workflow_dispatch` no repo consumidor abre PR de sync ao publicar nova release no `prodops-framework`; nenhum commit direto em `main` |
+
+## Riscos
+
+Riscos identificados antes do início da Delivery:
+
+| Risco | Probabilidade | Impacto | Mitigação |
+|---|---|---|---|
+| Export script sobrescreve áreas do consumidor (`artifacts/`, `skills/local/`) | Alta sem controle | Crítico — perda de artefatos do produto | `.prodopsignore` obrigatório; invariantes no sync script |
+| Links relativos quebram após cópia para `prodops-framework` | Média | Alto — framework inutilizável | `doctor.sh` antes e depois; validação de links em `validate-export-manifest.sh` |
+| Versão instalada fica fora de sync silenciosamente | Média | Médio — framework desatualizado sem aviso | `framework-lock.yaml` com `drift.status`; CI notifica |
+| Conteúdo produto-específico de `payments-api` exportado como canônico | Baixa (transforms já aplicadas) | Alto — contamina o framework canônico | `validate-export-manifest.sh` + transforms declaradas no manifest |
+| CI propaga versão quebrada para todos os consumidores simultaneamente | Baixa | Alto — impacto em N repos | PR revisável por repo; nunca commit direto em `main` |
+| prodops-framework sem LICENSE bloqueia adoção | Baixa | Médio — bloqueio legal | Camada 1 inclui LICENSE como critério de entrada |
+
+## Dependências
+
+| Tipo | Dependência | Observação |
+|---|---|---|
+| — | [apurar] | [apurar] |
+
+## Decisões
+
+| Data | Decisão | Justificativa | Fonte |
+|---|---|---|---|
+| 2026-11-10 | Migração para o template `local-obc.md`: seções adicionadas, Status normalizado, eventos classificados por Situação e SLIs com Fonte. | Aderência ao template e à regra de que o nome do evento é o emitido no código. Campos sem fonte marcados `[apurar]`. | skill `obc` (modo `fix`); `check-obc.sh` |
 
 ## Related Artifacts
 
@@ -88,4 +136,4 @@ Não aplicável nesta fase — o mecanismo de distribuição não emite eventos 
 - BDD Install: `prodops/artifacts/bdd/prodops-framework-install.feature`
 - BDD Sync: `prodops/artifacts/bdd/prodops-framework-sync.feature`
 - BDD CI: `prodops/artifacts/bdd/prodops-framework-ci.feature`
-- Iteration Plan: `prodops/artifacts/plans/iterations/v0.11.0/plan.md`
+- Iteration Plan: `prodops/artifacts/iterations/v0.11.0/plan.md`

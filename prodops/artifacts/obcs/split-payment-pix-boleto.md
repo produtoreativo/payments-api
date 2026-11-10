@@ -4,11 +4,28 @@
 <!-- Business Intent: prodops/artifacts/business-intents/PI-001.md -->
 <!-- Business Signal: prodops/artifacts/business-signals/BS-001.md -->
 
+## Metadados
+
+| Campo | Valor |
+|---|---|
+| Owner | [apurar] |
+| DS-ID | DS-61 |
+| Iteração | v0.13.0 (revisão em v0.14.0) |
+| Última atualização | 2026-11-10 |
+
 ## Status
 
-Committed. Aprovado por Eugenio (PM) em 2026-08-04. Originado em `PI-001`.
+**Estado:** In Delivery
+**Rastreado em:** DS-61 (#160) — v0.13.0 (revisão em v0.14.0), PR #162 e PR #169. Registro anterior: Committed. Aprovado por Eugenio (PM) em 2026-08-04. Originado em `PI-001`. ---
+**Pendência:** iteração concluída (PR #162 e PR #169); candidato a `Operational` — confirmar implantação em produção antes de promover. Fonte: `prodops/artifacts/plans/iteration-plan.md`.
 
----
+## Origem
+
+| Elo | Referência |
+|---|---|
+| Business Signal | [BS-001](../business-signals/BS-001.md) |
+| Business Intent | [PI-001](../business-intents/PI-001.md) |
+| Product Tracking Item | issue #160 (DS-61), ver `prodops/artifacts/plans/iteration-plan.md` |
 
 ## Business Outcome
 
@@ -22,28 +39,65 @@ O sistema garante rastreabilidade completa de cada porção do pagamento indepen
 
 ---
 
+## Escopo
+
+**Dentro do escopo**
+
+- [apurar]
+
+**Fora de escopo**
+
+- [apurar]
+
+## Regras de Negócio
+
+- [apurar]
+
+## Critérios de Aceite
+
+Derivados dos cenários de `prodops/artifacts/bdd/split-payment-pix-boleto.feature`; marcar após verificação.
+
+- [ ] Criar Split Payment com sucesso
+- [ ] Pedido liberado após confirmação dos dois meios
+- [ ] Confirmação na ordem inversa — Boleto antes do Pix
+- [ ] Retentativa de criação com mesma chave de idempotência
+- [ ] Webhook duplicado de confirmação do Pix
+- [ ] Boleto vence com Pix já confirmado
+- [ ] Boleto vence sem nenhum pagamento realizado
+- [ ] Rejeitar Split Payment com soma de valores incorreta
+- [ ] Falha transiente ao criar cobrança no provedor
+- [ ] Nenhum dado financeiro exposto em resposta de erro
+
+## Contexto Enterprise
+
+| Item | Conteúdo |
+|---|---|
+| Value Stream / Product Service | Service Deck: [split-payment-pix-boleto](../product/context/service-decks/split-payment-pix-boleto.md) |
+| Stakeholders | [apurar] |
+| Compliance | [apurar] |
+
 ## Observable Events
 
-| Event | Significado | Dimensões obrigatórias |
-|---|---|---|
-| `split_payment.created` | Split Payment criado com Pix e Boleto definidos | `splitPaymentId`, `orderId`, `pixAmount`, `boletoAmount`, `totalAmount`, `correlationId` |
-| `split_payment.pix.confirmed` | Porção Pix confirmada pelo provedor | `splitPaymentId`, `orderId`, `pixInvoiceId`, `confirmedAt`, `correlationId` |
-| `split_payment.boleto.confirmed` | Porção Boleto confirmada pelo provedor | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `confirmedAt`, `correlationId` |
-| `split_payment.completed` | Ambas as porções confirmadas — pedido liberado | `splitPaymentId`, `orderId`, `completedAt`, `correlationId` |
-| `split_payment.boleto.expired` | Boleto venceu sem pagamento — pedido pendente para investigação manual | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `expiredAt`, `pixStatus`, `correlationId` |
-| `split_payment.creation_failed` | Falha na criação do Split Payment | `orderId`, `reason`, `correlationId` |
+| Event | Situação | Significado | Dimensões obrigatórias |
+|---|---|---|---|
+| `split_payment.created` | Emitido | Split Payment criado com Pix e Boleto definidos | `splitPaymentId`, `orderId`, `pixAmount`, `boletoAmount`, `totalAmount`, `correlationId` |
+| `split_payment.pix.confirmed` | Emitido | Porção Pix confirmada pelo provedor | `splitPaymentId`, `orderId`, `pixInvoiceId`, `confirmedAt`, `correlationId` |
+| `split_payment.boleto.confirmed` | Emitido | Porção Boleto confirmada pelo provedor | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `confirmedAt`, `correlationId` |
+| `split_payment.completed` | Emitido | Ambas as porções confirmadas — pedido liberado | `splitPaymentId`, `orderId`, `completedAt`, `correlationId` |
+| `split_payment.boleto.expired` | Emitido | Boleto venceu sem pagamento — pedido pendente para investigação manual | `splitPaymentId`, `orderId`, `boletoInvoiceId`, `expiredAt`, `pixStatus`, `correlationId` |
+| `split_payment.creation_failed` | Emitido | Falha na criação do Split Payment | `orderId`, `reason`, `correlationId` |
 
 ---
 
 ## Initial SLIs
 
-| SLI | Meta inicial |
-|---|---|
-| Criação de Split Payment com mesma chave de idempotência retorna o mesmo resultado | 100% |
-| Evento `split_payment.completed` emitido em até 5s após confirmação do segundo meio | 99% |
-| Evento `split_payment.boleto.expired` emitido em até 60min após vencimento do Boleto | 99% |
-| Pedido nunca liberado com apenas uma das porções confirmadas | 100% |
-| `splitPaymentId` único por combinação de `orderId` + meios de pagamento | 100% |
+| SLI | Meta inicial | Fonte |
+|---|---|---|
+| Criação de Split Payment com mesma chave de idempotência retorna o mesmo resultado | 100% | [apurar] |
+| Evento `split_payment.completed` emitido em até 5s após confirmação do segundo meio | 99% | [apurar] |
+| Evento `split_payment.boleto.expired` emitido em até 60min após vencimento do Boleto | 99% | [apurar] |
+| Pedido nunca liberado com apenas uma das porções confirmadas | 100% | [apurar] |
+| `splitPaymentId` único por combinação de `orderId` + meios de pagamento | 100% | [apurar] |
 
 ---
 
@@ -107,9 +161,29 @@ O sistema garante rastreabilidade completa de cada porção do pagamento indepen
 
 ---
 
+## Riscos
+
+| Risco | Severidade | Tratamento |
+|---|---|---|
+| [apurar] | [apurar] | ver `prodops/artifacts/risks/risks.md` |
+
+## Dependências
+
+| Tipo | Dependência | Observação |
+|---|---|---|
+| Serviço interno | DynamoDB | Crítica (Product Deck, seção 4) |
+| Serviço externo | Asaas (PSP) | Crítica (Product Deck, seção 4) |
+
+## Decisões
+
+| Data | Decisão | Justificativa | Fonte |
+|---|---|---|---|
+| 2026-11-10 | Migração para o template `local-obc.md`: seções adicionadas, Status normalizado, eventos classificados por Situação e SLIs com Fonte. | Aderência ao template e à regra de que o nome do evento é o emitido no código. Campos sem fonte marcados `[apurar]`. | skill `obc` (modo `fix`); `check-obc.sh` |
+
 ## Related Artifacts
 
 - Business Intent: `prodops/artifacts/business-intents/PI-001.md`
 - Business Signal: `prodops/artifacts/business-signals/BS-001.md`
 - BDD: `prodops/artifacts/bdd/split-payment-pix-boleto.feature` *(a criar)*
 - Iteration Plan: `prodops/artifacts/plans/iteration-plan.md` *(a atualizar)*
+- Service Deck: `prodops/artifacts/product/context/service-decks/split-payment-pix-boleto.md`

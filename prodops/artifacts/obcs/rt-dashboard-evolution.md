@@ -1,8 +1,28 @@
 # OBC - RT Dashboard Evolution
 
+## Metadados
+
+| Campo | Valor |
+|---|---|
+| Owner | [apurar] |
+| DS-ID | DS-60 |
+| Iteração | v0.12.0 (suspensa) |
+| Última atualização | 2026-11-10 |
+
 ## Status
 
-Committed. Business Intent: PI-RT-003. Business Signal: #135. GitHub Issue: #144. DS-60. Owner Approval: Context Engineer — 2026-08-04.
+**Estado:** Committed
+**Rastreado em:** DS-60 (#149) — v0.12.0 (suspensa). Registro anterior: Committed. Business Intent: PI-RT-003. Business Signal: #135. GitHub Issue: #144. DS-60. Owner Approval: Context Engineer — 2026-08-04.
+**Pendência:** iteração suspensa; permanece `Committed` até retomada. Fonte: `prodops/artifacts/plans/iteration-plan.md`.
+
+## Origem
+
+| Elo | Referência |
+|---|---|
+| Business Signal | [#135](https://github.com/produtoreativa/payments-api/issues/135) — Qualidade operacional do Runtime v0.11.0 |
+| Business Intent | [PI-RT-003](../business-intents/PI-RT-003.md) ([#144](https://github.com/produtoreativa/payments-api/issues/144)) |
+| Product Tracking Item | issue #149 (DS-60), ver `prodops/artifacts/plans/iteration-plan.md` |
+| Icebox | RT-ICE-003 — [`icebox-backlog.md`](../product/backlogs/icebox-backlog.md) |
 
 ## Business Outcome
 
@@ -12,37 +32,7 @@ Os dashboards Datadog do Runtime exibem cycle time por phase, permitem filtro po
 
 Hoje o painel Datadog mostra eventos, mas sem cycle time por phase, sem filtro por iteração e com labels que refletem nomes internos de CloudEvents em vez dos nomes das phases que o time usa no dia a dia. Esse trabalho acrescenta as métricas derivadas e os filtros que tornam o painel acionável por qualquer stakeholder.
 
-## Premortem
-
-| Risco | Probabilidade | Impacto | Mitigação |
-|---|---|---|---|
-| Tag `iteration:<id>` ausente nos eventos atuais — filtro impossível | Alta | Alto — bloqueante | Verificar tags em `send.sh` antes de qualquer widget; adicionar se ausente |
-| Cycle time calculado por log-based metric tem latência alta no Datadog | Média | Médio — métrica com delay | Considerar envio explícito de duração via `send.sh` como gauge |
-| Dashboards editados manualmente divergem do estado desejado na próxima atualização | Média | Médio | Codificar dashboard como JSON exportado + instruções de import |
-| Labels canônicos ("Bootstrap") colidem com nomes existentes em outros dashboards | Baixa | Baixo — cosmético | Prefixar com "ProdOps:" se necessário |
-| Dados históricos não têm `iteration` tag — filtro mostra vazio para iterações passadas | Alta | Médio — limitação conhecida, aceitável | Documentar que o filtro funciona a partir da data de implementação |
-
-## Observable Events
-
-Nenhum CloudEvent novo, mas mudanças em `send.sh`:
-- Adicionar tag `iteration:<iteration-id>` em todos os eventos se ausente
-- Opcionalmente: enviar gauge `prodops.phase.duration_seconds` ao completar cada phase
-
-## Initial SLIs
-
-| SLI | Target |
-|---|---|
-| Widget de cycle time por phase disponível no dashboard Runtime | Presente |
-| Template variable `$iteration_id` funcional em todos os widgets do dashboard | 100% |
-| Labels dos widgets usam nomes canônicos (Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote) | 100% |
-
-## Reliability Rules
-
-- Tag `iteration:<id>` deve estar presente em **todos** os eventos enviados ao Datadog antes de ativar o filtro.
-- Cycle time deve ser calculado de `.Started` a `.Completed` da mesma phase, para o mesmo `work-item-id`.
-- Alterações no dashboard devem ser exportadas como JSON e commitadas em `prodops/runtime/datadog/`.
-
-## Scope
+## Escopo
 
 ### Step 1 — Tag `iteration` nos eventos (pré-requisito)
 Verificar se `send.sh` já envia `iteration:<id>`. Se não, adicionar. Sem essa tag, o filtro por iteração é impossível.
@@ -62,7 +52,11 @@ Atualizar labels de widgets existentes: substituir nomes internos (`prodops.deli
 - Dashboards para outros produtos além de `payments-api`
 - Dados históricos anteriores à implementação da tag `iteration`
 
-## Critérios de aceite
+## Regras de Negócio
+
+- [apurar]
+
+## Critérios de Aceite
 
 | # | Critério |
 |---|---|
@@ -71,6 +65,56 @@ Atualizar labels de widgets existentes: substituir nomes internos (`prodops.deli
 | 3 | Widget de cycle time por phase exibe duração média de Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote |
 | 4 | Labels dos widgets usam nomes canônicos — não nomes internos de CloudEvents |
 | 5 | Dashboard exportado como JSON em `prodops/runtime/datadog/` |
+
+## Contexto Enterprise
+
+| Item | Conteúdo |
+|---|---|
+| Value Stream / Product Service | n/a — capacidade de plataforma/framework, não é Product Service |
+| Stakeholders | [apurar] |
+| Compliance | [apurar] |
+
+## Observable Events
+
+Nenhum CloudEvent novo, mas mudanças em `send.sh`:
+- Adicionar tag `iteration:<iteration-id>` em todos os eventos se ausente
+- Opcionalmente: enviar gauge `prodops.phase.duration_seconds` ao completar cada phase
+
+## Initial SLIs
+
+| SLI | Target | Fonte |
+|---|---|---|
+| Widget de cycle time por phase disponível no dashboard Runtime | Presente | [apurar] |
+| Template variable `$iteration_id` funcional em todos os widgets do dashboard | 100% | [apurar] |
+| Labels dos widgets usam nomes canônicos (Bootstrap, Hack, Sync, Finish, Ship, Validate, Promote) | 100% | [apurar] |
+
+## Reliability Rules
+
+- Tag `iteration:<id>` deve estar presente em **todos** os eventos enviados ao Datadog antes de ativar o filtro.
+- Cycle time deve ser calculado de `.Started` a `.Completed` da mesma phase, para o mesmo `work-item-id`.
+- Alterações no dashboard devem ser exportadas como JSON e commitadas em `prodops/runtime/datadog/`.
+
+## Riscos
+
+| Risco | Probabilidade | Impacto | Mitigação |
+|---|---|---|---|
+| Tag `iteration:<id>` ausente nos eventos atuais — filtro impossível | Alta | Alto — bloqueante | Verificar tags em `send.sh` antes de qualquer widget; adicionar se ausente |
+| Cycle time calculado por log-based metric tem latência alta no Datadog | Média | Médio — métrica com delay | Considerar envio explícito de duração via `send.sh` como gauge |
+| Dashboards editados manualmente divergem do estado desejado na próxima atualização | Média | Médio | Codificar dashboard como JSON exportado + instruções de import |
+| Labels canônicos ("Bootstrap") colidem com nomes existentes em outros dashboards | Baixa | Baixo — cosmético | Prefixar com "ProdOps:" se necessário |
+| Dados históricos não têm `iteration` tag — filtro mostra vazio para iterações passadas | Alta | Médio — limitação conhecida, aceitável | Documentar que o filtro funciona a partir da data de implementação |
+
+## Dependências
+
+| Tipo | Dependência | Observação |
+|---|---|---|
+| — | [apurar] | [apurar] |
+
+## Decisões
+
+| Data | Decisão | Justificativa | Fonte |
+|---|---|---|---|
+| 2026-11-10 | Migração para o template `local-obc.md`: seções adicionadas, Status normalizado, eventos classificados por Situação e SLIs com Fonte. | Aderência ao template e à regra de que o nome do evento é o emitido no código. Campos sem fonte marcados `[apurar]`. | skill `obc` (modo `fix`); `check-obc.sh` |
 
 ## Related Artifacts
 

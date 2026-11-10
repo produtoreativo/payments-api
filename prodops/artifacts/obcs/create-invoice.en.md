@@ -1,33 +1,87 @@
 # OBC - Create Invoice via Gateway
 
+## Metadata
+
+| Field | Value |
+|---|---|
+| Owner | [to be determined] |
+| DS-ID | DS-38 |
+| Iteration | v0.4.0 |
+| Last updated | 2026-11-10 |
+
 ## Status
 
-Downstream. Status `In` in `prodops/artifacts/plans/iteration-plan.md` (section "Recommended Iteration Plan") — Pix journey as the first enabled billing type.
+**State:** In Delivery
+**Tracked in:** DS-38 (#38) — v0.4.0, PR #89. Previous record: Downstream. Status `In` in `prodops/artifacts/plans/iteration-plan.md` (section "Recommended Iteration Plan") — Pix journey as the first enabled billing type.
+**Pending:** iteration completed (PR #89); candidate for `Operational` — confirm production rollout before promoting. Source: `prodops/artifacts/plans/iteration-plan.md`.
+
+## Origin
+
+| Link | Reference |
+|---|---|
+| Business Signal | [BS-003](../business-signals/BS-003.md) |
+| Business Intent | [PI-003](../business-intents/PI-003.md) |
+| Product Tracking Item | issue #38 (DS-38), see `prodops/artifacts/plans/iteration-plan.md` |
+| Icebox | PAY-ICE-001 — [`icebox-backlog.md`](../product/backlogs/icebox-backlog.md) |
+| Related | [PI-PILOT-001](../business-intents/PI-PILOT-001.md) |
 
 ## Business Outcome
 
 Magazine Siará can create payment charges via the Payments gateway without direct coupling to the Asaas provider. The Checkout sends a single invoice contract; the gateway resolves the provider, creates or reuses the Asaas customer, guarantees idempotency by order key, and returns traceable identifiers. The invoice reaches `OPEN` status only when the `providerPaymentId` is consolidated — never before. Validation errors are auditable without exposing secrets or sensitive payloads.
 
+## Scope
+
+**In scope**
+
+- [to be determined]
+
+**Out of scope**
+
+- [to be determined]
+
+## Business Rules
+
+- [to be determined]
+
+## Acceptance Criteria
+
+Derived from the scenarios in `prodops/artifacts/bdd/create-invoice.feature`; tick after verification.
+
+- [ ] Criar invoice com sucesso no Asaas usando cliente ja vinculado
+- [ ] Criar cliente Asaas antes da invoice quando nao houver vinculo
+- [ ] Evitar duplicidade em retentativa do ecommerce
+- [ ] Rejeitar provedor nao habilitado
+- [ ] Falha transiente ao criar cobranca no provedor
+- [ ] Falha de validacao retornada pelo provedor
+
+## Enterprise Context
+
+| Item | Content |
+|---|---|
+| Value Stream / Product Service | Service Deck: [compra-com-pix](../product/context/service-decks/compra-com-pix.md) |
+| Stakeholders | [to be determined] |
+| Compliance | [to be determined] |
+
 ## Observable Events
 
-| Event | Meaning | Required dimensions |
-|---|---|---|
-| `invoice.created` | Invoice successfully created at the provider — status `OPEN`, `providerPaymentId` present. | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `billingType`, `correlationId` |
-| `invoice.creation_failed` | Failed to create invoice at the provider — invoice in `FAILED` or `PROVIDER_PENDING`. | `invoiceId`, `orderId`, `tenantId`, `reason`, `provider`, `correlationId` |
-| `invoice.idempotency_hit` | Retry with same idempotency key — existing invoice returned without a new charge. | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
-| `invoice.provider_rejected` | Provider rejected creation due to invalid data — invoice marked as `FAILED`. | `invoiceId`, `orderId`, `tenantId`, `providerErrorCode`, `correlationId` |
-| `invoice.customer_created` | Asaas customer created before invoice due to missing binding. | `tenantId`, `customerId`, `providerCustomerId`, `correlationId` |
-| `invoice.access_rejected` | Attempt to create invoice with a provider disabled for the tenant. | `tenantId`, `provider`, `correlationId` |
+| Event | Status | Meaning | Required dimensions |
+|---|---|---|---|
+| `invoice.created` | Planned | Invoice successfully created at the provider — status `OPEN`, `providerPaymentId` present. — *likely equivalent in the code (to be confirmed): `payments.invoice.created`* | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `billingType`, `correlationId` |
+| `invoice.creation_failed` | Planned | Failed to create invoice at the provider — invoice in `FAILED` or `PROVIDER_PENDING`. | `invoiceId`, `orderId`, `tenantId`, `reason`, `provider`, `correlationId` |
+| `invoice.idempotency_hit` | Planned | Retry with same idempotency key — existing invoice returned without a new charge. | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
+| `invoice.provider_rejected` | Planned | Provider rejected creation due to invalid data — invoice marked as `FAILED`. | `invoiceId`, `orderId`, `tenantId`, `providerErrorCode`, `correlationId` |
+| `invoice.customer_created` | Planned | Asaas customer created before invoice due to missing binding. — *likely equivalent in the code (to be confirmed): `pagamento.cobranca.cadastrada.cliente.cadastrado`* | `tenantId`, `customerId`, `providerCustomerId`, `correlationId` |
+| `invoice.access_rejected` | Planned | Attempt to create invoice with a provider disabled for the tenant. | `tenantId`, `provider`, `correlationId` |
 
 ## Initial SLIs
 
-| SLI | Initial target |
-|---|---|
-| Invoices created with `providerPaymentId` present in the response to Checkout. | 99.9% |
-| Retries with the same `Idempotency-Key` return the existing invoice without a new provider call. | 100% |
-| `OPEN` invoice never returned to Checkout without consolidated `providerPaymentId`. | 100% |
-| Provider validation errors returned without exposed secrets or sensitive payload. | 100% |
-| Requests with a provider disabled for the tenant rejected before calling the provider API. | 100% |
+| SLI | Initial target | Source |
+|---|---|---|
+| Invoices created with `providerPaymentId` present in the response to Checkout. | 99.9% | [to be determined] |
+| Retries with the same `Idempotency-Key` return the existing invoice without a new provider call. | 100% | [to be determined] |
+| `OPEN` invoice never returned to Checkout without consolidated `providerPaymentId`. | 100% | [to be determined] |
+| Provider validation errors returned without exposed secrets or sensitive payload. | 100% | [to be determined] |
+| Requests with a provider disabled for the tenant rejected before calling the provider API. | 100% | [to be determined] |
 
 ## Reliability Rules
 
@@ -57,9 +111,29 @@ The gateway must return to Checkout:
 }
 ```
 
+## Risks
+
+| Risk | Severity | Handling |
+|---|---|---|
+| [to be determined] | [to be determined] | see `prodops/artifacts/risks/risks.md` |
+
+## Dependencies
+
+| Type | Dependency | Note |
+|---|---|---|
+| Internal service | DynamoDB | Critical (Product Deck, section 4) |
+| External service | Asaas (PSP) | Critical (Product Deck, section 4) |
+
+## Decisions
+
+| Date | Decision | Rationale | Source |
+|---|---|---|---|
+| 2026-11-10 | Migration to the `local-obc.en.md` template: sections added, Status normalized, events classified by Status and SLIs with Source. | Template adherence and the rule that the event name is the one emitted in the code. Fields without a source marked `[to be determined]`. | `obc` skill (`fix` mode); `check-obc.sh` |
+
 ## Related Artifacts
 
 - BDD: `prodops/artifacts/bdd/create-invoice.feature`
 - Iteration Plan: `prodops/artifacts/plans/iteration-plan.md`
 - Icebox: `prodops/artifacts/product/backlogs/icebox-backlog.md` — PAY-ICE-001
 - Related OBCs: `prodops/artifacts/obcs/payment-confirmation.md`, `prodops/artifacts/obcs/cancel-invoice.md`
+- Service Deck: `prodops/artifacts/product/context/service-decks/compra-com-pix.md`

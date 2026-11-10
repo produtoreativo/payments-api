@@ -1,8 +1,28 @@
 # OBC - Persistência DynamoDB Otimizada para Produção
 
+## Metadados
+
+| Campo | Valor |
+|---|---|
+| Owner | [apurar] |
+| DS-ID | DS-49 |
+| Iteração | v0.9.0 |
+| Última atualização | 2026-11-10 |
+
 ## Status
 
-Downstream. Status `Entrou` em `prodops/artifacts/plans/iteration-plan.md` — capacidade operacional derivada do EXP-011.
+**Estado:** In Delivery
+**Rastreado em:** DS-49 (#45) — v0.9.0, PR #121. Registro anterior: Downstream. Status `Entrou` em `prodops/artifacts/plans/iteration-plan.md` — capacidade operacional derivada do EXP-011.
+**Pendência:** iteração concluída (PR #121); candidato a `Operational` — confirmar implantação em produção antes de promover. Fonte: `prodops/artifacts/plans/iteration-plan.md`.
+
+## Origem
+
+| Elo | Referência |
+|---|---|
+| Business Signal | [BS-004](../business-signals/BS-004.md) |
+| Business Intent | [PI-011](../business-intents/PI-011.md) |
+| Product Tracking Item | issue #45 (DS-49), ver `prodops/artifacts/plans/iteration-plan.md` |
+| Experimento | [EXP-011](../experiments/011-dynamodb-optimization/experiment.md) |
 
 ## Business Outcome
 
@@ -14,22 +34,55 @@ Antes, a Payments API usava um modelo de banco de dados com capacidade fixa cont
 
 Além disso, qualquer dado de pagamento pode ser restaurado para qualquer ponto nos últimos 35 dias — equivalente a um "Ctrl+Z" de banco de dados para situações de erro operacional ou corrupção de dados.
 
+## Escopo
+
+**Dentro do escopo**
+
+- [apurar]
+
+**Fora de escopo**
+
+- [apurar]
+
+## Regras de Negócio
+
+- [apurar]
+
+## Critérios de Aceite
+
+Derivados dos cenários de `prodops/artifacts/bdd/dynamodb-optimization.feature`; marcar após verificação.
+
+- [ ] Tabelas operam com billing PAY_PER_REQUEST
+- [ ] PITR esta habilitado em todas as tabelas criticas
+- [ ] GSIs sem uso foram removidos
+- [ ] TransactionsTable nao possui GSIs desnecessarios
+- [ ] ProvidersTable nao existe no stack de producao
+- [ ] Escrita em alta carga nao gera throttling
+
+## Contexto Enterprise
+
+| Item | Conteúdo |
+|---|---|
+| Value Stream / Product Service | n/a — capacidade de plataforma/framework, não é Product Service |
+| Stakeholders | [apurar] |
+| Compliance | [apurar] |
+
 ## Observable Events
 
-| Event | Meaning | Required dimensions |
-|---|---|---|
-| `dynamodb.throttle` | Requisição throttled pelo DynamoDB — não deve ocorrer com PAY_PER_REQUEST. | `table`, `operation`, `env` |
-| `dynamodb.pitr.enabled` | PITR habilitado na tabela — confirmado via `describe-continuous-backups`. | `table`, `env` |
-| `dynamodb.billing_mode` | Billing mode confirmado como PAY_PER_REQUEST. | `table`, `env` |
+| Event | Situação | Meaning | Required dimensions |
+|---|---|---|---|
+| `dynamodb.throttle` | [apurar] | Requisição throttled pelo DynamoDB — não deve ocorrer com PAY_PER_REQUEST. | `table`, `operation`, `env` |
+| `dynamodb.pitr.enabled` | [apurar] | PITR habilitado na tabela — confirmado via `describe-continuous-backups`. | `table`, `env` |
+| `dynamodb.billing_mode` | [apurar] | Billing mode confirmado como PAY_PER_REQUEST. | `table`, `env` |
 
 ## Initial SLIs
 
-| SLI | Initial target |
-|---|---|
-| Eventos de throttling DynamoDB em produção em 30 dias. | 0 |
-| Tabelas com PITR habilitado (todas as 5 tabelas críticas). | 100% |
-| Tabelas com billing PAY_PER_REQUEST. | 100% |
-| GSIs sem queries documentadas removidos. | 100% (GSI2 PaymentsTable, GSI1 TransactionsTable removidos) |
+| SLI | Initial target | Fonte |
+|---|---|---|
+| Eventos de throttling DynamoDB em produção em 30 dias. | 0 | [apurar] |
+| Tabelas com PITR habilitado (todas as 5 tabelas críticas). | 100% | [apurar] |
+| Tabelas com billing PAY_PER_REQUEST. | 100% | [apurar] |
+| GSIs sem queries documentadas removidos. | 100% (GSI2 PaymentsTable, GSI1 TransactionsTable removidos) | [apurar] |
 
 ## Reliability Rules
 
@@ -42,6 +95,24 @@ Além disso, qualquer dado de pagamento pode ser restaurado para qualquer ponto 
 ## Response Contract
 
 Não aplicável — mudança de infraestrutura de persistência sem alteração de contrato de API.
+
+## Riscos
+
+| Risco | Severidade | Tratamento |
+|---|---|---|
+| [apurar] | [apurar] | ver `prodops/artifacts/risks/risks.md` |
+
+## Dependências
+
+| Tipo | Dependência | Observação |
+|---|---|---|
+| — | [apurar] | [apurar] |
+
+## Decisões
+
+| Data | Decisão | Justificativa | Fonte |
+|---|---|---|---|
+| 2026-11-10 | Migração para o template `local-obc.md`: seções adicionadas, Status normalizado, eventos classificados por Situação e SLIs com Fonte. | Aderência ao template e à regra de que o nome do evento é o emitido no código. Campos sem fonte marcados `[apurar]`. | skill `obc` (modo `fix`); `check-obc.sh` |
 
 ## Related Artifacts
 
