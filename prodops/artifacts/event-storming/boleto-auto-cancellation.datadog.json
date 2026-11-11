@@ -1,0 +1,148 @@
+{
+  "title": "Payments — Autocancelamento de boleto (Event Storming)",
+  "description": "Gerado do Event Storming 'boleto-auto-cancellation' pelo skill event-storming. Não edite à mão: altere o spec e gere de novo.",
+  "layout_type": "ordered",
+  "reflow_type": "auto",
+  "tags": [
+    "team:payments"
+  ],
+  "template_variables": [
+    {
+      "name": "env",
+      "prefix": "env",
+      "default": "development"
+    },
+    {
+      "name": "service",
+      "prefix": "service",
+      "default": "payments-api"
+    }
+  ],
+  "widgets": [
+    {
+      "definition": {
+        "type": "note",
+        "content": "**Autocancelamento de boleto**\n\nDono: Christiano Milfont (dono do sinal e Tech Lead). Alinhar o que acontece do boleto emitido até o consumidor saber que ele foi cancelado por vencimento, e fechar o contrato do webhook.\n\n",
+        "background_color": "white",
+        "font_size": "14",
+        "text_align": "left",
+        "show_tick": false
+      }
+    },
+    {
+      "definition": {
+        "type": "group",
+        "title": "Sinais disponíveis",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Webhooks do PSP recebidos",
+              "autoscale": true,
+              "precision": 0,
+              "requests": [
+                {
+                  "q": "sum:webhook.received{env:$env.value,service:$service.value}.as_count()",
+                  "aggregator": "sum"
+                }
+              ]
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Falhas no processamento de webhooks",
+              "autoscale": true,
+              "precision": 0,
+              "requests": [
+                {
+                  "q": "sum:webhook.failed{env:$env.value,service:$service.value}.as_count()",
+                  "aggregator": "sum"
+                }
+              ]
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Webhooks do PSP ao longo do tempo",
+              "show_legend": false,
+              "requests": [
+                {
+                  "q": "sum:webhook.received{env:$env.value,service:$service.value}.as_count()",
+                  "display_type": "bars"
+                }
+              ]
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Boletos expirados",
+              "autoscale": true,
+              "precision": 0,
+              "requests": [
+                {
+                  "q": "sum:invoice.expired{env:$env.value,service:$service.value}.as_count()",
+                  "aggregator": "sum"
+                }
+              ]
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "invoice.cancelled entregue ao consumidor",
+              "autoscale": true,
+              "precision": 0,
+              "requests": [
+                {
+                  "q": "sum:webhook.delivery.sent{env:$env.value,service:$service.value,event:invoice.cancelled}.as_count()",
+                  "aggregator": "sum"
+                }
+              ]
+            }
+          },
+          {
+            "definition": {
+              "type": "query_value",
+              "title": "Falhas de entrega de invoice.cancelled",
+              "autoscale": true,
+              "precision": 0,
+              "requests": [
+                {
+                  "q": "sum:webhook.delivery.failed{env:$env.value,service:$service.value,event:invoice.cancelled}.as_count()",
+                  "aggregator": "sum"
+                }
+              ]
+            }
+          },
+          {
+            "definition": {
+              "type": "timeseries",
+              "title": "Expirações ignoradas",
+              "show_legend": false,
+              "requests": [
+                {
+                  "q": "sum:invoice.expiration_ignored{env:$env.value,service:$service.value}.as_count()",
+                  "display_type": "bars"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "note",
+        "content": "**SLIs propostos**\n\n| SLI | Meta |\n|---|---|\n| Atraso OVERDUE → webhook entregue (p95) | [apurar] |\n| Taxa de entrega de invoice.cancelled | [apurar] |",
+        "background_color": "white",
+        "font_size": "14",
+        "text_align": "left",
+        "show_tick": false
+      }
+    }
+  ]
+}

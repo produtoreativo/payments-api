@@ -832,6 +832,13 @@ O upgrade para multer >=2.2.0 foi aplicado via `npm audit fix` sem alteração e
 - **Mitigação:** OBC define explicitamente que CONFIRMED é imune a OVERDUE; implementação verifica status antes de transitar.
 - **Aceite:** Explícito — cobertura por BDD scenario "Boleto confirmado não é expirado".
 
+### RISK-BC-003 — Consumidor trata `invoice.cancelled` de boleto vencido como cancelamento solicitado
+- **Risco:** O boleto vencido é entregue ao consumidor com o mesmo tipo do cancelamento solicitado (`invoice.cancelled`). Um consumidor que assuma `status: CANCELLED` e `reason` ausente pode tratar o vencimento como cancelamento pedido por ele (por exemplo, liberar estoque ou notificar o cliente de forma errada) ou rejeitar o payload por `status: EXPIRED`.
+- **Probabilidade:** Média — depende de como cada consumidor interpreta o tipo.
+- **Impacto:** Médio — pedido tratado de forma incorreta; sem perda financeira, porque o boleto vencido não foi pago.
+- **Mitigação:** `status: "EXPIRED"` e `reason: "BOLETO_OVERDUE"` distinguem os dois casos; validar o contrato com o consumidor **antes** da implementação; se ele precisar tratar a expiração de forma diferente, adotar o tipo próprio `invoice.expired` (alternativa registrada no OBC).
+- **Aceite:** A definir com o dono do sinal — depende da confirmação do consumidor.
+
 ## Referências
 
 - OBC: `prodops/artifacts/obcs/boleto-auto-cancellation.md`

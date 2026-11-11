@@ -53,7 +53,8 @@ Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops
 | Evento interno | Payload entregue ao consumer | Trigger |
 |---|---|---|
 | `payments.invoice.confirmed` | `invoice.confirmed` | `InvoiceService` → `EventEmitter2` → `WebhookDeliveryService` |
-| `payments.invoice.cancelled` | `invoice.cancelled` | `InvoiceService` → `EventEmitter2` → `WebhookDeliveryService` |
+| `payments.invoice.cancelled` | `invoice.cancelled` (`status: CANCELLED`) | `InvoiceService` → `EventEmitter2` → `WebhookDeliveryService` |
+| `payments.invoice.expired` | `invoice.cancelled` (`status: EXPIRED`, `reason: BOLETO_OVERDUE`) | `InvoiceService` → `EventEmitter2` → `WebhookDeliveryService` — ver OBC `boleto-auto-cancellation` |
 
 ### Payload entregue ao consumer
 
@@ -72,6 +73,25 @@ Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops
     "currency": "BRL",
     "status": "CONFIRMED",
     "confirmedAt": "2026-08-10T10:00:00.000Z"
+  }
+}
+```
+
+**Boleto vencido (planejado)** — o mesmo tipo `invoice.cancelled`, com o motivo no payload:
+
+```json
+{
+  "event": "invoice.cancelled",
+  "payload": {
+    "invoiceId": "...",
+    "orderId": "...",
+    "amount": 159.90,
+    "currency": "BRL",
+    "status": "EXPIRED",
+    "reason": "BOLETO_OVERDUE",
+    "billingType": "BOLETO",
+    "dueDate": "2026-08-09",
+    "cancelledAt": "2026-08-10T10:00:00.000Z"
   }
 }
 ```

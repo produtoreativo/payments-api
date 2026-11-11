@@ -1,0 +1,336 @@
+{
+  "slug": "boleto-auto-cancellation",
+  "title": "Autocancelamento de boleto",
+  "status": "proposta",
+  "owner": "Christiano Milfont (dono do sinal e Tech Lead)",
+  "refs": {
+    "BS-006": "../business-signals/BS-006.md",
+    "PI-017": "../business-intents/PI-017.md",
+    "OBC": "../obcs/boleto-auto-cancellation.md",
+    "BDD": "../bdd/boleto-auto-cancellation.feature",
+    "Catálogo": "../architecture/domain-events.md"
+  },
+  "objective": "Alinhar o que acontece do boleto emitido até o consumidor saber que ele foi cancelado por vencimento, e fechar o contrato do webhook.",
+  "scope": {
+    "in": [
+      "Boleto emitido com cancelamento automático no PSP",
+      "Recebimento do PAYMENT_OVERDUE e expiração da invoice",
+      "Entrega do webhook de boleto cancelado ao consumidor",
+      "Observabilidade do fluxo"
+    ],
+    "out": [
+      "Criação da invoice em si",
+      "PIX, cartão e Split Payment",
+      "Cancelamento solicitado pela API",
+      "Conciliação financeira"
+    ]
+  },
+  "participants": [
+    {
+      "who": "Christiano Milfont",
+      "why": "Dono do sinal e Tech Lead — decide o contrato"
+    },
+    {
+      "who": "Consumidor do webhook",
+      "why": "Confirma se aceita invoice.cancelled com reason — [apurar quem]"
+    },
+    {
+      "who": "Quem opera o Asaas",
+      "why": "Semântica do PAYMENT_OVERDUE — [apurar quem]"
+    },
+    {
+      "who": "Plataforma / SRE",
+      "why": "Entrega, observabilidade e nova tentativa"
+    }
+  ],
+  "actors": [
+    {
+      "name": "Asaas (PSP)",
+      "role": "Aplica o cancelamento automático e envia PAYMENT_OVERDUE"
+    },
+    {
+      "name": "Tenant / consumidor",
+      "role": "Inscrito em invoice.cancelled; reage ao evento"
+    },
+    {
+      "name": "Operação",
+      "role": "Investiga entregas que falharam"
+    }
+  ],
+  "timeline": [
+    {
+      "id": "1",
+      "kind": "event",
+      "name": "Boleto emitido (payments.invoice.opened)",
+      "status": "emitted"
+    },
+    {
+      "id": "2",
+      "kind": "external",
+      "name": "Boleto vence; PSP envia PAYMENT_OVERDUE",
+      "status": "external"
+    },
+    {
+      "id": "3",
+      "kind": "policy",
+      "name": "P1: PAYMENT_OVERDUE de BOLETO não pago expira a invoice",
+      "status": "emitted"
+    },
+    {
+      "id": "4",
+      "kind": "event",
+      "name": "Boleto expirado (payments.invoice.expired)",
+      "status": "emitted"
+    },
+    {
+      "id": "5",
+      "kind": "event",
+      "name": "Webhook invoice.cancelled entregue (status EXPIRED, reason BOLETO_OVERDUE)",
+      "status": "emitted"
+    },
+    {
+      "id": "6",
+      "kind": "hotspot",
+      "name": "Entrega falha: sem nova tentativa (H6)",
+      "status": "planned"
+    }
+  ],
+  "policies": [
+    {
+      "id": "P1",
+      "rule": "Sempre que chegar PAYMENT_OVERDUE para invoice BOLETO não paga, expirar a invoice"
+    },
+    {
+      "id": "P2",
+      "rule": "Sempre que uma invoice expirar, entregar invoice.cancelled aos webhooks ativos do tenant inscritos nesse tipo"
+    },
+    {
+      "id": "P3",
+      "rule": "PAYMENT_OVERDUE para invoice CONFIRMED é ignorado"
+    },
+    {
+      "id": "P4",
+      "rule": "PAYMENT_OVERDUE repetido para invoice EXPIRED é ignorado, sem novo evento nem webhook"
+    },
+    {
+      "id": "P5",
+      "rule": "PAYMENT_OVERDUE para invoice que não é BOLETO é ignorado e registrado"
+    }
+  ],
+  "diagrams": {
+    "sequence": "sequenceDiagram\n  participant PSP as Asaas\n  participant API as Payments API\n  participant W as Worker / InvoiceService\n  participant DB as DynamoDB\n  participant WH as WebhookDeliveryService\n  participant C as Consumidor\n  PSP->>API: POST /webhook/payments (PAYMENT_OVERDUE)\n  API->>W: processa (sync ou via SQS)\n  W->>DB: updateInvoice(EXPIRED)\n  W->>WH: emitAsync payments.invoice.expired\n  WH->>C: POST invoice.cancelled (assinado)\n  C-->>WH: 2xx",
+    "states": "stateDiagram-v2\n  [*] --> OPEN\n  OPEN --> EXPIRED : PAYMENT_OVERDUE\n  OPEN --> CONFIRMED : PAYMENT_CONFIRMED\n  EXPIRED --> CONFIRMED : pagamento tardio (H5)\n  EXPIRED --> EXPIRED : OVERDUE repetido"
+  },
+  "unhappy": [
+    {
+      "case": "Invoice já CONFIRMED",
+      "expected": "Sem alteração, evento ou webhook",
+      "bdd": "Boleto confirmado não é expirado"
+    },
+    {
+      "case": "Invoice já EXPIRED",
+      "expected": "Idempotente, sem novo evento ou webhook",
+      "bdd": "Webhook duplicado é idempotente"
+    },
+    {
+      "case": "billingType diferente de BOLETO",
+      "expected": "Ignorado e registrado",
+      "bdd": "billingType incorreto é ignorado"
+    },
+    {
+      "case": "Endpoint do consumidor falha",
+      "expected": "Expiração mantida; falha registrada",
+      "bdd": "Falha na entrega não desfaz a expiração"
+    },
+    {
+      "case": "Consumidor não inscrito",
+      "expected": "Nenhuma entrega",
+      "bdd": "Consumidor não inscrito não recebe"
+    }
+  ],
+  "events": [
+    {
+      "name": "payments.invoice.expired",
+      "layer": "domain",
+      "status": "emitted",
+      "payload": [
+        "invoiceId",
+        "orderId",
+        "tenantId",
+        "provider",
+        "providerPaymentId",
+        "billingType",
+        "amount",
+        "currency",
+        "dueDate",
+        "expiredAt",
+        "correlationId"
+      ]
+    },
+    {
+      "name": "invoice.cancelled",
+      "layer": "webhook",
+      "status": "emitted",
+      "payload": [
+        "invoiceId",
+        "orderId",
+        "amount",
+        "currency",
+        "billingType",
+        "dueDate",
+        "status=EXPIRED",
+        "reason=BOLETO_OVERDUE",
+        "cancelledAt"
+      ]
+    },
+    {
+      "name": "invoice.expired (métrica)",
+      "layer": "observability",
+      "status": "emitted",
+      "payload": [
+        "invoiceId",
+        "tenantId"
+      ]
+    }
+  ],
+  "hotspots": [
+    {
+      "id": "H1",
+      "title": "invoice.cancelled ou tipo novo invoice.expired",
+      "why": "Consumidor pode tratar o vencimento como cancelamento pedido por ele (RISK-BC-003)",
+      "question": "O consumidor aceita status EXPIRED + reason?",
+      "owner": "Christiano + consumidor",
+      "decision": "Reutilizar invoice.cancelled — confirmar com o consumidor"
+    },
+    {
+      "id": "H2",
+      "title": "Semântica do PAYMENT_OVERDUE no Asaas",
+      "why": "Define quando a invoice expira e se ainda dá para pagar",
+      "question": "O que significa com daysAfterDueDate = 1 e qual o fuso?",
+      "owner": "Quem opera o Asaas"
+    },
+    {
+      "id": "H3",
+      "title": "Entrega assíncrona dentro de Lambda",
+      "why": "Entrega não aguardada pode se perder",
+      "question": "A entrega é aguardada antes de responder?",
+      "owner": "Christiano + SRE",
+      "decision": "Sim: emitAsync, listener sem async:true"
+    },
+    {
+      "id": "H4",
+      "title": "Atraso aceitável OVERDUE → webhook",
+      "why": "SLI do OBC em [apurar]",
+      "question": "Qual o atraso aceitável?",
+      "owner": "Consumidor + SRE"
+    },
+    {
+      "id": "H5",
+      "title": "Pagamento confirmado depois da expiração",
+      "why": "Consumidor recebe cancelled e depois confirmed",
+      "question": "Permitir pagamento tardio?",
+      "owner": "Christiano + Financeiro",
+      "decision": "Manter aceito — confirmar (RISK-BC-001)"
+    },
+    {
+      "id": "H6",
+      "title": "Nova tentativa de entrega",
+      "why": "Uma única tentativa, sem retry nem DLQ",
+      "question": "Quantas tentativas e que intervalo?",
+      "owner": "SRE",
+      "decision": "Fora desta entrega"
+    }
+  ],
+  "traceability": [
+    {
+      "element": "P1 + payments.invoice.expired",
+      "obc": "Regras 1–2",
+      "bdd": "Boleto vencido é automaticamente expirado",
+      "test": "publica payments.invoice.expired",
+      "code": "expireBoletoInvoice"
+    },
+    {
+      "element": "P2 + invoice.cancelled",
+      "obc": "Regra 5",
+      "bdd": "entrega o webhook ao consumidor inscrito",
+      "test": "entrega invoice.cancelled assinado",
+      "code": "WebhookDeliveryService.onInvoiceExpired"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "H1",
+      "decision": "Reutilizar invoice.cancelled com status EXPIRED e reason BOLETO_OVERDUE",
+      "confirm": "Consumidor"
+    },
+    {
+      "id": "H3",
+      "decision": "Aguardar a entrega antes de terminar o processamento",
+      "confirm": "SRE"
+    },
+    {
+      "id": "H5",
+      "decision": "Manter a aceitação de pagamento tardio",
+      "confirm": "Financeiro e consumidor"
+    }
+  ],
+  "dashboard": {
+    "title": "Payments — Autocancelamento de boleto (Event Storming)",
+    "env": "development",
+    "service": "payments-api",
+    "widgets": [
+      {
+        "title": "Webhooks do PSP recebidos",
+        "kind": "query_value",
+        "status": "available",
+        "query": "sum:webhook.received{$tags}.as_count()"
+      },
+      {
+        "title": "Falhas no processamento de webhooks",
+        "kind": "query_value",
+        "status": "available",
+        "query": "sum:webhook.failed{$tags}.as_count()"
+      },
+      {
+        "title": "Webhooks do PSP ao longo do tempo",
+        "kind": "timeseries",
+        "status": "available",
+        "query": "sum:webhook.received{$tags}.as_count()"
+      },
+      {
+        "title": "Boletos expirados",
+        "kind": "query_value",
+        "status": "available",
+        "query": "sum:invoice.expired{$tags}.as_count()"
+      },
+      {
+        "title": "invoice.cancelled entregue ao consumidor",
+        "kind": "query_value",
+        "status": "available",
+        "query": "sum:webhook.delivery.sent{$tags,event:invoice.cancelled}.as_count()"
+      },
+      {
+        "title": "Falhas de entrega de invoice.cancelled",
+        "kind": "query_value",
+        "status": "available",
+        "query": "sum:webhook.delivery.failed{$tags,event:invoice.cancelled}.as_count()"
+      },
+      {
+        "title": "Expirações ignoradas",
+        "kind": "timeseries",
+        "status": "available",
+        "query": "sum:invoice.expiration_ignored{$tags}.as_count()"
+      }
+    ],
+    "slis": [
+      {
+        "name": "Atraso OVERDUE → webhook entregue (p95)",
+        "target": "[apurar]"
+      },
+      {
+        "name": "Taxa de entrega de invoice.cancelled",
+        "target": "[apurar]"
+      }
+    ]
+  }
+}

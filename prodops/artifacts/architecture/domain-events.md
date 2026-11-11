@@ -30,7 +30,7 @@ payments.<agregado>.<fato>
 | `payment.created`, `payment.failed`, `webhook.received`… | `api/src/observability/metrics.ts` | São **métricas** do Datadog, não eventos |
 | `invoice.created`, `invoice.confirmed`, `invoice.cancelled` | tipos de evento entregues ao consumidor por webhook (`WebhookEventType`) | **Contrato externo**, sem o prefixo. O `WebhookDeliveryService` traduz `payments.invoice.confirmed` → `invoice.confirmed` e `payments.invoice.cancelled` → `invoice.cancelled` |
 
-## 2. Eventos emitidos hoje (19)
+## 2. Eventos emitidos hoje (20)
 
 | Evento | Quando | Campos do payload | Escutado por |
 |---|---|---|---|
@@ -39,6 +39,7 @@ payments.<agregado>.<fato>
 | `payments.invoice.creation_failed` | Falha ao criar a cobrança no provedor (qualquer meio) | `invoiceId`, `orderId`, `tenantId`, `provider`, `billingType`, `reason`, `correlationId`, `timestamp` | — |
 | `payments.invoice.idempotency_hit` | Retentativa com a mesma chave de idempotência; a invoice existente é devolvida (hoje só para `BOLETO`) | `invoiceId`, `orderId`, `tenantId`, `correlationId` | — |
 | `payments.invoice.confirmed` | Pagamento aprovado pelo provedor — libera o pedido | `invoiceId`, `orderId`, `tenantId`, `amount`, `currency`, `provider`, `providerPaymentId`, `confirmedAt`, `timestamp` | `WebhookDeliveryService` → webhook externo `invoice.confirmed` |
+| `payments.invoice.expired` | Boleto vencido e cancelado automaticamente (`PAYMENT_OVERDUE`); a invoice passa para `EXPIRED` | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `billingType`, `amount`, `currency`, `dueDate`, `expiredAt`, `correlationId` | `WebhookDeliveryService` → webhook externo `invoice.cancelled` (`status: EXPIRED`) |
 | `payments.invoice.received` | Liquidação financeira (conciliação); não libera o pedido de novo | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `receivedAt`, `correlationId` | — |
 | `payments.invoice.cancelled` | Cancelamento confirmado | `invoiceId`, `orderId`, `tenantId`, `amount`, `currency`, `provider`, `providerPaymentId`, `cancelledAt`, `timestamp` | `WebhookDeliveryService` → webhook externo `invoice.cancelled` |
 | `payments.invoice.refund_requested` | Refund de cartão solicitado | `invoiceId`, `orderId`, `tenantId`, `providerPaymentId`, `amount`, `reason`, `correlationId` | — |
@@ -71,7 +72,7 @@ payments.<agregado>.<fato>
 
 ## 4. Duplicatas eliminadas
 
-Eram 24 nomes emitidos; **5 eram duplicatas** de outro evento e foram eliminadas. Restam 19.
+Eram 24 nomes emitidos; **5 eram duplicatas** de outro evento e foram eliminadas. Restavam 19; hoje são 20, com `payments.invoice.expired`.
 
 | # | Eliminado | Sobrevivente | Por que era duplicata |
 |---|---|---|---|
@@ -85,14 +86,32 @@ Consequências:
 - Os consumidores (`WebhookDeliveryService`) escutam `payments.invoice.confirmed` e `payments.invoice.cancelled`; o webhook entregue ao cliente não mudou.
 - Nenhum evento passou a ser emitido em duplicidade: há um teste que garante a emissão única e que nenhum nome antigo reaparece no código (`api/src/events/payments-events.spec.ts` e o spec de confirmação).
 
-## 5. Pendências conhecidas (não tratadas nesta mudança)
+## 5. Eventos planejados
+
+Nenhum no momento. Um evento prometido num OBC e ainda não emitido entra aqui como `Planejado`. O último a sair desta lista foi `payments.invoice.expired` (OBC [`boleto-auto-cancellation`](../obcs/boleto-auto-cancellation.md)); o fato é a expiração do boleto e o meio de pagamento vai em `billingType` (regra N6).
+
+## 6. Do evento interno ao webhook entregue ao consumidor
+
+O webhook que o consumidor recebe tem um tipo **externo**, estável e sem o prefixo `payments.`. Mais de um evento interno pode alimentar o mesmo tipo externo:
+
+| Evento interno | Tipo externo entregue | Situação |
+|---|---|---|
+| `payments.invoice.confirmed` | `invoice.confirmed` | Emitido |
+| `payments.invoice.cancelled` | `invoice.cancelled` (`status: CANCELLED`) | Emitido |
+| `payments.invoice.expired` | `invoice.cancelled` (`status: EXPIRED`, `reason: BOLETO_OVERDUE`) | Emitido |
+
+`invoice.created` é aceito na inscrição (`WebhookEventType`), mas nenhum evento interno o entrega hoje.
+
+Decisão registrada em [`boleto-auto-cancellation`](../obcs/boleto-auto-cancellation.md): reutilizar `invoice.cancelled` em vez de criar `invoice.expired`, a confirmar com o consumidor (risco `RISK-BC-003`).
+
+## 7. Pendências conhecidas (não tratadas nesta mudança)
 
 - **Campo de tempo com 5 nomes:** `timestamp`, `occurredAt`, `receivedAt`, `confirmedAt`, `expiredAt`/`cancelledAt`/`completedAt`. A convenção de payload (envelope) ainda não foi definida.
 - **`tenantId` e `correlationId` ausentes** em parte dos eventos (por exemplo `payments.invoice.created` e os de chargeback).
 - **`payments.invoice.idempotency_hit`** só é emitido para `BOLETO`, embora o nome seja genérico.
 - **Eventos prometidos nos OBCs e ainda não emitidos** aparecem como `Planejado`; seus nomes já seguem esta convenção.
 
-## 6. Como acrescentar um evento
+## 8. Como acrescentar um evento
 
 1. Escolha o nome pela convenção (seção 1) e confira se o fato já não existe (N7).
 2. Acrescente a constante em `api/src/events/payments-events.ts` — é a única fonte de nomes.

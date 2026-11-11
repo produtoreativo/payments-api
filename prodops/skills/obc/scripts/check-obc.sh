@@ -199,7 +199,9 @@ while IFS= read -r ev; do
   else
     fail "evento NÃO encontrado no código e não marcado Planejado: $ev"
   fi
-done < <(printf '%s\n' "$EVENTS_BODY" | grep -E '^\|[[:space:]]*`' | sed -E 's/^\|[[:space:]]*`([^`]+)`.*/\1/')
+# Só a PRIMEIRA tabela da seção lista eventos do OBC; tabelas seguintes (ex.: webhook entregue,
+# comparações) são auxiliares e não são conferidas contra o código.
+done < <(printf '%s\n' "$EVENTS_BODY" | awk '/^\|/ { t = 1; print; next } t { exit }' | grep -E '^\|[[:space:]]*`' | sed -E 's/^\|[[:space:]]*`([^`]+)`.*/\1/')
 
 if [ "$EV_TOTAL" -eq 0 ] && [ "$EVENTS_NA" != "true" ]; then fail "nenhum evento listado em Observable Events"; fi
 if [ -z "$CODE_FILE" ]; then warn "verificação contra o código ignorada (--skip-code-events ou api/src ausente)"; else rm -f "$CODE_FILE"; fi

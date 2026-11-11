@@ -30,7 +30,7 @@ payments.<aggregate>.<fact>
 | `payment.created`, `payment.failed`, `webhook.received`… | `api/src/observability/metrics.ts` | These are Datadog **metrics**, not events |
 | `invoice.created`, `invoice.confirmed`, `invoice.cancelled` | event types delivered to the consumer by webhook (`WebhookEventType`) | **External contract**, without the prefix. `WebhookDeliveryService` translates `payments.invoice.confirmed` → `invoice.confirmed` and `payments.invoice.cancelled` → `invoice.cancelled` |
 
-## 2. Events emitted today (19)
+## 2. Events emitted today (20)
 
 | Event | When | Payload fields | Listened to by |
 |---|---|---|---|
@@ -39,6 +39,7 @@ payments.<aggregate>.<fact>
 | `payments.invoice.creation_failed` | Failure creating the charge at the provider (any method) | `invoiceId`, `orderId`, `tenantId`, `provider`, `billingType`, `reason`, `correlationId`, `timestamp` | — |
 | `payments.invoice.idempotency_hit` | Retry with the same idempotency key; the existing invoice is returned (today only for `BOLETO`) | `invoiceId`, `orderId`, `tenantId`, `correlationId` | — |
 | `payments.invoice.confirmed` | Payment approved by the provider — releases the order | `invoiceId`, `orderId`, `tenantId`, `amount`, `currency`, `provider`, `providerPaymentId`, `confirmedAt`, `timestamp` | `WebhookDeliveryService` → external webhook `invoice.confirmed` |
+| `payments.invoice.expired` | Overdue boleto cancelled automatically (`PAYMENT_OVERDUE`); the invoice becomes `EXPIRED` | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `billingType`, `amount`, `currency`, `dueDate`, `expiredAt`, `correlationId` | `WebhookDeliveryService` → external webhook `invoice.cancelled` (`status: EXPIRED`) |
 | `payments.invoice.received` | Financial settlement (reconciliation); does not release the order again | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `receivedAt`, `correlationId` | — |
 | `payments.invoice.cancelled` | Cancellation confirmed | `invoiceId`, `orderId`, `tenantId`, `amount`, `currency`, `provider`, `providerPaymentId`, `cancelledAt`, `timestamp` | `WebhookDeliveryService` → external webhook `invoice.cancelled` |
 | `payments.invoice.refund_requested` | Card refund requested | `invoiceId`, `orderId`, `tenantId`, `providerPaymentId`, `amount`, `reason`, `correlationId` | — |
@@ -71,7 +72,7 @@ payments.<aggregate>.<fact>
 
 ## 4. Duplicates eliminated
 
-There were 24 names emitted; **5 were duplicates** of another event and were eliminated. 19 remain.
+There were 24 names emitted; **5 were duplicates** of another event and were eliminated. 19 remained; today there are 20, with `payments.invoice.expired`.
 
 | # | Eliminated | Survivor | Why it was a duplicate |
 |---|---|---|---|
@@ -85,14 +86,32 @@ Consequences:
 - The consumers (`WebhookDeliveryService`) listen to `payments.invoice.confirmed` and `payments.invoice.cancelled`; the webhook delivered to the customer did not change.
 - No event is emitted twice anymore: a test guarantees a single emission and that no old name reappears in the code (`api/src/events/payments-events.spec.ts` and the confirmation spec).
 
-## 5. Known pending items (not handled in this change)
+## 5. Planned events
+
+None at the moment. An event promised in an OBC and not yet emitted is listed here as `Planned`. The last one to leave this list was `payments.invoice.expired` (OBC [`boleto-auto-cancellation`](../obcs/boleto-auto-cancellation.md)); the fact is the boleto expiring and the payment method goes in `billingType` (rule N6).
+
+## 6. From the internal event to the webhook delivered to the consumer
+
+The webhook the consumer receives has an **external**, stable type without the `payments.` prefix. More than one internal event may feed the same external type:
+
+| Internal event | External type delivered | Status |
+|---|---|---|
+| `payments.invoice.confirmed` | `invoice.confirmed` | Emitted |
+| `payments.invoice.cancelled` | `invoice.cancelled` (`status: CANCELLED`) | Emitted |
+| `payments.invoice.expired` | `invoice.cancelled` (`status: EXPIRED`, `reason: BOLETO_OVERDUE`) | Emitted |
+
+`invoice.created` is accepted on subscription (`WebhookEventType`), but no internal event delivers it today.
+
+Decision recorded in [`boleto-auto-cancellation`](../obcs/boleto-auto-cancellation.md): reuse `invoice.cancelled` instead of creating `invoice.expired`, to be confirmed with the consumer (risk `RISK-BC-003`).
+
+## 7. Known pending items (not handled in this change)
 
 - **Time field with 5 names:** `timestamp`, `occurredAt`, `receivedAt`, `confirmedAt`, `expiredAt`/`cancelledAt`/`completedAt`. The payload convention (envelope) is not defined yet.
 - **`tenantId` and `correlationId` missing** in some events (for example `payments.invoice.created` and the chargeback ones).
 - **`payments.invoice.idempotency_hit`** is only emitted for `BOLETO`, although the name is generic.
 - **Events promised in the OBCs and not emitted yet** appear as `Planned`; their names already follow this convention.
 
-## 6. How to add an event
+## 8. How to add an event
 
 1. Pick the name from the convention (section 1) and check the fact does not already exist (N7).
 2. Add the constant in `api/src/events/payments-events.ts` — the single source of names.
