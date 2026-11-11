@@ -1,3 +1,4 @@
+import { createSocket, Socket } from 'node:dgram';
 import { tracer, tracingEnabled } from './datadog.tracer';
 
 // Base tags applied to every metric — anchors each metric to the ProdOps context.
@@ -12,10 +13,47 @@ function buildTags(extra: Record<string, string>): string[] {
   return [...BASE_TAGS, ...Object.entries(extra).map(([k, v]) => `${k}:${v}`)];
 }
 
+/**
+ * O dd-trace se desativa dentro do Jest (proxy "noop"), e então `tracer.dogstatsd` descarta tudo em silêncio.
+ * Nesse caso — e só nele — as métricas saem por um socket UDP DogStatsD direto, para que os testes de
+ * integração (npm run test:e2e:datadog) enviem as mesmas métricas de verdade ao agente.
+ */
+function isNoopClient(): boolean {
+  return tracer.dogstatsd?.constructor?.name === 'NoopDogStatsDClient';
+}
+
+let udp: Socket | undefined;
+
+function udpIncrement(metric: string, tags: string[]): void {
+  udp ??= createSocket('udp4');
+  udp.unref();
+  const host =
+    process.env.DD_DOGSTATSD_HOSTNAME ??
+    process.env.DD_AGENT_HOST ??
+    'localhost';
+  const port = Number(process.env.DD_DOGSTATSD_PORT ?? 8125);
+  udp.send(`${metric}:1|c|#${tags.join(',')}`, port, host, () => undefined);
+}
+
+/** Envia imediatamente os incrementos pendentes ao agente (testes de integração e fim de jobs curtos). */
+export function flushMetrics(): void {
+  if (!tracingEnabled || isNoopClient()) return; // o fallback UDP já envia na hora
+  try {
+    tracer.dogstatsd.flush();
+  } catch {
+    // no-op: DD Agent unavailable
+  }
+}
+
 function increment(metric: string, extra: Record<string, string> = {}): void {
   if (!tracingEnabled) return;
   try {
-    tracer.dogstatsd.increment(metric, 1, buildTags(extra));
+    const tags = buildTags(extra);
+    if (isNoopClient()) {
+      udpIncrement(metric, tags);
+      return;
+    }
+    tracer.dogstatsd.increment(metric, 1, tags);
   } catch {
     // no-op: DD Agent unavailable or metrics endpoint not reachable
   }
@@ -109,6 +147,23 @@ export const WebhookMetrics = {
     });
   },
 
+  /** Entrega de webhook ao consumidor concluída com sucesso (BS-006). */
+  deliverySent(eventType: string) {
+    increment('webhook.delivery.sent', {
+      event: eventType,
+      journey: 'operation',
+    });
+  },
+
+  /** Entrega de webhook ao consumidor falhou (resposta não-2xx, timeout ou erro de rede). */
+  deliveryFailed(eventType: string, failureType: string) {
+    increment('webhook.delivery.failed', {
+      event: eventType,
+      failure_type: failureType,
+      journey: 'operation',
+    });
+  },
+
   /** Webhook received but could not be correlated to any invoice — P0 risk. */
   uncorrelated(provider: string) {
     increment('webhook.failed', {
@@ -117,6 +172,29 @@ export const WebhookMetrics = {
       journey: 'operation',
       reliability_scenario: 'webhook_sem_correlacao',
       obc: 'confirmacao_de_pagamento_confiavel',
+    });
+  },
+};
+
+// ---------------------------------------------------------------------------
+// Invoice metrics — autocancelamento de boleto (BS-006)
+// ---------------------------------------------------------------------------
+
+export const InvoiceMetrics = {
+  /** Boleto vencido e expirado automaticamente (payments.invoice.expired). */
+  expired(provider: string) {
+    increment('invoice.expired', {
+      payment_provider: provider,
+      journey: 'operation',
+    });
+  },
+
+  /** PAYMENT_OVERDUE recebido, mas a invoice não foi expirada (confirmado, já expirado, não é boleto). */
+  expirationIgnored(provider: string, reason: string) {
+    increment('invoice.expiration_ignored', {
+      payment_provider: provider,
+      reason,
+      journey: 'operation',
     });
   },
 };

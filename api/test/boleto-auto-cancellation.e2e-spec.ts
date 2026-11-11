@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */
 
 /**
  * E2E tests for DS-63 Boleto Auto-Cancellation
@@ -6,9 +6,12 @@
  * BDD feature: prodops/artifacts/bdd/boleto-auto-cancellation.feature
  * OBC:         prodops/artifacts/obcs/boleto-auto-cancellation.md
  */
+import { createServer, IncomingMessage } from 'node:http';
 import { INestApplication } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { TokenRepository } from '../src/modules/auth/token.repository';
 import { InvoiceRepository } from '../src/modules/invoices/services/invoice-repository.service';
 import {
   buildTestFixture,
@@ -252,6 +255,203 @@ describe('Boleto Auto-Cancellation (DS-63)', () => {
       expect(providerPayload?.daysAfterDueDateToRegistrationCancellation).toBe(
         1,
       );
+    });
+  });
+
+  describe('Evento e webhook de boleto cancelado (BS-006)', () => {
+    interface Delivery {
+      body: Record<string, any>;
+      headers: IncomingMessage['headers'];
+    }
+
+    async function startConsumer(status = 200, delayMs = 0) {
+      const deliveries: Delivery[] = [];
+      const server = createServer((req, res) => {
+        const chunks: Buffer[] = [];
+        req.on('data', (c: Buffer) => chunks.push(c));
+        req.on('end', () => {
+          deliveries.push({
+            body: JSON.parse(Buffer.concat(chunks).toString()),
+            headers: req.headers,
+          });
+          setTimeout(() => {
+            res.writeHead(status);
+            res.end('{}');
+          }, delayMs);
+        });
+      });
+      await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
+      const { port } = server.address() as { port: number };
+      return {
+        url: `http://127.0.0.1:${port}/hook`,
+        deliveries,
+        close: () => new Promise<void>((r) => server.close(() => r())),
+      };
+    }
+
+    async function setup(events: string[], consumer: { url: string }) {
+      const token = await app.get(TokenRepository).create('tenant-bs006');
+      await request(app.getHttpServer())
+        .post('/webhooks')
+        .set('X-Api-Token', token.rawToken)
+        .send({ url: consumer.url, events })
+        .expect(201);
+      const created = await request(app.getHttpServer())
+        .post('/invoices')
+        .set('X-Api-Token', token.rawToken)
+        .set('Idempotency-Key', 'MS-BS006:create')
+        .send(boletoPayload({ tenantId: 'tenant-bs006', orderId: 'MS-BS006' }))
+        .expect(201);
+      return created.body as { invoiceId: string; providerPaymentId: string };
+    }
+
+    it('publica payments.invoice.expired ao expirar o boleto', async () => {
+      const created = await criarBoleto();
+      const emitted: Array<Record<string, unknown>> = [];
+      app
+        .get(EventEmitter2)
+        .on('payments.invoice.expired', (e: Record<string, unknown>) =>
+          emitted.push(e),
+        );
+
+      await enviarWebhookPaymentOverdue(created.body.providerPaymentId);
+
+      expect(emitted).toHaveLength(1);
+      expect(emitted[0]).toMatchObject({
+        invoiceId: created.body.invoiceId,
+        orderId: 'MS-300063',
+        tenantId: TENANT_ID,
+        provider: 'ASAAS',
+        providerPaymentId: created.body.providerPaymentId,
+        billingType: 'BOLETO',
+      });
+      expect(typeof emitted[0].expiredAt).toBe('string');
+      expect(typeof emitted[0].dueDate).toBe('string');
+    });
+
+    it('entrega invoice.cancelled (EXPIRED / BOLETO_OVERDUE) assinado ao consumidor inscrito, antes de responder ao PSP', async () => {
+      const consumer = await startConsumer(200, 300);
+      try {
+        const { invoiceId, providerPaymentId } = await setup(
+          ['invoice.cancelled'],
+          consumer,
+        );
+
+        await enviarWebhookPaymentOverdue(providerPaymentId).then((r) =>
+          expect(r.status).toBe(200),
+        );
+
+        // a entrega é aguardada: já concluída quando o PSP recebe a resposta
+        expect(consumer.deliveries).toHaveLength(1);
+        const [{ body, headers }] = consumer.deliveries;
+        expect(body.event).toBe('invoice.cancelled');
+        expect(body.payload).toMatchObject({
+          invoiceId,
+          orderId: 'MS-BS006',
+          status: 'EXPIRED',
+          reason: 'BOLETO_OVERDUE',
+          billingType: 'BOLETO',
+          currency: 'BRL',
+        });
+        expect(typeof body.payload.cancelledAt).toBe('string');
+        expect(headers['x-payments-signature']).toMatch(
+          /^sha256=[0-9a-f]{64}$/,
+        );
+        expect(headers['x-payments-delivery-id']).toBeDefined();
+      } finally {
+        await consumer.close();
+      }
+    });
+
+    it('consumidor não inscrito em invoice.cancelled não recebe o webhook', async () => {
+      const consumer = await startConsumer();
+      try {
+        const { invoiceId, providerPaymentId } = await setup(
+          ['invoice.confirmed'],
+          consumer,
+        );
+        await enviarWebhookPaymentOverdue(providerPaymentId);
+
+        expect(
+          (await repository.findInvoice('tenant-bs006', invoiceId))?.status,
+        ).toBe('EXPIRED');
+        expect(consumer.deliveries).toHaveLength(0);
+      } finally {
+        await consumer.close();
+      }
+    });
+
+    it('falha na entrega não desfaz a expiração nem faz o PSP receber erro', async () => {
+      const consumer = await startConsumer(500);
+      try {
+        const { invoiceId, providerPaymentId } = await setup(
+          ['invoice.cancelled'],
+          consumer,
+        );
+        const resp = await enviarWebhookPaymentOverdue(providerPaymentId);
+
+        expect(resp.status).toBe(200);
+        expect(consumer.deliveries).toHaveLength(1);
+        expect(
+          (await repository.findInvoice('tenant-bs006', invoiceId))?.status,
+        ).toBe('EXPIRED');
+      } finally {
+        await consumer.close();
+      }
+    });
+
+    it.each([
+      ['duplicado', 'EXPIRED'],
+      ['boleto confirmado', 'CONFIRMED'],
+    ])(
+      'PAYMENT_OVERDUE em invoice %s não publica evento nem entrega webhook',
+      async (_label, status) => {
+        const consumer = await startConsumer();
+        try {
+          const { invoiceId, providerPaymentId } = await setup(
+            ['invoice.cancelled'],
+            consumer,
+          );
+          const inv = await repository.findInvoice('tenant-bs006', invoiceId);
+          await repository.updateInvoice(inv!, status as 'EXPIRED');
+          const emitted: unknown[] = [];
+          app
+            .get(EventEmitter2)
+            .on('payments.invoice.expired', (e: unknown) => emitted.push(e));
+
+          await enviarWebhookPaymentOverdue(providerPaymentId);
+
+          expect(emitted).toHaveLength(0);
+          expect(consumer.deliveries).toHaveLength(0);
+        } finally {
+          await consumer.close();
+        }
+      },
+    );
+
+    it('PAYMENT_OVERDUE em invoice PIX não publica evento nem entrega webhook', async () => {
+      const consumer = await startConsumer();
+      try {
+        await setup(['invoice.cancelled'], consumer);
+        const token = await app.get(TokenRepository).create('tenant-bs006');
+        const pix = await request(app.getHttpServer())
+          .post('/invoices')
+          .set('X-Api-Token', token.rawToken)
+          .set('Idempotency-Key', 'MS-BS006:pix')
+          .send(pixPayload({ tenantId: 'tenant-bs006' }))
+          .expect(201);
+        const emitted: unknown[] = [];
+        app
+          .get(EventEmitter2)
+          .on('payments.invoice.expired', (e: unknown) => emitted.push(e));
+
+        await enviarWebhookPaymentOverdue(pix.body.providerPaymentId);
+
+        expect(emitted).toHaveLength(0);
+        expect(consumer.deliveries).toHaveLength(0);
+      } finally {
+        await consumer.close();
+      }
     });
   });
 });

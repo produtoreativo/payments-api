@@ -1,0 +1,31 @@
+{
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": "..",
+  "testEnvironment": "node",
+  "testRegex": ".datadog.e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "testTimeout": 900000,
+  "collectCoverage": false,
+  "collectCoverageFrom": [
+    "src/**/*.ts"
+  ],
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "\\.module\\.ts$",
+    "src/main\\.ts$"
+  ],
+  "coverageDirectory": "./coverage",
+  "coverageReporters": [
+    "text-summary",
+    "cobertura"
+  ],
+  "setupFiles": [
+    "<rootDir>/test/support/datadog-env.ts"
+  ]
+}
