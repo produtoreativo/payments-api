@@ -23,6 +23,7 @@ export const PaymentsEvent = {
   InvoiceCreationFailed: 'payments.invoice.creation_failed',
   InvoiceIdempotencyHit: 'payments.invoice.idempotency_hit',
   InvoiceConfirmed: 'payments.invoice.confirmed',
+  InvoiceExpired: 'payments.invoice.expired',
   InvoiceReceived: 'payments.invoice.received',
   InvoiceCancelled: 'payments.invoice.cancelled',
   InvoiceRefundRequested: 'payments.invoice.refund_requested',

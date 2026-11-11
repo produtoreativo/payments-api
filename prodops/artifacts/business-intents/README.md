@@ -65,7 +65,7 @@ Utilize o template em [`prodops/templates/business-intents/`](../../templates/bu
 | [PI-014 — Resolver a vulnerabilidade HIGH do postcss em validation-workbench](./PI-014.md) | Technology | Downstream — entregue em v0.10.0 (PR #126); OBC postcss-security |
 | [PI-015 — Mecanismo de distribuição do ProdOps Framework](./PI-015.md) | Technology | Downstream — entregue em v0.11.0 (PR #136 · #137 · #138 · #139); OBC prodops-framework-… |
 | [PI-016 — Rastrear o ciclo de vida de chargeback do Asaas](./PI-016.md) | Business | Downstream — entregue em v0.15.0 (PR #176); OBC chargeback-handling |
-| [PI-017 — Cancelamento automático de boleto vencido com evento de expiração](./PI-017.md) | Business | Downstream — entregue em v0.15.0 (PR #177); OBC boleto-auto-cancellation |
+| [PI-017 — Cancelamento automático de boleto vencido, com evento e webhook ao consumidor](./PI-017.md) | Business | Em revisão — o comportamento de expiração foi entregue em v0.15.0 (PR #177); o contrato… |
 | [PI-PILOT-001 — Invoice PIX — Happy Path Completo](./PI-PILOT-001.md) | Team · Technology | Em Discovery |
 | [PI-PILOT-002 — Invoice Cartão — Happy Path sem Armazenar PAN](./PI-PILOT-002.md) | Team · Technology | Em Discovery |
 | [PI-PILOT-003 — Confirmação de Pagamento — Happy Path via Webhook](./PI-PILOT-003.md) | Team · Technology | Em Discovery |

@@ -24,6 +24,17 @@ interface PaymentCancelledEvent {
   currency?: string;
 }
 
+interface InvoiceExpiredEvent {
+  invoiceId: string;
+  orderId: string;
+  tenantId: string;
+  amount?: number;
+  currency?: string;
+  billingType?: string;
+  dueDate?: string;
+  expiredAt?: string;
+}
+
 const DELIVERY_TIMEOUT_MS = 10_000;
 
 @Injectable()
@@ -61,6 +72,29 @@ export class WebhookDeliveryService {
       currency: event.currency ?? 'BRL',
       status: 'CANCELLED',
       cancelledAt: new Date().toISOString(),
+    });
+  }
+
+  /**
+   * Boleto vencido (BS-006): reaproveita o tipo externo `invoice.cancelled`,
+   * distinguido por `status: EXPIRED` e `reason: BOLETO_OVERDUE`.
+   */
+  // Sem `{ async: true }` de propósito: o emissor usa emitAsync e precisa aguardar a entrega
+  // (o worker SQS não pode terminar antes dela).
+  @OnEvent(PaymentsEvent.InvoiceExpired)
+  async onInvoiceExpired(event: InvoiceExpiredEvent): Promise<void> {
+    if (!event.tenantId) return;
+
+    await this.deliver('invoice.cancelled', event.tenantId, {
+      invoiceId: event.invoiceId,
+      orderId: event.orderId,
+      amount: event.amount,
+      currency: event.currency ?? 'BRL',
+      billingType: event.billingType ?? 'BOLETO',
+      dueDate: event.dueDate,
+      status: 'EXPIRED',
+      reason: 'BOLETO_OVERDUE',
+      cancelledAt: event.expiredAt ?? new Date().toISOString(),
     });
   }
 

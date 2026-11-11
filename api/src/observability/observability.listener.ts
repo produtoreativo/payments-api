@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { CardMetrics, PaymentMetrics, WebhookMetrics } from './metrics';
+import {
+  CardMetrics,
+  InvoiceMetrics,
+  PaymentMetrics,
+  WebhookMetrics,
+} from './metrics';
+import { PaymentsEvent } from '../events/payments-events';
 
 interface ObservabilityEvent {
   event_key: string;
@@ -18,8 +24,16 @@ interface ObservabilityEvent {
  * It listens to the existing event bus and translates domain events to
  * ProdOps/PRE metrics without duplicating business logic.
  */
+const text = (v: unknown, fallback = 'unknown'): string =>
+  typeof v === 'string' && v ? v : fallback;
+
 @Injectable()
 export class ObservabilityListener {
+  @OnEvent(PaymentsEvent.InvoiceExpired, { async: false })
+  handleInvoiceExpired(event: { provider?: string }): void {
+    InvoiceMetrics.expired(String(event.provider ?? 'UNKNOWN'));
+  }
+
   @OnEvent('payments.observability', { async: false })
   handleObservabilityEvent(event: ObservabilityEvent): void {
     const key = event.event_key ?? '';
@@ -62,11 +76,24 @@ export class ObservabilityListener {
       return;
     }
 
-    if (key.includes('webhook')) {
-      const eventType = String(event.eventType ?? key);
-      WebhookMetrics.received(provider, eventType);
+    // Entrega de webhook ao consumidor (WebhookDeliveryService) — métricas próprias por tipo de evento.
+    if (key === 'webhook.delivery.sent') {
+      WebhookMetrics.deliverySent(text(event.event));
       return;
     }
+
+    if (key === 'webhook.delivery.failed') {
+      WebhookMetrics.deliveryFailed(text(event.event), text(event.reason));
+      return;
+    }
+
+    if (key.endsWith('expiracao.ignorada')) {
+      InvoiceMetrics.expirationIgnored(provider, text(event.reason));
+      return;
+    }
+
+    // webhook.received é contado na entrada do processamento (InvoiceService.processProviderWebhook),
+    // uma vez por webhook novo do PSP, com event_type = tipo do evento do PSP.
 
     if (key.includes('tokenizado') || key.includes('card.tokenized')) {
       CardMetrics.tokenized(provider);

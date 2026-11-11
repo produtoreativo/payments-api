@@ -20,6 +20,7 @@ import {
   PaymentProvider,
   ProviderChargeResponse,
 } from '../types/invoice.types';
+import { WebhookMetrics } from '../../../observability/metrics';
 import { InvoiceRepository } from './invoice-repository.service';
 import { ProviderRouterService } from './provider-router.service';
 
@@ -579,6 +580,9 @@ export class InvoiceService {
       return invoice?.providerPaymentId ? this.toResponse(invoice) : undefined;
     }
 
+    // Um webhook novo do PSP (não repetido) — base do widget "Webhooks recebidos".
+    WebhookMetrics.received('ASAAS', String(payload.event));
+
     switch (payload.event) {
       case 'PAYMENT_DELETED':
         return payload.payment?.id
@@ -793,10 +797,15 @@ export class InvoiceService {
     }
 
     if (invoice.billingType !== 'BOLETO') {
+      this.emitExpirationIgnored(invoice, 'billing_type');
       return this.recordIgnoredProviderEvent(payload, 'PAYMENT_OVERDUE');
     }
 
     if (invoice.status === 'CONFIRMED' || invoice.status === 'EXPIRED') {
+      this.emitExpirationIgnored(
+        invoice,
+        invoice.status === 'CONFIRMED' ? 'confirmado' : 'ja_expirado',
+      );
       return this.toResponse(invoice);
     }
 
@@ -805,7 +814,45 @@ export class InvoiceService {
       'EXPIRED',
     );
 
+    // Persistido antes de emitir. emitAsync aguarda os listeners (entrega do webhook),
+    // para que o worker não termine antes da entrega; uma falha aqui não desfaz a expiração.
+    try {
+      await this.eventEmitter.emitAsync(PaymentsEvent.InvoiceExpired, {
+        invoiceId: expiredInvoice.invoiceId,
+        orderId: expiredInvoice.orderId,
+        tenantId: expiredInvoice.tenantId,
+        provider: expiredInvoice.provider,
+        providerPaymentId: expiredInvoice.providerPaymentId,
+        billingType: expiredInvoice.billingType,
+        amount: expiredInvoice.amount,
+        currency: expiredInvoice.currency,
+        dueDate: expiredInvoice.dueDate,
+        expiredAt: expiredInvoice.updatedAt,
+        correlationId: `webhook-${expiredInvoice.providerPaymentId}`,
+      });
+    } catch (err: unknown) {
+      this.logger.error({
+        msg: 'invoice.expired: listener failed after expiry persisted',
+        invoiceId: expiredInvoice.invoiceId,
+        err: err instanceof Error ? err.message : String(err),
+      });
+    }
+
     return this.toResponse(expiredInvoice);
+  }
+
+  private emitExpirationIgnored(
+    invoice: InvoiceRecord,
+    reason: 'confirmado' | 'ja_expirado' | 'billing_type',
+  ): void {
+    this.emitObservable('pagamento.expiracao.cobranca.expiracao.ignorada', {
+      invoice,
+      correlationId: `webhook-${invoice.providerPaymentId}`,
+      stage: 'expiracao_ignorada',
+      flow: 'expiracao',
+      step: 2,
+      reason,
+    });
   }
 
   private async recordIgnoredProviderEvent(

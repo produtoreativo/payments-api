@@ -29,11 +29,11 @@ Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops
 |---|---|---|---|---|
 | `create-invoice-boleto` | [`create-invoice-boleto.md`](../../../obcs/create-invoice-boleto.md) | In Delivery | Criação da invoice via Boleto Bancário | ✅ completo |
 | `payment-confirmation` | [`payment-confirmation.md`](../../../obcs/payment-confirmation.md) | In Delivery | Confirmação do pagamento por webhook do provedor | ⚠️ parcial |
-| `boleto-auto-cancellation` *(candidato)* | [`boleto-auto-cancellation.md`](../../../obcs/boleto-auto-cancellation.md) | In Delivery | Cancelamento automático de boleto vencido (`PAYMENT_OVERDUE`) | ❌ não superficiado |
+| `boleto-auto-cancellation` | [`boleto-auto-cancellation.md`](../../../obcs/boleto-auto-cancellation.md) | Refining | Cancelamento automático de boleto vencido (`PAYMENT_OVERDUE`) e webhook de boleto cancelado ao consumidor | ⚠️ parcial (evento planejado) |
 
 > **Nó compartilhado:** `payment-confirmation` também é nó de `compra-com-pix`, `compra-com-cartao-de-credito`. O OBC é a fonte única; este deck apenas o referencia.
 
-> **Nó candidato:** o OBC já está committed e se restringe a este meio de pagamento, mas sua incorporação ao serviço depende de confirmação do dono do serviço.
+> **Nó incorporado (2026-11-10):** o consumidor precisa receber o evento de boleto cancelado por webhook (BS-006), então o autocancelamento passa a ser nó deste serviço. O OBC está em `Refining` enquanto o contrato do webhook é definido.
 
 > **Contratos neste deck:** resultado da comparação (2026-11-10) entre os eventos do OBC e os eventos citados neste deck — ✅ completo, ⚠️ parcial, ❌ não superficiado.
 
@@ -55,6 +55,7 @@ Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops
 | `payments.invoice.idempotency_hit` | Retentativa com mesma chave — invoice existente retornada | `invoiceId`, `orderId`, `tenantId`, `correlationId` |
 | `payments.invoice.confirmed` | Boleto pago e confirmado — pedido pode ser liberado | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `confirmedAt`, `correlationId` |
 | `payments.invoice.received` | Liquidação financeira — para conciliação (não libera pedido novamente) | `invoiceId`, `orderId`, `tenantId`, `receivedAt`, `correlationId` |
+| `payments.invoice.expired` | Boleto vencido e cancelado automaticamente — a invoice passa para `EXPIRED` e o consumidor recebe o webhook `invoice.cancelled` | `invoiceId`, `orderId`, `tenantId`, `provider`, `providerPaymentId`, `billingType`, `dueDate`, `expiredAt`, `correlationId` |
 | `payments.webhook.received` | Evento bruto do provedor persistido para auditoria | `tenantId`, `provider`, `eventType`, `providerPaymentId`, `correlationId` |
 
 ### Eventos consumidos
@@ -62,7 +63,7 @@ Lista completa dos nós (Local OBCs) que compõem este serviço. Fonte: `prodops
 | Evento | Origem | Ação |
 |---|---|---|
 | `PAYMENT_RECEIVED` (Asaas webhook) | Asaas PSP → `POST /webhook/payments` | Confirma pagamento; publica `payments.invoice.confirmed` |
-| `PAYMENT_OVERDUE` (Asaas webhook) | Asaas PSP → `POST /webhook/payments` | Registra expiração; atualiza estado operacional |
+| `PAYMENT_OVERDUE` (Asaas webhook) | Asaas PSP → `POST /webhook/payments` | Expira a invoice (`EXPIRED`); publica `payments.invoice.expired` e entrega `invoice.cancelled` ao consumidor |
 | `PAYMENT_DELETED` (Asaas webhook) | Asaas PSP → `POST /webhook/payments` | Confirma cancelamento para `CANCEL_REQUESTED` |
 
 ### Schema de resposta (criação)

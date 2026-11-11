@@ -1,15 +1,28 @@
 {
-  "moduleFileExtensions": ["js", "json", "ts"],
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
   "rootDir": "..",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "testRegex": "(?<!\\.datadog)\\.e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "testTimeout": 30000,
   "collectCoverage": true,
-  "collectCoverageFrom": ["src/**/*.ts"],
-  "coveragePathIgnorePatterns": ["/node_modules/", "\\.module\\.ts$", "src/main\\.ts$"],
+  "collectCoverageFrom": [
+    "src/**/*.ts"
+  ],
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "\\.module\\.ts$",
+    "src/main\\.ts$"
+  ],
   "coverageDirectory": "./coverage",
-  "coverageReporters": ["text-summary", "cobertura"]
+  "coverageReporters": [
+    "text-summary",
+    "cobertura"
+  ]
 }
